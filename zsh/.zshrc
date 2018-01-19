@@ -17,9 +17,6 @@ ZSH_THEME="powerlevel9k/powerlevel9k"
 # sensitive completion must be off. _ and - will be interchangeable.
 # HYPHEN_INSENSITIVE="true"
 
-# Uncomment the following line to disable bi-weekly auto-update checks.
-# DISABLE_AUTO_UPDATE="true"
-
 # Uncomment the following line to change how often to auto-update (in days).
 # export UPDATE_ZSH_DAYS=13
 
@@ -56,14 +53,12 @@ source $ZSH/oh-my-zsh.sh
 # User configuration
 
 # My Aliases
-alias dot="cd ~/dotfiles && v ."
+alias dot="cd ~/dotfiles && nvim ."
 alias v="nvim"
 alias c="cd /home/nelson/Code && ls -l"
-alias backup="git add * && git commit -am ':hammer_and_pick: [WIP] Done for today, cya tomorrow :wave:' && git push"
-alias um='cd /home/nelson/Code/uminho/2.\ Ano/1.\ Semestre'
-alias pf='cd /home/nelson/Desktop/Programação\ Funcional'
-alias pfe='cd /home/nelson/Desktop/Programação\ Funcional/Exercícios'
-alias li='cd /home/nelson/Code/2017li1g138'
+alias backup="git add * && git commit -am ':hammer_and_wrench: [WIP] Done for today, cya tomorrow :wave:' && git push"
+alias um='cd /home/nelson/Code/uminho/1st/2'
+
 
 # My Powerlevel9k Settings
 
@@ -176,3 +171,5 @@ ZSH_HIGHLIGHT_STYLES[bracket-level-1]="fg=cyan,bold"
 ZSH_HIGHLIGHT_STYLES[bracket-level-2]="fg=green,bold"
 ZSH_HIGHLIGHT_STYLES[bracket-level-3]="fg=magenta,bold"
 ZSH_HIGHLIGHT_STYLES[bracket-level-4]="fg=yellow,bold"
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
