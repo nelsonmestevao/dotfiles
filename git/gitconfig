@@ -1,0 +1,27 @@
+[user]
+    name = Nelson Estevão
+    email = nelsonmestevao@gmail.com
+[github]
+    user = nelsonmestevao
+[web]
+    browser = google-chrome
+[core]
+    editor = vim
+    excludesfile = ~/dotfiles/gitignore_global
+[alias]
+    a = add
+    b = branch
+    co = checkout
+    c = commit
+    cl = clone
+    p = push
+    pl = pull
+    rb = rebase
+    st = status
+    conflicts = diff --name-only --diff-filter=U
+[branch]
+    autosetuprebase = always
+[push]
+    default = simple
+[color]
+    ui = true
