@@ -21,6 +21,11 @@
     conflicts = diff --name-only --diff-filter=U
 [branch]
     autosetuprebase = always
+[diff]
+    tool = vimdiff
+[diff "odt"]
+    binary = true
+    textconv = odt2txt
 [push]
     default = simple
 [color]
