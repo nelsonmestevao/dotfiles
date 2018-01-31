@@ -1,32 +1,34 @@
 [user]
-    name = Nelson Estevão
-    email = nelsonmestevao@gmail.com
+  name = Nelson Estevão
+  email = nelsonmestevao@gmail.com
 [github]
-    user = nelsonmestevao
+  user = nelsonmestevao
 [web]
-    browser = google-chrome
+  browser = google-chrome
 [core]
-    editor = vim
-    excludesfile = ~/dotfiles/gitignore_global
+  editor = vim
+  excludesfile = ~/dotfiles/gitignore_global
 [alias]
-    a = add
-    b = branch
-    co = checkout
-    c = commit
-    cl = clone
-    p = push
-    pl = pull
-    rb = rebase
-    st = status
-    conflicts = diff --name-only --diff-filter=U
+  a = add
+  b = branch
+  co = checkout
+  c = commit
+  cl = clone
+  p = push
+  pl = pull
+  rb = rebase
+  st = status
+  conflicts = diff --name-only --diff-filter=U
 [branch]
-    autosetuprebase = always
+  autosetuprebase = always
 [diff]
-    tool = vimdiff
+  tool = vimdiff
 [diff "odt"]
-    binary = true
-    textconv = odt2txt
+  binary = true
+  textconv = odt2txt
 [push]
-    default = simple
+  default = simple
 [color]
-    ui = true
+  ui = true
+[pull]
+  rebase = true
