@@ -53,11 +53,11 @@ source $ZSH/oh-my-zsh.sh
 # User configuration
 
 # My Aliases
-alias dot="cd ~/dotfiles && nvim ."
+alias dot="cd ~/.dotfiles && nvim ."
 alias v="nvim"
 alias c="cd /home/nelson/Code && ls -l"
 alias s="cd /home/nelson/Snippets && ls -l"
-alias backup="git add * && git commit -am ':hammer_and_wrench: [WIP] Done for today, cya tomorrow :wave:' && git push"
+alias backup="git add --all && git commit -am ':hammer_and_wrench: [WIP] Done for today, cya tomorrow :wave:' && git push"
 alias um='cd /home/nelson/Code/uminho/1st/2'
 
 
