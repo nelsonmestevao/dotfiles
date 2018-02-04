@@ -4,4 +4,4 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/pwittchen/spotify-cli-linu
 
 sudo apt install tmux
 
-ln -sfT ~/dotfiles/tmux/.tmux.conf ~/.tmux.conf
+ln -sfT ~/.dotfiles/tmux/.tmux.conf ~/.tmux.conf

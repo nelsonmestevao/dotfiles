@@ -17,4 +17,4 @@ curl https://raw.githubusercontent.com/hzchirs/vim-material/master/colors/vim-ma
 
 curl https://raw.githubusercontent.com/hzchirs/vim-material/master/autoload/airline/themes/material.vim     > ~/.vim/bundle/vim-airline-themes/autoload/airline/themes/material.vim
 
-ln -sfT ~/dotfiles/vim/.vimrc ~/.vimrc
+ln -sfT ~/.dotfiles/vim/.vimrc ~/.vimrc
