@@ -42,21 +42,17 @@ map <C-s> <ESC>:w<CR> " saving buffers
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 syntax enable             " enable syntax highlighting
-set background=dark
-
-colorscheme vim-material
-
-let g:airline_theme='material'
-let g:airline_powerline_fonts = 1
-
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugins                                                                      "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-set runtimepath^=~/.vim/bundle/vim-ctrlp
-set runtimepath^=~/.vim/bundle/vim-airline
-set runtimepath^=~/.vim/bundle/vim-airline-themes
-set runtimepath^=~/.vim/bundle/vim-surround
-set runtimepath^=~/.vim/bundle/vim-commentary
+" Plugins will be downloaded under the specified directory.
+call plug#begin('~/.vim/plugged')
 
+" Declare the list of plugins.
+Plug 'neovimhaskell/haskell-vim'
+Plug 'bling/vim-airline'
+
+" List ends here. Plugins become visible to Vim after this call.
+call plug#end()
