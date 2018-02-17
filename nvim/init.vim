@@ -12,22 +12,26 @@
 if empty(glob('~/.config/nvim/autoload/plug.vim'))
   silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter  PlugInstall | nested source $MYVIMRC
+  autocmd VimEnter * PlugInstall | nested source $MYVIMRC
 endif
 
 " startup for vim-plug
 call plug#begin('~/.local/share/nvim/plugged')
 
-Plug 'neovimhaskell/haskell-vim'
+Plug 'sheerun/vim-polyglot'
 Plug 'ctrlpvim/ctrlp.vim'
-Plug 'valloric/youcompleteme'
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+"Plug 'valloric/youcompleteme'
 Plug 'tpope/vim-fugitive'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'scrooloose/nerdtree'
 Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'scrooloose/nerdcommenter'
+Plug 'neomake/neomake'
+Plug 'tpope/vim-surround'
+Plug 'jiangmiao/auto-pairs'
 Plug 'bling/vim-airline'
 Plug 'ryanoasis/vim-devicons'
-Plug 'hallison/vim-markdown'
 Plug 'chrisbra/Colorizer'
 Plug 'prettier/vim-prettier', {
   \ 'do': 'yarn install',
@@ -41,6 +45,35 @@ call plug#end()
 
 """ Colorizer
 let g:colorizer_auto_filetype='css,html,scss,slim,sass,less'
+
+""" deoplete
+let g:deoplete#enable_at_startup = 1
+" use tab to forward cycle
+inoremap <silent><expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+" use tab to backward cycle
+inoremap <silent><expr><s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
+" Close the documentation window when completion is done
+autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+
+""" NERDTree
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+""" Neomaker
+" When writing a buffer.
+call neomake#configure#automake('w')
+" When writing a buffer, and on normal mode changes (after 750ms).
+call neomake#configure#automake('nw', 750)
+" When reading a buffer (after 1s), and when writing.
+call neomake#configure#automake('rw', 1000)
+
+""" syntastic
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Editing behaviour                                                            "
@@ -117,4 +150,3 @@ let g:seiya_target_groups = ['guibg']
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_theme = 'gruvbox'
 let g:airline_powerline_fonts = 1
-
