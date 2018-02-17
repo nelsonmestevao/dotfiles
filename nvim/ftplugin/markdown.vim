@@ -1,1 +1,0 @@
-set textwidth=80

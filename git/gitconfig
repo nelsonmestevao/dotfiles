@@ -7,7 +7,7 @@
   browser = google-chrome
 [core]
   editor = nvim
-  excludesfile = ~/.dotfiles/gitignore_global
+  excludesfile = ~/.dotfiles/git/gitignore_global
 [alias]
   a = add
   b = branch
