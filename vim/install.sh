@@ -2,4 +2,4 @@
 
 sudo apt install vim
 
-ln -sfT ~/.dotfiles/vim/.vimrc ~/.vimrc
+ln -sfT ~/.dotfiles/vim/vimrc ~/.vimrc

@@ -2,7 +2,7 @@
 
 sudo apt install zsh
 
-ln -sfT ~/.dotfiles/zsh/.zshrc ~/.zshrc
+ln -sfT ~/.dotfiles/zsh/zshrc ~/.zshrc
 
 sudo apt install curl
 

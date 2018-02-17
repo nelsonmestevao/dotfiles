@@ -128,13 +128,17 @@ nnoremap tl :tablast<CR>
 inoremap kj <Esc>
 cnoremap kj <Esc>
 
+nnoremap <c-s> :w<CR>
+inoremap <c-s> <Esc>:w<CR>a
+vnoremap <c-s> <Esc>:w<CR>
+
+tnoremap <Esc> <C-\><C-n>
+
 " Better pane movement
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
-
-"map <C-s> <ESC>:w<CR> " saving buffers
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Colors and Fonts                                                             "
