@@ -1,5 +1,5 @@
 # Path to your oh-my-zsh installation.
-  export ZSH=/home/nelson/.oh-my-zsh
+  export ZSH=~/.oh-my-zsh
   export TERM="xterm-256color"
 
 # Set name of the theme to load. Optionally, if you set this to "random"
@@ -55,11 +55,12 @@ source $ZSH/oh-my-zsh.sh
 # My Aliases
 alias dot="cd ~/.dotfiles && nvim ."
 alias v="nvim"
-alias c="cd /home/nelson/Code && ls -l"
-alias s="cd /home/nelson/Snippets && ls -l"
+alias c="cd ~/Code && ls -l"
+alias s="cd ~/Snippets && ls -l"
 alias backup="git add --all && git commit -am ':hammer_and_wrench: [WIP] Done for today, cya tomorrow :wave:' && git push"
-alias um='cd /home/nelson/Code/uminho/1st/2'
-alias pi='cd /home/nelson/Desktop/Programação\ Imperativa'
+alias um='cd ~/Code/uminho/1st/2'
+alias pi='cd ~/Desktop/Programação\ Imperativa'
+alias li='cd ~/Code/tic-tac-logic'
 
 # My Powerlevel9k Settings
 
