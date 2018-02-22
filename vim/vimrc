@@ -6,7 +6,6 @@
 call plug#begin('~/.vim/plugged')
 
 Plug 'scrooloose/syntastic'
-Plug 'valloric/youcompleteme'
 Plug 'sheerun/vim-polyglot'
 Plug 'honza/vim-snippets'
 Plug 'prettier/prettier'
@@ -69,7 +68,9 @@ let g:prettier#config#use_tabs = 'false' " use tabs over spaces
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 set encoding=utf-8
+set termencoding=utf-8
 set spelllang=en          " spell check set to English
+set wrap
 set showmode              " always show what mode we're currently editing in
 set tabstop=2             " determine how many columns a tab counts
 set softtabstop=2
@@ -86,8 +87,6 @@ set title                 " change the terminal's title
 set autoread              " read when a file is changed from the outside
 set smartcase             " when searching try to be smart about cases
 set hlsearch              " highlights the term you search for
-
-set wrap
 
 " Highlight whitespaces
 set list
