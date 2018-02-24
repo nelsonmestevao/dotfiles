@@ -64,6 +64,7 @@ let g:webdevicons_enable_nerdtree = 1 " adding the flags to NERDTree
 let g:colorizer_auto_filetype='css,html,scss,slim,sass,less'
 
 """ NERDTree
+let NERDTreeShowHidden=1
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 """ Neomaker
