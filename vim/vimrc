@@ -19,10 +19,11 @@ Plug 'chrisbra/Colorizer'
 
 Plug 'scrooloose/nerdtree'
 Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'kien/ctrlp.vim'
 
 Plug 'tpope/vim-fugitive'
 
-Plug 'kien/ctrlp.vim'
+Plug 'editorconfig/editorconfig-vim'
 
 Plug 'bling/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
