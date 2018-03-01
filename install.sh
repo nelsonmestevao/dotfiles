@@ -1,5 +1,7 @@
 #!/bin/sh
 
+apt install curl
+
 SAVED_DIR=$PWD
 
 cd ~/.dotfiles
