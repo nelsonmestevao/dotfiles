@@ -1,8 +1,8 @@
 #!/bin/sh
 
-curl -LO https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage
-chmod u+x nvim.appimage
-./nvim.appimage
+sudo apt install software-properties-common
+sudo add-apt-repository ppa:neovim-ppa/stable
+sudo apt install neovim
 
 curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
