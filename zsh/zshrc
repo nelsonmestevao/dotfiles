@@ -47,8 +47,8 @@ ZSH_THEME="powerlevel9k/powerlevel9k"
 
 # Plugins
 plugins=(
-  git 
-  extract 
+  git
+  extract
   zsh-syntax-highlighting
 )
 
