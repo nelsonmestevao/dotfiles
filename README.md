@@ -51,3 +51,7 @@ I setup my `.tmux.conf` with the following:
 ```tmux
 source ~/dotfiles/tmux/.tmux.conf
 ```
+
+# Themes
+
+http://ubuntuhandbook.org/index.php/2015/11/flatabulous-flat-theme-ubuntu/
