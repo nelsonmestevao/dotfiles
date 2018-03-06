@@ -55,7 +55,7 @@ autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#formatter = 'default'
 let g:airline_powerline_fonts = 1
-let g:airline_theme = 'gruvbox'
+let g:airline_theme = "gruvbox"
 
 """ vim-devicons
 let g:webdevicons_enable = 1 " loading the plugin
@@ -78,12 +78,25 @@ let g:prettier#config#print_width = 40 " max line length that prettier will wrap
 let g:prettier#config#tab_width = 2 " number of spaces per indentation level
 let g:prettier#config#use_tabs = 'false' " use tabs over spaces
 
+""" gruvbox (theme)
+let g:gruvbox_bold = 1
+let g:gruvbox_underline = 1
+"let g:gruvbox_italic = 1
+let g:gruvbox_contrast_dark = 'medium'
+let g:gruvbox_italicize_comments = 1
+
+let g:seiya_auto_enable=1
+let g:seiya_target_groups = ['guibg']
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Editing behaviour                                                            "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 set encoding=utf-8
 set termencoding=utf-8
+if has("termguicolors")
+  set termguicolors
+endif
 set spelllang=en          " spell check set to English
 set wrap
 set showmode              " always show what mode we're currently editing in
@@ -113,13 +126,6 @@ set listchars+=nbsp:•
 " Fix horizontal and vertical splits
 set splitbelow
 set splitright
-
-if has("termguicolors")
-  set termguicolors
-endif
-
-let g:enable_bold_font=1
-let g:enable_italic_font = 1
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Keymap                                                                       "
@@ -157,8 +163,5 @@ map <C-\> :NERDTreeToggle<CR>
 syntax enable             " enable syntax highlighting
 syntax on
 
-let NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 set background=dark
 colorscheme gruvbox
-let g:seiya_auto_enable=1
-let g:seiya_target_groups = ['guibg']
