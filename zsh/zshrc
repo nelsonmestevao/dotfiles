@@ -63,10 +63,10 @@ alias v="nvim"
 alias c="cd ~/Code && ls -l"
 alias s="cd ~/Snippets && ls -l"
 alias backup="git add --all && git commit -am ':hammer_and_wrench: [WIP] Done for today, cya tomorrow :wave:' && git push"
+alias atualizar="cd ~/Code/tic-tac-logic && git checkout master && git fetch && git pull && cd ~/Code/2018li2g077 && svn update && rm -rf src && cp -r ~/Code/tic-tac-logic/src . && svn commit -m"
 alias um='cd ~/Code/uminho/1st/2'
 alias pi='cd ~/Desktop/Programação\ Imperativa'
 alias li='cd ~/Code/tic-tac-logic'
-alias jbb='gcc -Wall -Wextra'
 alias jbb='gcc -Wall -Wextra'
 
 # My Powerlevel9k Settings
