@@ -1,6 +1,9 @@
 #!/bin/sh
 
 apt install curl
+apt install wget
+
+apt install pandoc
 
 SAVED_DIR=$PWD
 
