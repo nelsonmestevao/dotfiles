@@ -1,9 +1,16 @@
 #!/bin/sh
 
-apt install curl
-apt install wget
+PKG=(
+  curl
+  pandoc
+  wget
+)
 
-apt install pandoc
+sudo apt update && sudo apt upgrade -y
+for pkg in "${PKG[@]}"
+do
+  sudo apt install $pkg -y
+done
 
 SAVED_DIR=$PWD
 

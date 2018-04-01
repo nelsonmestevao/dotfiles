@@ -19,6 +19,8 @@ Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 Plug 'justinmk/vim-syntax-extra', { 'for': ['c', 'cpp', 'flex'] }
 Plug 'neomake/neomake'
 
+Plug 'mzlogin/vim-markdown-toc'
+
 Plug 'jiangmiao/auto-pairs'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-endwise'
@@ -72,6 +74,9 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 call neomake#configure#automake('w') " When writing a buffer
 call neomake#configure#automake('nw', 750) " When writing a buffer, and on normal mode changes (after 750ms)
 call neomake#configure#automake('rw', 1000) " When reading a buffer (after 1s), and when writing
+
+""" vim-markdown-toc
+let g:vmt_auto_update_on_save = 0
 
 """ vim-prettier
 let g:prettier#config#print_width = 40 " max line length that prettier will wrap on

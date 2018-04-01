@@ -12,6 +12,8 @@ Plug 'prettier/prettier'
 Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 Plug 'justinmk/vim-syntax-extra', { 'for': ['c', 'cpp', 'flex'] }
 
+Plug 'mzlogin/vim-markdown-toc'
+
 Plug 'jiangmiao/auto-pairs'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-endwise'
