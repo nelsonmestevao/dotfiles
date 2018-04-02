@@ -3,6 +3,7 @@
 PKG=(
   curl
   pandoc
+  texlive-full
   wget
 )
 
