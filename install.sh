@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 PKG=(
   curl
@@ -8,6 +8,7 @@ PKG=(
 )
 
 sudo apt update && sudo apt upgrade -y
+
 for pkg in "${PKG[@]}"
 do
   sudo apt install $pkg -y
