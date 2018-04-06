@@ -20,6 +20,7 @@ Plug 'justinmk/vim-syntax-extra', { 'for': ['c', 'cpp', 'flex'] }
 Plug 'neomake/neomake'
 
 Plug 'mzlogin/vim-markdown-toc'
+"Plug 'ajorgensen/vim-markdown-toc'
 
 Plug 'jiangmiao/auto-pairs'
 Plug 'tpope/vim-surround'
