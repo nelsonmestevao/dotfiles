@@ -54,7 +54,8 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 
-# User configuration
+# User Configuration
+# ==================
 
 # My Aliases
 alias dot="cd ~/.dotfiles && nvim ."
@@ -71,8 +72,10 @@ alias pi='cd ~/Code/uminho/1st/2/Programação\ Imperativa'
 alias li='cd ~/Code/tic-tac-logic'
 alias jbb='gcc -Wall -Wextra'
 
-# My Powerlevel9k Settings
+# My Functions
+function gi() { curl -L -s https://www.gitignore.io/api/$@ ;}
 
+# My Powerlevel9k Settings
 POWERLEVEL9K_LEFT_SEGMENT_SEPARATOR="\uE0B4"
 POWERLEVEL9K_LEFT_SUBSEGMENT_SEPARATOR=""
 POWERLEVEL9K_RIGHT_SEGMENT_SEPARATOR="\uE0B6"
