@@ -14,3 +14,26 @@
 
 # .nfs files are created when an open file is removed but is still being accessed
 .nfs*
+
+################################################################################
+### Code Editors                                                             ###
+################################################################################
+
+### Code ###
+# Visual Studio Code - https://code.visualstudio.com/
+.settings/
+.vscode/
+tsconfig.json
+jsconfig.json
+
+### Vim ###
+# swap
+.sw[a-p]
+.*.sw[a-p]
+# session
+Session.vim
+# temporary
+.netrwhist
+*~
+# auto-generated tag files
+tags
