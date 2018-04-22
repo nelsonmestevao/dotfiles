@@ -8,6 +8,7 @@
 [core]
   editor = nvim
   excludesfile = ~/.dotfiles/git/gitignore_global
+  attributesfile = ~/.dotfiles/git/gitattributes
 [alias]
   a = add
   b = branch
