@@ -1,0 +1,12 @@
+# example user config (see "hg help config" for more info)
+[ui]
+username = Nelson Estevão <nelsonmestevao@gmail.com>
+editor = nvim
+
+[extensions]
+# uncomment these lines to enable some popular extensions
+# (see "hg help extensions" for more info)
+#
+# pager =
+# progress =
+# color =
