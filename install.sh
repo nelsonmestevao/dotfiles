@@ -1,10 +1,16 @@
 #!/bin/bash
 
 PKG=(
+  catdoc
+  catppt
   curl
+  diffpdf
+  odt2txt
   pandoc
   texlive-full
+  tree
   wget
+  xls2csv
 )
 
 sudo apt update && sudo apt upgrade -y
