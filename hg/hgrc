@@ -9,4 +9,6 @@ editor = nvim
 #
 # pager =
 # progress =
-# color =
+color =
+convert =
+graphlog =
