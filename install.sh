@@ -17,6 +17,7 @@ sudo apt update && sudo apt upgrade -y
 
 for pkg in "${PKG[@]}"
 do
+  echo "Installing ${pkg}..."
   sudo apt install $pkg -y
 done
 
