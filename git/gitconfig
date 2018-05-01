@@ -50,3 +50,5 @@
   ui = true
 [pull]
   rebase = true
+[color "diff"]
+	whitespace = red reverse

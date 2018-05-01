@@ -73,6 +73,9 @@ alias pi='cd ~/Code/uminho/1st/2/Programação\ Imperativa'
 alias li='cd ~/Code/tic-tac-logic'
 alias jbb='gcc -Wall -Wextra'
 
+alias svnl='svn log | less'
+alias svnd='svn diff'
+
 # My Functions
 function gi() { curl -L -s https://www.gitignore.io/api/$@ ;}
 
