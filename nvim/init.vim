@@ -39,7 +39,7 @@ Plug 'editorconfig/editorconfig-vim'
 Plug 'bling/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
-Plug 'morhetz/gruvbox'
+Plug 'mhartington/oceanic-next'
 Plug 'ryanoasis/vim-devicons'
 
 " List ends here. Plugins become visible to Vim after this call.
@@ -58,7 +58,7 @@ autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#formatter = 'default'
 let g:airline_powerline_fonts = 1
-let g:airline_theme = "gruvbox"
+let g:airline_theme='oceanicnext'
 
 """ vim-devicons
 let g:webdevicons_enable = 1 " loading the plugin
@@ -83,13 +83,6 @@ let g:vmt_auto_update_on_save = 0
 let g:prettier#config#print_width = 40 " max line length that prettier will wrap on
 let g:prettier#config#tab_width = 2 " number of spaces per indentation level
 let g:prettier#config#use_tabs = 'false' " use tabs over spaces
-
-""" gruvbox (theme)
-let g:gruvbox_bold = 1
-let g:gruvbox_underline = 1
-"let g:gruvbox_italic = 1
-let g:gruvbox_contrast_dark = 'medium'
-let g:gruvbox_italicize_comments = 1
 
 let g:seiya_auto_enable=1
 let g:seiya_target_groups = ['guibg']
@@ -168,7 +161,8 @@ map <C-\> :NERDTreeToggle<CR>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 syntax enable             " enable syntax highlighting
-syntax on
 
-set background=dark
-colorscheme gruvbox
+"set background=dark
+let g:oceanic_next_terminal_bold = 1
+"let g:oceanic_next_terminal_italic = 1
+colorscheme OceanicNext
