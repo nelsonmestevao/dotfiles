@@ -39,7 +39,7 @@ Plug 'editorconfig/editorconfig-vim'
 Plug 'bling/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
-Plug 'mhartington/oceanic-next'
+Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'ryanoasis/vim-devicons'
 
 " List ends here. Plugins become visible to Vim after this call.
@@ -58,7 +58,7 @@ autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#formatter = 'default'
 let g:airline_powerline_fonts = 1
-let g:airline_theme='oceanicnext'
+let g:airline_theme='dracula'
 
 """ vim-devicons
 let g:webdevicons_enable = 1 " loading the plugin
@@ -160,9 +160,7 @@ map <C-\> :NERDTreeToggle<CR>
 " Colors and Fonts                                                             "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-syntax enable             " enable syntax highlighting
-
-"set background=dark
-let g:oceanic_next_terminal_bold = 1
-"let g:oceanic_next_terminal_italic = 1
-colorscheme OceanicNext
+syntax enable
+set background=dark
+let g:dracula_italic = 0
+colorscheme dracula
