@@ -7,6 +7,7 @@ PKG=(
   diffpdf
   odt2txt
   pandoc
+  ranger
   texlive-full
   tree
   wget
