@@ -6,6 +6,7 @@ PKG=(
   curl
   diffpdf
   htop
+  img2txt
   odt2txt
   pandoc
   ranger
