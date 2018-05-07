@@ -5,6 +5,7 @@ PKG=(
   catppt
   curl
   diffpdf
+  htop
   odt2txt
   pandoc
   ranger
