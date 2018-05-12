@@ -127,7 +127,7 @@ bindsym $mod+Shift+8 move container to workspace 8
 bindsym $mod+Shift+9 move container to workspace 9
 bindsym $mod+Shift+0 move container to workspace $workspace10
 
-for_window [class="^.*"] border pixel 10
+for_window [class="^.*"] border pixel 15
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
@@ -162,18 +162,24 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
-set $bg-color            #2f343f
-set $inactive-bg-color   #2f343f
-set $text-color          #f3f4f5
-set $inactive-text-color #676E7D
-set $urgent-bg-color     #E53935
+set $background          #282a36
+set $selection           #44475a
+set $foreground          #f8f8f2
+set $comment             #6272a4
+set $cyan                #8be9fd
+set $green               #50fa7b
+set $orange              #ffb86c
+set $pink                #ff79c6
+set $purple              #bd93f9
+set $red                 #ff5555
+set $yellow              #f1fa8c
 
 # window colors
 #                       border              background         text                 indicator
-client.focused          $bg-color           $bg-color          $text-color          #00ff00
-client.unfocused        $inactive-bg-color  $inactive-bg-color $inactive-text-color #00ff00
-client.focused_inactive $inactive-bg-color  $inactive-bg-color $inactive-text-color #00ff00
-client.urgent           $urgent-bg-color    $urgent-bg-color   $text-color          #00ff00
+client.focused          $selection          $selection         $foreground          $purple
+client.unfocused        $background         $background        $comment             $purple
+client.focused_inactive $background         $background        $comment             $purple
+client.urgent           $red                $red               $foreground          $purple
 
 #hide_edge_borders both
 
@@ -184,12 +190,12 @@ bar {
         tray_output primary
         position top
         colors {
-          background $bg-color
-          separator #757575
+          background $background
+          separator  $pink
           #                  border             background         text
-          focused_workspace  $bg-color          $bg-color          $text-color
-          inactive_workspace $inactive-bg-color $inactive-bg-color $inactive-text-color
-          urgent_workspace   $urgent-bg-color   $urgent-bg-color   $text-color
+          focused_workspace  $selection         $selection         $foreground
+          inactive_workspace $background        $background        $comment
+          urgent_workspace   $red               $red               $foreground
          }
 }
 
