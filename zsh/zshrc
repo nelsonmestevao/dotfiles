@@ -58,6 +58,8 @@ source $ZSH/oh-my-zsh.sh
 # User Configuration
 # ==================
 
+set -o vi
+
 # My Aliases
 alias dot="cd ~/.dotfiles && nvim ."
 alias vim="nvim"
