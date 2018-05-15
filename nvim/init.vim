@@ -160,6 +160,9 @@ nnoremap <C-l> <C-w>l
 
 map <C-\> :NERDTreeToggle<CR>
 
+"""Git
+  autocmd FileType gitcommit setlocal spell
+
 """LaTeX
   " Word count:
   autocmd FileType tex map <F3> :w !detex \| wc -w<CR>
@@ -226,6 +229,7 @@ map <C-\> :NERDTreeToggle<CR>
   autocmd FileType bib inoremap ,c @incollection{<Enter><tab>author<Space>=<Space>"<++>",<Enter><tab>title<Space>=<Space>"<++>",<Enter><tab>booktitle<Space>=<Space>"<++>",<Enter><tab>editor<Space>=<Space>"<++>",<Enter><tab>year<Space>=<Space>"<++>",<Enter><tab>publisher<Space>=<Space>"<++>",<Enter><tab>}<Enter><++><Esc>8kA,<Esc>i
 
 "MARKDOWN
+  autocmd BufRead,BufNewFile *.md,*rmd setlocal spell
   autocmd Filetype markdown,rmd inoremap ,i ![](<++>)<++><Esc>F[a
   autocmd Filetype markdown,rmd inoremap ,a [](<++>)<++><Esc>F[a
   autocmd Filetype markdown,rmd inoremap ,1 #<Space><Enter><++><Esc>kA
