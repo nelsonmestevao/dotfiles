@@ -5,6 +5,7 @@ PKG=(
   catppt
   curl
   diffpdf
+  haskell-platform
   htop
   img2txt
   odt2txt
@@ -13,6 +14,7 @@ PKG=(
   texlive-full
   tree
   wget
+  xclip
   xls2csv
 )
 
