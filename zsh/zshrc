@@ -62,6 +62,7 @@ set -o vi
 
 # My Aliases
 alias dot="cd ~/.dotfiles && nvim ."
+alias spl="cd ~/.spells && nvim ."
 alias vim="nvim"
 alias v="nvim"
 alias c="cd ~/Code && ls -l"
@@ -70,7 +71,7 @@ alias r="ranger ."
 alias cv="cd ~/Code/curriculum-vitae/ && ls -l"
 alias ocv="cd ~/Code/online-curriculum/ && ls -l"
 alias backup="git add --all && git commit -am ':hammer_and_wrench: [WIP] Done for today, cya tomorrow :wave:' && git push"
-alias atualizar="cd ~/Code/tic-tac-logic && git checkout master && cd src && make clean && cd .. && git fetch && git pull && cd ~/Code/2018li2g077 && svn update && rm -rf src && cp -r ~/Code/tic-tac-logic/src . && svn add --force . && svn commit -m"
+alias atualizar="cd ~/Code/tic-tac-logic && git checkout master && cd src && make clean && cd .. && git fetch && git pull && cd ~/Code/2018li2g077 && svn update && rm -rf src && rm -rf gerar && cp -r ~/Code/tic-tac-logic/src . && cp -r ~/Code/tic-tac-logic/gerar . && svn add --force . && svn commit -m"
 alias um='cd ~/Code/uminho/1st/2'
 alias pi='cd ~/Code/uminho/1st/2/Programação\ Imperativa'
 alias li='cd ~/Code/tic-tac-logic'
