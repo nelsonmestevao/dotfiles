@@ -51,9 +51,4 @@
 [pull]
   rebase = true
 [color "diff"]
-	whitespace = red reverse
-[filter "lfs"]
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-	process = git-lfs filter-process
-	required = true
+  whitespace = red reverse
