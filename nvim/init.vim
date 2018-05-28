@@ -20,6 +20,8 @@ Plug 'justinmk/vim-syntax-extra', { 'for': ['c', 'cpp', 'flex'] }
 Plug 'neomake/neomake'
 
 Plug 'tpope/vim-git'
+"Plug 'elixir-editors/vim-elixir'
+"Plug 'slashmili/alchemist.vim'
 Plug 'mzlogin/vim-markdown-toc'
 
 Plug 'jiangmiao/auto-pairs'
@@ -30,6 +32,7 @@ Plug 'chrisbra/Colorizer'
 
 Plug 'scrooloose/nerdtree'
 Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'ctrlpvim/ctrlp.vim'
 
 Plug 'tpope/vim-fugitive'
@@ -61,8 +64,30 @@ let g:airline_powerline_fonts = 1
 let g:airline_theme='dracula'
 
 """ vim-devicons
-let g:webdevicons_enable = 1 " loading the plugin
-let g:webdevicons_enable_nerdtree = 1 " adding the flags to NERDTree
+let g:webdevicons_enable = 1
+let g:webdevicons_enable_nerdtree = 1
+let g:webdevicons_enable_unite = 1
+let g:webdevicons_enable_vimfiler = 1
+let g:webdevicons_enable_airline_tabline = 1
+let g:webdevicons_enable_airline_statusline = 1
+let g:webdevicons_enable_ctrlp = 1
+let g:webdevicons_enable_flagship_statusline = 1
+let g:WebDevIconsUnicodeDecorateFileNodes = 1
+let g:WebDevIconsUnicodeGlyphDoubleWidth = 1
+let g:webdevicons_conceal_nerdtree_brackets = 1
+let g:WebDevIconsNerdTreeAfterGlyphPadding = '  '
+let g:WebDevIconsNerdTreeGitPluginForceVAlign = 1
+let g:webdevicons_enable_denite = 1
+let g:WebDevIconsUnicodeDecorateFolderNodes = 1
+let g:DevIconsEnableFoldersOpenClose = 1
+let g:DevIconsEnableFolderPatternMatching = 1
+let g:DevIconsEnableFolderExtensionPatternMatching = 1
+let WebDevIconsUnicodeDecorateFolderNodesExactMatches = 1
+let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols = {} " needed
+let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['ex'] = ''
+let g:WebDevIconsUnicodeDecorateFileNodesExactSymbols = {} " needed
+let g:WebDevIconsUnicodeDecorateFileNodesExactSymbols['MyReallyCoolFile.okay'] = 'ƛ'
+
 
 """ Colorizer
 let g:colorizer_auto_filetype='css,html,scss,slim,sass,less'
@@ -70,6 +95,8 @@ let g:colorizer_auto_filetype='css,html,scss,slim,sass,less'
 """ NERDTree
 "let NERDTreeShowHidden=1
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+let g:NERDTreeDirArrowExpandable = nr2char(8200)
+let g:NERDTreeDirArrowCollapsible = nr2char(8200)
 
 """ Neomaker
 call neomake#configure#automake('w') " When writing a buffer
