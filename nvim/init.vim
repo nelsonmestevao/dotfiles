@@ -20,8 +20,9 @@ Plug 'justinmk/vim-syntax-extra', { 'for': ['c', 'cpp', 'flex'] }
 Plug 'neomake/neomake'
 
 Plug 'tpope/vim-git'
-"Plug 'elixir-editors/vim-elixir'
-"Plug 'slashmili/alchemist.vim'
+Plug 'elixir-editors/vim-elixir'
+Plug 'mhinz/vim-mix-format'
+Plug 'mhinz/vim-mix-format'
 Plug 'mzlogin/vim-markdown-toc'
 
 Plug 'jiangmiao/auto-pairs'
