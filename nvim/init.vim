@@ -18,10 +18,11 @@ Plug 'prettier/prettier'
 Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 Plug 'justinmk/vim-syntax-extra', { 'for': ['c', 'cpp', 'flex'] }
 Plug 'neomake/neomake'
+Plug 'w0rp/ale'
 
 Plug 'tpope/vim-git'
 Plug 'elixir-editors/vim-elixir'
-Plug 'mhinz/vim-mix-format'
+Plug 'neovimhaskell/haskell-vim'
 Plug 'mhinz/vim-mix-format'
 Plug 'mzlogin/vim-markdown-toc'
 
@@ -88,7 +89,6 @@ let WebDevIconsUnicodeDecorateFolderNodesExactMatches = 1
 "let g:WebDevIconsUnicodeDecorateFileNodesExactSymbols = {} " needed
 "let g:WebDevIconsUnicodeDecorateFileNodesExactSymbols['.gitignore'] = ''
 
-
 """ Colorizer
 let g:colorizer_auto_filetype='css,html,scss,slim,sass,less'
 
@@ -105,6 +105,15 @@ call neomake#configure#automake('rw', 1000) " When reading a buffer (after 1s), 
 
 """ vim-markdown-toc
 let g:vmt_auto_update_on_save = 0
+
+"""" vim-haskell
+let g:haskell_enable_quantification = 1   " to enable highlighting of `forall`
+let g:haskell_enable_recursivedo = 1      " to enable highlighting of `mdo` and `rec`
+let g:haskell_enable_arrowsyntax = 1      " to enable highlighting of `proc`
+let g:haskell_enable_pattern_synonyms = 1 " to enable highlighting of `pattern`
+let g:haskell_enable_typeroles = 1        " to enable highlighting of type roles
+let g:haskell_enable_static_pointers = 1  " to enable highlighting of `static`
+let g:haskell_backpack = 1                " to enable highlighting of backpack keywords
 
 """ vim-prettier
 let g:prettier#config#print_width = 40 " max line length that prettier will wrap on
@@ -271,5 +280,6 @@ map <C-\> :NERDTreeToggle<CR>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 syntax enable
+filetype plugin indent on
 colorscheme onehalfdark
 let g:airline_theme='onehalfdark'
