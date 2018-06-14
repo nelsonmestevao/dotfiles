@@ -73,10 +73,9 @@ alias cv="cd ~/Code/curriculum-vitae/ && ls -l"
 alias ocv="cd ~/Code/online-curriculum/ && ls -l"
 alias backup="git add --all && git commit -am ':hammer_and_wrench: [WIP] Done for today, cya tomorrow :wave:' && git push"
 alias atualizar="cd ~/Code/tic-tac-logic && git checkout master && cd src && make clean && cd .. && git fetch && git pull && cd ~/Code/2018li2g077 && svn update && rm -rf src && rm -rf gerar && cp -r ~/Code/tic-tac-logic/src . && cp -r ~/Code/tic-tac-logic/gerar . && svn add --force . && svn commit -m"
-alias um='cd ~/Code/uminho/1st/2'
-alias pi='cd ~/Code/uminho/1st/2/Programação\ Imperativa'
-alias li='cd ~/Code/tic-tac-logic'
-alias jbb='gcc -Wall -Wextra'
+alias um='cd ~/Code/uminho/'
+alias li1='cd ~/Code/uminho/1st/1/Laboratórios\ de\ Informática\ I/Project'
+alias li2='cd ~/Code/uminho/1st/2/Laboratórios\ de\ Informática\ II/Project'
 
 alias svnl='svn log | less'
 alias svnd='svn diff'
