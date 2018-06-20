@@ -36,7 +36,10 @@ bindsym $mod+Return exec i3-sensible-terminal
 bindsym $mod+Shift+q kill
 
 # lock
-bindsym $mod+Shift+x exec i3lock --color 475263
+bindsym $mod+x exec i3lock --color 475263
+
+bindsym $mod+e exec nemo
+bindsym $mod+i exec cinnamon-settings
 
 # start dmenu (a program launcher)
 #bindsym $mod+d exec dmenu_run
