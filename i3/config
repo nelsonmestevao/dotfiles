@@ -228,6 +228,7 @@ bindsym Print exec screenshot
 
 exec_always feh --bg-fill ~/Pictures/wallpaper.jpg
 exec_always compton
+exec_always --no-startup-id albert
 
 exec xrandr --output HDMI1 --auto --right-of eDP1
 
