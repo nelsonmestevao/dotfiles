@@ -119,7 +119,7 @@ bindsym $mod+9 workspace 9
 bindsym $mod+0 workspace $workspace10
 
 assign [class="Slack"]   $workspace1
-assign [class="Spotify"] $workspace10
+for_window [class="Spotify"] move to workspace $workspace10
 
 # move focused container to workspace
 bindsym $mod+Shift+1 move container to workspace $workspace1
