@@ -2,7 +2,8 @@
 
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/pwittchen/spotify-cli-linux/master/install.sh)"
 
-sudo apt-get install tmux
+echo "Installing Tmux..."
+sudo apt-get install tmux -yqq
 
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
