@@ -16,7 +16,7 @@
   c = commit
   cl = clone
   p = push
-  pl = pull
+  l = pull
   rb = rebase
   st = status
   conflicts = diff --name-only --diff-filter=U
@@ -46,9 +46,14 @@
   textconv = catppt
 [push]
   default = simple
-[color]
-  ui = true
 [pull]
   rebase = true
+[color]
+  ui = true
 [color "diff"]
   whitespace = red reverse
+[filter "lfs"]
+  smudge = git-lfs smudge -- %f
+  process = git-lfs filter-process
+  required = true
+  clean = git-lfs clean -- %f
