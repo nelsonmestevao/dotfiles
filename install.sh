@@ -2,12 +2,13 @@
 
 source packages.sh
 
-sudo apt update && sudo apt upgrade -y
+echo "Updating packages..."
+sudo apt update -qq && sudo apt upgrade -yqq
 
 for pkg in "${PKG[@]}"
 do
   echo "Installing ${pkg}..."
-  sudo apt install $pkg -y
+  sudo apt install $pkg -yqq
 done
 
 SAVED_DIR=$PWD
