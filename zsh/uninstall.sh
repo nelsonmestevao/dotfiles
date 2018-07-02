@@ -6,4 +6,4 @@ rm -rf ~/.oh-my-zsh
 
 unlink ~/.zshrc
 
-chsh -s `which bash`
+chsh -s "$(which bash)"
