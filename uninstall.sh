@@ -6,6 +6,7 @@ for pkg in "${PKG[@]}"
 do
   echo "Uninstalling ${pkg}..."
   sudo apt remove $pkg -y
+  sudo apt autoremove
 done
 
 SAVED_DIR=$PWD
