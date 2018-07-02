@@ -2,7 +2,7 @@
 
 sudo apt-get remove zsh
 
-rm -rf ~/.oh-my-zsh/custom/themes/powerlevel9k
+rm -rf ~/.oh-my-zsh
 
 unlink ~/.zshrc
 
