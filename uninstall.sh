@@ -5,7 +5,7 @@ source packages.sh
 for pkg in "${PKG[@]}"
 do
   echo "Uninstalling ${pkg}..."
-  sudo apt remove $pkg -y
+  sudo apt remove "$pkg" -y
   sudo apt autoremove
 done
 
@@ -17,7 +17,7 @@ dirs=$(find . -maxdepth 1 -mindepth 1 -type d -not -name '.git' -print)
 for dir in $dirs
 do
   echo "Uninstalling ${dir}..."
-  sh $dir/uninstall.sh
+  sh "$dir"/uninstall.sh
 done
 
-cd $SAVED_DIR
+cd "$SAVED_DIR"

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PKG=(
+export PKG=(
   catdoc
   catppt
   curl

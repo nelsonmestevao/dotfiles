@@ -9,4 +9,4 @@ git clone https://github.com/bhilburn/powerlevel9k.git ~/.oh-my-zsh/custom/theme
 
 ln -sfT ~/.dotfiles/zsh/zshrc ~/.zshrc
 
-chsh -s `which zsh`
+chsh -s "$(which zsh)"
