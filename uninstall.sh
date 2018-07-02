@@ -2,12 +2,10 @@
 
 source packages.sh
 
-sudo apt update && sudo apt upgrade -y
-
 for pkg in "${PKG[@]}"
 do
-  echo "Installing ${pkg}..."
-  sudo apt install $pkg -y
+  echo "Uninstalling ${pkg}..."
+  sudo apt remove $pkg -y
 done
 
 SAVED_DIR=$PWD
@@ -17,8 +15,8 @@ cd ~/.dotfiles
 dirs=$(find . -maxdepth 1 -mindepth 1 -type d -not -name '.git' -print)
 for dir in $dirs
 do
-  echo "Installing ${dir}..."
-  sh $dir/install.sh
+  echo "Uninstalling ${dir}..."
+  sh $dir/uninstall.sh
 done
 
 cd $SAVED_DIR
