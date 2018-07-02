@@ -4,7 +4,9 @@
   </a>
 </div>
 
-## Setup
+> ~ is where the :heart: is
+
+## Install
 
 ```shell
 git clone https://github.com/nelsonmestevao/dotfiles ~/.dotfiles
@@ -12,3 +14,11 @@ cd ~/.dotfiles
 sh install.sh
 ```
 
+## Uninstall
+
+```shell
+cd ~/.dotfiles
+sh uninstall.sh
+cd ~
+rm -rf ~/.dotfiles
+```
