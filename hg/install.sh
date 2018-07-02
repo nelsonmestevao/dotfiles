@@ -1,5 +1,5 @@
 #!/bin/bash
 
-apt install mercurial
+sudo apt-get install mercurial
 
 ln -sfT ~/.dotfiles/hg/hgrc ~/.hgrc
