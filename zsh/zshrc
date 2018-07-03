@@ -1,11 +1,12 @@
-#              _              
-#             | |             
-#      _______| |__  _ __ ___ 
+#              _
+#             | |
+#      _______| |__  _ __ ___
 #     |_  / __| '_ \| '__/ __|
-#    _ / /\__ \ | | | | | (__ 
+#    _ / /\__ \ | | | | | (__
 #   (_)___|___/_| |_|_|  \___|
 
 export DOTFILES="$HOME/.dotfiles"
+export PATH=$PATH:$HOME/.spells
 
 source $DOTFILES/zsh/plugins.zsh
 source $DOTFILES/zsh/theme.zsh
