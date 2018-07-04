@@ -16,7 +16,7 @@ alias r="ranger ."
 alias cv="cd ~/Code/curriculum-vitae/ && ls -l"
 alias ocv="cd ~/Code/online-curriculum/ && ls -l"
 
-alias backup="git add --all && git commit -am ':hammer_and_wrench: [WIP] Done for today, cya tomorrow :wave:' && git push"
+alias backup="git add --all && git commit -am ':wrench: [WIP] Done for today, cya tomorrow [ci skip] :wave:' && git push"
 
 alias um='cd ~/Code/uminho/'
 alias li1='cd ~/Code/uminho/1st/1/Laboratórios\ de\ Informática\ I/Project'
