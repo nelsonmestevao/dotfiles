@@ -6,7 +6,6 @@ export PKG=(
   curl
   diffpdf
   exuberant-ctags
-  haskell-platform
   htop
   img2txt
   lighttpd
