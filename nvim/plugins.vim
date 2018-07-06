@@ -98,6 +98,8 @@ Plug 'jelera/vim-javascript-syntax'
 Plug 'prettier/vim-prettier', { 'do': 'npm install' }
 
 " Markdown
+Plug 'godlygeek/tabular'
+Plug 'plasticboy/vim-markdown'
 Plug 'vim-pandoc/vim-pandoc', {'for': ['latex','tex','rmarkdown','markdown']}
 Plug 'vim-pandoc/vim-pandoc-syntax', {'for': ['latex','tex','rmarkdown','markdown']}
 
@@ -173,4 +175,12 @@ let g:syntastic_style_error_symbol = '✗'
 let g:syntastic_style_warning_symbol = '⚠'
 let g:syntastic_auto_loc_list=1
 let g:syntastic_aggregate_errors = 1
+
+""" Vim Markdown
+let g:vim_markdown_math = 1
+let g:vim_markdown_toc_autofit = 1
+let g:vim_markdown_frontmatter = 1
+let g:vim_markdown_folding_disabled = 1
+let g:vim_markdown_toml_frontmatter = 1
+let g:vim_markdown_json_frontmatter = 1
 
