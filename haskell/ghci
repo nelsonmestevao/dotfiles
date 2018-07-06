@@ -1,3 +1,3 @@
-:set prompt  "\SOH\ESC]0;GHCi: %s\BEL\ESC[32;1m\STXλ>\SOH\ESC[0m\STX "
+:set prompt "\ESC[1;35mλ\ESC[2;35m: \ESC[0m"
 :set +s
 :set +t
