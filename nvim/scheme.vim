@@ -28,10 +28,12 @@ set listchars+=tab:>-
 set listchars+=trail:•
 set listchars+=nbsp:•
 
-colorscheme onehalfdark
+set background=dark
+colorscheme gruvbox
+let g:gruvbox_contrast_dark = 'hard'
 
 """ vim-airline
-let g:airline_theme='onehalfdark'
+let g:airline_theme='gruvbox'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#formatter = 'default'
 let g:airline_powerline_fonts = 1
