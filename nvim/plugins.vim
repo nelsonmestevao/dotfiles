@@ -2,109 +2,133 @@
 " Plugins                                                                     "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-if empty(glob('~/.config/nvim/autoload/plug.vim'))
-  silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
+"" Vim-Plug
+if !filereadable(expand('~/.config/nvim/autoload/plug.vim'))
+  if !executable("curl")
+    echoerr "You have to install curl or first install vim-plug yourself!"
+    execute "q!"
+  endif
+  echo "Installing Vim-Plug..."
+  echo ""
+  silent !\curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall | nested source $MYVIMRC
+  autocmd VimEnter * PlugInstall
 endif
 
-" Plugins will be downloaded under the specified directory.
-call plug#begin('~/.local/share/nvim/plugged')
+" Plugins Install Packages
+call plug#begin(expand('~/.config/nvim/plugged'))
 
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'sheerun/vim-polyglot'
-Plug 'honza/vim-snippets'
-Plug 'prettier/prettier'
-Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
-Plug 'justinmk/vim-syntax-extra', { 'for': ['c', 'cpp', 'flex'] }
-Plug 'neomake/neomake'
-Plug 'w0rp/ale'
-
-Plug 'tpope/vim-git'
-Plug 'elixir-editors/vim-elixir'
-Plug 'neovimhaskell/haskell-vim'
-Plug 'mhinz/vim-mix-format'
-Plug 'mzlogin/vim-markdown-toc'
-
-Plug 'jiangmiao/auto-pairs'
-Plug 'tpope/vim-surround'
+" IDE like plugins
+Plug 'majutsushi/tagbar'
 Plug 'tpope/vim-endwise'
-Plug 'scrooloose/nerdcommenter'
-Plug 'chrisbra/Colorizer'
+Plug 'tpope/vim-surround'
+Plug 'Yggdroot/indentLine'
+Plug 'tpope/vim-commentary'
+Plug 'Raimondi/delimitMate'
+Plug 'terryma/vim-multiple-cursors'
+Plug 'bronson/vim-trailing-whitespace'
 
-Plug 'scrooloose/nerdtree'
-Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
-Plug 'ctrlpvim/ctrlp.vim'
+" Autocomplete
+Plug 'w0rp/ale'
+" Plug 'neomake/neomake'
+Plug 'sheerun/vim-polyglot'
+Plug 'vim-syntastic/syntastic'
+" Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 
-Plug 'tpope/vim-fugitive'
+"" Snippets
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
 
+" EditorConfig
 Plug 'editorconfig/editorconfig-vim'
 
-Plug 'bling/vim-airline'
+" Git
+Plug 'tpope/vim-git'
+Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
+
+" NERDTree
+Plug 'scrooloose/nerdtree'
+Plug 'jistr/vim-nerdtree-tabs'
+Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+
+" Vim Terminal
+" Plug 'Shougo/deol.nvim'
+
+" Vim-Session
+Plug 'xolox/vim-misc'
+Plug 'xolox/vim-session'
+
+" vim-airline
+Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
+" Color Scheme
 Plug 'sonph/onehalf', {'rtp': 'vim/'}
 Plug 'ryanoasis/vim-devicons'
 
-" List ends here. Plugins become visible to Vim after this call.
+""" Languages
+
+" C
+Plug 'vim-scripts/c.vim', {'for': ['c', 'cpp']}
+Plug 'ludwig/split-manpage.vim'
+" Plug 'justinmk/vim-syntax-extra', { 'for': ['c', 'cpp', 'flex'] }
+
+" Elixir
+Plug 'elixir-editors/vim-elixir'
+Plug 'carlosgaldino/elixir-snippets'
+
+" Haskell
+Plug 'dag/vim2hs'
+Plug 'eagletmt/neco-ghc'
+" Plug 'neovimhaskell/haskell-vim'
+Plug 'pbrisbin/vim-syntax-shakespeare'
+
+" HTML
+Plug 'tpope/vim-haml'
+Plug 'mattn/emmet-vim'
+Plug 'hail2u/vim-css3-syntax'
+Plug 'gorodinskiy/vim-coloresque'
+
+" JavaScript
+Plug 'jelera/vim-javascript-syntax'
+Plug 'prettier/vim-prettier', { 'do': 'npm install' }
+
+" Markdown
+Plug 'vim-pandoc/vim-pandoc', {'for': ['latex','tex','rmarkdown','markdown']}
+Plug 'vim-pandoc/vim-pandoc-syntax', {'for': ['latex','tex','rmarkdown','markdown']}
+
+" Python
+Plug 'davidhalter/jedi-vim'
+Plug 'raimon49/requirements.txt.vim', {'for': 'requirements'}
+
+" Ruby
+Plug 'tpope/vim-rails'
+Plug 'tpope/vim-rake'
+Plug 'tpope/vim-projectionist'
+Plug 'thoughtbot/vim-rspec'
+Plug 'ecomba/vim-ruby-refactoring'
+
 call plug#end()
 
 """ deoplete
-let g:deoplete#enable_at_startup = 1
-" use tab to forward cycle
-inoremap <silent><expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
-" use tab to backward cycle
-inoremap <silent><expr><s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
-" Close the documentation window when completion is done
-autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
-
-""" vim-airline
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#formatter = 'default'
-let g:airline_powerline_fonts = 1
-
-""" vim-devicons
-let g:webdevicons_enable = 1
-let g:webdevicons_enable_nerdtree = 1
-let g:webdevicons_enable_unite = 1
-let g:webdevicons_enable_vimfiler = 1
-let g:webdevicons_enable_airline_tabline = 1
-let g:webdevicons_enable_airline_statusline = 1
-let g:webdevicons_enable_ctrlp = 1
-let g:webdevicons_enable_flagship_statusline = 1
-let g:WebDevIconsUnicodeDecorateFileNodes = 1
-let g:WebDevIconsUnicodeGlyphDoubleWidth = 1
-let g:webdevicons_conceal_nerdtree_brackets = 1
-let g:WebDevIconsNerdTreeAfterGlyphPadding = '  '
-let g:WebDevIconsNerdTreeGitPluginForceVAlign = 1
-let g:webdevicons_enable_denite = 1
-let g:WebDevIconsUnicodeDecorateFolderNodes = 1
-let g:DevIconsEnableFoldersOpenClose = 1
-let g:DevIconsEnableFolderPatternMatching = 1
-let g:DevIconsEnableFolderExtensionPatternMatching = 1
-let WebDevIconsUnicodeDecorateFolderNodesExactMatches = 1
-"let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols = {} " needed
-"let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['ex'] = ''
-"let g:WebDevIconsUnicodeDecorateFileNodesExactSymbols = {} " needed
-"let g:WebDevIconsUnicodeDecorateFileNodesExactSymbols['.gitignore'] = ''
-
-""" Colorizer
-let g:colorizer_auto_filetype='css,html,scss,slim,sass,less'
+" let g:deoplete#enable_at_startup = 1
 
 """ NERDTree
 "let NERDTreeShowHidden=1
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+let g:NERDTreeChDirMode=2
+let g:NERDTreeIgnore=['\.rbc$', '\~$', '\.pyc$', '\.db$', '\.sqlite$', '__pycache__']
+let g:NERDTreeSortOrder=['^__\.py$', '\/$', '*', '\.swp$', '\.bak$', '\~$']
+let g:NERDTreeShowBookmarks=1
+let g:nerdtree_tabs_focus_on_files=1
+let g:NERDTreeMapOpenInTabSilent = '<RightMouse>'
+let g:NERDTreeWinSize = 40
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc,*.db,*.sqlite
 let g:NERDTreeDirArrowExpandable = nr2char(8200)
 let g:NERDTreeDirArrowCollapsible = nr2char(8200)
-
-""" Neomaker
-call neomake#configure#automake('w') " When writing a buffer
-call neomake#configure#automake('nw', 750) " When writing a buffer, and on normal mode changes (after 750ms)
-call neomake#configure#automake('rw', 1000) " When reading a buffer (after 1s), and when writing
-
-""" vim-markdown-toc
-let g:vmt_auto_update_on_save = 0
 
 """" vim-haskell
 let g:haskell_enable_quantification = 1   " to enable highlighting of `forall`
@@ -116,9 +140,36 @@ let g:haskell_enable_static_pointers = 1  " to enable highlighting of `static`
 let g:haskell_backpack = 1                " to enable highlighting of backpack keywords
 
 """ vim-prettier
-let g:prettier#config#print_width = 40 " max line length that prettier will wrap on
-let g:prettier#config#tab_width = 2 " number of spaces per indentation level
+let g:prettier#config#print_width = 40   " max line length that prettier will wrap on
+let g:prettier#config#tab_width = 2      " number of spaces per indentation level
 let g:prettier#config#use_tabs = 'false' " use tabs over spaces
 
-let g:seiya_auto_enable=1
-let g:seiya_target_groups = ['guibg']
+""" Tagbar
+let g:tagbar_autofocus = 1
+
+""" Session management
+let g:session_directory = "~/.config/nvim/session"
+let g:session_autoload = "no"
+let g:session_autosave = "no"
+let g:session_command_aliases = 1
+
+""" fzf.vim
+set wildmode=list:longest,list:full
+set wildignore+=*.o,*.obj,.git,*.rbc,*.pyc,__pycache__
+let $FZF_DEFAULT_COMMAND =  "find * -path '*/\.*' -prune -o -path 'node_modules/**' -prune -o -path 'target/**' -prune -o -path 'dist/**' -prune -o  -type f -print -o -type l -print 2> /dev/null"
+
+""" Snippets
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsJumpBackwardTrigger="<c-b>"
+let g:UltiSnipsEditSplit="vertical"
+
+""" Syntastic
+let g:syntastic_always_populate_loc_list=1
+let g:syntastic_error_symbol='✗'
+let g:syntastic_warning_symbol='⚠'
+let g:syntastic_style_error_symbol = '✗'
+let g:syntastic_style_warning_symbol = '⚠'
+let g:syntastic_auto_loc_list=1
+let g:syntastic_aggregate_errors = 1
+

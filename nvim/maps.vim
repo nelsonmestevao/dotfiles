@@ -1,27 +1,33 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Keymap                                                                      "
+" Keymaps                                                                     "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-nnoremap tn :tabnew<Space>
+" Map leader
+let mapleader="\<space>"
+let maplocalleader=','
 
-nnoremap tk :tabnext<CR>
-nnoremap tj :tabprev<CR>
-
-nnoremap th :tabfirst<CR>
-nnoremap tl :tablast<CR>
-
+" Because <Esc> it too far away
 inoremap kj <Esc>
 cnoremap kj <Esc>
 
-nnoremap <c-s> :w<CR>
-inoremap <c-s> <Esc>:w<CR>a
-vnoremap <c-s> <Esc>:w<CR>
-
+" Ups?
 tnoremap <Esc> <C-\><C-n>
 
-" A syntax for placeholders
-" Pressing Control-j jumps to the next match.
-inoremap <c-j> <Esc>/<++><CR><Esc>cf>
+"" no one is really happy until you have this shortcuts
+cnoreabbrev W! w!
+cnoreabbrev Q! q!
+cnoreabbrev Qall! qall!
+cnoreabbrev Wq wq
+cnoreabbrev Wa wa
+cnoreabbrev wQ wq
+cnoreabbrev WQ wq
+cnoreabbrev W w
+cnoreabbrev Q q
+cnoreabbrev Qall qall
+
+" Split
+noremap <Leader>h :<C-u>split<CR>
+noremap <Leader>v :<C-u>vsplit<CR>
 
 " Better pane movement
 nnoremap <C-h> <C-w>h
@@ -29,12 +35,161 @@ nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 
-map <C-\> :NERDTreeToggle<CR>
+" Better pane switching
+nnoremap <M-h> <C-w>H
+nnoremap <M-j> <C-w>J
+nnoremap <M-k> <C-w>K
+nnoremap <M-l> <C-w>L
 
-"""Git
-  autocmd FileType gitcommit setlocal spell
+" Tab management
+nnoremap tn :tabnew<Space>
+nnoremap tk :tabnext<CR>
+nnoremap th :tabfirst<CR>
+nnoremap tl :tablast<CR>
+nnoremap <Tab> gt
+nnoremap <S-Tab> gT
+nnoremap <silent> <S-t> :tabnew<CR>
 
-"""LaTeX
+"" Buffer nav
+noremap <leader>z :bp<CR>
+noremap <leader>q :bp<CR>
+noremap <leader>x :bn<CR>
+noremap <leader>w :bn<CR>
+noremap <leader>c :bd<CR>
+
+"" Clean search (highlight)
+nnoremap <localleader><leader> :noh<cr>
+
+" terminal emulation
+nnoremap <silent> <leader>sh :terminal<CR>
+
+" Search mappings: These will make it so that going to the next one in a
+" search will center on the line it's found in.
+nnoremap n nzzzv
+nnoremap N Nzzzv
+
+" Vmap for maintain Visual Mode after shifting > and <
+vmap < <gv
+vmap > >gv
+
+"" Move visual block
+vnoremap J :m '>+1<CR>gv=gv
+vnoremap K :m '<-2<CR>gv=gv
+
+" Save it
+nnoremap <C-s> :w<CR>
+inoremap <C-s> <Esc>:w<CR>a
+vnoremap <C-s> <Esc>:w<CR>
+
+"" Copy/Paste/Cut
+if has('unnamedplus')
+  set clipboard=unnamed,unnamedplus
+endif
+
+noremap YY "+y<CR>
+noremap <leader>p "+gP<CR>
+noremap XX "+x<CR>
+
+" Rename the current file
+noremap <Leader>r :call Rename()<CR>
+
+" Refresh the browser
+nnoremap <localleader>r :silent !browser.refresh<CR>
+
+" NERDTree
+noremap <C-\> :NERDTreeTabsToggle<CR>
+noremap <leader><C-\>   :NERDTreeTabsFind<CR>
+
+" Git
+noremap <Leader>ga :Gwrite<CR>
+noremap <Leader>gc :Gcommit<CR>
+noremap <Leader>gsh :Gpush<CR>
+noremap <Leader>gll :Gpull<CR>
+noremap <Leader>gs :Gstatus<CR>
+noremap <Leader>gb :Gblame<CR>
+noremap <Leader>gd :Gvdiff<CR>
+noremap <Leader>gr :Gremove<CR>
+
+" Tagbar
+nmap <C-t> :TagbarToggle<CR>
+
+" FZF
+nnoremap <leader>e :Files<CR>
+
+" Session management
+nnoremap <leader>so :OpenSession<Space>
+nnoremap <leader>ss :SaveSession<Space>
+nnoremap <leader>sd :DeleteSession<CR>
+nnoremap <leader>sc :CloseSession<CR>
+
+" A syntax for placeholders
+" Pressing Control-j jumps to the next match.
+inoremap <c-j> <Esc>/<++><CR><Esc>cf>
+
+"" Set working directory
+nnoremap <leader>. :lcd %:p:h<CR>
+
+"" Opens an edit command with the path of the currently edited file filled in
+noremap <Leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
+
+"" Opens a tab edit command with the path of the currently edited file filled
+noremap <Leader>te :tabe <C-R>=expand("%:p:h") . "/" <CR>
+
+"" The PC is fast enough, do syntax highlight syncing from start unless 200 lines
+augroup vimrc-sync-fromstart
+  autocmd!
+  autocmd BufEnter * :syntax sync maxlines=200
+augroup END
+
+"" Remember cursor position
+augroup vimrc-remember-cursor-position
+  autocmd!
+  autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
+augroup END
+
+"" txt
+augroup vimrc-wrapping
+  autocmd!
+  autocmd BufRead,BufNewFile *.txt call s:setupWrapping()
+augroup END
+
+"" make/cmake
+augroup vimrc-make-cmake
+  autocmd!
+  autocmd FileType make setlocal noexpandtab
+  autocmd BufNewFile,BufRead CMakeLists.txt setlocal filetype=cmake
+augroup END
+
+""" Languages Configs
+
+"" C
+autocmd FileType c setlocal tabstop=4 shiftwidth=4 expandtab
+autocmd FileType cpp setlocal tabstop=4 shiftwidth=4 expandtab
+
+"" Elixir
+
+"" Haskell
+let g:haskell_conceal_wide = 1
+let g:haskell_multiline_strings = 1
+let g:necoghc_enable_detailed_browse = 1
+autocmd Filetype haskell setlocal omnifunc=necoghc#omnifunc
+
+"" Git
+autocmd FileType gitcommit setlocal spell
+
+"" html
+autocmd Filetype html setlocal ts=2 sw=2 expandtab
+
+"" JavaScript
+let g:javascript_enable_domhtmlcss = 1
+
+" vim-javascript
+augroup vimrc-javascript
+  autocmd!
+  autocmd FileType javascript set tabstop=4|set shiftwidth=4|set expandtab softtabstop=4
+augroup END
+
+"" LaTeX
   " Word count:
   autocmd FileType tex map <F3> :w !detex \| wc -w<CR>
   autocmd FileType tex inoremap <F3> <Esc>:w !detex \| wc -w<CR>
@@ -76,8 +231,8 @@ map <C-\> :NERDTreeToggle<CR>
   autocmd FileType tex inoremap ;nu $\varnothing$
   autocmd FileType tex inoremap ;col \begin{columns}[T]<Enter>\begin{column}{.5\textwidth}<Enter><Enter>\end{column}<Enter>\begin{column}{.5\textwidth}<Enter><++><Enter>\end{column}<Enter>\end{columns}<Esc>5kA
   autocmd FileType tex inoremap ;rn (\ref{})<++><Esc>F}i
-"""LATEX Logical symbols
-  autocmd FileType tex inoremap ;m $$<Space><++><Esc>2T$i 
+  " LaTeX Logical symbols
+  autocmd FileType tex inoremap ;m $$<Space><++><Esc>2T$i
   autocmd FileType tex inoremap ;M $$$$<Enter><Enter><++><Esc>2k$hi
   autocmd FileType tex inoremap ;neg {\neg}
   autocmd FileType tex inoremap ;V {\vee}
@@ -94,12 +249,12 @@ map <C-\> :NERDTreeToggle<CR>
   autocmd FileType tex inoremap ;gt	{\textgreater}
   autocmd FileType tex inoremap ;lt	{\textless}
 
-""".bib
+" .bib
   autocmd FileType bib inoremap ,a @article{<Enter><tab>author<Space>=<Space>"<++>",<Enter><tab>year<Space>=<Space>"<++>",<Enter><tab>title<Space>=<Space>"<++>",<Enter><tab>journal<Space>=<Space>"<++>",<Enter><tab>volume<Space>=<Space>"<++>",<Enter><tab>pages<Space>=<Space>"<++>",<Enter><tab>}<Enter><++><Esc>8kA,<Esc>i
   autocmd FileType bib inoremap ,b @book{<Enter><tab>author<Space>=<Space>"<++>",<Enter><tab>year<Space>=<Space>"<++>",<Enter><tab>title<Space>=<Space>"<++>",<Enter><tab>publisher<Space>=<Space>"<++>",<Enter><tab>}<Enter><++><Esc>6kA,<Esc>i
   autocmd FileType bib inoremap ,c @incollection{<Enter><tab>author<Space>=<Space>"<++>",<Enter><tab>title<Space>=<Space>"<++>",<Enter><tab>booktitle<Space>=<Space>"<++>",<Enter><tab>editor<Space>=<Space>"<++>",<Enter><tab>year<Space>=<Space>"<++>",<Enter><tab>publisher<Space>=<Space>"<++>",<Enter><tab>}<Enter><++><Esc>8kA,<Esc>i
 
-"MARKDOWN
+"" Markdown
   autocmd BufRead,BufNewFile *.md,*rmd setlocal spell
   autocmd Filetype markdown,rmd inoremap ,i ![](<++>)<++><Esc>F[a
   autocmd Filetype markdown,rmd inoremap ,a [](<++>)<++><Esc>F[a
@@ -109,3 +264,82 @@ map <C-\> :NERDTreeToggle<CR>
   autocmd Filetype markdown map <F5> :!pandoc<space><C-r>%<space>--pdf-engine=xelatex<space>-o<space><C-r>%.pdf<Enter><Enter>
   autocmd Filetype rmd map <F5> :!echo<space>"require(rmarkdown);<space>render('<c-r>%')"<space>\|<space>R<space>--vanilla<enter>
   autocmd Filetype rmd inoremap ;r ```{r}<CR>```<CR><CR><esc>2kO
+
+"" Python
+" vim-python
+augroup vimrc-python
+  autocmd!
+  autocmd FileType python setlocal expandtab shiftwidth=4 tabstop=8 colorcolumn=79
+      \ formatoptions+=croq softtabstop=4
+      \ cinwords=if,elif,else,for,while,try,except,finally,def,class,with
+augroup END
+
+" jedi-vim
+let g:jedi#popup_on_dot = 0
+let g:jedi#goto_assignments_command = "<leader>g"
+let g:jedi#goto_definitions_command = "<leader>d"
+let g:jedi#documentation_command = "K"
+let g:jedi#usages_command = "<leader>n"
+let g:jedi#rename_command = "<leader>r"
+let g:jedi#show_call_signatures = "0"
+let g:jedi#completions_command = "<C-Space>"
+let g:jedi#smart_auto_mappings = 0
+
+" syntastic
+let g:syntastic_python_checkers=['python', 'flake8']
+
+" vim-airline
+let g:airline#extensions#virtualenv#enabled = 1
+
+" Syntax highlight
+" Default highlight is better than polyglot
+let g:polyglot_disabled = ['python']
+let python_highlight_all = 1
+
+"" Ruby
+let g:rubycomplete_buffer_loading = 1
+let g:rubycomplete_classes_in_global = 1
+let g:rubycomplete_rails = 1
+
+augroup vimrc-ruby
+  autocmd!
+  autocmd BufNewFile,BufRead *.rb,*.rbw,*.gemspec setlocal filetype=ruby
+  autocmd FileType ruby set tabstop=2|set shiftwidth=2|set expandtab softtabstop=2
+augroup END
+
+let g:tagbar_type_ruby = {
+    \ 'kinds' : [
+        \ 'm:modules',
+        \ 'c:classes',
+        \ 'd:describes',
+        \ 'C:contexts',
+        \ 'f:methods',
+        \ 'F:singleton methods'
+    \ ]
+\ }
+
+" RSpec.vim mappings
+map <Leader>t :call RunCurrentSpecFile()<CR>
+map <Leader>s :call RunNearestSpec()<CR>
+map <Leader>l :call RunLastSpec()<CR>
+map <Leader>a :call RunAllSpecs()<CR>
+
+" For ruby refactory
+if has('nvim')
+  runtime! macros/matchit.vim
+else
+  packadd! matchit
+endif
+
+" Ruby refactory
+nnoremap <leader>rap  :RAddParameter<cr>
+nnoremap <leader>rcpc :RConvertPostConditional<cr>
+nnoremap <leader>rel  :RExtractLet<cr>
+vnoremap <leader>rec  :RExtractConstant<cr>
+vnoremap <leader>relv :RExtractLocalVariable<cr>
+nnoremap <leader>rit  :RInlineTemp<cr>
+vnoremap <leader>rrlv :RRenameLocalVariable<cr>
+vnoremap <leader>rriv :RRenameInstanceVariable<cr>
+vnoremap <leader>rem  :RExtractMethod<cr>
+
+

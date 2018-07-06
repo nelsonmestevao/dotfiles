@@ -2,38 +2,54 @@
 " Editing behaviour                                                           "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+" Encoding
 set encoding=utf-8
-set termencoding=utf-8
-if has("termguicolors")
-  set termguicolors
-endif
-set spelllang=en          " spell check set to English
-set wrap
-set showmode              " always show what mode we're currently editing in
-set tabstop=2             " determine how many columns a tab counts
-set softtabstop=2
-set shiftwidth=2          " determine how many columns text is indented when using reindent operations
+set fileencoding=utf-8
+set fileencodings=utf-8
+set bomb
+set binary
+
+set fileformats=unix,dos
+
+set autoread              " read when a file is changed from the outside
+
+" Fix backspace indent
+set backspace=indent,eol,start
+
+" Tabs
+set tabstop=4
+set softtabstop=0
+set shiftwidth=4
 set expandtab             " convert any tab to spaces
 set smarttab
+
+" Indentation
 set autoindent            " always set autoindenting on
 set copyindent            " copy the previous indentation on autoindenting
-set number relativenumber " set hybrid line numbers
-set showmatch             " set show matching parenthesis
-set cursorline            " underline the current line, for quick orientation
-"set cursorcolumn
-set colorcolumn=80
-set title                 " change the terminal's title
-set autoread              " read when a file is changed from the outside
-set smartcase             " when searching try to be smart about cases
-set hlsearch              " highlights the term you search for
 
-" Highlight whitespaces
-set list
-set listchars=""
-set listchars+=tab:>-
-set listchars+=trail:•
-set listchars+=nbsp:•
+" Spelling
+set spelllang=en          " spell check set to English
+
+"" Enable hidden buffers
+set hidden
 
 " Fix horizontal and vertical splits
 set splitbelow
 set splitright
+
+"" Searching
+set hlsearch              " highlights the term you search for
+set incsearch
+set ignorecase
+set smartcase             " when searching try to be smart about cases
+
+"" Directories for swp files
+set nobackup
+set noswapfile
+
+if exists('$SHELL')
+    set shell=$SHELL
+else
+    set shell=/bin/sh
+endif
+
