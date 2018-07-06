@@ -5,11 +5,13 @@ export PKG=(
   catppt
   curl
   diffpdf
+  exuberant-ctags
   haskell-platform
   htop
   img2txt
+  lighttpd
+  ncurses-term
   odt2txt
-  exuberant-ctags
   pandoc
   ranger
   texlive-full
