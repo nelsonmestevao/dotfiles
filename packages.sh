@@ -9,6 +9,7 @@ export PKG=(
   htop
   img2txt
   odt2txt
+  exuberant-ctags
   pandoc
   ranger
   texlive-full
