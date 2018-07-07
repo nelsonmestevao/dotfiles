@@ -13,7 +13,6 @@ export PKG=(
   odt2txt
   pandoc
   ranger
-  texlive-full
   tree
   wget
   xclip
