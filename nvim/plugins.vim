@@ -100,8 +100,8 @@ Plug 'prettier/vim-prettier', { 'do': 'npm install' }
 " Markdown
 Plug 'godlygeek/tabular'
 Plug 'plasticboy/vim-markdown'
-Plug 'vim-pandoc/vim-pandoc', {'for': ['latex','tex','rmarkdown','markdown']}
-Plug 'vim-pandoc/vim-pandoc-syntax', {'for': ['latex','tex','rmarkdown','markdown']}
+" Plug 'vim-pandoc/vim-pandoc', {'for': ['latex','tex','rmarkdown','markdown']}
+" Plug 'vim-pandoc/vim-pandoc-syntax', {'for': ['latex','tex','rmarkdown','markdown']}
 
 " Python
 Plug 'davidhalter/jedi-vim'
