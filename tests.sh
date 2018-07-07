@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 if find . -name '*.sh' -print0 | xargs -n1 -0 shellcheck -s bash; then
     echo "\033[0;32mShell script linting passed!\033[0m"
