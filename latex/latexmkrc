@@ -9,6 +9,9 @@
 # -pvc : run file previewer and continually recompile on change
 # -C   : clean up by removing all regeneratable files
 
+# Use bibtex if a .bib file exists
+$bibtex_use = 1;
+
 $pdf_previewer = 'start mupdf';
 $pdf_update_method = 2;
 
