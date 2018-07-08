@@ -24,6 +24,7 @@
   autosetuprebase = always
 [diff]
   tool = vimdiff
+  submodule = log
 [diff "pdf"]
   binary = true
   cachetextconv = true
