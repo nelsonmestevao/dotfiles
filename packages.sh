@@ -11,6 +11,7 @@ export PKG=(
   lighttpd
   ncurses-term
   odt2txt
+  okular
   pandoc
   ranger
   tree
