@@ -8,6 +8,7 @@ export PKG=(
   exuberant-ctags
   htop
   img2txt
+  lxappearance
   lighttpd
   ncurses-term
   numlockx
