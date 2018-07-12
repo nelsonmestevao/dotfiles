@@ -49,6 +49,10 @@
   default = simple
 [pull]
   rebase = true
+[url "git@github.com:"]
+    insteadOf = gh:
+[url "git@gitlab.com:"]
+    insteadOf = gl:
 [color]
   ui = true
 [color "diff"]
