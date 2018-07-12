@@ -8,3 +8,8 @@
 #This change
 
 # Provide links to any relevant tickets, articles or other resources
+
+#Fixes: #123
+
+#Co-authored-by:
+# (Co-authored-by: Name <email@example.com>)
