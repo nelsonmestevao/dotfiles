@@ -51,8 +51,12 @@
   rebase = true
 [url "git@github.com:"]
     insteadOf = gh:
+[url "git@github.com:nelsonmestevao/"]
+    insteadOf = gh/
 [url "git@gitlab.com:"]
     insteadOf = gl:
+[url "git@gitlab.com:nelsonmestevao/"]
+    insteadOf = gl/
 [color]
   ui = true
 [color "diff"]
