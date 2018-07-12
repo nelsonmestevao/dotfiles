@@ -22,6 +22,7 @@ call plug#begin(expand('~/.config/nvim/plugged'))
 Plug 'majutsushi/tagbar'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-surround'
+Plug 'mhinz/vim-startify'
 Plug 'Yggdroot/indentLine'
 Plug 'tpope/vim-commentary'
 Plug 'Raimondi/delimitMate'
