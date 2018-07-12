@@ -10,6 +10,7 @@ export PKG=(
   img2txt
   lighttpd
   ncurses-term
+  numlockx
   odt2txt
   okular
   pandoc
