@@ -74,9 +74,10 @@ bindsym $mod+Shift+Right move right
 
 # split in horizontal orientation
 bindsym $mod+b split h
-
 # split in vertical orientation
 bindsym $mod+v split v
+# toggle split
+bindsym $mod+t layout toggle split
 
 # enter fullscreen mode for the focused container
 bindsym $mod+f fullscreen toggle
@@ -84,7 +85,6 @@ bindsym $mod+f fullscreen toggle
 # change container layout (stacked, tabbed, toggle split)
 bindsym $mod+s layout stacking
 bindsym $mod+w layout tabbed
-bindsym $mod+g layout toggle split
 
 # toggle tiling / floating
 bindsym $mod+Shift+space floating toggle
@@ -99,12 +99,12 @@ bindsym $mod+a focus parent
 #bindsym $mod+d focus child
 
 set $workspace1  "1. Slack"
-set $workspace2  "2. Terminal"
-set $workspace3  "3. Chrome"
+set $workspace2  "2. Terminal "
+set $workspace3  "3. Chrome "
 set $workspace4  "4. Code"
-set $workspace5  "5. Terminal"
-set $workspace6  "6. Terminal"
-set $workspace10 "10. Music"
+set $workspace5  "5. Terminal "
+set $workspace6  "6. Terminal "
+set $workspace10 "10: Music "
 
 # switch to workspace
 bindsym $mod+1 workspace $workspace1
