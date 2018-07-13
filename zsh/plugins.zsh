@@ -7,5 +7,6 @@ plugins=(
   git
   mercurial
   vi-mode
+  zsh-autosuggestions
   zsh-syntax-highlighting
 )
