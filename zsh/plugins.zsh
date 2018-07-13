@@ -1,6 +1,7 @@
 # PLUGINS
 
 plugins=(
+  command-not-found
   extract
   git
   mercurial
