@@ -1,6 +1,6 @@
 # ALIASES
 
-set -o vi
+#set -o vi
 
 alias dot="cd ~/.dotfiles && nvim ."
 alias spl="cd ~/.spells && nvim ."
