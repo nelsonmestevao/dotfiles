@@ -124,7 +124,7 @@ nnoremap <leader>sc :CloseSession<CR>
 
 " A syntax for placeholders
 " Pressing Control-j jumps to the next match.
-inoremap <c-j> <Esc>/<++><CR><Esc>cf>
+inoremap <c-j> <Esc>/<++><CR>"_c4l
 
 "" Set working directory
 nnoremap <leader>. :lcd %:p:h<CR>
