@@ -1,6 +1,7 @@
 #!/bin/bash
 
 export PKG=(
+  acpi
   catdoc
   catppt
   curl
