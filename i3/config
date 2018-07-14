@@ -252,6 +252,7 @@ exec_always feh --bg-fill ~/Pictures/wallpaper.jpg
 exec_always compton -b
 exec_always --no-startup-id albert
 exec_always --no-startup-id copyq
+exec_always --no-startup-id redshift
 
 exec xrandr --output HDMI1 --auto --right-of eDP1
 exec chmod go-w ~/.dotfiles/haskell/ghci
