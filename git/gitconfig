@@ -24,6 +24,9 @@
   conflicts = diff --name-only --diff-filter=U
 [branch]
   autosetuprebase = always
+[merge]
+  tool = vimdiff
+  log = true
 [diff]
   tool = vimdiff
   submodule = log
