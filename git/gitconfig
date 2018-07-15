@@ -22,7 +22,9 @@
   rb = rebase
   st = status
   conflicts = diff --name-only --diff-filter=U
+
   fire = !git-fire
+  fuck = !git-fuck-this
 [branch]
   autosetuprebase = always
 [merge]
