@@ -22,6 +22,7 @@
   rb = rebase
   st = status
   conflicts = diff --name-only --diff-filter=U
+  fire = !git-fire
 [branch]
   autosetuprebase = always
 [merge]
