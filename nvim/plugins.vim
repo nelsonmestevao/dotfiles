@@ -86,7 +86,7 @@ Plug 'carlosgaldino/elixir-snippets'
 " Haskell
 Plug 'dag/vim2hs'
 Plug 'eagletmt/neco-ghc'
-" Plug 'neovimhaskell/haskell-vim'
+Plug 'neovimhaskell/haskell-vim'
 Plug 'pbrisbin/vim-syntax-shakespeare'
 
 " HTML
