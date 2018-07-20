@@ -6,6 +6,7 @@ export PKG=(
   catppt
   curl
   diffpdf
+  dunst
   exuberant-ctags
   htop
   img2txt
