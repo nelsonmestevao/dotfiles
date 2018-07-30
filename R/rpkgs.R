@@ -1,5 +1,6 @@
 CRAN_PKGS <-
   c( 'bookdown'
+   , 'citr'
    , 'devtools'
    , 'knitr'
    , 'testhat'
