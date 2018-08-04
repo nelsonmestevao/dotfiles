@@ -8,6 +8,7 @@ CRAN_PKGS <-
    , 'rmarkdown'
    , 'roxygen2'
    , 'testhat'
+   , 'tidyverse'
    )
 
 install.packages(CRAN_PKGS, dependencies = TRUE)
