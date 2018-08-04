@@ -4,9 +4,9 @@ CRAN_PKGS <-
    , 'devtools'
    , 'knitr'
    , 'lintr'
-   , 'testhat'
-   , 'roxygen2'
    , 'rmarkdown'
+   , 'roxygen2'
+   , 'testhat'
    )
 
 install.packages(CRAN_PKGS)
