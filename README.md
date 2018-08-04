@@ -24,4 +24,5 @@ cd ~/.dotfiles
 sh uninstall.sh
 cd ~
 rm -rf ~/.dotfiles
+rm -rf ~/.spells
 ```
