@@ -1,9 +1,10 @@
 CRAN_PKGS <-
   c( 'bookdown'
-   , 'citr'
    , 'devtools'
+   , 'citr'
    , 'knitr'
    , 'lintr'
+   , 'pkgdown'
    , 'rmarkdown'
    , 'roxygen2'
    , 'testhat'
