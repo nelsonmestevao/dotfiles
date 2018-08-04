@@ -1,3 +1,2 @@
-options(repos=structure(c(CRAN="https://cloud.r-project.org/")))
 
 message("\n*** Successfully loaded .Rprofile ***\n")
