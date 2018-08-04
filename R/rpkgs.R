@@ -9,5 +9,5 @@ CRAN_PKGS <-
    , 'testhat'
    )
 
-install.packages(CRAN_PKGS)
+install.packages(CRAN_PKGS, dependencies = TRUE)
 
