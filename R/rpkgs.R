@@ -3,6 +3,7 @@ CRAN_PKGS <-
    , 'citr'
    , 'devtools'
    , 'knitr'
+   , 'lintr'
    , 'testhat'
    , 'roxygen2'
    , 'rmarkdown'
