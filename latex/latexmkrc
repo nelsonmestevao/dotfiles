@@ -18,4 +18,4 @@ $bibtex_use = 1;
 $pdf_previewer = 'start mupdf';
 $pdf_update_method = 2;
 
-$clean_ext = "bbl nav out snm";
+$clean_ext = "bbl nav out snm upa synctex.gz";
