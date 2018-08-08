@@ -213,6 +213,10 @@ bar {
          }
 }
 
+# Printscreen
+bindsym Print       exec --no-startup-id gnome-screenshot -i
+bindsym $mod+Print  exec --no-startup-id gnome-screenshot -a
+
 # Pulse Audio controls
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% #increase sound volume
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% #decrease sound volume
