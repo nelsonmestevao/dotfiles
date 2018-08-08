@@ -236,6 +236,9 @@ exec --no-startup-id copyq
 exec --no-startup-id dunst
 exec --no-startup-id redshift
 
+# Keyboard Remaps
+exec --no-startup-id setxkbmap -option caps:escape
+
 exec xrandr --output HDMI1 --auto --right-of eDP1
 exec chmod go-w ~/.dotfiles/haskell/ghci
 
