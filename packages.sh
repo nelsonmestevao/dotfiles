@@ -11,14 +11,15 @@ export PKG=(
   feh
   htop
   img2txt
-  lxappearance
   lighttpd
+  lxappearance
   ncurses-term
   numlockx
   odt2txt
   okular
   pandoc
   ranger
+  screenkey
   tree
   wget
   xclip
