@@ -22,6 +22,7 @@ export PKG=(
   screenkey
   tree
   wget
+  xbacklight
   xclip
   xls2csv
 )
