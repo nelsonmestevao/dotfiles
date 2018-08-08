@@ -19,7 +19,10 @@ bindsym $mod+x exec i3lock --color 475263
 bindsym $mod+e exec nemo
 bindsym $mod+i exec cinnamon-settings
 
+# Workspace Bindings
+bindsym $mod+Tab workspace back_and_forth
 bindsym $mod+m move workspace to output left
+
 
 # start dmenu (a program launcher)
 #bindsym $mod+d exec dmenu_run
