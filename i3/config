@@ -16,20 +16,18 @@ bindsym $mod+Shift+q kill
 # lock
 bindsym $mod+x exec i3lock --color 475263
 
-bindsym $mod+e exec nemo
-bindsym $mod+i exec cinnamon-settings
+bindsym $mod+e exec --no-startup-id nemo
+bindsym $mod+i exec --no-startup-id cinnamon-settings
+
+# There also is the (new) i3-dmenu-desktop which only displays applications
+# shipping a .desktop file. It is a wrapper around dmenu, so you need that
+# installed.
+#bindsym $mod+d exec dmenu_run
+bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
 
 # Workspace Bindings
 bindsym $mod+Tab workspace back_and_forth
 bindsym $mod+m move workspace to output left
-
-
-# start dmenu (a program launcher)
-#bindsym $mod+d exec dmenu_run
-# There also is the (new) i3-dmenu-desktop which only displays applications
-# shipping a .desktop file. It is a wrapper around dmenu, so you need that
-# installed.
-bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
 
 # change focus
 bindsym $mod+h focus left
