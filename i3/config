@@ -94,10 +94,11 @@ bindsym $mod+8 workspace $workspace8
 bindsym $mod+9 workspace $workspace9
 bindsym $mod+0 workspace $workspace10
 
-assign [class="Slack"]   $workspace1
+assign [class="Slack"]         $workspace1
+assign [class="Code"]          $workspace4
 assign [class="Google-chrome"] $workspace3
-assign [class="discord"] $workspace9
-assign [class="Spotify"] $workspace10
+assign [class="discord"]       $workspace9
+assign [class="Spotify"]       $workspace10
 for_window [class="Spotify"] move to workspace $workspace10
 
 # move focused container to workspace
