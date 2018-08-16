@@ -14,6 +14,7 @@ export PKG=(
   lighttpd
   lxappearance
   ncurses-term
+  neofetch
   numlockx
   odt2txt
   okular
