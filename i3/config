@@ -15,7 +15,7 @@ bindsym $mod+Shift+q kill
 # lock
 bindsym $mod+x exec i3lock --color 475263
 
-bindsym $mod+Return exec i3-sensible-terminal
+bindsym $mod+Return exec --no-startup-id alacritty
 bindsym $mod+e      exec --no-startup-id nemo
 bindsym $mod+i      exec --no-startup-id cinnamon-settings
 bindsym $mod+d      exec --no-startup-id i3-dmenu-desktop
