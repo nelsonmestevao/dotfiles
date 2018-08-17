@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 git clone git@github.com:alexanderjeurissen/ranger_devicons.git
 

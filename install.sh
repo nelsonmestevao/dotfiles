@@ -25,3 +25,4 @@ done
 curl -o ~/Pictures/wallpaper.jpg "https://images.unsplash.com/photo-1533759233673-2d30c9bc1e93"
 
 cd "$SAVED_DIR"
+

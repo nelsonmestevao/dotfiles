@@ -266,7 +266,7 @@ exec_always --no-startup-id feh --bg-fill ~/Pictures/wallpaper.jpg
 exec --no-startup-id albert
 exec --no-startup-id clipit
 exec --no-startup-id compton -b
-exec --no-startup-id copyq
+# exec --no-startup-id copyq
 exec --no-startup-id dunst
 exec --no-startup-id redshift
 exec --no-startup-id xautolock -time 10 -locker blurlock
