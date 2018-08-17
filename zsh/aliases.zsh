@@ -17,7 +17,6 @@ alias :q="exit"
 alias joão="date -d '+2 hour' '+%T' && weather Tampere Finland 0"
 alias carolina="date -d '+1 hour' '+%T' && weather Brussels Belgium 0"
 
-alias backup="git add --all && git commit -am ':wrench: [WIP] Done for today, cya tomorrow [ci skip] :wave:' && git push"
 alias bsc=backup
 
 alias cv="cd ~/Code/curriculum-vitae/ && ls -l"
