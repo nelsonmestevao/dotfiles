@@ -20,6 +20,8 @@ export PKG=(
   odt2txt
   okular
   pandoc
+  pandoc-citeproc
+  pandoc-crossref
   ranger
   screenkey
   tree
