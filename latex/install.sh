@@ -1,7 +1,7 @@
 #!/bin/sh
 
 echo "Installing LaTeX..."
-sudo apt-get install texlive-full -yqq
+sudo pacman -S texlive-core
 
 ln -sfT ~/.dotfiles/latex/latexmkrc ~/.latexmkrc
 

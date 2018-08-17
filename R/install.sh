@@ -1,5 +1,5 @@
 #!/bin/sh
 
-apt install r-base r-base-core r-base-dev -yqq
+sudo pacman -Sy r
 
 ln -sfT ~/.dotfiles/R/Rprofile ~/.Rprofile

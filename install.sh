@@ -1,14 +1,14 @@
-#!/bin/sh
+#!/usr/bin/env sh
 
 source packages.sh
 
 echo "Updating packages..."
-sudo apt update -qq && sudo apt upgrade -yqq
+pacman -U
 
 for pkg in "${PKG[@]}"
 do
   echo "Installing ${pkg}..."
-  sudo apt install "$pkg" -yqq
+  sudo pacman -Sy "$pkg" --needed --noconfirm
 done
 
 SAVED_DIR=$PWD

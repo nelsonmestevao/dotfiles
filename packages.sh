@@ -31,3 +31,8 @@ export PKG=(
   xls2csv
 )
 
+export AUR=(
+  google-chrome-stable
+  neovim
+)
+
