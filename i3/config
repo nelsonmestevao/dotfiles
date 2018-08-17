@@ -272,6 +272,7 @@ exec --no-startup-id redshift
 exec --no-startup-id xautolock -time 10 -locker blurlock
 
 # Keyboard Remaps
+exec --no-startup-id numlockx on
 exec --no-startup-id setxkbmap -option caps:escape
 
 exec xrandr --output HDMI1 --auto --right-of eDP1
