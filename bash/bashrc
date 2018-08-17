@@ -1,3 +1,0 @@
-[ -n "$PS1" ] && source ~/.dotfiles/bash/bash_profile;
-
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
