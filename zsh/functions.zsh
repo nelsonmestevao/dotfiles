@@ -1,5 +1,11 @@
 # FUNCTIONS
 
+function backup() {
+  git add --all ;
+  git commit -am ':wrench: [WIP] Done for today, cya tomorrow [ci skip] :wave:' ;
+  git push $@ ;
+}
+
 function gi() {
   curl -L -s https://www.gitignore.io/api/$@ ;
 }
