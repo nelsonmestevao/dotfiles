@@ -14,3 +14,4 @@ if type "xrandr"; then
 else
   polybar top -r -c ~/.dotfiles/i3/polybar.conf &
 fi
+
