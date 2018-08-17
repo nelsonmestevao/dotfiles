@@ -1,28 +1,119 @@
+# Set mod key (Mod1=<Alt>, Mod4=<Super>)
 set $mod Mod4
 
-# Font for window titles. Will also be used by the bar unless a different font
-# is used in the bar {} block below.
-#font pango:Hack NF Regular 8
-
-# Use Mouse+$mod to drag floating windows to their wanted position
-floating_modifier $mod
-
 # start a terminal
+bindsym $mod+Return exec --no-startup-id termite
+bindsym $mod+e      exec --no-startup-id pcmanfm
+bindsym $mod+i      exec --no-startup-id cinnamon-settings
+# start program launcher
+bindsym $mod+d      exec --no-startup-id i3-dmenu-desktop
+# launch categorized menu
+bindsym $mod+z      exec --no-startup-id morc_menu
+bindsym $mod+Ctrl+b exec terminal -e 'bmenu'
+bindsym $mod+Ctrl+x --release exec --no-startup-id xkill
 
 # kill focused window
 bindsym $mod+Shift+q kill
 
-# lock
-bindsym $mod+x exec i3lock --color 475263
+# reload the configuration file
+bindsym $mod+Shift+c reload
+# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+bindsym $mod+Shift+r restart
 
-bindsym $mod+Return exec --no-startup-id alacritty
-bindsym $mod+e      exec --no-startup-id nemo
-bindsym $mod+i      exec --no-startup-id cinnamon-settings
-bindsym $mod+d      exec --no-startup-id i3-dmenu-desktop
+# Lock screen
+bindsym $mod+Escape exec --no-startup-id blurlock
+
+bindsym $mod+Shift+Escape mode "$mode_system"
+set $mode_system (l)ock, (e)xit, switch_(u)ser, (s)uspend, (h)ibernate, (r)eboot, (Shift+s)hutdown
+mode "$mode_system" {
+    bindsym l exec --no-startup-id i3exit lock, mode "default"
+    bindsym s exec --no-startup-id i3exit suspend, mode "default"
+    bindsym u exec --no-startup-id i3exit switch_user, mode "default"
+    bindsym e exec --no-startup-id i3exit logout, mode "default"
+    bindsym h exec --no-startup-id i3exit hibernate, mode "default"
+    bindsym r exec --no-startup-id i3exit reboot, mode "default"
+    bindsym Shift+s exec --no-startup-id i3exit shutdown, mode "default"
+
+    # exit system mode: "Enter" or "Escape"
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+# resize window (you can also use the mouse for that)
+bindsym $mod+r mode "resize"
+mode "resize" {
+        # These bindings trigger as soon as you enter the resize mode
+
+        # Pressing left will shrink the window’s width.
+        # Pressing right will grow the window’s width.
+        # Pressing up will shrink the window’s height.
+        # Pressing down will grow the window’s height.
+        bindsym h resize shrink width 5 px or 5 ppt
+        bindsym j resize grow height 5 px or 5 ppt
+        bindsym k resize shrink height 5 px or 5 ppt
+        bindsym l resize grow width 5 px or 5 ppt
+
+        # same bindings, but for the arrow keys
+        bindsym Left resize shrink width 10 px or 10 ppt
+        bindsym Down resize grow height 10 px or 10 ppt
+        bindsym Up resize shrink height 10 px or 10 ppt
+        bindsym Right resize grow width 10 px or 10 ppt
+
+        # back to normal: Enter or Escape
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+
+# Press $mod+Shift+g to enter the gap mode. Choose o or i for modifying outer/inner gaps. Press one of + / - (in-/decrement for current workspace) or 0 (remove gaps for current workspace). If you also press Shift with these keys, the change will be global for all workspaces.
+set $mode_gaps Gaps: (o) outer, (i) inner
+set $mode_gaps_outer Outer Gaps: +|-|0 (local), Shift + +|-|0 (global)
+set $mode_gaps_inner Inner Gaps: +|-|0 (local), Shift + +|-|0 (global)
+bindsym $mod+Shift+g mode "$mode_gaps"
+
+mode "$mode_gaps" {
+        bindsym o      mode "$mode_gaps_outer"
+        bindsym i      mode "$mode_gaps_inner"
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+mode "$mode_gaps_inner" {
+        bindsym plus  gaps inner current plus 5
+        bindsym minus gaps inner current minus 5
+        bindsym 0     gaps inner current set 0
+
+        bindsym Shift+plus  gaps inner all plus 5
+        bindsym Shift+minus gaps inner all minus 5
+        bindsym Shift+0     gaps inner all set 0
+
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+mode "$mode_gaps_outer" {
+        bindsym plus  gaps outer current plus 5
+        bindsym minus gaps outer current minus 5
+        bindsym 0     gaps outer current set 0
+
+        bindsym Shift+plus  gaps outer all plus 5
+        bindsym Shift+minus gaps outer all minus 5
+        bindsym Shift+0     gaps outer all set 0
+
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
 
 # Workspace Bindings
 bindsym $mod+Tab workspace back_and_forth
 bindsym $mod+m move workspace to output left
+
+# move the currently focused window to the scratchpad
+bindsym $mod+Shift+minus move scratchpad
+
+# Show the next scratchpad window or hide the focused scratchpad window.
+# If there are multiple scratchpad windows, this command cycles through them.
+bindsym $mod+minus scratchpad show
+
+# Use Mouse+$mod to drag floating windows to their wanted position
+floating_modifier $mod
 
 # change focus
 bindsym $mod+h focus left
@@ -68,18 +159,18 @@ bindsym $mod+space focus mode_toggle
 # focus the parent container
 bindsym $mod+a focus parent
 
-# focus the child container
-#bindsym $mod+d focus child
+# switch to workspace with urgent window automatically
+# for_window [urgent=latest] focus
 
-set $workspace1  "1:  Slack"
-set $workspace2  "2:  Terminal"
-set $workspace3  "3:  Chrome"
-set $workspace4  "4:  Code"
-set $workspace5  "5:  Terminal"
-set $workspace6  "6:  Terminal"
-set $workspace7  "7: "
-set $workspace8  "8: "
-set $workspace9  "9:  Discord"
+set $workspace1   "1:  Slack"
+set $workspace2   "2:  Terminal"
+set $workspace3   "3:  Chrome"
+set $workspace4   "4:  Code"
+set $workspace5   "5:  Terminal"
+set $workspace6   "6:  Terminal"
+set $workspace7   "7: "
+set $workspace8   "8: "
+set $workspace9   "9:  Discord"
 set $workspace10 "10:  Spotify"
 
 # switch to workspace
@@ -122,54 +213,6 @@ gaps outer 10
 #smart_gaps on
 smart_borders on
 
-# reload the configuration file
-bindsym $mod+Shift+c reload
-# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
-bindsym $mod+Shift+r restart
-# exit i3 (logs you out of your X session)
-bindsym $mod+Shift+Escape exec "i3-nagbar -t warning -m 'Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
-bindsym $mod+Shift+Return mode "$mode_system"
-set $mode_system (l)ock, (e)xit, switch_(u)ser, (s)uspend, (h)ibernate, (r)eboot, (Shift+s)hutdown
-mode "$mode_system" {
-    bindsym l exec --no-startup-id i3exit lock, mode "default"
-    bindsym s exec --no-startup-id i3exit suspend, mode "default"
-    bindsym u exec --no-startup-id i3exit switch_user, mode "default"
-    bindsym e exec --no-startup-id i3exit logout, mode "default"
-    bindsym h exec --no-startup-id i3exit hibernate, mode "default"
-    bindsym r exec --no-startup-id i3exit reboot, mode "default"
-    bindsym Shift+s exec --no-startup-id i3exit shutdown, mode "default"
-
-    # exit system mode: "Enter" or "Escape"
-    bindsym Return mode "default"
-    bindsym Escape mode "default"
-}
-
-# resize window (you can also use the mouse for that)
-mode "resize" {
-        # These bindings trigger as soon as you enter the resize mode
-
-        # Pressing left will shrink the window’s width.
-        # Pressing right will grow the window’s width.
-        # Pressing up will shrink the window’s height.
-        # Pressing down will grow the window’s height.
-        bindsym h resize shrink width 5 px or 5 ppt
-        bindsym j resize grow height 5 px or 5 ppt
-        bindsym k resize shrink height 5 px or 5 ppt
-        bindsym l resize grow width 5 px or 5 ppt
-
-        # same bindings, but for the arrow keys
-        bindsym Left resize shrink width 10 px or 10 ppt
-        bindsym Down resize grow height 10 px or 10 ppt
-        bindsym Up resize shrink height 10 px or 10 ppt
-        bindsym Right resize grow width 10 px or 10 ppt
-
-        # back to normal: Enter or Escape
-        bindsym Return mode "default"
-        bindsym Escape mode "default"
-}
-
-bindsym $mod+r mode "resize"
-
 set $background          #282a36
 set $selection           #44475a
 set $foreground          #f8f8f2
@@ -192,9 +235,12 @@ client.urgent           $red                $red               $foreground      
 
 #hide_edge_borders both
 
+bindsym $mod+F1 exec mupdf /usr/share/doc/manjaro/i3_help.pdf
+
 # Printscreen
-bindsym Print       exec --no-startup-id gnome-screenshot -i
-bindsym $mod+Print  exec --no-startup-id gnome-screenshot -a
+bindsym Print                      exec --no-startup-id i3-scrot
+bindsym $mod+Print       --release exec --no-startup-id i3-scrot -w
+bindsym $mod+Shift+Print --release exec --no-startup-id i3-scrot -s
 
 # Pulse Audio controls
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% #increase sound volume
@@ -218,10 +264,12 @@ bindsym XF86AudioPrev  exec playerctl previous
 exec_always --no-startup-id ~/.dotfiles/i3/polybarlaunch.sh
 exec_always --no-startup-id feh --bg-fill ~/Pictures/wallpaper.jpg
 exec --no-startup-id albert
+exec --no-startup-id clipit
 exec --no-startup-id compton -b
 exec --no-startup-id copyq
 exec --no-startup-id dunst
 exec --no-startup-id redshift
+exec --no-startup-id xautolock -time 10 -locker blurlock
 
 # Keyboard Remaps
 exec --no-startup-id setxkbmap -option caps:escape
