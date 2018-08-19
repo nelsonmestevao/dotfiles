@@ -2,7 +2,7 @@
 set $mod Mod4
 
 # start a terminal
-bindsym $mod+Return exec --no-startup-id termite
+bindsym $mod+Return exec --no-startup-id alacritty
 bindsym $mod+e      exec --no-startup-id pcmanfm
 bindsym $mod+i      exec --no-startup-id cinnamon-settings
 # start program launcher
