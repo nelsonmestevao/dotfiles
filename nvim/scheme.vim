@@ -5,11 +5,6 @@
 syntax on
 filetype plugin indent on
 
-
-if has("termguicolors")
-  set termguicolors
-endif
-
 set wrap
 set ruler
 set title                 " change the terminal's title
