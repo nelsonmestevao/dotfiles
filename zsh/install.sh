@@ -10,6 +10,5 @@ git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/
 git clone https://github.com/zsh-users/zsh-autosuggestions         ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 
 ln -sfT ~/.dotfiles/zsh/zshrc   ~/.zshrc
-ln -sfT ~/.dotfiles/zsh/profile ~/.profile
 
 chsh -s "$(which zsh)"
