@@ -1,3 +1,3 @@
-#/usr/bin/env sh
+#/bin/bash
 
-ln -sfT ~/.dotfiles/zsh/profile ~/.profile
+ln -sfT ~/.dotfiles/config/profile ~/.profile
