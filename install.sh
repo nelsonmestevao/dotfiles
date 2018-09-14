@@ -22,7 +22,8 @@ do
   sh "$dir"/install.sh
 done
 
-curl -o ~/Pictures/wallpaper.jpg "https://images.unsplash.com/photo-1533759233673-2d30c9bc1e93"
+sudo curl -o /usr/share/backgrounds/wallpaper.jpg  "https://images.unsplash.com/photo-1533759233673-2d30c9bc1e93"
+sudo curl -o /usr/share/backgrounds/login.jpg "https://images.unsplash.com/photo-1521080755838-d2311117f767"
 
 cd "$SAVED_DIR"
 
