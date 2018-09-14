@@ -34,5 +34,8 @@ export PKG=(
 export AUR=(
   google-chrome-stable
   neovim
+  nerd-fonts-complete
+  playerctl
+  polybar
 )
 
