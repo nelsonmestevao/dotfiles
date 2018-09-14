@@ -427,7 +427,7 @@ mode "$mode_gaps_outer" {
 ###############################################################################
 
 # Autostart applications
-exec albert
+exec --no-startup-id albrt
 exec --no-startup-id clipit
 exec --no-startup-id volumeicon
 exec --no-startup-id redshift
