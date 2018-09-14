@@ -11,5 +11,5 @@ CRAN_PKGS <-
    , 'tidyverse'
    )
 
-install.packages(CRAN_PKGS, dependencies = TRUE)
+install.packages(CRAN_PKGS, dependencies = TRUE, repos='http://cran.us.r-project.org')
 
