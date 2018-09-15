@@ -3,10 +3,10 @@
 #set -o vi
 
 alias dot="cd $HOME/.dotfiles && nvim ."
-alias spl="cd $HOME~/.spells && nvim ."
+alias spl="cd $HOME/.spells && nvim ."
 
-alias c="cd $HOME~/Code && ls -l"
-alias s="cd $HOME~/Snippets && ls -l"
+alias c="cd $HOME/Code && ls -l"
+alias s="cd $HOME/Snippets && ls -l"
 
 alias v="nvim"
 alias vim="nvim"
