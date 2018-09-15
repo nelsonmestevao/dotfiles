@@ -28,3 +28,5 @@ alias li2="cd $HOME/Code/uminho/1st/2/Laboratórios\ de\ Informática\ II/Projec
 
 alias svnl="svn log | less"
 alias svnd="svn diff"
+
+alias miei="slack-term --config $HOME/.slack-miei"
