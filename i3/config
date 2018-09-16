@@ -193,16 +193,16 @@ bindsym $mod+Ctrl+9 move container to workspace $ws9
 bindsym $mod+Ctrl+0 move container to workspace $ws10
 
 # Move to workspace with focused container
-bindsym $mod+Shift+1 move container to workspace $ws1; workspace $ws1
-bindsym $mod+Shift+2 move container to workspace $ws2; workspace $ws2
-bindsym $mod+Shift+3 move container to workspace $ws3; workspace $ws3
-bindsym $mod+Shift+4 move container to workspace $ws4; workspace $ws4
-bindsym $mod+Shift+5 move container to workspace $ws5; workspace $ws5
-bindsym $mod+Shift+6 move container to workspace $ws6; workspace $ws6
-bindsym $mod+Shift+7 move container to workspace $ws7; workspace $ws7
-bindsym $mod+Shift+8 move container to workspace $ws8; workspace $ws8
-bindsym $mod+Shift+9 move container to workspace $ws8; workspace $ws9
-bindsym $mod+Shift+0 move container to workspace $ws8; workspace $ws10
+bindsym $mod+Shift+1 move container to workspace $ws1;  workspace $ws1
+bindsym $mod+Shift+2 move container to workspace $ws2;  workspace $ws2
+bindsym $mod+Shift+3 move container to workspace $ws3;  workspace $ws3
+bindsym $mod+Shift+4 move container to workspace $ws4;  workspace $ws4
+bindsym $mod+Shift+5 move container to workspace $ws5;  workspace $ws5
+bindsym $mod+Shift+6 move container to workspace $ws6;  workspace $ws6
+bindsym $mod+Shift+7 move container to workspace $ws7;  workspace $ws7
+bindsym $mod+Shift+8 move container to workspace $ws8;  workspace $ws8
+bindsym $mod+Shift+9 move container to workspace $ws9;  workspace $ws9
+bindsym $mod+Shift+0 move container to workspace $ws10; workspace $ws10
 
 # Open applications on specific workspaces
 assign [class="Slack"]         $ws1
@@ -432,6 +432,7 @@ exec --no-startup-id albert
 exec --no-startup-id clipit
 exec --no-startup-id volumeicon
 exec --no-startup-id redshift
+exec --no-startup-id nm-applet
 
 exec --no-startup-id nitrogen --restore; sleep 1; compton -b
 exec --no-startup-id xautolock -time 10 -locker blurlock
@@ -447,13 +448,8 @@ exec --no-startup-id setxkbmap -option caps:escape
 
 # others
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
-exec --no-startup-id nm-applet
 exec --no-startup-id xfce4-power-manager
 exec --no-startup-id pamac-tray
 exec --no-startup-id blueman-applet
 # exec_always --no-startup-id sbxkb
 exec --no-startup-id start_conky_maia
-# exec --no-startup-id start_conky_green
-exec_always --no-startup-id ff-theme-util
-exec_always --no-startup-id fix_xcursor
-
