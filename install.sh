@@ -1,14 +1,20 @@
 #!/usr/bin/env sh
 
-source packages.sh
+. packages.sh
 
 echo "Updating packages..."
-pacman -U
+sudo pacman -Syu --needed --noconfirm
 
 for pkg in "${PKG[@]}"
 do
   echo "Installing ${pkg}..."
-  sudo pacman -Sy "$pkg" --needed --noconfirm
+  sudo pacman -Syu "$pkg" --needed --noconfirm
+done
+
+for aur in "${AUR[@]}"
+do
+  echo "Installing ${aur}..."
+  sudo yaourt -Syu "$aur" --needed --noconfirm
 done
 
 SAVED_DIR=$PWD
@@ -23,7 +29,7 @@ do
 done
 
 sudo curl -o /usr/share/backgrounds/wallpaper.jpg  "https://images.unsplash.com/photo-1533759233673-2d30c9bc1e93"
-sudo curl -o /usr/share/backgrounds/login.jpg "https://images.unsplash.com/photo-1521080755838-d2311117f767"
+sudo curl -o /usr/share/backgrounds/login.jpg      "https://images.unsplash.com/photo-1521080755838-d2311117f767"
 
 cd "$SAVED_DIR"
 

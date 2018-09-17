@@ -1,5 +1,6 @@
-#!/bin/sh
+#!/usr/bin/env sh
 
-sudo apt-get remove texlive-full
+sudo pacman -Rs texlive-core --needed --noconfirm
 
 unlink ~/.latexmkrc
+

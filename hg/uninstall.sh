@@ -1,5 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
-sudo apt-get remove mercurial
+sudo pacman -Rs mercurial
 
 unlink ~/.hgrc
+

@@ -1,6 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 echo "Installing Mercurial..."
-sudo apt-get install mercurial -yqq
+sudo pacman -Syu mercurial --needed --noconfirm
 
 ln -sfT ~/.dotfiles/hg/hgrc ~/.hgrc
+

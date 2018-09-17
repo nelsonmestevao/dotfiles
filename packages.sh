@@ -32,6 +32,7 @@ export PKG=(
 )
 
 export AUR=(
+  betterlockscreen
   google-chrome-stable
   neovim
   nerd-fonts-complete

@@ -1,9 +1,10 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
-sudo apt-get remove zsh
+sudo pacman -Rs zsh --needed --noconfirm
 
 rm -rf ~/.oh-my-zsh
 
 unlink ~/.zshrc
 
-chsh -s "$(which bash)"
+chsh -s "$(command -v bash)"
+

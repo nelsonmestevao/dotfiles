@@ -1,5 +1,6 @@
-#!/bin/sh
+#!/usr/bin/env sh
 
-apt remove r-base r-base-core r-base-dev -yqq
+sudo pacman -Rs r --needed --noconfirm
 
 unlink ~/.Rprofile
+

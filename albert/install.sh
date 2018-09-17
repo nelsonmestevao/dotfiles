@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-yaourt -S albert
+sudo yaourt -Syu albert --needed --noconfirm
 
 ln -sfT ~/.dotfiles/albert/albert.conf  ~/.config/albert/albert.conf
 ln -sfT ~/.dotfiles/albert/engines.json ~/.config/albert/org.albert.extension.websearch/engines.json
