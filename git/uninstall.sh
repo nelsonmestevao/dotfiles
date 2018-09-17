@@ -1,7 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
-curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
-
-sudo apt-get remove git-lfs
+sudo pacman -Rs git-lfs --needed --noconfirm
 
 unlink ~/.gitconfig
+

@@ -1,12 +1,11 @@
-#!/bin/sh
+#!/usr/bin/env sh
 
-source packages.sh
+. packages.sh
 
 for pkg in "${PKG[@]}"
 do
   echo "Uninstalling ${pkg}..."
-  sudo apt remove "$pkg" -y
-  sudo apt autoremove
+  sudo pacman -Rs "$pkg" --needed --noconfirm
 done
 
 SAVED_DIR=$PWD

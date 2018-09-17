@@ -1,9 +1,8 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
-sudo apt-get remove software-properties-common
-sudo add-apt-repository --remove ppa:neovim-ppa/stable
-sudo apt-get remove neovim
+sudo pacman -Rs neovim
 
 rm ~/.local/share/nvim/site/autoload/plug.vim
 
 unlink ~/.config/nvim/init.vim
+
