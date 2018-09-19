@@ -440,11 +440,12 @@ exec --no-startup-id nm-applet
 
 exec --no-startup-id nitrogen --restore; sleep 1; compton -b
 exec --no-startup-id xautolock -time 10 -locker betterlockscreen -l dim
-exec xrandr --output HDMI1 --auto --right-of eDP1
 exec chmod go-w ~/.dotfiles/haskell/ghci
 
 exec_always --no-startup-id ~/.spells/polybarlaunch.sh
 exec_always --no-startup-id feh --bg-fill /usr/share/backgrounds/wallpaper.jpg
+
+exec xrandr --output HDMI1 --auto --right-of eDP1
 
 # Keyboard Remaps
 exec --no-startup-id numlockx on
