@@ -30,3 +30,4 @@ alias svnl="svn log | less"
 alias svnd="svn diff"
 
 alias miei="slack-term --config $HOME/.slack-miei"
+alias cesium="xrandr --output HDMI1 --auto --above eDP1"
