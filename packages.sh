@@ -27,6 +27,7 @@ export PKG=(
   tree
   wget
   xbacklight
+  xcape
   xclip
   xls2csv
 )
