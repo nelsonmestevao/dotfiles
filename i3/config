@@ -449,7 +449,9 @@ exec xrandr --output HDMI1 --auto --right-of eDP1
 
 # Keyboard Remaps
 exec --no-startup-id numlockx on
-exec --no-startup-id setxkbmap -option caps:escape
+#exec --no-startup-id setxkbmap -option caps:escape
+exec --no-startup-id setxkbmap -option ctrl:nocaps
+exec --no-startup-id xcape -e 'Control_L=Escape'
 
 # others
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
