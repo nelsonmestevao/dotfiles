@@ -165,9 +165,9 @@ set $ws2   "2:  Terminal"
 set $ws3   "3:  Chrome"
 set $ws4   "4:  Code"
 set $ws5   "5:  Terminal"
-set $ws6   "6:  Terminal"
+set $ws6   "6: "
 set $ws7   "7: "
-set $ws8   "8: "
+set $ws8   "8:  Keybase"
 set $ws9   "9:  Discord"
 set $ws10 "10:  Spotify"
 
@@ -211,6 +211,7 @@ bindsym $mod+Shift+0 move container to workspace $ws10; workspace $ws10
 assign [class="Slack"]         $ws1
 assign [class="Code"]          $ws4
 assign [class="Google-chrome"] $ws3
+assign [class="Keybase"]       $ws8
 assign [class="discord"]       $ws9
 assign [class="Spotify"]       $ws10
 for_window [class="Spotify"] move to workspace $ws10
