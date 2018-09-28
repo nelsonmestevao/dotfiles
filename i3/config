@@ -45,6 +45,8 @@ bindsym $mod+Return exec termite
 # start a terminal with tmux
 bindsym $mod+Shift+Return exec termite -e 'tmux'
 
+bindsym $mod+Shift+t exec terminology
+
 # kill focused window
 bindsym $mod+Shift+q kill
 
