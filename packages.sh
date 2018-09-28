@@ -24,6 +24,7 @@ export PKG=(
   pandoc-crossref
   ranger
   screenkey
+  terminology
   tree
   wget
   xbacklight
@@ -38,6 +39,7 @@ export AUR=(
   neovim
   nerd-fonts-complete
   playerctl
+  pokemon-terminal-git
   polybar
 )
 
