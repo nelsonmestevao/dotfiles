@@ -211,10 +211,10 @@ bindsym $mod+Shift+0 move container to workspace $ws10; workspace $ws10
 
 # Open applications on specific workspaces
 assign [class="Slack"]         $ws1
-assign [class="Code"]          $ws4
 assign [class="Google-chrome"] $ws3
-assign [class="Keybase"]       $ws8
-assign [class="discord"]       $ws9
+assign [class="Trello"]        $ws4
+assign [class="Code"]          $ws8
+assign [class="Keybase"]       $ws9
 assign [class="Spotify"]       $ws10
 for_window [class="Spotify"] move to workspace $ws10
 
