@@ -42,5 +42,6 @@ export AUR=(
   playerctl
   pokemon-terminal-git
   polybar
+  trello
 )
 
