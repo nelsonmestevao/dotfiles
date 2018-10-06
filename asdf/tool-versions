@@ -1,6 +1,7 @@
 R 3.5.1
 elixir 1.6.0
 erlang 20.2
+golang 1.5
 haskell 8.4.3
 nodejs 8.2.1
 python 3.6.4
