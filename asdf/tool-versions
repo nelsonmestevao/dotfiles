@@ -1,6 +1,7 @@
-ruby 2.5.0
+R 3.5.1
 elixir 1.6.0
-nodejs 8.2.1
 erlang 20.2
-rust 1.23.0
+haskell 8.4.3
+nodejs 8.2.1
 python 3.6.4
+ruby 2.5.0
