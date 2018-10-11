@@ -1,0 +1,5 @@
+[PageView]
+MouseMode=RectSelect
+
+[Reviews]
+AnnotationTools=<tool type="note-linked" id="1"><engine hoverIcon="tool-note" color="#ffff00" type="PickPoint"><annotation icon="Note" color="#ffff00" type="Text"/></engine><shortcut>1</shortcut></tool>,<tool type="note-inline" id="2"><engine hoverIcon="tool-note-inline" color="#ffff00" block="true" type="PickPoint"><annotation color="#ffff00" font="Cantarell\\,10\\,-1\\,5\\,50\\,0\\,0\\,0\\,0\\,0\\,Regular" type="FreeText" width="1.38778e-16"/></engine><shortcut>2</shortcut></tool>,<tool type="highlight" id="3"><engine color="#ffff00" type="TextSelector"><annotation color="#ffff00" type="Highlight"/></engine><shortcut>3</shortcut></tool>,<tool type="highlight" id="4"><engine color="#55ff00" type="TextSelector"><annotation color="#55ff00" type="Highlight"/></engine><shortcut>4</shortcut></tool>,<tool type="highlight" id="5"><engine color="#ff0000" type="TextSelector"><annotation color="#ff0000" type="Highlight"/></engine><shortcut>5</shortcut></tool>,<tool type="highlight" id="6"><engine color="#00ffff" type="TextSelector"><annotation color="#00ffff" type="Highlight"/></engine><shortcut>6</shortcut></tool>
