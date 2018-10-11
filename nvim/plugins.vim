@@ -100,6 +100,9 @@ Plug 'gorodinskiy/vim-coloresque'
 Plug 'jelera/vim-javascript-syntax'
 Plug 'prettier/vim-prettier', { 'do': 'npm install' }
 
+" Julia
+Plug 'JuliaEditorSupport/julia-vim'
+
 " Markdown
 Plug 'godlygeek/tabular'
 Plug 'junegunn/vim-emoji'
