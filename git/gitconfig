@@ -1,10 +1,10 @@
 [user]
-  name = Nelson Estevão
-  email = nelsonmestevao@gmail.com
+  name = Marco Gonçalves
+  email = marcomatiaspg@gmail.com
 [github]
-  user = nelsonmestevao
+  user = Barca88
 [web]
-  browser = google-chrome
+  browser = firefox
 [core]
   editor = nvim
   excludesfile = ~/.dotfiles/git/gitignore_global
@@ -57,9 +57,9 @@
   default = simple
 [pull]
   rebase = true
-[url "git@github.com:nelsonmestevao/"]
+[url "git@github.com:Barca88/"]
     insteadOf = gh:
-[url "git@gitlab.com:nelsonmestevao/"]
+[url "git@gitlab.com:Barca88/"]
     insteadOf = gl:
 [color]
   ui = true
