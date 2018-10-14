@@ -13,14 +13,12 @@ alias r="ranger"
 alias ka="killall"
 alias :q="exit"
 
-alias bsc=backup
-
 alias carolina="date -d '+1 hour' '+%T' && weather Brussels Belgium 0"
 
 alias miei="slack-term --config $HOME/.slack-miei"
 alias cesium="xrandr --output HDMI1 --auto --above eDP1"
 #bota Remedio
-alias li1 "cd ~/Universidade/LI1/2018li1g142/src/"
+alias li1 "cd ~/Universidade/LI1/2018li1g142/src"
 alias um="cd ~/Universidade/"
 alias bsc="git add --all && git commit -m ':wave: :speedboat: :wave:' && git push"
 alias c="clear"
