@@ -44,5 +44,6 @@ export AUR=(
   pokemon-terminal-git
   polybar
   trello
+  watchexec
 )
 
