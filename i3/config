@@ -60,7 +60,9 @@ bindsym $mod+Shift+r restart
 bindsym $mod+Escape exec --no-startup-id betterlockscreen -l dim
 
 # start program launcher
-bindsym $mod+d exec --no-startup-id dmenu_recency
+#bindsym $mod+d exec ---no-startup-id rofi -show run
+bindsym $mod+d exec "rofi -modi window,drun,run -show drun -sidebar-mode -terminal termite -color-window '#000000, #000000, #000000' -color-normal '#000000, #b3e774, #000000, #b3e774, #000000' -color-active '#000000, #b3e774, #000000, #b3e774, #000000' -color-urgent '#000000, #b3e774, #000000, #b3e774, #000000'"
+#bindsym $mod+d exec --no-startup-id dmenu_recency
 #bindsym $mod+d      exec --no-startup-id i3-dmenu-desktop
 
 # launch categorized menu

@@ -23,6 +23,7 @@ export PKG=(
   pandoc-citeproc
   pandoc-crossref
   ranger
+  rofi
   screenkey
   terminology
   tree
