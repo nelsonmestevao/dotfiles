@@ -45,6 +45,7 @@ export AUR=(
   pokemon-terminal-git
   polybar
   trello
+  spotify
   watchexec
 )
 
