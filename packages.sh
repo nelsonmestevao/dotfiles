@@ -32,6 +32,7 @@ export PKG=(
   xcape
   xclip
   xls2csv
+  zeal
 )
 
 export AUR=(
