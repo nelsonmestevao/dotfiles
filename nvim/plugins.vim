@@ -104,6 +104,7 @@ Plug 'prettier/vim-prettier', { 'do': 'npm install' }
 Plug 'JuliaEditorSupport/julia-vim'
 
 " Markdown
+Plug 'junegunn/goyo.vim' " distraction free writing
 Plug 'godlygeek/tabular'
 Plug 'junegunn/vim-emoji'
 Plug 'plasticboy/vim-markdown'
