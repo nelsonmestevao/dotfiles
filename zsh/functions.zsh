@@ -6,6 +6,11 @@ function backup() {
   git push $@ ;
 }
 
+function please() {
+  CMD=$(history -1 | cut -d" " -f4-) ;
+  sudo "$CMD" ;
+}
+
 function gi() {
   curl -L -s https://www.gitignore.io/api/$@ ;
 }

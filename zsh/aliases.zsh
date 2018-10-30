@@ -1,3 +1,6 @@
+# UNALIASES
+unalias please
+
 # ALIASES
 
 alias dot="cd $HOME/.dotfiles && nvim ."
@@ -23,6 +26,7 @@ alias ka="killall"
 alias :q="exit"
 
 alias bsc=backup
+alias pls=please
 
 alias joão="date -d '+2 hour' '+%T' && weather Tampere Finland 0"
 alias carolina="date -d '+1 hour' '+%T' && weather Brussels Belgium 0"
