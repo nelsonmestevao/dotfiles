@@ -18,12 +18,13 @@ alias li2="cd $HOME/Code/uminho/1st/2/Laboratórios\ de\ Informática\ II/Projec
 
 alias v="nvim"
 alias vim="nvim"
-
 alias r="ranger"
 alias p="sudo pacman"
 alias y="yaourt"
 alias ka="killall"
 alias :q="exit"
+
+alias o=open
 
 alias bsc=backup
 alias pls=please
