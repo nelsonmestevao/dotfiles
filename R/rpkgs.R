@@ -1,3 +1,5 @@
+#!/usr/bin/env Rscript
+
 CRAN_PKGS <-
   c( 'bookdown'
    , 'citr'
