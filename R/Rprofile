@@ -1,2 +1,5 @@
 
+options(prompt="\033[0;34mℛ ➤ \033[0m")
+
 message("\n*** Successfully loaded .Rprofile ***\n")
+
