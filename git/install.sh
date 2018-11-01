@@ -1,7 +1,14 @@
-#!/usr/bin/env sh
+#!/bin/bash
 
-echo "Installing Git LFS..."
-sudo pacman -Syu git-lfs --needed --noconfirm
+# shellcheck source=distro.sh
+. ../distro.sh
+# shellcheck source=helpers.sh
+. ../helpers.sh
 
-ln -sfT "$HOME/.dotfiles/git/gitconfig"  "$HOME/.gitconfig"
+echo_info "Installing Git LFS..."
+_install git-lfs
 
+echo_info "Symlink ~/.gitconfig"
+ln -sfT "$HOME/.dotfiles/git/gitconfig" "$HOME/.gitconfig"
+
+echo_done "Git configuration!"

@@ -3,4 +3,3 @@
 sudo pacman -Rs termite --needed --noconfirm
 
 unlink ~/.config/termite/config
-

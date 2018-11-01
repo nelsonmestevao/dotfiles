@@ -1,9 +1,18 @@
-#!/usr/bin/env sh
+#!/bin/bash
 
+# shellcheck source=distro.sh
+. ../distro.sh
+# shellcheck source=helpers.sh
+. ../helpers.sh
+
+echo_info "Installing albert..."
 sudo yaourt -Syu albert --needed --noconfirm
 
-ln -sfT ~/.dotfiles/albert/albert.conf  ~/.config/albert/albert.conf
+echo_info "Symling albert.conf..."
+mkdir -p ~/.config/albert
+ln -sfT ~/.dotfiles/albert/albert.conf ~/.config/albert/albert.conf
+
+echo_info "Symling albert engines.json..."
 ln -sfT ~/.dotfiles/albert/engines.json ~/.config/albert/org.albert.extension.websearch/engines.json
 
-curl -o ~/.config/albert/org.albert.extension.websearch/gitlab. "https://about.gitlab.com/images/press/logo/logo.png"
-curl -o ~/.config/albert/org.albert.extension.websearch/amazon. "https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Amazon_logo_plain.svg/2000px-Amazon_logo_plain.svg.png"
+echo_done "Albert configuration!"

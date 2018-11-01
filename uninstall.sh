@@ -1,22 +1,13 @@
-#!/usr/bin/env sh
+#!/bin/bash
 
+. distro.sh
 . packages.sh
+. helpers.sh
 
-for pkg in "${PKG[@]}"
-do
-  echo "Uninstalling ${pkg}..."
-  sudo pacman -Rs "$pkg" --needed --noconfirm
-done
+# Uninstall packages in the official repositories
+echo_info "Uninstalling core packages..."
+_uninstall core
 
-SAVED_DIR=$PWD
-
-cd ~/.dotfiles
-
-dirs=$(find . -maxdepth 1 -mindepth 1 -type d -not -name '.git' -print)
-for dir in $dirs
-do
-  echo "Uninstalling ${dir}..."
-  sh "$dir"/uninstall.sh
-done
-
-cd "$SAVED_DIR"
+# Uninstall packages in the AUR
+echo_info "Uninstalling aur packages..."
+_uninstall aur

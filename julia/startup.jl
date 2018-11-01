@@ -1,11 +1,12 @@
 using Pkg
 
-PKGS = ["OhMyREPL"
-        , "CSV"
-        , "DataFrames"
-        , "Missings"
-        , "Parsers"
-        , "RData"
+PKGS = [
+        "OhMyREPL",
+        "CSV",
+        "DataFrames",
+        "Missings",
+        "Parsers",
+        "RData",
      ]
 
 for pkg in PKGS
@@ -15,4 +16,3 @@ for pkg in PKGS
 end
 
 using OhMyREPL
-

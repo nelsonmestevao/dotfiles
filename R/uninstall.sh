@@ -3,4 +3,3 @@
 sudo pacman -Rs r --needed --noconfirm
 
 unlink ~/.Rprofile
-

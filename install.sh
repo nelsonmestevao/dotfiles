@@ -1,35 +1,15 @@
-#!/usr/bin/env sh
+#!/bin/bash
 
+. distro.sh
 . packages.sh
+. helpers.sh
 
-echo "Updating packages..."
-sudo pacman -Syu --needed --noconfirm
+# Install packages in the official repositories
+# echo_info "Installing core packages..."
+# _install core
 
-for pkg in "${PKG[@]}"
-do
-  echo "Installing ${pkg}..."
-  sudo pacman -Syu "$pkg" --needed --noconfirm
-done
+# Install packages in the AUR
+# echo_info "Installing aur packages..."
+# _install aur
 
-for aur in "${AUR[@]}"
-do
-  echo "Installing ${aur}..."
-  sudo yaourt -Syu "$aur" --needed --noconfirm
-done
-
-SAVED_DIR=$PWD
-
-cd ~/.dotfiles
-
-dirs=$(find . -maxdepth 1 -mindepth 1 -type d -not -name '.git' -print)
-for dir in $dirs
-do
-  echo "Installing ${dir}..."
-  sh "$dir"/install.sh
-done
-
-sudo curl -o /usr/share/backgrounds/wallpaper.jpg  "https://images.unsplash.com/photo-1533759233673-2d30c9bc1e93"
-sudo curl -o /usr/share/backgrounds/login.jpg      "https://images.unsplash.com/photo-1539553521736-053bd7e14cf5"
-
-cd "$SAVED_DIR"
-
+_symlink

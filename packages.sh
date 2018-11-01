@@ -1,63 +1,58 @@
 #!/bin/bash
 
 export PKG=(
-  acpi
+  # acpi #
   bat
   catdoc
-  catppt
-  curl
+  ctags
+  # curl #
+  diff-so-fancy
   diffpdf
-  dunst
-  exuberant-ctags
+  # dunst #
   exa
   feh
-  htop
-  img2txt
+  # htop #
+  # libreoffice-still #
   lighttpd
   lolcat
-  lxappearance
-  ncurses-term
+  # lxappearance #
+  mupdf
   neofetch
   numlockx
   odt2txt
-  okular
-  pandoc
-  pandoc-citeproc
-  pandoc-crossref
+  playerctl
   ranger
+  rclone
   redshift
   rofi
-  screenkey
-  terminology
-  texstudio
+  shfmt
+  # terminology #
+  # texstudio #
+  tldr
   tree
+  unzip
   wget
   wmctrl
   xcape
-  xclip
-  z
+  # xclip #
   zeal
 )
 
 export AUR=(
   betterlockscreen
-  copyq
-  diff-so-fancy
-  google-chrome-stable
+  # copyq #
+  google-chrome
   hyperfine
   insect
-  mailspring
+  # mailspring #
   neovim
-  nerd-fonts-complete
-  playerctl
-  pokemon-terminal-git
+  # pokemon-terminal-git #
   polybar
   rainbow
   screenkey
+  slack-desktop
   spotify
-  tldr
-  trello
-  spotify
+  # trello #
   watchexec
+  z-dir-jump-git
 )
-
