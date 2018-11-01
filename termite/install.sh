@@ -1,6 +1,15 @@
-#!/usr/bin/env sh
+#!/bin/bash
 
-sudo pacman -Syu termite --needed --noconfirm
+# shellcheck source=distro.sh
+. ../distro.sh
+# shellcheck source=helpers.sh
+. ../helpers.sh
 
-ln -sfT ~/.dotfiles/termite/config  ~/.config/termite/config
+echo_info "Installing termite..."
+_install termite
 
+echo_info "Symlink termite config"
+mkdir -p ~/.config/termite
+ln -sfT ~/.dotfiles/termite/config ~/.config/termite/config
+
+echo_done "Termite configuration!"

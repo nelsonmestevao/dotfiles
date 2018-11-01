@@ -1,6 +1,3 @@
-# UNALIASES
-unalias please
-
 # ALIASES
 
 alias dot="cd $HOME/.dotfiles && nvim ."

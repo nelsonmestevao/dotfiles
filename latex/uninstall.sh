@@ -3,4 +3,3 @@
 sudo pacman -Rs texlive-core --needed --noconfirm
 
 unlink ~/.latexmkrc
-

@@ -3,4 +3,3 @@
 sudo pacman -Rs mercurial
 
 unlink ~/.hgrc
-

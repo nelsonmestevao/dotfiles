@@ -1,7 +1,14 @@
-#!/usr/bin/env sh
+#!/bin/bash
 
-echo "Installing LaTeX..."
-sudo pacman -Syu texlive-core --needed --noconfirm
+# shellcheck source=distro.sh
+. ../distro.sh
+# shellcheck source=helpers.sh
+. ../helpers.sh
 
+echo_info "Installing LaTeX..."
+_install texlive-most
+
+echo_info "Symlink ~/.latexmkrc"
 ln -sfT ~/.dotfiles/latex/latexmkrc ~/.latexmkrc
 
+echo_done "LaTeX configuration!"
