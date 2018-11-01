@@ -100,8 +100,8 @@ nmap <C-S-P> :call SynStack()<CR>
 nnoremap <localleader>r :silent !browser.refresh<CR>
 
 " NERDTree
-noremap <C-\> :NERDTreeTabsToggle<CR>
-noremap <leader><C-\>   :NERDTreeTabsFind<CR>
+noremap <leader>f :NERDTreeTabsToggle<CR>
+noremap <localleader>f :NERDTreeFind<CR>
 
 " Git
 noremap <Leader>ga :Gwrite<CR>
