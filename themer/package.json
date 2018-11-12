@@ -1,0 +1,25 @@
+{
+  "name": "dotfiles",
+  "version": "1.0.0",
+  "description": "Nelson Estevão's dotfiles",
+  "main": "colors.js",
+  "dependencies": {
+    "themer": "^3.1.6",
+    "themer-chrome": "^1.0.6",
+    "themer-slack": "^2.0.2",
+    "themer-termite": "^1.0.1",
+    "themer-tmux": "^1.0.4",
+    "themer-vim": "^3.0.2",
+    "themer-wallpaper-triangles": "^2.0.7"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "chrome": "themer -c colors.js -t themer-chrome -o gen",
+    "vscode": "themer -c colors.js -t themer-vscode -o gen",
+    "tmux": "themer -c colors.js -t themer-tmux -o gen",
+    "vim": "themer -c colors.js -t themer-vim -t -o gen",
+    "wallpaper": "themer -c colors.js -t themer-wallpaper-triangles -o gen"
+  },
+  "author": "Nelson Estevão",
+  "license": "MIT"
+}
