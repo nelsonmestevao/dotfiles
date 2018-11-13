@@ -456,6 +456,8 @@ exec --no-startup-id numlockx on
 #exec --no-startup-id setxkbmap -option caps:escape
 exec --no-startup-id setxkbmap -option ctrl:nocaps
 exec --no-startup-id xcape -e 'Control_L=Escape'
+# Natural Scroll
+exec_always --no-startup-id ~/.spells/naturalScrollOn.sh
 
 # others
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
