@@ -1,7 +1,7 @@
 R 3.5.1
 elixir 1.6.0
 erlang 20.2
-golang 1.5
+golang 1.11.2
 haskell 8.4.3
 julia 1.0.1
 nodejs 8.2.1
