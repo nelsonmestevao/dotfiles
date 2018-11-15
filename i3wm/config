@@ -172,7 +172,7 @@ set $ws5   "5:  Terminal"
 set $ws6   "6: "
 set $ws7   "7: "
 set $ws8   "8:  Code"
-set $ws9   "9:  Keybase"
+set $ws9   "9:  Mail"
 set $ws10 "10:  Spotify"
 
 # switch to workspace
@@ -216,7 +216,7 @@ assign [class="Slack"]         $ws1
 assign [class="Google-chrome"] $ws3
 assign [class="Trello"]        $ws4
 assign [class="Code"]          $ws8
-assign [class="Keybase"]       $ws9
+assign [class="Mailspring"]    $ws9
 assign [class="Spotify"]       $ws10
 for_window [class="Spotify"] move to workspace $ws10
 
@@ -438,9 +438,10 @@ mode "$mode_gaps_outer" {
 # Autostart applications
 exec --no-startup-id albert
 exec --no-startup-id copyq
-exec --no-startup-id volumeicon
-exec --no-startup-id redshift -l 41:-8 -t 5700:3600
+exec --no-startup-id mailspring
 exec --no-startup-id nm-applet
+exec --no-startup-id redshift -l 41:-8 -t 5700:3600
+exec --no-startup-id volumeicon
 
 exec --no-startup-id nitrogen --restore; sleep 1; compton -b
 exec --no-startup-id xautolock -time 10 -locker betterlockscreen -l dim

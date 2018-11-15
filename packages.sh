@@ -36,9 +36,10 @@ export PKG=(
 )
 
 export AUR=(
-  betterlockscreen
   copyq
+  betterlockscreen
   google-chrome-stable
+  mailspring
   neovim
   nerd-fonts-complete
   playerctl
