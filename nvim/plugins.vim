@@ -35,7 +35,7 @@ Plug 'w0rp/ale'
 " Plug 'neomake/neomake'
 Plug 'sheerun/vim-polyglot'
 Plug 'vim-syntastic/syntastic'
-" Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
@@ -84,6 +84,9 @@ Plug 'ludwig/split-manpage.vim'
 Plug 'elixir-editors/vim-elixir'
 Plug 'carlosgaldino/elixir-snippets'
 
+" Go
+Plug 'zchee/deoplete-go', { 'do': 'make'}
+
 " Haskell
 Plug 'dag/vim2hs'
 Plug 'eagletmt/neco-ghc'
@@ -125,7 +128,15 @@ Plug 'ecomba/vim-ruby-refactoring'
 call plug#end()
 
 """ deoplete
-" let g:deoplete#enable_at_startup = 1
+" Enable deoplete on startup
+let g:deoplete#enable_at_startup = 1
+
+""" Ale
+" Error and warning signs.
+let g:ale_sign_error = '✗'
+let g:ale_sign_warning = '⚠'
+" Enable integration with airline.
+let g:airline#extensions#ale#enabled = 1
 
 """ NERDTree
 "let NERDTreeShowHidden=1
@@ -191,4 +202,15 @@ let g:vim_markdown_frontmatter = 1
 let g:vim_markdown_folding_disabled = 1
 let g:vim_markdown_toml_frontmatter = 1
 let g:vim_markdown_json_frontmatter = 1
+
+""" Go
+let g:go_fmt_command = "goimports"
+let g:go_highlight_build_constraints = 1
+let g:go_highlight_extra_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_structs = 1
+let g:go_highlight_types = 1
 
