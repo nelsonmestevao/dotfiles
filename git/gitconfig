@@ -9,6 +9,7 @@
   editor = nvim
   excludesfile = ~/.dotfiles/git/gitignore_global
   attributesfile = ~/.dotfiles/git/gitattributes
+  pager = diff-so-fancy | less --tabs=4 -RFX
 [commit]
   template = ~/.dotfiles/git/git-commit-msg-template
 [alias]
@@ -23,8 +24,9 @@
   st = status
   conflicts = diff --name-only --diff-filter=U
 
-  fire = !git-fire
-  fuck = !git-fuck-this
+  fire  = !git-fire
+  fuck  = !git-fuck-this
+  patch = !git --no-pager diff
 [branch]
   autosetuprebase = always
 [merge]

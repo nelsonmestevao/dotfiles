@@ -36,8 +36,9 @@ export PKG=(
 )
 
 export AUR=(
-  copyq
   betterlockscreen
+  copyq
+  diff-so-fancy
   google-chrome-stable
   mailspring
   neovim
