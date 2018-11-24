@@ -46,6 +46,10 @@ export AUR=(
   playerctl
   pokemon-terminal-git
   polybar
+  rainbow
+  screenkey
+  spotify
+  tldr
   trello
   spotify
   watchexec
