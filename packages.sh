@@ -26,6 +26,7 @@ export PKG=(
   rofi
   screenkey
   terminology
+  texstudio
   tree
   wget
   xbacklight
