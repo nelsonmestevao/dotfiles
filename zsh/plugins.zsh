@@ -12,6 +12,7 @@ plugins=(
 )
 
 source $DOTFILES/zsh/plugins/syntax-highlighting.zsh
+[[ -r "/usr/share/z/z.sh" ]] && source /usr/share/z/z.sh
 
 ### zplug #####################################################################
 

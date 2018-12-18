@@ -32,7 +32,7 @@ export PKG=(
   xbacklight
   xcape
   xclip
-  xls2csv
+  z
   zeal
 )
 
