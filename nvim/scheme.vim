@@ -39,6 +39,22 @@ let g:indentLine_concealcursor = 0
 let g:indentLine_faster = 1
 let g:indentLine_char = '┆'
 
+" Fuzzy finder
+let g:fzf_colors = {
+      \ 'fg':      ['fg', 'GruvboxGray'],
+      \ 'bg':      ['bg', 'Normal'],
+      \ 'hl':      ['fg', 'GruvboxRed'],
+      \ 'fg+':     ['fg', 'GruvboxGreen'],
+      \ 'bg+':     ['bg', 'GruvboxBg1'],
+      \ 'hl+':     ['fg', 'GruvboxRed'],
+      \ 'info':    ['fg', 'GruvboxOrange'],
+      \ 'prompt':  ['fg', 'GruvboxBlue'],
+      \ 'header':  ['fg', 'GruvboxBlue'],
+      \ 'pointer': ['fg', 'Error'],
+      \ 'marker':  ['fg', 'Error'],
+      \ 'spinner': ['fg', 'Statement'],
+      \ }
+
 " vim-airline
 let g:airline#extensions#syntastic#enabled = 1
 let g:airline#extensions#branch#enabled = 1
