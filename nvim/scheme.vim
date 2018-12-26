@@ -5,6 +5,10 @@
 syntax on
 filetype plugin indent on
 
+if (has("termguicolors"))
+ set termguicolors
+endif
+
 set wrap
 set ruler
 set title                 " change the terminal's title
@@ -23,21 +27,11 @@ set listchars+=tab:>-
 set listchars+=trail:•
 set listchars+=nbsp:•
 
-set background=dark
-colorscheme gruvbox
-let g:gruvbox_contrast_dark = 'hard'
 
-""" vim-airline
-let g:airline_theme='gruvbox'
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#formatter = 'default'
-let g:airline_powerline_fonts = 1
-
-" IndentLine
-let g:indentLine_enabled = 0
-let g:indentLine_concealcursor = 0
-let g:indentLine_faster = 1
-let g:indentLine_char = '┆'
+" Theme
+syntax enable
+colorscheme OceanicNext
+" let g:gruvbox_contrast_dark = 'hard'
 
 " Fuzzy finder
 let g:fzf_colors = {
@@ -56,6 +50,10 @@ let g:fzf_colors = {
       \ }
 
 " vim-airline
+" let g:airline_theme='gruvbox'
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#formatter = 'default'
+let g:airline_powerline_fonts = 1
 let g:airline#extensions#syntastic#enabled = 1
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#tabline#enabled = 1
@@ -86,3 +84,9 @@ let WebDevIconsUnicodeDecorateFolderNodesExactMatches = 1
 "let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['ex'] = ''
 "let g:WebDevIconsUnicodeDecorateFileNodesExactSymbols = {} " needed
 "let g:WebDevIconsUnicodeDecorateFileNodesExactSymbols['.gitignore'] = ''
+
+" IndentLine
+let g:indentLine_enabled = 0
+let g:indentLine_concealcursor = 0
+let g:indentLine_faster = 1
+let g:indentLine_char = '┆'
