@@ -94,7 +94,7 @@ noremap <leader>p "+gP<CR>
 noremap XX "+x<CR>
 
 " Rename the current file
-noremap <Leader>r :call Rename()<CR>
+noremap <leader>r :call Rename()<CR>
 
 " Show syntax highlighting groups for word under cursor
 nmap <C-S-P> :call SynStack()<CR>
@@ -117,7 +117,7 @@ noremap <Leader>gd :Gvdiff<CR>
 noremap <Leader>gr :Gremove<CR>
 
 " Tagbar
-nmap <C-t> :TagbarToggle<CR>
+nnoremap <leader>t :TagbarToggle<CR>
 
 " FZF
 nnoremap <leader>e :Files<CR>
@@ -317,29 +317,4 @@ let g:tagbar_type_ruby = {
       \ 'F:singleton methods'
       \ ]
       \ }
-
-" RSpec.vim mappings
-map <Leader>t :call RunCurrentSpecFile()<CR>
-map <Leader>s :call RunNearestSpec()<CR>
-map <Leader>l :call RunLastSpec()<CR>
-map <Leader>a :call RunAllSpecs()<CR>
-
-" For ruby refactory
-if has('nvim')
-  runtime! macros/matchit.vim
-else
-  packadd! matchit
-endif
-
-" Ruby refactory
-nnoremap <leader>rap  :RAddParameter<cr>
-nnoremap <leader>rcpc :RConvertPostConditional<cr>
-nnoremap <leader>rel  :RExtractLet<cr>
-vnoremap <leader>rec  :RExtractConstant<cr>
-vnoremap <leader>relv :RExtractLocalVariable<cr>
-nnoremap <leader>rit  :RInlineTemp<cr>
-vnoremap <leader>rrlv :RRenameLocalVariable<cr>
-vnoremap <leader>rriv :RRenameInstanceVariable<cr>
-vnoremap <leader>rem  :RExtractMethod<cr>
-
 
