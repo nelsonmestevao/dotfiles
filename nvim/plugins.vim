@@ -18,6 +18,9 @@ endif
 " Plugins Install Packages
 call plug#begin(expand('~/.config/nvim/plugged'))
 
+" Games
+Plug 'vim-scripts/TeTrIs.vim'
+
 " IDE like plugins
 Plug 'majutsushi/tagbar'
 Plug 'tpope/vim-endwise'
