@@ -41,6 +41,7 @@ export AUR=(
   copyq
   diff-so-fancy
   google-chrome-stable
+  hyperfine
   insect
   mailspring
   neovim
