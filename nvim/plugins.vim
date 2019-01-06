@@ -49,6 +49,9 @@ Plug 'honza/vim-snippets'
 " EditorConfig
 Plug 'editorconfig/editorconfig-vim'
 
+" Org-Mode
+Plug 'jceb/vim-orgmode'
+
 " Git
 Plug 'tpope/vim-git'
 Plug 'tpope/vim-fugitive'
