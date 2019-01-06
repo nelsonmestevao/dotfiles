@@ -8,6 +8,7 @@ export PKG=(
   diffpdf
   dunst
   exuberant-ctags
+  exa
   feh
   htop
   img2txt
