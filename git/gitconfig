@@ -11,6 +11,7 @@
   attributesfile = ~/.dotfiles/git/gitattributes
   pager = diff-so-fancy | less --tabs=4 -RFX
 [commit]
+  verbose = true
   template = ~/.dotfiles/git/git-commit-msg-template
 [alias]
   a = add
