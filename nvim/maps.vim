@@ -51,11 +51,9 @@ nnoremap <S-Tab> gT
 nnoremap <silent> <S-t> :tabnew<CR>
 
 "" Buffer nav
-noremap <leader>z :bp<CR>
+noremap <leader>b :Buffers<CR>
 noremap <leader>q :bp<CR>
-noremap <leader>x :bn<CR>
 noremap <leader>w :bn<CR>
-noremap <leader>c :bd<CR>
 
 "" Clean search (highlight)
 nnoremap <localleader><leader> :noh<cr>
