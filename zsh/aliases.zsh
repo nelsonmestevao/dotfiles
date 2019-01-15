@@ -21,7 +21,7 @@ alias vim="nvim"
 alias r="ranger"
 alias p="sudo pacman"
 alias y="yaourt"
-alias l="exa --long --git"
+alias l="exa --long --git --sort type"
 alias ka="killall"
 alias :q="exit"
 
