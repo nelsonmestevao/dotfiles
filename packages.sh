@@ -30,7 +30,7 @@ export PKG=(
   texstudio
   tree
   wget
-  xbacklight
+  wmctrl
   xcape
   xclip
   z
