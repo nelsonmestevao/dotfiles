@@ -24,6 +24,7 @@ export PKG=(
   pandoc-citeproc
   pandoc-crossref
   ranger
+  redshift
   rofi
   screenkey
   terminology
