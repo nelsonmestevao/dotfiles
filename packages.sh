@@ -2,6 +2,7 @@
 
 export PKG=(
   acpi
+  bat
   catdoc
   catppt
   curl
