@@ -27,6 +27,8 @@ alias :q="exit"
 
 alias o=open
 
+alias gi=git-ignore
+
 alias bsc=backup
 alias pls=please
 
