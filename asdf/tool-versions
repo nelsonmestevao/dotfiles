@@ -5,3 +5,4 @@ julia 1.1.0
 nodejs 10.15.0
 ruby system
 rust system
+java openjdk-11.0.1
