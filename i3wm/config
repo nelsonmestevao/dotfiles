@@ -169,7 +169,7 @@ set $ws2   "2:  Terminal"
 set $ws3   "3:  Chrome"
 set $ws4   "4:  Trello"
 set $ws5   "5:  Terminal"
-set $ws6   "6: "
+set $ws6   "6:  IntelliJ"
 set $ws7   "7: "
 set $ws8   "8:  Code"
 set $ws9   "9:  Mail"
@@ -212,12 +212,13 @@ bindsym $mod+Shift+9 move container to workspace $ws9;  workspace $ws9
 bindsym $mod+Shift+0 move container to workspace $ws10; workspace $ws10
 
 # Open applications on specific workspaces
-assign [class="Slack"]         $ws1
-assign [class="Google-chrome"] $ws3
-assign [class="Trello"]        $ws4
-assign [class="code-oss"]      $ws8
-assign [class="Mailspring"]    $ws9
-assign [class="Spotify"]       $ws10
+assign [class="Slack"]           $ws1
+assign [class="Google-chrome"]   $ws3
+assign [class="Trello"]          $ws4
+assign [class="jetbrains-idea"]  $ws6
+assign [class="code-oss"]        $ws8
+assign [class="Mailspring"]      $ws9
+assign [class="Spotify"]         $ws10
 for_window [class="Spotify"] move to workspace $ws10
 
 # Open specific applications in floating mode
