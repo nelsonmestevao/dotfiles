@@ -27,6 +27,7 @@
 
   fire  = !git-fire
   fuck  = !git-fuck-this
+  joke  = !git-joke
   patch = !git --no-pager diff
 [branch]
   autosetuprebase = always
