@@ -1,7 +1,8 @@
 #!/usr/bin/env sh
 
-echo "Installling Haskell..."
-sudo pacman -Syu ghc ghc-libs ghc-static cabal-install
+echo "Installing haskell..."
+sudo pacman -S stack
 
+echo "Symling .ghci..."
 ln -sfT ~/.dotfiles/haskell/ghci ~/.ghci
 
