@@ -6,7 +6,8 @@
   </a>
 </h1>
 
-[![Build Status](https://semaphoreci.com/api/v1/nelsonmestevao/dotfiles/branches/master/badge.svg)][semaphoreci]
+[![Build Status](https://semaphoreci.com/api/v1/nelsonmestevao/dotfiles/branches/master/badge.svg)][![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fnelsonmestevao%2Fdotfiles.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fnelsonmestevao%2Fdotfiles?ref=badge_shield)
+[semaphoreci]
 
 ## Install
 
@@ -26,3 +27,7 @@ cd ~
 rm -rf ~/.dotfiles
 rm -rf ~/.spells
 ```
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fnelsonmestevao%2Fdotfiles.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fnelsonmestevao%2Fdotfiles?ref=badge_large)
