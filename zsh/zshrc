@@ -6,7 +6,7 @@
 #   (_)___|___/_| |_|_|  \___|
 
 export DOTFILES="$HOME/.dotfiles"
-export PATH=$PATH:$HOME/.spells:$HOME/.spells/git
+export PATH=$PATH:$HOME/.spells:$HOME/.spells/git:$HOME/.spells/rofi
 
 source $DOTFILES/zsh/plugins.zsh
 source $DOTFILES/zsh/theme.zsh
