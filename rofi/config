@@ -1,0 +1,8 @@
+! Rofi config file
+rofi.theme: ~/.dotfiles/rofi/oxide.rafi
+rofi.modi:           drun,window,run
+rofi.combi-modi:     drun,window
+rofi.display-window: Window
+rofi.display-drun:   Search
+rofi.show-icons:     true
+rofi.lines:          10
