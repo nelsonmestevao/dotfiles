@@ -1,7 +1,6 @@
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Scheme                                                                      "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+# Scheme                                                                      "
 
+```vim
 syntax on
 filetype plugin indent on
 
@@ -90,3 +89,5 @@ let g:indentLine_enabled = 0
 let g:indentLine_concealcursor = 0
 let g:indentLine_faster = 1
 let g:indentLine_char = '┆'
+```
+
