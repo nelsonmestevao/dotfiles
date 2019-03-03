@@ -5,9 +5,11 @@
 "     | | | | | | |_ \ V /| | | | | | |
 "     |_|_| |_|_|\__(_)_/ |_|_| |_| |_|
 
-source ~/.dotfiles/nvim/plugins.vim
-source ~/.dotfiles/nvim/base.vim
-source ~/.dotfiles/nvim/functions.vim
-source ~/.dotfiles/nvim/maps.vim
-source ~/.dotfiles/nvim/scheme.vim
+source ~/.dotfiles/nvim/autoload/literate.vim
+
+execute literate#load("~/.dotfiles/nvim/plugins.md")
+execute literate#load("~/.dotfiles/nvim/base.md")
+execute literate#load("~/.dotfiles/nvim/functions.md")
+execute literate#load("~/.dotfiles/nvim/maps.md")
+execute literate#load("~/.dotfiles/nvim/scheme.md")
 

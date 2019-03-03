@@ -1,19 +1,42 @@
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Keymaps                                                                     "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+# Keymaps
 
-" Map leader
+## Leader Keys
+
+The leader keys change the normal behavior of the keys by creating an
+intermediate mode.
+
+```vim
 let mapleader="\<space>"
 let maplocalleader=','
+```
 
-" Because <Esc> it too far away
+## Comfortable Escape Key
+
+I don't have a Caps lock key because I prefer having a <kdb>Ctrl</kdb> and a
+<kdb>Esc</kdb> keys there. However, for a quick Escape key I like the `kj`
+combination since they normally don't appear together in the English
+dictionary.
+
+```vim
+" Because <Esc> is too far away
 inoremap kj <Esc>
 cnoremap kj <Esc>
+```
 
-" Ups?
+Leaving insert mode when you are in the terminal mode (inside vim) is just
+annoying. Using the `Escape` key is much more comfortable.
+
+```vim
 tnoremap <Esc> <C-\><C-n>
+```
 
-"" no one is really happy until you have this shortcuts
+## Basics
+
+We all do this mistakes. I would recommend you to remap your `CapsLock` key
+system wise. Less errors of this nature would happen. However, if you choose
+not to, this list of shortcuts will make you a little bit happier.
+
+```vim
 cnoreabbrev W! w!
 cnoreabbrev Q! q!
 cnoreabbrev Qall! qall!
@@ -24,24 +47,47 @@ cnoreabbrev WQ wq
 cnoreabbrev W w
 cnoreabbrev Q q
 cnoreabbrev Qall qall
+```
 
-" Split
-noremap <Leader>h :<C-u>split<CR>
-noremap <Leader>v :<C-u>vsplit<CR>
+I could not live without this old habit. Saving with key sequence `Ctrl` + `S`.
 
-" Better pane movement
+```vim
+nnoremap <C-s> :w<CR>
+inoremap <C-s> <Esc>:w<CR>a
+vnoremap <C-s> <Esc>:w<CR>
+```
+
+Do you want to split faster?
+
+- `h`orizontal
+- `v`ertical
+
+```vim
+noremap <Leader>h :split<CR>
+noremap <Leader>v :vsplit<CR>
+```
+
+Better pane movement.
+
+```vim
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
+```
 
-" Better pane switching
+Better pane switching.
+
+```vim
 nnoremap <M-h> <C-w>H
 nnoremap <M-j> <C-w>J
 nnoremap <M-k> <C-w>K
 nnoremap <M-l> <C-w>L
+```
 
-" Tab management
+## Tab & Buffer management
+
+```vim
 nnoremap tn :tabnew<Space>
 nnoremap tk :tabnext<CR>
 nnoremap th :tabfirst<CR>
@@ -49,12 +95,15 @@ nnoremap tl :tablast<CR>
 nnoremap <Tab> gt
 nnoremap <S-Tab> gT
 nnoremap <silent> <S-t> :tabnew<CR>
+```
 
-"" Buffer nav
+```vim
 noremap <leader>b :Buffers<CR>
 noremap <leader>q :bp<CR>
 noremap <leader>w :bn<CR>
+```
 
+```vim
 "" Clean search (highlight)
 nnoremap <localleader><leader> :noh<cr>
 
@@ -65,7 +114,11 @@ nnoremap <silent> <leader>sh :terminal<CR>
 " search will center on the line it's found in.
 nnoremap n nzzzv
 nnoremap N Nzzzv
+```
 
+## Visual Mode Mappings
+
+```vim
 " Vmap for maintain Visual Mode after shifting > and <
 vmap < <gv
 vmap > >gv
@@ -74,10 +127,6 @@ vmap > >gv
 vnoremap J :m '>+1<CR>gv=gv
 vnoremap K :m '<-2<CR>gv=gv
 
-" Save it
-nnoremap <C-s> :w<CR>
-inoremap <C-s> <Esc>:w<CR>a
-vnoremap <C-s> <Esc>:w<CR>
 
 " Indent all file and come back to where you were
 nnoremap <leader>gf gg=G``zz
@@ -99,7 +148,11 @@ nmap <C-S-P> :call SynStack()<CR>
 
 " Refresh the browser
 nnoremap <localleader>r :silent !browser.refresh<CR>
+```
 
+## Plugin Related maps
+
+```vim
 " NERDTree
 noremap <leader>f :NERDTreeTabsToggle<CR>
 noremap <localleader>f :NERDTreeFind<CR>
@@ -315,4 +368,5 @@ let g:tagbar_type_ruby = {
       \ 'F:singleton methods'
       \ ]
       \ }
+```
 
