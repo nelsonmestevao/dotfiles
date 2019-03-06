@@ -49,6 +49,7 @@ export AUR=(
   # pokemon-terminal-git #
   polybar
   rainbow
+  sc-im
   screenkey
   slack-desktop
   spotify
