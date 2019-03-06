@@ -9,6 +9,7 @@ echo_info "Installing Ranger..."
 sudo pacman -S ranger --need --noconfirm
 
 echo_info "Symlink rc.conf..."
+mkdir -p ~/.config/ranger
 ln -sfT ~/.dotfiles/ranger/rc.conf ~/.config/ranger/rc.conf
 
 echo_done "Ranger configuration!"
