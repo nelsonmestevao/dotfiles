@@ -62,13 +62,13 @@
 [pull]
   rebase = true
 [url "git@github.com:nelsonmestevao/"]
-    insteadOf = gh:
+  insteadOf = gh:
 [url "git@github.com:"]
-    insteadOf = ghx:
+  insteadOf = ghx:
 [url "git@gitlab.com:nelsonmestevao/"]
-    insteadOf = gl:
+  insteadOf = gl:
 [url "git@gitlab.com:"]
-    insteadOf = glx:
+  insteadOf = glx:
 [color]
   ui = true
 [color "diff-highlight"]
@@ -83,6 +83,8 @@
   old = red bold
   new = green bold
   whitespace = red reverse
+[diff-so-fancy]
+  first-run = false
 [filter "lfs"]
   clean = git-lfs clean -- %f
   smudge = git-lfs smudge -- %f
