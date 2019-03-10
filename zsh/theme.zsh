@@ -8,4 +8,3 @@ ZSH_THEME="powerlevel9k/powerlevel9k"
 source $ZSH/oh-my-zsh.sh
 
 source $DOTFILES/zsh/themes/powerlevel9k.zsh
-
