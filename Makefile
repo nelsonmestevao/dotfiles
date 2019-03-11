@@ -8,7 +8,7 @@ uninstall:
 	@./uninstall.sh
 
 fmt:
-	@shfmt -l -w -i 2 .
+	@shfmt -l -w -ci -i 2 .
 
 test:
 	@./tests.sh

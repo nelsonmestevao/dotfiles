@@ -4,7 +4,7 @@
 [github]
   user = nelsonmestevao
 [web]
-  browser = google-chrome
+  browser = google-chrome-stable
 [core]
   editor = nvim
   excludesfile = ~/.dotfiles/git/gitignore_global
