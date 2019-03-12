@@ -1,12 +1,12 @@
 [semaphoreci]: https://semaphoreci.com/nelsonmestevao/dotfiles
+[releases]: https://github.com/nelsonmestevao/dotfiles/releases/latest
 
 <h1 align="center">
-  <a target="_blank" href="https://dotfiles.github.io">
-    <img src="https://dotfiles.github.io/images/dotfiles-logo.png" alt="dotfiles" width="400px">
-  </a>
+  <img src="https://user-images.githubusercontent.com/19409687/54166758-980b4200-445e-11e9-8e81-f0cd7ba70fb5.png" alt="dotfiles" width="750px">
 </h1>
 
 [![Build Status](https://semaphoreci.com/api/v1/nelsonmestevao/dotfiles/branches/master/badge.svg)][semaphoreci]
+[![Latest Release](https://img.shields.io/github/release-pre/nelsonmestevao/dotfiles.svg?style=flat-square)][releases]
 
 I really like to configure my system in every possible way. This repository
 holds how I do it. If you are just starting out you could use mine (_I don't
@@ -61,4 +61,3 @@ As you probably know, you shouldn't just run my Makefile without reading it
 first. And if you read it, you will understand that it calls other scripts like
 `install.sh` which depend on `helpers.sh`. Read those, it's the only way that
 you can trust what it is doing.
-
