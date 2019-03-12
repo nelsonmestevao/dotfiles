@@ -1,0 +1,32 @@
+[colors]
+# If both of these are unset, cursor falls back to the foreground color,
+# and cursor_foreground falls back to the background color.
+cursor = #16A085
+cursor_foreground = #ECF0F1
+
+foreground = #ECF0F1
+foreground_bold = #ECF0F1
+
+# 20% background transparency (requires a compositor)
+background = rgba(31, 45, 58, 0.8)
+
+# If unset, will reverse foreground and background
+highlight = #2980B9
+
+# Colors from color0 to color254 can be set
+color0 = #1F2D3A
+color1 = #C0392B
+color2 = #27AE60
+color3 = #F39C12
+color4 = #2980B9
+color5 = #8E44AD
+color6 = #16A085
+color7 = #84888B
+color8 = #2C3E50
+color9 = #E74C3C
+color10 = #2ECC71
+color11 = #F1C40F
+color12 = #3498DB
+color13 = #9B59B6
+color14 = #2AA198
+color15 = #ECF0F1

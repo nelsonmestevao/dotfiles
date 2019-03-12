@@ -1,0 +1,17 @@
+[options]
+resize_grip = false
+scroll_on_output = false
+scroll_on_keystroke = true
+audible_bell = false
+visible_bell = false
+mouse_autohide = false
+allow_bold = true
+dynamic_title = true
+urgent_on_bell = true
+clickable_url = true
+font = Hack NF, Regular 11
+scrollback_lines = 1000
+search_wrap = true
+cursor_blink = system
+cursor_shape = block
+browser = google-chrome-stable
