@@ -28,6 +28,7 @@ asdf update
 echo_info "Add asdf plugins..."
 asdf plugin-add R
 asdf plugin-add golang
+asdf plugin-add haskell
 asdf plugin-add julia
 asdf plugin-add nodejs
 asdf plugin-add ruby

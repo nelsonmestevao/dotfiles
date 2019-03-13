@@ -1,0 +1,7 @@
+ShellCheck
+cabal-install
+hindent
+hlint
+lhs2tex
+pandoc
+pandoc-citeproc

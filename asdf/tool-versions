@@ -1,5 +1,6 @@
 R 3.5.2
 golang 1.11.5
+haskell 8.6.4
 java openjdk-11.0.1
 julia 1.1.0
 nodejs 10.15.0
