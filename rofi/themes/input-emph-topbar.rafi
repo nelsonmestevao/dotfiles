@@ -24,25 +24,30 @@ configuration {
   location: center;
   anchor: center;
 }
+
 #mainbox {
   background-color: transparent;
   children: [sidebar,inputbar,dummy,listview];
   spacing: 0;
 }
+
 #sidebar {
   background-color: transparent;
   spacing: 0;
 }
+
 #button {
   background-color: @fg;
   text-color: @bg;
   padding: 10px;
   expand: false;
 }
+
 #button.selected {
   background-color: @bg;
   text-color: @fg;
 }
+
 #inputbar {
   background-color: @bg;
   text-color: @fg;
@@ -50,68 +55,84 @@ configuration {
   border-radius: 0 10px 10px 10px;
   spacing: 10px;
 }
+
 #prompt {
   background-color: @bg;
   text-color: @fg;
   font: "Ubuntu 20";
 }
+
 #case-indicator {
   background-color: @bg;
   text-color: @fg;
   font: "Ubuntu 20";
 }
+
 #entry {
   background-color: @bg;
   text-color: @fg;
   font: "Ubuntu 20";
 }
+
 #dummy {
   background-color: transparent;
   expand: false;
   padding: 5px 0px 0px 0px;
 }
+
 #listview {
   background-color: @below-bg;
   spacing: 0;
   border-radius: 5px;
 }
+
 #element {
   background-color: transparent;
   padding: 10px;
 }
+
 #element.normal.normal {
   background-color: @below-bg;
   text-color:       @fg;
 }
+
 #element.normal.urgent {
   background-color: @below-bg;
   text-color:       @fg;
 }
+
 #element.normal.active {
   background-color: @below-bg;
   text-color:       @fg;
 }
+
 #element.selected.normal {
   background-color: @selected-bg;
   text-color:       @selected-fg;
 }
+
 #element.selected.urgent {
   background-color: @selected-bg;
   text-color:       @selected-fg;
 }
+
 #element.selected.active {
   background-color: @selected-bg;
   text-color:       @selected-fg;
 }
+
 #element.alternate.normal {
   background-color: @below-bg;
   text-color:       @fg;
 }
+
 #element.alternate.urgent {
   background-color: @below-bg;
   text-color:       @fg;
 }
+
 #element.alternate.active {
   background-color: @below-bg;
   text-color:       @fg;
 }
+
