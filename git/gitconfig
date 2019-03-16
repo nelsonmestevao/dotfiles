@@ -25,10 +25,11 @@
   st = status
   conflicts = diff --name-only --diff-filter=U
 
-  fire  = !git-fire
-  fuck  = !git-fuck-this
-  joke  = !git-joke
-  patch = !git --no-pager diff
+  fire   = !git-fire
+  fuck   = !git-fuck-this
+  joke   = !git-joke
+  patch  = !git --no-pager diff
+  forall = !git-forall $@
 [branch]
   autosetuprebase = always
 [merge]
