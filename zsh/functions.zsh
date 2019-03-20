@@ -10,6 +10,15 @@ function git-ignore() {
   curl -L -s https://www.gitignore.io/api/$@
 }
 
+function most () {
+  history | awk '{
+      cmd[$2]++; count++;
+    }
+    END {
+      for (i in cmd) print cmd[i]/count*100 "%", i
+    }' | sort -nr | head -n20 | column -c3 -s " " -t
+}
+
 function mkcd() {
   mkdir -p $@
   cd $@
