@@ -27,6 +27,11 @@ alias o=open
 
 alias gi=git-ignore
 
+alias mk=make
+alias mkc="make clean"
+alias mkr="make run"
+alias mkt="make test"
+
 alias bsc=backup
 alias pls=please
 
