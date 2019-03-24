@@ -32,9 +32,29 @@
   forall = !git-forall $@
 [branch]
   autosetuprebase = always
+[log]
+  date = auto:human
 [merge]
   tool = vimdiff
   log = true
+[push]
+  default = simple
+[pull]
+  rebase = true
+[color]
+  ui = true
+[color "diff-highlight"]
+  oldNormal = red bold
+  oldHighlight = red bold 52
+  newNormal = green bold
+  newHighlight = green bold 22
+[color "diff"]
+  meta = yellow
+  frag = magenta bold
+  commit = yellow bold
+  old = red bold
+  new = green bold
+  whitespace = red reverse
 [diff]
   tool = vimdiff
   submodule = log
@@ -58,10 +78,8 @@
   binary = true
   cachetextconv = true
   textconv = catppt
-[push]
-  default = simple
-[pull]
-  rebase = true
+[diff-so-fancy]
+  first-run = false
 [url "git@github.com:nelsonmestevao/"]
   insteadOf = gh:
 [url "git@github.com:"]
@@ -70,22 +88,6 @@
   insteadOf = gl:
 [url "git@gitlab.com:"]
   insteadOf = glx:
-[color]
-  ui = true
-[color "diff-highlight"]
-  oldNormal = red bold
-  oldHighlight = red bold 52
-  newNormal = green bold
-  newHighlight = green bold 22
-[color "diff"]
-  meta = yellow
-  frag = magenta bold
-  commit = yellow bold
-  old = red bold
-  new = green bold
-  whitespace = red reverse
-[diff-so-fancy]
-  first-run = false
 [filter "lfs"]
   clean = git-lfs clean -- %f
   smudge = git-lfs smudge -- %f
