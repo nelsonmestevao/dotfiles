@@ -15,7 +15,7 @@ $pdf_mode = 1;
 # Use bibtex if a .bib file exists
 $bibtex_use = 1;
 
-$pdf_previewer = 'start mupdf';
-$pdf_update_method = 2;
+$pdf_previewer = 'start zathura';
+# $pdf_update_method = 2;
 
 $clean_ext = "bbl nav out snm upa synctex.gz";

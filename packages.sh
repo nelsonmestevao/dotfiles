@@ -16,7 +16,8 @@ export PKG=(
   lighttpd
   lolcat
   # lxappearance #
-  mupdf
+  # mupdf
+  zathura-pdf-mupdf
   neofetch
   numlockx
   odt2txt
