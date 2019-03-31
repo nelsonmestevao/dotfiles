@@ -2,27 +2,28 @@
 
 export PKG=(
   # acpi #
-  # bat
+  # bat #
   catdoc
   ctags
   # curl #
   diff-so-fancy
   diffpdf
   # dunst #
-  # exa
+  # exa #
   feh
-  # hyperfine
   # htop #
+  # hyperfine #
   # libreoffice-still #
   lighttpd
   lolcat
   # lxappearance #
-  # mupdf
-  zathura-pdf-mupdf
+  # mupdf #
   neofetch
   numlockx
   odt2txt
   playerctl
+  pulseaudio
+  pulseaudio-bluetooth
   ranger
   rclone
   redshift
@@ -37,6 +38,7 @@ export PKG=(
   wmctrl
   xcape
   # xclip #
+  zathura-pdf-mupdf
   zeal
 )
 
@@ -58,3 +60,4 @@ export AUR=(
   watchexec
   z-dir-jump-git
 )
+
