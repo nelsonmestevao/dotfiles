@@ -2,15 +2,16 @@
 
 export PKG=(
   # acpi #
-  bat
+  # bat
   catdoc
   ctags
   # curl #
   diff-so-fancy
   diffpdf
   # dunst #
-  exa
+  # exa
   feh
+  # hyperfine
   # htop #
   # libreoffice-still #
   lighttpd
@@ -43,7 +44,6 @@ export AUR=(
   betterlockscreen
   # copyq #
   google-chrome
-  hyperfine
   insect
   # mailspring #
   neovim
