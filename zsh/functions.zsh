@@ -25,7 +25,7 @@ function mkcd() {
 }
 
 function open() {
-  xdg-open $@ &
+  xdg-open $@ & disown
 }
 
 function please() {
