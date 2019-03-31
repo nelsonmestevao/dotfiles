@@ -45,6 +45,7 @@ export PKG=(
 export AUR=(
   betterlockscreen
   # copyq #
+  franz
   google-chrome
   insect
   # mailspring #
