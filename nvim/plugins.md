@@ -245,6 +245,8 @@ Plug 'JuliaEditorSupport/julia-vim'
 Plug 'junegunn/goyo.vim' " distraction free writing
 Plug 'godlygeek/tabular'
 Plug 'junegunn/vim-emoji'
+Plug 'iamcco/markdown-preview.nvim', { 'do': ':call mkdp#util#install()', 'for': 'markdown', 'on': 'MarkdownPreview' }
+
 
 Plug 'plasticboy/vim-markdown'
 let g:vim_markdown_math = 1
