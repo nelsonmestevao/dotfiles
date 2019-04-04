@@ -9,4 +9,3 @@ echo_info "Symling .ghci..."
 ln -sfT ~/.dotfiles/haskell/ghci ~/.ghci
 
 echo_done "Haskell configuration!"
-

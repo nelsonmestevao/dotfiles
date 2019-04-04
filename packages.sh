@@ -61,4 +61,3 @@ export AUR=(
   watchexec
   z-dir-jump-git
 )
-
