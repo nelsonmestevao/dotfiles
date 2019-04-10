@@ -5,4 +5,5 @@ rofi.combi-modi:     drun,window
 rofi.display-window: Window
 rofi.display-drun:   Search
 rofi.show-icons:     true
+rofi.font:           Hack NF 16
 rofi.lines:          10
