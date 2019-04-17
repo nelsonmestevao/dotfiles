@@ -11,6 +11,7 @@ export PKG=(
   # dunst #
   # exa #
   feh
+  figlet
   # htop #
   # hyperfine #
   # libreoffice-still #
