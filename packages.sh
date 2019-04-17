@@ -45,6 +45,7 @@ export PKG=(
 export AUR=(
   betterlockscreen
   # copyq #
+  direnv
   franz
   google-chrome
   insect
