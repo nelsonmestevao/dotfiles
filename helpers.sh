@@ -45,7 +45,7 @@ function _install() {
     done
   else
     echo_info "Intalling ${1}..."
-    sudo "PKGMN" "$PKGI" "$1"
+    sudo "$PKGMN" "$PKGI" "$1"
   fi
 }
 
