@@ -10,12 +10,12 @@
 
 I really like to configure my system in every possible way. This repository
 holds how I do it. If you are just starting out you could use mine (_I don't
-care or mind_) but for your own sake **read them**. You will not get the most
-out of it without.
+care or mind_, see [LICENSE](#License)) but for your own sake **read them**.
+You will not get the most out of it without.
 
-Start by reading my neovim configuration. It follows a literate configuration
+Start by reading my Neovim configuration. It follows a literate configuration
 where it's documentation is the configuration files it selves. I write them
-using markdown and neovim will interpret only the code blocks.
+using markdown and Neovim will interpret only the code blocks.
 
 <div align="center">
   <img alt="screenshot" src="screenshot.png" width="85%"/>
@@ -61,3 +61,7 @@ As you probably know, you shouldn't just run my Makefile without reading it
 first. And if you read it, you will understand that it calls other scripts like
 `install.sh` which depend on `helpers.sh`. Read those, it's the only way that
 you can trust what it is doing.
+
+## License
+
+This repository is licensed under the [WTFNMFPL](LICENSE.txt).
