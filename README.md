@@ -65,3 +65,7 @@ you can trust what it is doing.
 ## License
 
 This repository is licensed under the [WTFNMFPL](LICENSE.txt).
+
+<div align="center">
+  <sub>Use your tools well or use better tools.</sub>
+</div>
