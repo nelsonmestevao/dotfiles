@@ -449,7 +449,7 @@ exec --no-startup-id xautolock -time 10 -locker betterlockscreen -l dim
 exec chmod go-w ~/.dotfiles/haskell/ghci
 
 exec_always --no-startup-id ~/.spells/polybarlaunch.sh
-exec_always --no-startup-id ~/.spells/chooseWallpaper.sh
+exec_always --no-startup-id ~/.local/bin/dynamicx
 
 exec xrandr --output HDMI1 --auto --right-of eDP1
 
