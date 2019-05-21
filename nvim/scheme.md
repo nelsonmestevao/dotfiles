@@ -29,7 +29,9 @@ set listchars+=nbsp:•
 
 " Theme
 syntax enable
-colorscheme OceanicNext
+colorscheme one
+hi Normal guibg=NONE ctermbg=NONE
+" colorscheme OceanicNext
 " let g:gruvbox_contrast_dark = 'hard'
 
 " Fuzzy finder
