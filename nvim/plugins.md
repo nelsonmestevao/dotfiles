@@ -57,7 +57,14 @@ Plug 'RRethy/vim-illuminate'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'bronson/vim-trailing-whitespace'
 ```
+This plugin aim is to integrate Direnv and Vim. Because Vim can shell out to
+other tools it's nice if the environment is in sync with the usual shell.
 
+It also adds syntax highlighting for `.envrc` files.
+
+```vim
+Plug 'direnv/direnv.vim'
+```
 ### Auto-completions
 
 #### Ale
