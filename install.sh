@@ -12,4 +12,6 @@
 # echo_info "Installing aur packages..."
 # _install aur
 
+_update system
+
 _symlink
