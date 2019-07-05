@@ -1,6 +1,7 @@
 [user]
   name = Nelson Estevão
   email = nelsonmestevao@gmail.com
+  signingkey = 160B73352C4F1CC7
 [github]
   user = nelsonmestevao
 [web]
@@ -11,6 +12,7 @@
   attributesfile = ~/.dotfiles/git/gitattributes
   pager = diff-so-fancy | less --tabs=4 -RFX
 [commit]
+  gpgsign = true
   verbose = true
   template = ~/.dotfiles/git/git-commit-msg-template
 [alias]
