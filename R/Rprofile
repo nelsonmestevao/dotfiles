@@ -1,5 +1,5 @@
 
-options(prompt="\033[0;34mℛ ➤ \033[0m")
+options(prompt="\033[0;34mℜ > \033[0m")
 
 message("\n*** Successfully loaded .Rprofile ***\n")
 
