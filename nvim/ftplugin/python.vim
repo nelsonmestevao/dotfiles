@@ -1,0 +1,1 @@
+setlocal equalprg=black\ --quiet\ -
