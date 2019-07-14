@@ -44,6 +44,13 @@ function mkcd() {
   cd $@
 }
 
+function send-sms() {
+  curl -X POST https://textbelt.com/text \
+       --data-urlencode phone="$1" \
+       --data-urlencode message="$2" \
+       -d key=textbelt
+}
+
 function open() {
   xdg-open $@ & disown
 }
