@@ -11,12 +11,32 @@ function git-ignore() {
 }
 
 function most () {
-  history | awk '{
-      cmd[$2]++; count++;
-    }
-    END {
-      for (i in cmd) print cmd[i]/count*100 "%", i
-    }' | sort -nr | head -n20 | column -c3 -s " " -t
+  alias   | sed "s/'//g" > /tmp/aliases.tmp
+  history | sed "s/'//g" > /tmp/history.tmp
+  python -c "aliases = {}
+aliases_file = open('/tmp/aliases.tmp')
+for line in aliases_file:
+    alias, command  = line.strip().split('=', 1)
+    aliases[alias] = command.split()[0]
+
+statistics = {}
+history_file = open('/tmp/history.tmp')
+for line in history_file:
+    trash, command = line.strip().split(' ', 1)
+    command = command.split()[0]
+    if command in aliases:
+        if aliases[command] in statistics:
+            statistics[aliases[command]] += 1
+        else:
+            statistics[aliases[command]] = 1
+    else:
+        if command in statistics:
+            statistics[command] += 1
+        else:
+            statistics[command] = 1
+
+for k, v in statistics.items():
+    print('{}\t{}'.format(v, k))" | sort -nr | head -20
 }
 
 function mkcd() {
