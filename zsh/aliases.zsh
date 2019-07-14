@@ -37,6 +37,6 @@ alias bsc=backup
 alias pls=please
 
 alias joão="date -d '+2 hour' '+%T' && weather Tampere Finland 0"
-alias carolina="date -d '+1 hour' '+%T' && weather Brussels Belgium 0"
+alias beatriz="date -d '-5 hour' '+%T' && weather Dominican Republic 0"
 
 alias cesium="xrandr --output HDMI1 --auto --above eDP1"
