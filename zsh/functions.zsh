@@ -13,7 +13,8 @@ function git-ignore() {
 function most () {
   alias   | sed "s/'//g" > /tmp/aliases.tmp
   history | sed "s/'//g" > /tmp/history.tmp
-  python -c "aliases = {}
+  python -c "
+aliases = {}
 aliases_file = open('/tmp/aliases.tmp')
 for line in aliases_file:
     alias, command  = line.strip().split('=', 1)
@@ -35,8 +36,13 @@ for line in history_file:
         else:
             statistics[command] = 1
 
+total = 0
+for v in statistics.values():
+    total += v
+
 for k, v in statistics.items():
-    print('{}\t{}'.format(v, k))" | sort -nr | head -20
+  print('{:5.2f}% {:5}   {}'.format(v/total*100, v, k))
+" | sort -nr | head -20 | nl
 }
 
 function mkcd() {
