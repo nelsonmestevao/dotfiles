@@ -92,3 +92,11 @@ else
 endif
 ```
 
+## Security
+
+Disable modelines as a security precaution
+
+```vim
+set modelines=0
+set nomodeline
+```
