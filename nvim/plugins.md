@@ -65,6 +65,13 @@ It also adds syntax highlighting for `.envrc` files.
 ```vim
 Plug 'direnv/direnv.vim'
 ```
+
+#### Secure Modelines
+
+```vim
+Plug 'ciaranm/securemodelines'
+```
+
 ### Auto-completions
 
 #### Ale

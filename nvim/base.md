@@ -94,9 +94,11 @@ endif
 
 ## Security
 
-Disable modelines as a security precaution
+Disable `modelines` as a security precaution. Read more
+[here](https://github.com/numirias/security/blob/master/doc/2019-06-04_ace-vim-neovim.md).
 
 ```vim
 set modelines=0
 set nomodeline
 ```
+
