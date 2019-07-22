@@ -72,23 +72,22 @@ bindsym Print                      exec --no-startup-id i3-scrot
 bindsym $mod+Print       --release exec --no-startup-id i3-scrot -w
 bindsym $mod+Shift+Print --release exec --no-startup-id i3-scrot -s
 
+# Media player controls
+bindsym XF86AudioPlay  exec playerctl play-pause
+bindsym XF86AudioNext  exec playerctl next
+bindsym XF86AudioPrev  exec playerctl previous
+
 # Pulse Audio controls
-# bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% #increase sound volume
-# bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% #decrease sound volume
-# bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5%
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5%
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle
 
 # Sreen brightness controls
-# bindsym XF86MonBrightnessUp exec xbacklight -inc 5 # increase screen brightness
-# bindsym XF86MonBrightnessDown exec xbacklight -dec 5 # decrease screen brightness
+# bindsym XF86MonBrightnessUp exec xbacklight -inc 5
+# bindsym XF86MonBrightnessDown exec xbacklight -dec 5
 
 # Touchpad controls
 bindsym XF86TouchpadToggle exec ~/.dotfiles/i3/toggletouchpad.sh # toggle touchpad
-
-# Media player controls
-bindsym XF86AudioPlay  exec playerctl play-pause
-# bindsym XF86AudioPause exec playerctl pause
-bindsym XF86AudioNext  exec playerctl next
-bindsym XF86AudioPrev  exec playerctl previous
 
 ###############################################################################
 # Navigation bindings
