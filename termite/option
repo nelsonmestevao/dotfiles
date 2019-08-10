@@ -14,4 +14,4 @@ scrollback_lines = 1000
 search_wrap = true
 cursor_blink = system
 cursor_shape = block
-browser = google-chrome-stable
+browser = firefox

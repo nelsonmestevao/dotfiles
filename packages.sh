@@ -12,6 +12,7 @@ export PKG=(
   # exa #
   feh
   figlet
+  firefox
   # htop #
   # hyperfine #
   # libreoffice-still #

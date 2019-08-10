@@ -31,7 +31,7 @@ bindsym $mod+e        exec pcmanfm
 bindsym $mod+i        exec manjaro-settings-manager
 bindsym $mod+Ctrl+b   exec terminal -e 'bmenu'
 bindsym $mod+F1       exec mupdf /usr/share/doc/manjaro/i3_help.pdf
-bindsym $mod+F2       exec google-chrome-stable
+bindsym $mod+F2       exec firefox
 bindsym $mod+F3       exec ranger
 bindsym $mod+F5       exec terminal -e 'mocp'
 bindsym $mod+Ctrl+t   exec compton -b
@@ -164,7 +164,7 @@ bindsym $mod+Ctrl+Left workspace prev
 # Workspace names
 set $ws1   "1:  Slack"
 set $ws2   "2:  Terminal"
-set $ws3   "3:  Chrome"
+set $ws3   "3:  Browser"
 set $ws4   "4: "
 set $ws5   "5:  Terminal"
 set $ws6   "6:  IntelliJ"
@@ -211,7 +211,7 @@ bindsym $mod+Shift+0 move container to workspace $ws10; workspace $ws10
 
 # Open applications on specific workspaces
 assign [class="Slack"]           $ws1
-assign [class="Google-chrome"]   $ws3
+assign [class="firefox"]         $ws3
 # assign [class="Trello"]          $ws4
 assign [class="jetbrains-idea"]  $ws6
 assign [class="code-oss"]        $ws8
