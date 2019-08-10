@@ -216,6 +216,7 @@ assign [class="firefox"]         $ws3
 assign [class="jetbrains-idea"]  $ws6
 assign [class="code-oss"]        $ws8
 assign [class="Keybase"]         $ws9
+assign [class="TelegramDesktop"] $ws9
 assign [class="Spotify"]         $ws10
 for_window [class="Spotify"] move to workspace $ws10
 

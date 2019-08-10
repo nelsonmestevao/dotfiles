@@ -32,6 +32,7 @@ export PKG=(
   rofi
   shfmt
   # terminology #
+  telegram-desktop
   # texstudio #
   tldr
   tree
