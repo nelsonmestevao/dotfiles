@@ -278,6 +278,9 @@ Plug 'tpope/vim-rake'
 Plug 'tpope/vim-projectionist'
 Plug 'thoughtbot/vim-rspec'
 Plug 'ecomba/vim-ruby-refactoring'
+
+" CSS
+Plug 'stephenway/postcss.vim'
 ```
 
 This is necessary in order to close where there are no more plugins to install.
