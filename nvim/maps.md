@@ -57,6 +57,23 @@ inoremap <C-s> <Esc>:w<CR>a
 vnoremap <C-s> <Esc>:w<CR>
 ```
 
+If you have wrap option enabled (as I do), with a very long sentence, Vim will
+stretch your current sentence over the multiple rows. But that will still be a
+single "physical" line. It might be tricky to move between those rows/lines.
+
+Hitting arrow-down or `j` will move the cursor down one physical line.
+
+But, hitting `gj` will move the cursor down one displayed line. This will
+enable you to move around on a long sentence wrapped in multiple rows/lines.
+
+```vim
+nnoremap j gj
+nnoremap k gk
+```
+
+It makes navigating easier. I got this tip from [Mastering Vim Quickly
+Newsletter](https://masteringvim.com/).
+
 Do you want to split faster?
 
 - `h`orizontal
