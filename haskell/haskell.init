@@ -1,1 +1,4 @@
-export PATH=$PATH:$HOME/.local/bin
+CURRENT_HASKELL=$(asdf current haskell | cut -d ' ' -f 1)
+
+export PATH=$PATH:$HOME/.asdf/installs/haskell/$CURRENT_HASKELL/bin
+

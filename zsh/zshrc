@@ -6,7 +6,9 @@
 #   (_)___|___/_| |_|_|  \___|
 
 export DOTFILES="$HOME/.dotfiles"
-export PATH=$PATH:$HOME/.spells:$HOME/.spells/git:$HOME/.spells/rofi
+
+source $HOME/.spells/spells.init
+export PATH=$PATH:$SPELLS
 
 source $DOTFILES/zsh/plugins.zsh
 source $DOTFILES/zsh/theme.zsh
@@ -14,11 +16,12 @@ source $DOTFILES/zsh/aliases.zsh
 source $DOTFILES/zsh/functions.zsh
 
 source $DOTFILES/asdf/asdf.init
+
 source $DOTFILES/haskell/haskell.init
+source $DOTFILES/nodejs/nodejs.init
 
-eval "$(direnv hook zsh)"
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+source $DOTFILES/system/direnv.init
+source $DOTFILES/system/fzf.init
 
 # start typing + [Up-Arrow] - fuzzy find history forward
 if [[ "${terminfo[kcuu1]}" != "" ]]; then
