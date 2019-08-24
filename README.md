@@ -3,7 +3,7 @@
 [license]: #memo-license
 
 <h1 align="center">
-  <img src="https://user-images.githubusercontent.com/19409687/54166758-980b4200-445e-11e9-8e81-f0cd7ba70fb5.png" alt="dotfiles" width="750px">
+  <img alt="dotfiles" src=".github/header.png" width="750px">
 </h1>
 
 [![Build Status](https://semaphoreci.com/api/v1/nelsonmestevao/dotfiles/branches/master/badge.svg)][semaphoreci]
@@ -21,7 +21,7 @@ where it's documentation is the configuration files it selves. I write them
 using markdown and Neovim will interpret only the code blocks.
 
 <div align="center">
-  <img alt="screenshot" src="screenshot.png" width="85%"/>
+  <img alt="screenshot" src=".github/screenshot.png" width="85%"/>
 </div>
 
 ## :rocket: Installing
