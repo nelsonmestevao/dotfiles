@@ -25,18 +25,18 @@ alias ka="killall"
 alias :q="exit"
 
 alias o=open
+alias f=find-file
 
 alias gi=git-ignore
+
+alias bsc=backup
+alias pls=please
 
 alias mk=make
 alias mkc="make clean"
 alias mkr="make run"
 alias mkt="make test"
 
-alias bsc=backup
-alias pls=please
-
 alias joão="date -d '+2 hour' '+%T' && weather Tampere Finland 0"
-alias beatriz="date -d '-5 hour' '+%T' && weather Dominican Republic 0"
 
 alias cesium="xrandr --output HDMI1 --auto --above eDP1"

@@ -57,6 +57,14 @@ function send-sms() {
        -d key=textbelt
 }
 
+function find-file() {
+  FILE=$(fzf --preview-window=right:60% --preview='bat --color "always" {}')
+
+  if [ ! -z $FILE ]; then
+    $EDITOR $FILE
+  fi
+}
+
 function open() {
   xdg-open $@ & disown
 }
@@ -69,3 +77,4 @@ function please() {
 function weather() {
   curl 'wttr.in/~'${1:-Braga}'+'$2'?'${3:-0}
 }
+
