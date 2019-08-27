@@ -4,6 +4,7 @@ CRAN_PKGS <-
   c( 'bookdown'
    , 'citr'
    , 'devtools'
+   , 'httr'
    , 'knitr'
    , 'lintr'
    , 'pkgdown'
