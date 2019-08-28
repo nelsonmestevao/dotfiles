@@ -27,6 +27,7 @@ alias :q="exit"
 alias o=open
 alias f=find-file
 
+alias g-='cd $(git rev-parse --show-toplevel || echo ".")'
 alias gi=git-ignore
 
 alias bsc=backup
@@ -40,3 +41,4 @@ alias mkt="make test"
 alias joão="date -d '+2 hour' '+%T' && weather Tampere Finland 0"
 
 alias cesium="xrandr --output HDMI1 --auto --above eDP1"
+
