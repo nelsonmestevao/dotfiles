@@ -19,6 +19,7 @@ source $DOTFILES/asdf/asdf.init
 
 source $DOTFILES/haskell/haskell.init
 source $DOTFILES/nodejs/nodejs.init
+source $DOTFILES/ruby/ruby.init
 
 source $DOTFILES/system/direnv.init
 source $DOTFILES/system/fzf.init

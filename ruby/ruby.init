@@ -1,0 +1,8 @@
+CURRENT_RUBY=$(asdf current ruby | cut -d ' ' -f 1)
+
+if [ "$CURRENT_RUBY" = "system" ]; then
+  export PATH=$PATH:$(gem env gempath | cut -d ':' -f 1)/bin
+else
+  export PATH=$PATH:$HOME/.asdf/installs/ruby/$CURRENT_RUBY/bin
+fi
+
