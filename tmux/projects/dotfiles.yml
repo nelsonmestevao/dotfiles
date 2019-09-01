@@ -1,0 +1,12 @@
+# /home/nelson/.dotfiles/tmux/projects/dotfiles.yml
+
+name: dotfiles
+root: ~/.dotfiles
+
+windows:
+  - dotfiles:
+      layout: main-vertical
+      panes:
+        - vim -c NERDTreeToggle
+        - git status --verbose
+

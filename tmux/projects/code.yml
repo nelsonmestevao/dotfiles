@@ -1,0 +1,20 @@
+# /home/nelson/.dotfiles/tmux/projects/code.yml
+
+name: code
+root: <%= @args[0] %>
+
+startup_window: editor
+
+windows:
+  - shell:
+      layout: main-vertical
+      panes:
+        - git status --verbose
+        - exa --group-directories-first -1
+  - editor:
+      layout: main-horizontal
+      panes:
+        - vim
+        - git fetch --all --verbose
+  - server:
+

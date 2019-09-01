@@ -1,10 +1,10 @@
 # ALIASES
 
-alias dot="cd $HOME/.dotfiles && nvim ."
-alias spl="cd $HOME/.spells && nvim ."
+alias dot="mux start dotfiles"
+alias spl="mux start spells"
 
-alias c="cd $HOME/Code && exa --long --header"
-alias s="cd $HOME/Snippets && exa --long --header"
+alias c="coding $HOME/Code"
+alias s="coding $HOME/Snippets"
 
 alias cv="cd $HOME/Code/curriculum-vitae/ && exa --long --header --git"
 alias ocv="cd $HOME/Code/online-curriculum/ && exa --long --header --git"
@@ -26,6 +26,7 @@ alias :q="exit"
 
 alias o=open
 alias f=find-file
+alias m=find-tmuxinator-project
 
 alias g-='cd $(git rev-parse --show-toplevel || echo ".")'
 alias gi=git-ignore

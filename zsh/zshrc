@@ -16,6 +16,7 @@ source $DOTFILES/zsh/aliases.zsh
 source $DOTFILES/zsh/functions.zsh
 
 source $DOTFILES/asdf/asdf.init
+source $DOTFILES/tmux/tmux.init
 
 source $DOTFILES/haskell/haskell.init
 source $DOTFILES/nodejs/nodejs.init
