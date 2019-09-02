@@ -16,6 +16,7 @@ alias li2="cd $HOME/Code/uminho/1st/2/Laboratórios\ de\ Informática\ II/Projec
 alias v="nvim"
 alias vim="nvim"
 alias cat="bat"
+alias n="npm"
 alias r="ranger"
 alias scim="sc-im"
 alias p="sudo pacman"

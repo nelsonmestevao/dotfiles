@@ -6,7 +6,8 @@ plugins=(
   extract
   git
   mercurial
-  # vi-mode
+  npm
+  # vi-mode #
   zsh-autosuggestions
   zsh-syntax-highlighting
 )
