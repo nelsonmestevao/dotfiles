@@ -5,9 +5,14 @@ plugins=(
   command-not-found
   extract
   git
+  # golang #
   mercurial
   npm
+  tmux
+  tmuxinator
+  # themes #
   # vi-mode #
+  z
   zsh-autosuggestions
   zsh-syntax-highlighting
 )
