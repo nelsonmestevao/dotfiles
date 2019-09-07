@@ -211,7 +211,7 @@ bindsym $mod+Shift+0 move container to workspace $ws10; workspace $ws10
 
 # Open applications on specific workspaces
 assign [class="Slack"]           $ws1
-assign [class="firefox"]         $ws3
+assign [class="Firefox"]         $ws3
 # assign [class="Trello"]          $ws4
 assign [class="jetbrains-idea"]  $ws6
 assign [class="code-oss"]        $ws8
