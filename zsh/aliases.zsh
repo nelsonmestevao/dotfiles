@@ -44,3 +44,6 @@ alias joão="date -d '+2 hour' '+%T' && weather Tampere Finland 0"
 
 alias cesium="xrandr --output HDMI1 --auto --above eDP1"
 
+# useful comands
+# xdotool key Caps_Lock
+# setxkbmap -option ctrl:nocaps
