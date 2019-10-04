@@ -1,4 +1,4 @@
-bpython
+ipython
 yapf
 black
 shovel

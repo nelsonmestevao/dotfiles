@@ -22,6 +22,7 @@ alias scim="sc-im"
 alias p="sudo pacman"
 alias y="yay"
 alias l="exa --long --git --sort type"
+alias py="ipython"
 alias ka="killall"
 alias :q="exit"
 
