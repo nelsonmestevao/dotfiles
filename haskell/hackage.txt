@@ -5,3 +5,4 @@ hlint
 lhs2tex
 pandoc
 pandoc-citeproc
+pandoc-include-code
