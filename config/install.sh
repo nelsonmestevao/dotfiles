@@ -30,3 +30,4 @@ curl -o ~/Pictures/desktop.jpg "https://images.unsplash.com/photo-1533759233673-
 curl -o ~/Pictures/login.jpg "https://images.unsplash.com/photo-1548354911-457c10eaf236"
 
 sudo mv ~/Pictures/desktop.jpg /usr/share/backgrounds/i3_default_background.jpg
+

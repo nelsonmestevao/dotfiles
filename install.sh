@@ -15,3 +15,6 @@
 _update system
 
 _symlink
+
+xdg-mime default pcmanfm.desktop inode/directory
+
