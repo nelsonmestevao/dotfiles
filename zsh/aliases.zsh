@@ -36,6 +36,9 @@ alias gi=git-ignore
 alias bsc=backup
 alias pls=please
 
+# history | awk '{print $2}' | sort | uniq -c | sort -nr | head -10
+alias most=most_used_commands
+
 alias mk=make
 alias mkc="make clean"
 alias mkr="make run"
