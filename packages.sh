@@ -19,6 +19,7 @@ export PKG=(
   lighttpd
   lolcat
   # lxappearance #
+  mariadb
   # mupdf #
   neofetch
   numlockx
