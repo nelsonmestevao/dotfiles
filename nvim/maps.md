@@ -160,9 +160,6 @@ noremap XX "+x<CR>
 " Rename the current file
 noremap <leader>r :call Rename()<CR>
 
-" Show syntax highlighting groups for word under cursor
-nmap <C-S-P> :call SynStack()<CR>
-
 " Refresh the browser
 nnoremap <localleader>r :silent !browser.refresh<CR>
 ```
