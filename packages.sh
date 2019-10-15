@@ -22,6 +22,7 @@ export PKG=(
   # mupdf #
   neofetch
   numlockx
+  octave
   odt2txt
   playerctl
   pulseaudio
