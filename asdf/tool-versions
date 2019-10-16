@@ -7,3 +7,4 @@ nodejs 10.15.0
 python system
 ruby system
 rust stable
+scala 2.13.1
