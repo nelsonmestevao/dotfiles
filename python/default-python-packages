@@ -2,3 +2,4 @@ ipython
 yapf
 black
 shovel
+mycli
