@@ -7,7 +7,7 @@ plugins=(
   git
   # golang #
   mercurial
-  npm
+  # npm #
   tmux
   tmuxinator
   # themes #
