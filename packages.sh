@@ -28,6 +28,7 @@ export PKG=(
   playerctl
   pulseaudio
   pulseaudio-bluetooth
+  pv
   ranger
   rclone
   redshift
