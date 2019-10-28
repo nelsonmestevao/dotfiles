@@ -44,6 +44,8 @@ alias mkc="make clean"
 alias mkr="make run"
 alias mkt="make test"
 
+alias firefox=firefox-developer-edition
+
 alias joão="date -d '+2 hour' '+%T' && weather Tampere Finland 0"
 
 alias cesium="xrandr --output HDMI1 --auto --above eDP1"

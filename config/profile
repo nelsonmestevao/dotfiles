@@ -2,5 +2,5 @@ export QT_QPA_PLATFORMTHEME="qt5ct"
 export QT_SCALE_FACTOR=1
 export GTK2_RC_FILES="$HOME/.gtkrc-2.0"
 export EDITOR=/usr/bin/nvim
-export BROWSER=/usr/bin/firefox
+export BROWSER=/usr/bin/firefox-developer-edition
 export TERM=/usr/bin/termite

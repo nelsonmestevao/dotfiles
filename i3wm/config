@@ -31,7 +31,7 @@ bindsym $mod+e        exec pcmanfm
 bindsym $mod+i        exec manjaro-settings-manager
 bindsym $mod+Ctrl+b   exec terminal -e 'bmenu'
 bindsym $mod+F1       exec mupdf /usr/share/doc/manjaro/i3_help.pdf
-bindsym $mod+F2       exec firefox
+bindsym $mod+F2       exec firefox-developer-edition
 bindsym $mod+F3       exec ranger
 bindsym $mod+F5       exec terminal -e 'mocp'
 bindsym $mod+Ctrl+t   exec compton -b
