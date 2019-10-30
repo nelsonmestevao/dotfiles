@@ -68,9 +68,9 @@ bindsym Mod1+space exec --no-startup-id rofi -show combi
 bindsym $mod+z exec --no-startup-id morc_menu
 
 # Printscreen
-bindsym Print                      exec --no-startup-id i3-scrot
-bindsym $mod+Print       --release exec --no-startup-id i3-scrot -w
-bindsym $mod+Shift+Print --release exec --no-startup-id i3-scrot -s
+bindsym Print                      exec --no-startup-id flameshot gui
+bindsym $mod+Print       --release exec --no-startup-id flameshot screen -c -p ~/Pictures/Screenshots
+bindsym $mod+Shift+Print --release exec --no-startup-id flameshot full -c -p ~/Pictures/Screenshots
 
 # Media player controls
 bindsym XF86AudioPlay  exec playerctl play-pause

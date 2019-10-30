@@ -14,6 +14,7 @@ export PKG=(
   figlet
   # firefox #
   firefox-developer-edition
+  flameshot
   # htop #
   # hyperfine #
   # libreoffice-still #
