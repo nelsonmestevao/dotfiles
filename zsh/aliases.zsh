@@ -16,7 +16,6 @@ alias li2="cd $HOME/Code/uminho/1st/2/Laboratórios\ de\ Informática\ II/Projec
 alias v="nvim"
 alias vim="nvim"
 alias cat="bat"
-alias n="npm"
 alias r="ranger"
 alias scim="sc-im"
 alias p="sudo pacman"
@@ -43,6 +42,9 @@ alias mk=make
 alias mkc="make clean"
 alias mkr="make run"
 alias mkt="make test"
+
+alias n="npm"
+alias nr="npm-run-all"
 
 alias firefox=firefox-developer-edition
 
