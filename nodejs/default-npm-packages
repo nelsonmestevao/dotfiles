@@ -1,2 +1,5 @@
 yarn
 np
+npm-run-all
+eslint
+prettier
