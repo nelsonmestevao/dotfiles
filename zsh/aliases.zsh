@@ -13,8 +13,6 @@ alias um="cd $HOME/Code/uminho/"
 alias li1="cd $HOME/Code/uminho/1st/1/Laboratórios\ de\ Informática\ I/Project"
 alias li2="cd $HOME/Code/uminho/1st/2/Laboratórios\ de\ Informática\ II/Project"
 
-alias v="nvim"
-alias vim="nvim"
 alias cat="bat"
 alias r="ranger"
 alias scim="sc-im"
@@ -25,18 +23,24 @@ alias py="ipython"
 alias ka="killall"
 alias :q="exit"
 
-alias o=open
-alias f=find-file
-alias m=find-tmuxinator-project
-
-alias g-='cd $(git rev-parse --show-toplevel || echo ".")'
-alias gi=git-ignore
+# history | awk '{print $2}' | sort | uniq -c | sort -nr | head -10
+alias most=most_used_commands
 
 alias bsc=backup
 alias pls=please
 
-# history | awk '{print $2}' | sort | uniq -c | sort -nr | head -10
-alias most=most_used_commands
+alias g-='cd $(git rev-parse --show-toplevel || echo ".")'
+alias gi=git-ignore
+
+alias o=open
+alias f=find-file
+alias m=find-tmuxinator-project
+
+alias v="nvim"
+alias vim="nvim"
+
+alias t=tmux
+alias mux=tmuxinator
 
 alias mk=make
 alias mkc="make clean"
