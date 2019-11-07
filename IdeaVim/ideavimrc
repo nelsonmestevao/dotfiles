@@ -2,8 +2,10 @@
 " https://github.com/JetBrains/ideavim
 " https://github.com/Valloric/dotfiles/blob/master/intellij/ideavimrc
 " https://resources.jetbrains.com/storage/products/intellij-idea/docs/IntelliJIDEA_ReferenceCard.pdf
-set surround
 let mapleader =' '
+
+set surround
+set commentary
 
 " These are leader-based alternative shortcuts for actions whose corresponding
 " idea shortcuts require hand-stretching combinations, function keys, Home or
