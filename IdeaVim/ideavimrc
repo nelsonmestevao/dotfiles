@@ -31,4 +31,5 @@ map ,g :action Generate<CR>
 " Custom
 map <Leader>gf :action ReformatCode<CR>
 map <Leader>e :action SearchEverywhere<CR>
+map <Leader>r :action Run<CR>
 
