@@ -206,6 +206,9 @@ nnoremap <leader>. :lcd %:p:h<CR>
 "" Opens a tab edit command with the path of the currently edited file filled
 noremap <Leader>te :tabe <C-R>=expand("%:p:h") . "/" <CR>
 
+"" Open docs in vim
+autocmd BufReadPost *.doc,*.rtf,*.odp,*.odt silent %!pandoc "%" -tplain -o /dev/stdout
+
 "" The PC is fast enough, do syntax highlight syncing from start unless 200 lines
 augroup vimrc-sync-fromstart
   autocmd!
