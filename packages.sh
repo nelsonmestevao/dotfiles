@@ -35,6 +35,7 @@ export PKG=(
   rclone
   redshift
   rofi
+  rofimoji
   shfmt
   # terminology #
   telegram-desktop

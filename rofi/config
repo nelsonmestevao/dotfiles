@@ -2,7 +2,9 @@
 rofi.theme: ~/.dotfiles/rofi/themes/oxide.rafi
 rofi.modi:           drun,window,run
 rofi.combi-modi:     drun,window
+rofi.display-combi:
 rofi.display-window: Window
+rofi.display-run:    Run
 rofi.display-drun:   Search
 rofi.show-icons:     true
 rofi.font:           Hack NF 16
