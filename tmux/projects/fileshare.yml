@@ -1,0 +1,29 @@
+# /home/nelson/.dotfiles/tmux/projects/fileshare.yml
+
+name: SD
+root: ~/Code/fileshare
+
+startup_window: testing
+startup_pane: 2
+
+windows:
+  - testing:
+      layout: 5d08,208x53,0,0{142x53,0,0[142x26,0,0,0,142x26,0,27,4],65x53,143,0,2}
+      panes:
+        - client1:
+            - sleep 5
+            - mvn exec:java@client
+        - client2:
+            - sleep 5
+            - mvn exec:java@client
+        - sever:
+          - mvn clean compile exec:java@server
+  - terminal:
+      layout: main-vertical
+      panes:
+        - git:
+          - git log -10 --oneline --graph --decorate --all
+          - git status
+        - files:
+          - git fetch
+          - tree src/
