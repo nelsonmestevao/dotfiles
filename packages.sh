@@ -6,7 +6,7 @@ export PKG=(
   catdoc
   ctags
   # curl #
-  diff-so-fancy
+  # diff-so-fancy
   diffpdf
   # dunst #
   # exa #

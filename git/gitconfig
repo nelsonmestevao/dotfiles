@@ -10,7 +10,7 @@
   editor = nvim
   excludesfile = ~/.dotfiles/git/gitignore_global
   attributesfile = ~/.dotfiles/git/gitattributes
-  pager = diff-so-fancy | less --tabs=4 -RFX
+	pager = delta --dark --highlight-removed
 [commit]
   gpgsign = true
   verbose = true
@@ -80,8 +80,6 @@
   binary = true
   cachetextconv = true
   textconv = catppt
-[diff-so-fancy]
-  first-run = false
 [url "git@github.com:nelsonmestevao/"]
   insteadOf = gh:
 [url "git@github.com:"]

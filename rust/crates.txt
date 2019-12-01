@@ -1,5 +1,6 @@
 bat
 exa
 fd-find
+git-delta
 hyperfine
 ripgrep
