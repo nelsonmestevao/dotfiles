@@ -15,6 +15,12 @@ function mkcd() {
   cd $@
 }
 
+function filter() {
+  flex $1
+  gcc -o $2.out lex.yy.c -lfl
+  rm lex.yy.c
+}
+
 function open() {
   xdg-open $@ & disown
 }
