@@ -69,5 +69,4 @@ export AUR=(
   spotify
   # trello #
   watchexec
-  z-dir-jump-git
 )
