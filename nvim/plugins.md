@@ -56,6 +56,8 @@ Plug 'Raimondi/delimitMate'
 Plug 'RRethy/vim-illuminate'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'bronson/vim-trailing-whitespace'
+
+Plug 'psliwka/vim-smoothie'
 ```
 This plugin aim is to integrate Direnv and Vim. Because Vim can shell out to
 other tools it's nice if the environment is in sync with the usual shell.
