@@ -69,6 +69,12 @@ set ignorecase
 set smartcase             " when searching try to be smart about cases
 ```
 
+## Mouse
+
+```vim
+set mouse=a
+```
+
 ## Swap files
 
 Usually, VIM creates `.swp` files that you are currently editing. They are in
