@@ -18,6 +18,7 @@ source $DOTFILES/zsh/functions.zsh
 source $DOTFILES/asdf/asdf.init
 source $DOTFILES/tmux/tmux.init
 
+source $DOTFILES/dotnet/dotnet.init
 source $DOTFILES/haskell/haskell.init
 source $DOTFILES/java/java.init
 source $DOTFILES/nodejs/nodejs.init

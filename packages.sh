@@ -8,6 +8,9 @@ export PKG=(
   # curl #
   # diff-so-fancy
   diffpdf
+  dotnet-sdk
+  dotnet-runtime
+  dotnet-host
   # dunst #
   # exa #
   feh
