@@ -28,6 +28,7 @@ export PKG=(
   # mupdf #
   neofetch
   numlockx
+  obs-studio
   octave
   odt2txt
   playerctl
@@ -73,3 +74,4 @@ export AUR=(
   # trello #
   watchexec
 )
+
