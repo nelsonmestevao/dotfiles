@@ -41,6 +41,7 @@ export PKG=(
   rofi
   rofimoji
   shfmt
+  sqlitebrowser
   # terminology #
   telegram-desktop
   # texstudio #
