@@ -6,26 +6,18 @@
 #   (_)___|___/_| |_|_|  \___|
 
 export DOTFILES="$HOME/.dotfiles"
+export SPELLS="$HOME/.spells"
 
-source $HOME/.spells/spells.init
+source $SPELLS/spells.init
 export PATH=$PATH:$SPELLS
 
-source $DOTFILES/zsh/plugins.zsh
-source $DOTFILES/zsh/theme.zsh
-source $DOTFILES/zsh/aliases.zsh
-source $DOTFILES/zsh/functions.zsh
+for module in $(ls $DOTFILES/zsh/*.zsh); do
+  source $module
+done
 
-source $DOTFILES/asdf/asdf.init
-source $DOTFILES/tmux/tmux.init
-
-source $DOTFILES/dotnet/dotnet.init
-source $DOTFILES/haskell/haskell.init
-source $DOTFILES/java/java.init
-source $DOTFILES/nodejs/nodejs.init
-source $DOTFILES/ruby/ruby.init
-
-source $DOTFILES/system/direnv.init
-source $DOTFILES/system/fzf.init
+for init_file in $(ls $DOTFILES/**/*.init); do
+  source $init_file
+done
 
 # start typing + [Up-Arrow] - fuzzy find history forward
 if [[ "${terminfo[kcuu1]}" != "" ]]; then
