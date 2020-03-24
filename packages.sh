@@ -3,6 +3,7 @@
 export PKG=(
   # acpi #
   # bat #
+  bind-tools
   catdoc
   ctags
   # curl #
