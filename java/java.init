@@ -2,8 +2,7 @@
 
 CURRENT_JAVA=$(asdf current java | cut -d ' ' -f 1)
 
-if [[ "$CURRENT_Java" -eq "system" ]]; then
-else
+if [ "$CURRENT_Java" != "system" ]; then
   export JAVA_HOME=$(asdf where java)
 fi
 
