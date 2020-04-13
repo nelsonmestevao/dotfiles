@@ -61,4 +61,3 @@ function please() {
 function weather() {
   curl 'wttr.in/~'${1:-Braga}'+'$2'?'${3:-0}
 }
-
