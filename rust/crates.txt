@@ -1,4 +1,5 @@
 bat
+du-dust
 exa
 fd-find
 git-delta
