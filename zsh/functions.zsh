@@ -48,9 +48,9 @@ function find-tmuxinator-project() {
 
 function send-sms() {
   curl -X POST https://textbelt.com/text \
-       --data-urlencode phone="$1" \
-       --data-urlencode message="$2" \
-       -d key=textbelt
+    --data-urlencode phone="$1" \
+    --data-urlencode message="$2" \
+    -d key=textbelt
 }
 
 function please() {
@@ -61,3 +61,8 @@ function please() {
 function weather() {
   curl 'wttr.in/~'${1:-Braga}'+'$2'?'${3:-0}
 }
+
+function show_ip() {
+  ip addr show wlp3s0 | awk '$1 == "inet" {gsub(/\/.*$/, "", $2); print $2}'
+}
+
