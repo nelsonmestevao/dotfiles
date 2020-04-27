@@ -63,6 +63,6 @@ function weather() {
 }
 
 function show_ip() {
-  ip addr show wlp3s0 | awk '$1 == "inet" {gsub(/\/.*$/, "", $2); print $2}'
+  ifconfig wlp3s0 | awk '$1 == "inet" {print $2}'
 }
 
