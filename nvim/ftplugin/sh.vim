@@ -1,1 +1,1 @@
-setlocal equalprg=shfmt\ -i\ 2
+setlocal equalprg=shfmt\ -ci\ -i\ 2
