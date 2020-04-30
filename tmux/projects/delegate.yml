@@ -12,7 +12,6 @@ windows:
       panes:
         - steps:
           - code .
-          - firefox localhost:8000
           - firefox localhost:8080
           - firefox localhost:8080/docs
         - status:
@@ -22,7 +21,7 @@ windows:
       root: ~/Code/delegatewise/frontend
       layout: main-vertical
       panes:
-        - npm run develop
+        - npm run develop -- -o
         - git:
           - git fetch --all --tags --verbose
           - git pull --all --verbose --rebase
