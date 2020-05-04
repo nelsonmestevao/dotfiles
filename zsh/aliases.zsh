@@ -36,7 +36,7 @@ alias o=open
 alias f=find-file
 alias m=find-tmuxinator-project
 
-alias v="nvim"
+alias v="nvim -p"
 alias vim="nvim"
 
 alias t=tmux
