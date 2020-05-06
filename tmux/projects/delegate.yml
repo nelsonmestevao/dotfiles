@@ -12,7 +12,6 @@ windows:
       panes:
         - steps:
           - code .
-          - firefox localhost:8080
           - firefox localhost:8080/docs
         - status:
           - exa --group-directories-first -1 -a
