@@ -1,6 +1,7 @@
 # PLUGINS
 
 plugins=(
+  asdf
   colored-man-pages
   command-not-found
   extract
