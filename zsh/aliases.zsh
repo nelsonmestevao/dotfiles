@@ -42,6 +42,12 @@ alias vim="nvim"
 alias t=tmux
 alias mux=tmuxinator
 
+alias bs="bin/server"
+alias bb="bin/build"
+alias bt="bin/test"
+alias bf="bin/format"
+alias bl="bin/lint"
+
 alias mk=make
 alias mkc="make clean"
 alias mkr="make run"
