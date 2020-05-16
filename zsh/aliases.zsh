@@ -1,7 +1,6 @@
 # ALIASES
 
-alias dot="mux start dotfiles"
-alias spl="mux start spells"
+alias dot="cd $DOTFILES"
 
 alias c="coding $HOME/Code"
 alias s="coding $HOME/Snippets"
