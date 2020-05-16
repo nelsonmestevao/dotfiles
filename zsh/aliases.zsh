@@ -1,3 +1,7 @@
+# GLOBAL ALIASES
+
+alias -g rpi=192.168.1.201
+
 # ALIASES
 
 alias dot="cd $DOTFILES"
