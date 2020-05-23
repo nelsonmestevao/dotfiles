@@ -29,8 +29,6 @@ windows:
       layout: main-vertical
       panes:
         - server:
-          - asdf local java adopt-openjdk-11.0.5+10
-          - source ~/.zshrc
           - docker start docker-mysql docker-mongo
           - bin/clean
           - bin/server
