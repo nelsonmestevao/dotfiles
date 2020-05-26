@@ -47,6 +47,7 @@ alias mux=tmuxinator
 
 alias bs="bin/server"
 alias bb="bin/build"
+alias br="bin/run"
 alias bt="bin/test"
 alias bf="bin/format"
 alias bl="bin/lint"
