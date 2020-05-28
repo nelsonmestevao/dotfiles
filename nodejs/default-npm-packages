@@ -1,4 +1,5 @@
 yarn
+docsify-cli
 np
 npm-run-all
 eslint
