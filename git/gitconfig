@@ -10,7 +10,7 @@
   editor = nvim
   excludesfile = ~/.dotfiles/git/gitignore_global
   attributesfile = ~/.dotfiles/git/gitattributes
-	pager = delta --dark --highlight-removed
+  pager = delta --dark --highlight-removed
 [commit]
   gpgsign = true
   verbose = true
@@ -18,20 +18,22 @@
 [alias]
   a = add
   b = branch
-  co = checkout
   c = commit
   cl = clone
-  p = push
-  l = pull
-  rb = rebase
-  st = status
+  co = checkout
   conflicts = diff --name-only --diff-filter=U
+  l = pull
+  p = push
+  rb = rebase
+  rw = review
+  st = status
 
   fire   = !git-fire
+  forall = !git-forall $@
   fuck   = !git-fuck-this
   joke   = !git-joke
   patch  = !git --no-pager diff
-  forall = !git-forall $@
+  review = !git-review
 [branch]
   autosetuprebase = always
 [log]
