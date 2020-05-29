@@ -22,18 +22,20 @@
   cl = clone
   co = checkout
   conflicts = diff --name-only --diff-filter=U
+  h = history
   l = pull
   p = push
   rb = rebase
   rw = review
   st = status
 
-  fire   = !git-fire
-  forall = !git-forall $@
-  fuck   = !git-fuck-this
-  joke   = !git-joke
-  patch  = !git --no-pager diff
-  review = !git-review
+  fire    = !git-fire
+  forall  = !git-forall $@
+  fuck    = !git-fuck-this
+  history = !git-history
+  joke    = !git-joke
+  patch   = !git --no-pager diff
+  review  = !git-review
 [branch]
   autosetuprebase = always
 [log]
