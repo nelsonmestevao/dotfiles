@@ -34,6 +34,7 @@ alias pls=please
 
 alias g-='cd $(git rev-parse --show-toplevel || echo ".")'
 alias gi=git-ignore
+alias grw=git-review
 
 alias o=open
 alias f=find-file
