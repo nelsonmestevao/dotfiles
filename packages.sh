@@ -4,6 +4,7 @@ export PKG=(
   # acpi #
   # bat #
   bind-tools
+  bitwarden-cli
   catdoc
   ctags
   # curl #
