@@ -168,12 +168,12 @@ bindsym $mod+Ctrl+Left workspace prev
 set $ws1   "1:  Slack"
 set $ws2   "2:  Terminal"
 set $ws3   "3:  Browser"
-set $ws4   "4: "
+set $ws4   "4:  General"
 set $ws5   "5:  Terminal"
 set $ws6   "6:  IntelliJ"
-set $ws7   "7: "
+set $ws7   "7:  Playground"
 set $ws8   "8:  Code"
-set $ws9   "9: "
+set $ws9   "9:  Chat"
 set $ws10 "10:  Spotify"
 
 # switch to workspace
