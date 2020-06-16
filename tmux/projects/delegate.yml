@@ -12,10 +12,6 @@ windows:
       panes:
         - steps:
           - code .
-          - firefox localhost:8080/docs
-        - status:
-          - exa --group-directories-first -1 -a
-          - git status --verbose
   - server:
       root: ~/Code/delegatewise/frontend
       layout: main-vertical
@@ -30,9 +26,15 @@ windows:
       panes:
         - server:
           - docker start docker-mysql docker-mongo
-          - bin/clean
+          - bin/populate
           - bin/server
         - status:
           - exa --group-directories-first -1 -a
           - git status --verbose
-
+          - firefox localhost:8080/docs
+  - delegator:
+      root: ~/Code/delegatewise/delegator
+      layout: main-vertical
+      panes:
+        - server:
+          - bin/server
