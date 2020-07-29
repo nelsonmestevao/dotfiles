@@ -1,6 +1,7 @@
-yarn
 docsify-cli
+eslint
 np
 npm-run-all
-eslint
+npx
 prettier
+yarn
