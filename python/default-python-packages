@@ -1,6 +1,7 @@
+# black
 ipython
-yapf
-black
-shovel
 mycli
+mypy
 pipenv
+shovel
+yapf
