@@ -5,6 +5,7 @@ plugins=(
   colored-man-pages
   command-not-found
   extract
+  fzf-tab
   git
   # golang #
   # mercurial #
