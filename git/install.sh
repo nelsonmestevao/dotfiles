@@ -8,6 +8,9 @@
 echo_info "Installing Git LFS..."
 _install git-lfs
 
+echo_info "Installing Git Fuzzy..."
+git clone https://github.com/bigH/git-fuzzy.git "$HOME/.git-fuzzy"
+
 echo_info "Symlink ~/.gitconfig"
 ln -sfT "$HOME/.dotfiles/git/gitconfig" "$HOME/.gitconfig"
 
