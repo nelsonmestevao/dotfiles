@@ -168,8 +168,8 @@ nnoremap <localleader>r :silent !browser.refresh<CR>
 
 ```vim
 " NERDTree
-noremap <leader>f :NERDTreeTabsToggle<CR>
-noremap <localleader>f :NERDTreeFind<CR>
+noremap <leader>g :NERDTreeTabsToggle<CR>
+noremap <localleader>g :NERDTreeFind<CR>
 
 " Git
 noremap <Leader>ga :Gwrite<CR>
@@ -186,6 +186,7 @@ nnoremap <leader>t :TagbarToggle<CR>
 
 " FZF
 nnoremap <leader>e :Files<CR>
+nnoremap <leader>f :Rg<CR>
 
 " Session management
 nnoremap <leader>so :OpenSession<Space>
