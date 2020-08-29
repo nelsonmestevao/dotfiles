@@ -15,11 +15,6 @@ function mkcd() {
   cd $@
 }
 
-function filter() {
-  flex $1
-  gcc -o $2.out lex.yy.c -lfl
-  rm lex.yy.c
-}
 
 function open() {
   xdg-open $@ & disown
@@ -27,6 +22,7 @@ function open() {
 
 function coding() {
   local PROJECT=$(ls $1 | fzf)
+  [ -z "$PROJECT" ] && return
 
   tmuxinator start code "$1/$PROJECT"
 }
@@ -41,7 +37,7 @@ function find-file() {
 
 function find-tmuxinator-project() {
   local PROJECT=$(ls -l ~/.dotfiles/tmux/projects | grep "^-" | awk {'print $9'} | cut -d. -f1 | awk '!/code/' | fzf)
-  [ -z "$PROJECT" ] && exit
+  [ -z "$PROJECT" ] && return
 
   tmuxinator start $PROJECT
 }
