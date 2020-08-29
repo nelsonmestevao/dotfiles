@@ -36,6 +36,7 @@ alias g-='cd $(git rev-parse --show-toplevel || echo ".")'
 alias gi=git-ignore
 alias grw=git-review
 alias ght=git-history
+alias gfz=git-fuzzy
 
 alias o=open
 alias f=find-file

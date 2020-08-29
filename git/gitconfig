@@ -25,6 +25,8 @@
   h = history
   l = pull
   p = push
+  fz = fuzzy
+  ht = history
   rb = rebase
   rw = review
   st = status
