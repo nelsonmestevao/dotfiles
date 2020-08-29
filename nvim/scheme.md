@@ -34,22 +34,6 @@ hi Normal guibg=NONE ctermbg=NONE
 " colorscheme OceanicNext
 " let g:gruvbox_contrast_dark = 'hard'
 
-" Fuzzy finder
-let g:fzf_colors = {
-      \ 'fg':      ['fg', 'GruvboxGray'],
-      \ 'bg':      ['bg', 'Normal'],
-      \ 'hl':      ['fg', 'GruvboxRed'],
-      \ 'fg+':     ['fg', 'GruvboxGreen'],
-      \ 'bg+':     ['bg', 'GruvboxBg1'],
-      \ 'hl+':     ['fg', 'GruvboxRed'],
-      \ 'info':    ['fg', 'GruvboxOrange'],
-      \ 'prompt':  ['fg', 'GruvboxBlue'],
-      \ 'header':  ['fg', 'GruvboxBlue'],
-      \ 'pointer': ['fg', 'Error'],
-      \ 'marker':  ['fg', 'Error'],
-      \ 'spinner': ['fg', 'Statement'],
-      \ }
-
 " vim-airline
 " let g:airline_theme='gruvbox'
 let g:airline#extensions#tabline#enabled = 1
