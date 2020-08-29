@@ -2,7 +2,7 @@
 export ZSH=~/.oh-my-zsh
 export TERM="xterm-256color"
 
-POWERLEVEL9K_MODE='awesome-fontconfig'
+# POWERLEVEL9K_MODE='awesome-fontconfig'
 # ZSH_THEME="powerlevel9k/powerlevel9k"
 ZSH_THEME="powerlevel10k/powerlevel10k"
 
