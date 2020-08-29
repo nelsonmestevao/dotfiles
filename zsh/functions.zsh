@@ -15,9 +15,30 @@ function mkcd() {
   cd $@
 }
 
-
 function open() {
   xdg-open $@ & disown
+}
+
+function mark () {
+  file=~/.markfile
+  [ -f $file ] || touch $file
+  if grep "^$1=" $file > /dev/null; then
+    sed -i -e "s:$1\=.*$:$1\=${PWD}:g" $file
+    echo "entry $1 changed"
+  else
+    echo "$1=$PWD" >> $file
+    echo "entry $1 added"
+  fi
+}
+
+function goto () {
+  file=~/.markfile
+  if [ $# -eq 1 ]; then
+    dest=$(grep "^$1=" $file | cut -d= -f2)
+    cd $dest
+  else
+    echo "no mark specified"
+  fi
 }
 
 function coding() {
@@ -61,4 +82,3 @@ function weather() {
 function show_ip() {
   ifconfig wlp3s0 | awk '$1 == "inet" {print $2}'
 }
-
