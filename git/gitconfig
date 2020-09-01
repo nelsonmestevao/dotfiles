@@ -11,6 +11,8 @@
   excludesfile = ~/.dotfiles/git/gitignore_global
   attributesfile = ~/.dotfiles/git/gitattributes
   pager = delta --dark --highlight-removed
+[init]
+  defaultBranch = main
 [commit]
   gpgsign = true
   verbose = true
