@@ -20,6 +20,7 @@ export PKG=(
   # firefox #
   firefox-developer-edition
   flameshot
+  github-cli
   # htop #
   # hyperfine #
   # libreoffice-still #
