@@ -109,6 +109,14 @@ endif
 let g:deoplete#enable_at_startup = 1
 ```
 
+#### Switch
+
+Really useful to toggle between values like boolean values or expressions.
+
+```vim
+Plug 'AndrewRadev/switch.vim'
+```
+
 #### **fz**f
 
 > fzf is a general-purpose command-line fuzzy finder

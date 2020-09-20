@@ -166,6 +166,14 @@ nnoremap <localleader>r :silent !browser.refresh<CR>
 
 ## Plugin Related maps
 
+Imagine you have something like `is_logged_in = True` and want it changed to
+false just use `leader <a>`. Same shortcut as increasing a number.
+
+```vim
+" Switch
+nnoremap <leader>a :Switch<CR>
+```
+
 ```vim
 " NERDTree
 noremap <leader>g :NERDTreeTabsToggle<CR>
