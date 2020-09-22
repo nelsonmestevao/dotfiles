@@ -17,3 +17,12 @@ function! Rename()
 endfunction
 ```
 
+## Writing mode
+
+Change the spell between English and Portuguese more easily.
+
+```vim
+command PT set spell | set spelllang=pt
+command EN set spell | set spelllang=pt
+```
+
