@@ -1,1 +1,1 @@
-setlocal equalprg=black\ --quiet\ -
+setlocal equalprg=yapf
