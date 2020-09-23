@@ -22,9 +22,12 @@ alias scim="sc-im"
 alias p="sudo pacman"
 alias y="yay"
 alias e="exa --group-directories-first --long --git --sort type"
-alias py="ipython"
 alias ka="killall"
 alias :q="exit"
+
+alias o=open
+alias f=find-file
+alias m=find-tmuxinator-project
 
 # history | awk '{print $2}' | sort | uniq -c | sort -nr | head -10
 alias most=most_used_commands
@@ -38,12 +41,11 @@ alias grw=git-review
 alias ght=git-history
 alias gfz=git-fuzzy
 
-alias o=open
-alias f=find-file
-alias m=find-tmuxinator-project
-
 alias v="nvim -p"
 alias vim="nvim"
+
+alias py="ipython -i"
+alias pm="python -m"
 
 alias t=tmux
 alias mux=tmuxinator
