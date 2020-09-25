@@ -1,0 +1,4 @@
+# vim: ft=zsh
+
+fpath=(/opt/vagrant/embedded/gems/2.2.10/gems/vagrant-2.2.10/contrib/zsh $fpath)
+compinit
