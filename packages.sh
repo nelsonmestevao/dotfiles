@@ -51,6 +51,7 @@ export PKG=(
   tldr
   tree
   unzip
+  vagrant
   wget
   wmctrl
   xcape
