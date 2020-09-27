@@ -10,6 +10,7 @@ plugins=(
   # golang #
   # mercurial #
   # npm #
+  rails
   tmux
   tmuxinator
   # themes #
