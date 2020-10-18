@@ -5,6 +5,7 @@ plugins=(
   colored-man-pages
   command-not-found
   extract
+  docker-compose
   fzf-tab
   git
   # golang #
