@@ -8,3 +8,4 @@ python system
 ruby system
 rust nightly
 scala 2.13.1
+erlang 22.1.5
