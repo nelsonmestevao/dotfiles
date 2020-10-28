@@ -15,6 +15,7 @@ plugins=(
   tmux
   tmuxinator
   # themes #
+  vagrant
   # vi-mode #
   z
   zsh-autosuggestions
