@@ -48,6 +48,8 @@ alias vim="nvim"
 alias py="ipython -i"
 alias pm="python -m"
 
+alias r3="rebar3"
+
 alias t=tmux
 alias mux=tmuxinator
 
