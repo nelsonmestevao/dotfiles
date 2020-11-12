@@ -40,6 +40,7 @@
   joke    = !git-joke
   patch   = !git --no-pager diff
   review  = !git-review
+  standup = !git log --all --author=$USER --format=%s --since '9am last week'
 [branch]
   autosetuprebase = always
 [log]
