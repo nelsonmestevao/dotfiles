@@ -2,20 +2,19 @@
 
 export PKG=(
   # acpi #
+  ansible
+  ansible-lint
   # bat #
-  bind-tools
+  # bind-tools
   bitwarden-cli
-  catdoc
+  # catdoc
   ctags
   # curl #
   # diff-so-fancy
   diffpdf
-  dotnet-sdk
-  dotnet-runtime
-  dotnet-host
   # dunst #
   # exa #
-  feh
+  # feh
   figlet
   # firefox #
   firefox-developer-edition
@@ -24,19 +23,23 @@ export PKG=(
   # htop #
   # hyperfine #
   # libreoffice-still #
-  lighttpd
+  # lighttpd
   lolcat
   # lxappearance #
-  mariadb
+  # mariadb #
   # mupdf #
+  # nitrogen
   neofetch
+  maven
   numlockx
   obs-studio
-  octave
-  odt2txt
+  # octave
+  # odt2txt
   playerctl
-  pulseaudio
-  pulseaudio-bluetooth
+  polybar
+  # pulseaudio
+  # pulseaudio-alsa
+  # pulseaudio-bluetooth
   pv
   ranger
   rclone
@@ -45,6 +48,7 @@ export PKG=(
   rofimoji
   shfmt
   sqlitebrowser
+  sshpass
   # terminology #
   telegram-desktop
   # texstudio #
@@ -54,6 +58,7 @@ export PKG=(
   vagrant
   wget
   wmctrl
+  xarchiver
   xcape
   # xclip #
   zathura-pdf-mupdf
@@ -64,13 +69,13 @@ export AUR=(
   betterlockscreen
   # copyq #
   direnv
+  emojify
   franz
   google-chrome
   insect
   # mailspring #
   neovim
   # pokemon-terminal-git #
-  polybar
   rainbow
   sc-im
   screenkey

@@ -24,6 +24,6 @@ echo_info "Symling init.vim..."
 mkdir -p ~/.config/nvim
 ln -sfT ~/.dotfiles/nvim/init.vim ~/.config/nvim/init.vim
 
-ln -s ~/.dotfiles/nvim/ftplugin ~/.config/nvim/ftplugin
+ln -s ~/.dotfiles/nvim/ftplugin ~/.config/nvim
 
 echo_done "Neovim configuration!"

@@ -303,3 +303,12 @@ This is necessary in order to close where there are no more plugins to install.
 call plug#end()
 ```
 
+# Python
+
+Set python locations.
+
+```
+let g:python_host_prog = "/bin/python2"
+let g:python3_host_prog = "/bin/python3"
+```
+

@@ -4,7 +4,7 @@ export FZF_DEFAULT_COMMAND="fd -t f ."
 export FZF_CTRL_T_COMMAND="fd ."
 export FZF_ALT_C_COMMAND="fd -t d . $HOME"
 
-export FZF_DEFAULT_OPTS="--height 50% --bind=ctrl-j:preview-down,ctrl-k:preview-up --reverse --inline-info --preview-window=right:130"
+export FZF_DEFAULT_OPTS="--height 50% --bind=ctrl-j:preview-down,ctrl-k:preview-up --reverse --inline-info --preview-window=right:110"
 
  [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 

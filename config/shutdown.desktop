@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Version=1.0
+Type=Application
+Terminal=false
+Exec=shutdown now
+Name=Shutdown
+Icon=/usr/share/icons/Papirus/128x128/apps/system-shut-down.svg
+

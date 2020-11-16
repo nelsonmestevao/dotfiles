@@ -220,6 +220,7 @@ assign [class="jetbrains-idea"]  $ws6
 assign [class="code-oss"]        $ws8
 assign [class="Keybase"]         $ws9
 assign [class="TelegramDesktop"] $ws9
+assign [class="discord"]         $ws9
 assign [class="Spotify"]         $ws10
 for_window [class="Spotify"] move to workspace $ws10
 
@@ -449,7 +450,7 @@ exec --no-startup-id volumeicon
 exec --no-startup-id clipit
 # exec --no-startup-id copyq
 
-exec --no-startup-id nitrogen --restore; sleep 1; compton -b
+exec --no-startup-id nitrogen --restore; sleep 1; picom -C -b
 exec --no-startup-id xautolock -time 10 -locker betterlockscreen -l dim
 exec chmod go-w ~/.dotfiles/haskell/ghci
 

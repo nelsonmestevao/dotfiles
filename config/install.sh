@@ -8,6 +8,14 @@
 echo_info "Symling .profile..."
 ln -sfT ~/.dotfiles/config/profile ~/.profile
 
+echo_info "Symling folders' images..."
+ln -sfT ~/.dotfiles/config/user-dirs.dirs ~/.config/user-dirs.dirs
+
+xdg-user-dirs-update
+
+echo_info "Global programs..."
+ln -sfT ~/.dotfiles/config/shutdown.desktop ~/.local/share/applications/shutdown.desktop
+
 echo_info "Downloading fonts..."
 mkdir -p ~/.fonts ~/Downloads/fonts
 

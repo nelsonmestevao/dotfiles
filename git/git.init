@@ -1,2 +1,2 @@
 # git fuzzy
-export PATH="$HOME/.gitfuzzy/bin:$PATH"
+export PATH="$HOME/.git-fuzzy/bin:$PATH"

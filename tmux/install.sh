@@ -8,6 +8,9 @@
 echo_info "Installing Tmux..."
 _install tmux
 
+echo_info "Installing Tmux..."
+_install tmuxinator
+
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
 echo_info "Symling .tmux.conf..."

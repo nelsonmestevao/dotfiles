@@ -1,6 +1,6 @@
 # vim: ft=zsh
 
-CURRENT_NODE=$(asdf current nodejs | cut -d ' ' -f 1)
+CURRENT_NODE=$(asdf current nodejs | awk '{print $2}')
 
 # both yarn and npm install to this directory
 export PATH=$PATH:$HOME/.asdf/installs/nodejs/$CURRENT_NODE/.npm/bin/

@@ -30,8 +30,8 @@ asdf plugin-add R
 asdf plugin-add golang
 asdf plugin-add haskell
 asdf plugin-add java
-asdf plugin-add julia
 asdf plugin-add nodejs
+asdf plugin-add python 
 asdf plugin-add ruby
 asdf plugin-add rust
 
