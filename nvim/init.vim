@@ -13,3 +13,4 @@ execute literate#load("~/.dotfiles/nvim/functions.md")
 execute literate#load("~/.dotfiles/nvim/maps.md")
 execute literate#load("~/.dotfiles/nvim/scheme.md")
 
+
