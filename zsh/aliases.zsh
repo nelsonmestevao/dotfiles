@@ -69,6 +69,10 @@ alias mkt="make test"
 alias n="npm"
 alias nr="npm-run-all"
 
+alias a="ansible"
+alias ac="ansible-console"
+alias ap="ansible-playbook"
+
 alias firefox=firefox-developer-edition
 
 alias joão="date -d '+2 hour' '+%T' && weather Tampere Finland 0"
