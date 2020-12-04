@@ -1,6 +1,6 @@
 # GLOBAL ALIASES
 
-alias -g rpi=192.168.1.201
+alias -g rpi=raspberrypi.local
 alias -g search=search.di.uminho.pt
 alias -g storm=storm.cesium.di.uminho.pt
 
