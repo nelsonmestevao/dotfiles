@@ -71,7 +71,7 @@ bindsym $mod+z exec --no-startup-id morc_menu
 # Printscreen
 set $print_path ~/Pictures/Screenshots
 bindsym Print                      exec --no-startup-id flameshot gui -p $print_path
-bindsym $mod+Print       --release exec --no-startup-id i3-scrot -w
+bindsym $mod+Print       --release exec --no-startup-id i3-scrot -wc
 # bindsym $mod+Print       --release exec --no-startup-id flameshot screen -c -p $print_path
 bindsym $mod+Shift+Print --release exec --no-startup-id flameshot full -c -p $print_path
 
