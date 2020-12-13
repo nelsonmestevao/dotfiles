@@ -47,6 +47,7 @@ export PKG=(
   redshift
   rofi
   rofimoji
+  rofi-calc
   shfmt
   sqlitebrowser
   sshpass
