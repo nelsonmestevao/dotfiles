@@ -41,6 +41,7 @@ export PKG=(
   # pulseaudio-alsa
   # pulseaudio-bluetooth
   pv
+  libqalculate
   ranger
   rclone
   redshift
