@@ -6,7 +6,6 @@ export PKG=(
   ansible-lint
   # bat #
   # bind-tools
-  bitwarden-cli
   # catdoc
   ctags
   # curl #
@@ -69,6 +68,7 @@ export PKG=(
 
 export AUR=(
   betterlockscreen
+  bitwarden-cli
   # copyq #
   direnv
   emojify
