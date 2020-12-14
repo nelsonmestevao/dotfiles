@@ -176,8 +176,8 @@ nnoremap <leader>a :Switch<CR>
 
 ```vim
 " NERDTree
-noremap <leader>g :NERDTreeTabsToggle<CR>
-noremap <localleader>g :NERDTreeFind<CR>
+noremap <leader>o :NERDTreeTabsToggle<CR>
+noremap <localleader>o :NERDTreeFind<CR>
 
 " Git
 noremap <Leader>ga :Gwrite<CR>
