@@ -12,6 +12,6 @@ echo_info "Installing docker-compose..."
 _install docker-compose
 
 # add docker to usergroup
-sudo usermod -aG docker ${USER}
+sudo usermod -aG docker "${USER}"
 
 echo_done "Rofi configuration!"

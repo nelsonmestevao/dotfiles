@@ -11,9 +11,9 @@ _install neovim
 _install python2-neovim
 _install python-neovim
 
-if [[ -x "$(command -v yaourt)" ]]; then
-  yaourt -Sy ruby-neovim --needed --noconfirm
-  yaourt -Sy nodejs-neovim --needed --noconfirm
+if [[ -x "$(command -v yay)" ]]; then
+  yay -Sy ruby-neovim --needed --noconfirm
+  yay -Sy nodejs-neovim --needed --noconfirm
 fi
 
 echo_info "Installing vim-plug..."

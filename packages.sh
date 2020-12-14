@@ -63,7 +63,6 @@ export PKG=(
   xcape
   # xclip #
   zathura-pdf-mupdf
-  zeal
 )
 
 export AUR=(
@@ -72,18 +71,19 @@ export AUR=(
   # copyq #
   direnv
   emojify
-  franz
-  google-chrome
+  # franz
+  # google-chrome
   insect
   # mailspring #
   neovim
   # pokemon-terminal-git #
   rainbow
-  sc-im
+  # sc-im
   screenkey
   slack-desktop
   spotify
   # trello #
   watchexec
+  zeal
 )
 
