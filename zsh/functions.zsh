@@ -71,7 +71,7 @@ function send-sms() {
 }
 
 function please() {
-  local CMD=$(history -1 | cut -d" " -f4-)
+  local CMD=$(history -1 | tr -s ' ' | cut -d' ' -f2-)
   sudo "$CMD"
 }
 
