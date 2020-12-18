@@ -41,11 +41,24 @@ function goto () {
   fi
 }
 
+function tmux-connect() {
+  local HOSTNAME=$1
+  local PORT=${2:-22}
+  ssh $HOSTNAME -p $PORT -t tmux new-session -A -d -s ssh_tmux
+}
+
 function coding() {
   local PROJECT=$(ls $1 | fzf)
   [ -z "$PROJECT" ] && return
 
   tmuxinator start code "$1/$PROJECT"
+}
+
+function find-tmuxinator-project() {
+  local PROJECT=$(ls -l ~/.dotfiles/tmux/projects | grep "^-" | awk {'print $9'} | cut -d. -f1 | awk '!/code/' | fzf)
+  [ -z "$PROJECT" ] && return
+
+  tmuxinator start $PROJECT
 }
 
 function find-file() {
@@ -54,13 +67,6 @@ function find-file() {
   if [ ! -z $FILE ]; then
     $EDITOR $FILE
   fi
-}
-
-function find-tmuxinator-project() {
-  local PROJECT=$(ls -l ~/.dotfiles/tmux/projects | grep "^-" | awk {'print $9'} | cut -d. -f1 | awk '!/code/' | fzf)
-  [ -z "$PROJECT" ] && return
-
-  tmuxinator start $PROJECT
 }
 
 function send-sms() {
