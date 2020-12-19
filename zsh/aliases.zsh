@@ -1,10 +1,5 @@
 # GLOBAL ALIASES
 
-alias -g rpi=raspberrypi.local
-alias -g search=search.di.uminho.pt
-alias -g storm=storm.cesium.di.uminho.pt
-alias -g trooper=trooper.cesium.di.uminho.pt
-
 # ALIASES
 
 alias dot="cd $DOTFILES"
