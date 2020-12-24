@@ -89,8 +89,6 @@ bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle
 # bindsym XF86MonBrightnessUp exec xbacklight -inc 5
 # bindsym XF86MonBrightnessDown exec xbacklight -dec 5
 
-# Touchpad controls
-bindsym XF86TouchpadToggle exec ~/.dotfiles/i3/toggletouchpad.sh # toggle touchpad
 
 ###############################################################################
 # Navigation bindings
@@ -464,8 +462,15 @@ exec --no-startup-id numlockx on
 #exec --no-startup-id setxkbmap -option caps:escape
 exec --no-startup-id setxkbmap -option ctrl:nocaps
 exec --no-startup-id xcape -e 'Control_L=Escape'
+
+# Touchpad controls
+bindsym XF86TouchpadToggle exec ~/.dotfiles/i3wm/toggletouchpad.sh # toggle touchpad
+
 # Natural Scroll
-exec_always --no-startup-id ~/.spells/naturalScrollOn.sh
+exec_always --no-startup-id ~/.dotfiles/i3wm/naturalScrollOn.sh
+
+# Spiral layout
+exec_always --no-startup-id ~/.dotfiles/i3wm/alternating_layouts.py
 
 # others
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
