@@ -43,8 +43,7 @@ function goto () {
 
 function tmux-connect() {
   local HOSTNAME=$1
-  local PORT=${2:-22}
-  ssh $HOSTNAME -p $PORT -t tmux new-session -A -d -s ssh_tmux
+  ssh $HOSTNAME -t tmux new-session -A -d -s ssh_tmux
 }
 
 function coding() {
