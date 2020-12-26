@@ -80,8 +80,8 @@ Do you want to split faster?
 - `v`ertical
 
 ```vim
-noremap <Leader>h :split<CR>
-noremap <Leader>v :vsplit<CR>
+noremap <leader>h :split<CR>
+noremap <leader>v :vsplit<CR>
 ```
 
 Better pane movement.
@@ -123,9 +123,6 @@ noremap <leader>w :bn<CR>
 ```vim
 "" Clean search (highlight)
 nnoremap <localleader><leader> :noh<cr>
-
-" terminal emulation
-nnoremap <silent> <leader>sh :terminal<CR>
 
 " Search mappings: These will make it so that going to the next one in a
 " search will center on the line it's found in.
@@ -195,6 +192,18 @@ nnoremap <leader>t :TagbarToggle<CR>
 " FZF
 nnoremap <leader>e :Files<CR>
 nnoremap <leader>f :Rg<CR>
+
+" terminal emulation in floating mode
+nnoremap <silent> <leader>sh  :FloatermNew --height=0.4 --width=0.95 --wintype=floating --position=bottom --autoclose=2 --title=
+tnoremap <silent> <leader>sh  <C-\><C-n>:FloatermNew --height=0.4 --width=0.98 --wintype=floating --position=bottom --autoclose=2 --title=
+nnoremap <silent> <leader>st  :FloatermToggle<CR>
+tnoremap <silent> <leader>st  <C-\><C-n>:FloatermToggle<CR>
+nnoremap <silent> <leader>sn  :FloatermNext<CR>
+tnoremap <silent> <leader>sn  <C-\><C-n>:FloatermNext<CR>
+
+" Send code to a floaterm
+nnoremap   <C-c><C-c> :FloatermSend<CR>
+vnoremap   <C-c><C-c> :FloatermSend<CR>
 
 " Session management
 nnoremap <leader>so :OpenSession<Space>

@@ -40,6 +40,13 @@ Plug 'vim-scripts/TeTrIs.vim'
 
 ### IDE like plugins
 
+Sometimes you want a quick access to a terminal window. It's awesome to use a
+floating term without use a tmux pane or something else.
+
+```vim
+Plug 'voldikss/vim-floaterm'
+```
+
 ```vim
 Plug 'majutsushi/tagbar'
 """ Tagbar
@@ -48,7 +55,6 @@ let g:tagbar_autofocus = 1
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-surround'
 Plug 'mhinz/vim-startify'
-Plug 'jpalardy/vim-slime'
 Plug 'luochen1990/rainbow'
 Plug 'Yggdroot/indentLine'
 Plug 'tpope/vim-commentary'
@@ -59,6 +65,7 @@ Plug 'bronson/vim-trailing-whitespace'
 
 Plug 'psliwka/vim-smoothie'
 ```
+
 This plugin aim is to integrate Direnv and Vim. Because Vim can shell out to
 other tools it's nice if the environment is in sync with the usual shell.
 
