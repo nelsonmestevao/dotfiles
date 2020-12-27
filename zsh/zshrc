@@ -22,6 +22,9 @@ for module in $(ls $DOTFILES/zsh/*.zsh); do
   source $module
 done
 
+# go to working directory if it has one
+gtwd
+
 for init_file in $(ls $DOTFILES/**/*.init); do
   source $init_file
 done
@@ -40,3 +43,4 @@ if [[ "${terminfo[kcud1]}" != "" ]]; then
 fi
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+

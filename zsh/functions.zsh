@@ -20,7 +20,7 @@ function open() {
 }
 
 function mark () {
-  file=~/.markfile
+  file="$HOME/.markfile"
   [ -f $file ] || touch $file
   if grep "^$1=" $file > /dev/null; then
     sed -i -e "s:$1\=.*$:$1\=${PWD}:g" $file
@@ -32,12 +32,29 @@ function mark () {
 }
 
 function goto () {
-  file=~/.markfile
+  file="$HOME/.markfile"
   if [ $# -eq 1 ]; then
     dest=$(grep "^$1=" $file | cut -d= -f2)
     cd $dest
   else
     echo "no mark specified"
+  fi
+}
+
+function chwd() {
+  mark WORKING_DIR
+  touch "$HOME/.wdfile"
+}
+
+function clwd() {
+  if [[ -f "$HOME/.wdfile" ]]; then
+    rm "$HOME/.wdfile"
+  fi
+}
+
+function gtwd() {
+  if [[ -f "$HOME/.wdfile" ]] && [ -z "$TMUX" ]; then
+    goto WORKING_DIR
   fi
 }
 
@@ -73,7 +90,7 @@ function send-sms() {
     --data-urlencode phone="$1" \
     --data-urlencode message="$2" \
     -d key=textbelt
-}
+  }
 
 function please() {
   local CMD=$(history -1 | tr -s ' ' | cut -d' ' -f2-)
