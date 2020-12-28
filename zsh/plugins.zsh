@@ -11,9 +11,9 @@ plugins=(
   gitignore
   # globalias
   # golang #
-  # mercurial #
   # npm #
   rails
+  sudo
   tmux
   tmuxinator
   # themes #
