@@ -1,5 +1,10 @@
 # GLOBAL ALIASES
 
+alias -g H='| head'
+alias -g T='| tail'
+alias -g G='| grep'
+alias -g L="| less"
+
 # ALIASES
 
 alias dot="cd $DOTFILES"
@@ -11,8 +16,6 @@ alias cv="cd $HOME/Code/curriculum-vitae/ && exa --long --header --git"
 alias ocv="cd $HOME/Code/online-curriculum/ && exa --long --header --git"
 
 alias um="cd $HOME/Code/uminho/"
-alias li1="cd $HOME/Code/uminho/1st/1/Laboratórios\ de\ Informática\ I/Project"
-alias li2="cd $HOME/Code/uminho/1st/2/Laboratórios\ de\ Informática\ II/Project"
 
 alias cat="bat"
 alias r="ranger"

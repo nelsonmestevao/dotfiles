@@ -4,6 +4,7 @@ plugins=(
   asdf
   colored-man-pages
   command-not-found
+  # common-aliases
   extract
   docker-compose
   fzf-tab
