@@ -19,6 +19,7 @@ plugins=(
   # themes #
   vagrant
   # vi-mode #
+  web-search
   z
   zsh-autosuggestions
   zsh-syntax-highlighting
