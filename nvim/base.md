@@ -79,7 +79,7 @@ set mouse=a
 
 Usually, VIM creates `.swp` files that you are currently editing. They are in
 my `.gitignore_global` but I still prefer if it doesn't create these files
-since I commit a log and often.
+since I commit a lot and often.
 
 ```vim
 set nobackup
