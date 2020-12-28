@@ -81,6 +81,12 @@ Plug 'direnv/direnv.vim'
 Plug 'ciaranm/securemodelines'
 ```
 
+### Grammar and spelling
+
+```vim
+Plug 'dpelle/vim-LanguageTool'
+```
+
 ### Auto-completions
 
 #### Ale

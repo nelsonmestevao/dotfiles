@@ -21,6 +21,7 @@ export PKG=(
   github-cli
   # htop #
   # hyperfine #
+  languagetool
   # libreoffice-still #
   # lighttpd
   lolcat
