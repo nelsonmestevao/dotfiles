@@ -6,10 +6,6 @@ function backup() {
   git push $@
 }
 
-function git-ignore() {
-  curl -L -s https://www.gitignore.io/api/$@
-}
-
 function mkcd() {
   mkdir -p $@
   cd $@

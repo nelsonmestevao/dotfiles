@@ -8,6 +8,8 @@ plugins=(
   docker-compose
   fzf-tab
   git
+  gitignore
+  # globalias
   # golang #
   # mercurial #
   # npm #

@@ -34,7 +34,6 @@ alias bsc=backup
 alias pls=please
 
 alias g-='cd $(git rev-parse --show-toplevel || echo ".")'
-alias gi=git-ignore
 alias grw=git-review
 alias ght=git-history
 alias gfz=git-fuzzy
@@ -75,6 +74,7 @@ alias firefox=firefox-developer-edition
 alias joão="date -d '+2 hour' '+%T' && weather Tampere Finland 0"
 
 alias cesium="xrandr --output HDMI1 --auto --above eDP1"
+alias ip='ip -c=auto'
 
 # useful comands
 # xdotool key Caps_Lock
