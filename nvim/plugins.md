@@ -82,6 +82,14 @@ It also adds syntax highlighting for `.envrc` files.
 Plug 'direnv/direnv.vim'
 ```
 
+In order to see immediately the color from something like #rrggbb, #rgb,
+hsl(r,g,b) etc, this plugin does it asynchronously. It requires go to be
+installed.
+
+```vim
+Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' }
+```
+
 #### Secure Modelines
 
 ```vim
@@ -275,7 +283,6 @@ let g:haskell_backpack = 1                " to enable highlighting of backpack k
 Plug 'tpope/vim-haml'
 Plug 'mattn/emmet-vim'
 Plug 'hail2u/vim-css3-syntax'
-Plug 'gorodinskiy/vim-coloresque'
 
 " JavaScript
 Plug 'jelera/vim-javascript-syntax'

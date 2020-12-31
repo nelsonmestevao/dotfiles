@@ -19,6 +19,7 @@ export PKG=(
   firefox-developer-edition
   flameshot
   github-cli
+  go
   # htop #
   # hyperfine #
   languagetool
