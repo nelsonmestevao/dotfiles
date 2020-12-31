@@ -61,9 +61,16 @@ Plug 'tpope/vim-commentary'
 Plug 'Raimondi/delimitMate'
 Plug 'RRethy/vim-illuminate'
 Plug 'terryma/vim-multiple-cursors'
-Plug 'bronson/vim-trailing-whitespace'
 
 Plug 'psliwka/vim-smoothie'
+```
+
+This plugin causes all trailing whitespace characters to be highlighted. The
+strip whitespace on save is activated so it asks before saving.
+
+```vim
+Plug 'ntpeters/vim-better-whitespace'
+let g:strip_whitespace_on_save=1
 ```
 
 This plugin aim is to integrate Direnv and Vim. Because Vim can shell out to
