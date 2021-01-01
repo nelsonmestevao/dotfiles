@@ -452,7 +452,8 @@ exec --no-startup-id nitrogen --restore; sleep 1; picom -C -b
 exec --no-startup-id xautolock -time 10 -locker betterlockscreen -l dim
 exec chmod go-w ~/.dotfiles/haskell/ghci
 
-exec_always --no-startup-id ~/.spells/polybarlaunch.sh
+exec_always --no-startup-id ~/.spells/i3wm/polybarlaunch.sh
+
 exec_always --no-startup-id ~/.local/bin/dynamicx
 
 exec xrandr --output HDMI1 --auto --right-of eDP1
@@ -464,14 +465,14 @@ exec --no-startup-id setxkbmap -option ctrl:nocaps
 exec --no-startup-id xcape -e 'Control_L=Escape'
 
 # Touchpad controls
-bindsym XF86TouchpadToggle exec ~/.dotfiles/i3wm/toggletouchpad.sh # toggle touchpad
+bindsym XF86TouchpadToggle exec ~/.spells/i3wm/toggletouchpad.sh # toggle touchpad
 
 # Natural Scroll
-exec_always --no-startup-id ~/.dotfiles/i3wm/naturalScrollOn.sh
-exec_always --no-startup-id ~/.spells/natural_scroll.sh
+exec_always --no-startup-id ~/.spells/i3wm/naturalScrollOn.sh
+exec_always --no-startup-id ~/.spells/i3wm/natural_scroll.sh
 
 # Spiral layout
-exec_always --no-startup-id ~/.dotfiles/i3wm/alternating_layouts.py
+exec_always --no-startup-id ~/.spells/i3wm/alternating_layouts.py
 
 # others
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
