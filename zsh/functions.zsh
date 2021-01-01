@@ -17,7 +17,12 @@ function open() {
   xdg-open $@ & disown
 }
 
-function mark () {
+function most_used_commands() {
+  omz_history | awk '{print $2}' | sort | uniq -c | sort -nr | column -t |  nl | head -n40
+}
+
+
+function mark() {
   file="$HOME/.markfile"
   [ -f $file ] || touch $file
   if grep "^$1=" $file > /dev/null; then
@@ -29,7 +34,7 @@ function mark () {
   fi
 }
 
-function goto () {
+function goto() {
   file="$HOME/.markfile"
   if [ $# -eq 1 ]; then
     dest=$(grep "^$1=" $file | cut -d= -f2)

@@ -30,9 +30,6 @@ alias o=open
 alias f=find-file
 alias m=find-tmuxinator-project
 
-# history | awk '{print $2}' | sort | uniq -c | sort -nr | head -10
-alias most=most_used_commands
-
 alias bsc=backup
 alias pls=please
 
