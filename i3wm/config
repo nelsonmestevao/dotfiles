@@ -468,6 +468,7 @@ bindsym XF86TouchpadToggle exec ~/.dotfiles/i3wm/toggletouchpad.sh # toggle touc
 
 # Natural Scroll
 exec_always --no-startup-id ~/.dotfiles/i3wm/naturalScrollOn.sh
+exec_always --no-startup-id ~/.spells/natural_scroll.sh
 
 # Spiral layout
 exec_always --no-startup-id ~/.dotfiles/i3wm/alternating_layouts.py
