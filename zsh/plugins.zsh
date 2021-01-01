@@ -1,4 +1,5 @@
-# PLUGINS
+
+# OMZ PLUGINS
 
 plugins=(
   asdf

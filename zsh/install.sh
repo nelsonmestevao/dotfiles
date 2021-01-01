@@ -23,6 +23,9 @@ git clone https://github.com/Aloxaf/fzf-tab "$ZSH_CUSTOM/plugins/fzf-tab"
 echo_info "Installing Powerlevel10k..."
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$ZSH_CUSTOM/themes/powerlevel10k"
 
+echo_info "Installing zplug..."
+curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh
+
 echo_info "Symlink .zshrc..."
 ln -sfT "$HOME/.dotfiles/zsh/zshrc" "$HOME/.zshrc"
 
