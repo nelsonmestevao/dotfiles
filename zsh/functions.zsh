@@ -104,6 +104,11 @@ function weather() {
   curl 'wttr.in/~'${1:-Braga}'+'$2'?'${3:-0}
 }
 
+function tre() {
+  local ignore_dirs=$(echo "$(cat .gitignore | sed '/^$/d' | sed '/^#/d' | sed '/[^/]$/d' | tr '\n' '|')renv|node_modules")
+  tree -I $ignore_dirs --dirsfirst $@
+}
+
 function show_ip() {
   ifconfig wlp3s0 | awk '$1 == "inet" {print $2}'
 }
