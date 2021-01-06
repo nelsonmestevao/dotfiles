@@ -10,9 +10,14 @@
   editor = nvim
   excludesfile = ~/.dotfiles/git/gitignore_global
   attributesfile = ~/.dotfiles/git/gitattributes
-  pager = delta --dark --highlight-removed
+  pager = delta
 [init]
   defaultBranch = main
+[interactive]
+    diffFilter = delta --color-only
+[delta]
+    features = decorations
+    whitespace-error-style = 22 reverse
 [commit]
   gpgsign = true
   verbose = true
@@ -47,41 +52,9 @@
   rebase = true
 [color]
   ui = true
-[color "diff-highlight"]
-  oldNormal = red bold
-  oldHighlight = red bold 52
-  newNormal = green bold
-  newHighlight = green bold 22
-[color "diff"]
-  meta = yellow
-  frag = magenta bold
-  commit = yellow bold
-  old = red bold
-  new = green bold
-  whitespace = red reverse
 [diff]
   tool = vimdiff
   submodule = log
-[diff "pdf"]
-  binary = true
-  cachetextconv = true
-  textconv = diffpdf
-[diff "odt"]
-  binary = true
-  cachetextconv = true
-  textconv = odt2txt
-[diff "word"]
-  binary = true
-  cachetextconv = true
-  textconv = catdoc
-[diff "xls"]
-  binary = true
-  cachetextconv = true
-  textconv = xls2csv
-[diff "ppt"]
-  binary = true
-  cachetextconv = true
-  textconv = catppt
 [url "git@github.com:nelsonmestevao/"]
   insteadOf = gh:
 [url "git@github.com:"]
@@ -90,8 +63,3 @@
   insteadOf = gl:
 [url "git@gitlab.com:"]
   insteadOf = glx:
-[filter "lfs"]
-  clean = git-lfs clean -- %f
-  smudge = git-lfs smudge -- %f
-  process = git-lfs filter-process
-  required = true
