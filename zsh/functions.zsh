@@ -105,7 +105,7 @@ function weather() {
 }
 
 function tre() {
-  local ignore_dirs=$(echo "$(cat .gitignore | sed '/^$/d' | sed '/^#/d' | sed '/[^/]$/d' | tr '\n' '|')renv|node_modules")
+  local ignore_dirs=$(echo "$(cat .gitignore | sed '/^$/d' | sed '/^#/d' | sed '/[^/]$/d' | tr '\n' '|' | tr -d '/')renv|node_modules")
   tree -I $ignore_dirs --dirsfirst $@
 }
 
