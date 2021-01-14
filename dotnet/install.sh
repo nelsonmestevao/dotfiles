@@ -1,13 +1,13 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# shellcheck source=distro.sh
-. ../distro.sh
-# shellcheck source=helpers.sh
-. ../helpers.sh
+#set -Eeuo pipefail
 
-echo_info "Installing dotnet dev tools..."
-_install dotnet-sdk
-_install dotnet-runtime
-_install dotnet-host
+BASE_DIR=$(dirname "${BASH_SOURCE[0]:-$0}")
+cd "${BASE_DIR}/.." || exit 127
 
-echo_done "dotnet configuration!"
+# shellcheck source=../scripts/extras.sh
+. scripts/extras.sh
+
+install_package dotnet-sdk
+install_package dotnet-runtime
+install_package dotnet-host

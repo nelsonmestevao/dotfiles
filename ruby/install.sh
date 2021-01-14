@@ -1,14 +1,11 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# shellcheck source=distro.sh
-. ../distro.sh
-# shellcheck source=helpers.sh
-. ../helpers.sh
+BASE_DIR=$(dirname "${BASH_SOURCE[0]:-$0}")
+cd "${BASE_DIR}/.." || exit 127
 
-echo_info "Symling .default-gems..."
-ln -sfT ~/.dotfiles/ruby/default-gems ~/.default-gems
+# shellcheck source=../scripts/extras.sh
+. scripts/extras.sh
 
-echo_info "Symling .irbrc..."
-ln -sfT ~/.dotfiles/ruby/irbrc ~/.irbrc
+symlink ~/.dotfiles/ruby/default-gems ~/.default-gems
 
-echo_done "Ruby configuration!"
+symlink ~/.dotfiles/ruby/irbrc ~/.irbrc

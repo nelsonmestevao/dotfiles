@@ -1,0 +1,121 @@
+#!/usr/bin/env bash
+
+ROOT_DIR=$(dirname "${BASH_SOURCE[0]:-$0}")
+cd "${ROOT_DIR}" || exit 127
+
+# shellcheck source=./packages.sh
+. packages.sh
+# shellcheck source=scripts/extras.sh
+. scripts/extras.sh
+# shellcheck source=scripts/helpers.sh
+. scripts/helpers.sh
+# shellcheck source=scripts/logging.sh
+. scripts/logging.sh
+# shellcheck source=scripts/utils.sh
+. scripts/utils.sh
+
+PROGRAM=$(basename "${BASH_SOURCE[0]:-$0}")
+VERSION=0.4.1
+
+function display_help() {
+  cat <<EOF
+  $(help_title_section Usage)
+    ${PROGRAM} [options] [<command>]
+
+  $(help_title_section Commands)
+    check
+    packages [--repo | --aur]
+    modules
+    update
+    clean
+
+  $(help_title_section Options)
+    -h --help         Show this screen.
+    -v --version      Show version.
+EOF
+}
+
+function install_packages() {
+  case ${1:-all} in
+    --repo | repo)
+      # ===============================================
+      # Install packages from repo (--repo)
+      # ===============================================
+      for pkg in "${PKG[@]}"; do
+        install_package "$pkg"
+      done
+      ;;
+    --aur | aur)
+      # ===============================================
+      # Install packages from aur (--aur)
+      # ===============================================
+      for aur in "${AUR[@]}"; do
+        install_package "$aur"
+      done
+      ;;
+    all)
+      install_packages repo
+      install_packages aur
+      ;;
+  esac
+}
+
+function install_modules() {
+  # ===============================================
+  # Run all sub folders install script
+  # ===============================================
+  local dirs=$(find . -maxdepth 1 -mindepth 1 -type d -print | sed -e 's/.\///')
+
+  for dir in $dirs; do
+    if [ ! -f "$dir/install.sh" ]; then
+      continue
+    fi
+
+    log_section "${dir}"
+    ./"${dir}"/install.sh
+  done
+}
+
+dotfiles_setup() {
+  case ${1:-all} in
+    -h | --help)
+      display_help
+      ;;
+    -v | --version)
+      display_version "${VERSION}" "${PROGRAM}"
+      ;;
+    check)
+      yay -Ps
+      ;;
+    packages)
+      ask_for_sudo
+      install_packages "${2:-all}"
+      ;;
+    modules)
+      ask_for_sudo
+      install_modules
+      ;;
+    update)
+      ask_for_sudo
+      execute "yay -Syyu --needed --noconfirm" "Updating all system packages..."
+      xdg-mime default pcmanfm.desktop inode/directory
+      betterlockscreen -u ~/Pictures/login.jpg
+      ;;
+    clean)
+      ask_for_sudo
+      execute "yay --noconfirm -Rns $(yay -Qdtq); yay -Yc" "Uninstalling unecessary packages..."
+      ;;
+    all)
+      dotfiles_setup packages
+      dotfiles_setup modules
+      dotfiles_setup update
+      dotfiles_setup clean
+      ;;
+    *)
+      display_help >&2
+      exit 1
+      ;;
+  esac
+}
+
+dotfiles_setup "$@"

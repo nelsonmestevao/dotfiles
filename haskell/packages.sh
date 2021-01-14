@@ -24,4 +24,3 @@ for pkg in "${HACKAGE[@]}"; do
   stack install "$pkg"
   echo_done "${pkg} installed!"
 done
-

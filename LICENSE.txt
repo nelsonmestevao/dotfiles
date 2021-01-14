@@ -1,7 +1,7 @@
        DO WHAT THE FUCK YOU WANT TO BUT IT'S NOT MY FAULT PUBLIC LICENSE
                              Version 2, April 2019
 
- Copyright (C) 2019 Nelson Estevão <nelson@estevao.xyz>
+ Copyright (C) 2021 Nelson Estevão <nelson@estevao.org>
 
  Everyone is permitted to copy and distribute verbatim or modified copies of
  this license document, and changing it is allowed as long as the name is

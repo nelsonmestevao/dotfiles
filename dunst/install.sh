@@ -1,14 +1,11 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# shellcheck source=distro.sh
-. ../distro.sh
-# shellcheck source=helpers.sh
-. ../helpers.sh
+BASE_DIR=$(dirname "${BASH_SOURCE[0]:-$0}")
+cd "${BASE_DIR}/.." || exit 127
 
-echo_info "Installing dunst..."
-_install dunst
+# shellcheck source=../scripts/extras.sh
+. scripts/extras.sh
 
-echo_info "Symlink dunstrc..."
-ln -sfT "$HOME/.dotfiles/dunst/dunstrc" "$HOME/.config/dunst/dunstrc"
+install_package dunst
 
-echo_done "dunstrc configuration!"
+symlink "$HOME/.dotfiles/dunst/dunstrc" "$HOME/.config/dunst/dunstrc"

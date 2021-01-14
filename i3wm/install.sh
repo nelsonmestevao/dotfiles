@@ -1,14 +1,12 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# shellcheck source=distro.sh
-. ../distro.sh
-# shellcheck source=helpers.sh
-. ../helpers.sh
+#set -Eeuo pipefail
 
-echo_info "Symling i3 configuration file..."
-mkdir -p ~/.i3
-ln -sfT ~/.dotfiles/i3wm/config ~/.i3/config
+BASE_DIR=$(dirname "${BASH_SOURCE[0]:-$0}")
+cd "${BASE_DIR}/.." || exit 127
 
-python3 -m pip install i3ipc
+# shellcheck source=../scripts/extras.sh
+. scripts/extras.sh
 
-echo_done "i3wm configuration!"
+mkdir -p "$HOME/.i3"
+symlink "$HOME/.dotfiles/i3wm/config" "$HOME/.i3/config"

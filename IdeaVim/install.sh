@@ -1,10 +1,11 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# shellcheck source=distro.sh
-. ../distro.sh
-# shellcheck source=helpers.sh
-. ../helpers.sh
+#set -Eeuo pipefail
 
-echo_info "Symling .ideavimrc..."
-ln -sfT ~/.dotfiles/IdeaVim/ideavimrc ~/.ideavimrc
-echo_done "IdeaVim configuration!"
+BASE_DIR=$(dirname "${BASH_SOURCE[0]:-$0}")
+cd "${BASE_DIR}/.." || exit 127
+
+# shellcheck source=../scripts/extras.sh
+. scripts/extras.sh
+
+symlink "$HOME/.dotfiles/IdeaVim/ideavimrc" "$HOME/.ideavimrc"

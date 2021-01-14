@@ -1,17 +1,14 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# shellcheck source=distro.sh
-. ../distro.sh
-# shellcheck source=helpers.sh
-. ../helpers.sh
+BASE_DIR=$(dirname "${BASH_SOURCE[0]:-$0}")
+cd "${BASE_DIR}/.." || exit 127
 
-echo_info "Installing termite..."
-_install termite
+# shellcheck source=../scripts/extras.sh
+. scripts/extras.sh
 
-echo_info "Symlink termite config"
+install_package termite
+
 mkdir -p ~/.config/termite
-ln -sfT ~/.dotfiles/termite/option ~/.config/termite/option
-ln -sfT ~/.dotfiles/termite/theme ~/.config/termite/theme
-ln -sfT ~/.dotfiles/termite/color/ ~/.config/termite/color
-
-echo_done "Termite configuration!"
+symlink ~/.dotfiles/termite/option ~/.config/termite/option
+symlink ~/.dotfiles/termite/theme ~/.config/termite/theme
+symlink ~/.dotfiles/termite/color/ ~/.config/termite/color

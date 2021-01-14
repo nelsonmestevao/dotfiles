@@ -1,19 +1,15 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# shellcheck source=distro.sh
-. ../distro.sh
-# shellcheck source=helpers.sh
-. ../helpers.sh
+BASE_DIR=$(dirname "${BASH_SOURCE[0]:-$0}")
+cd "${BASE_DIR}/.." || exit 127
 
-echo_info "Installing Tmux..."
-_install tmux
+# shellcheck source=../scripts/extras.sh
+. scripts/extras.sh
 
-echo_info "Installing Tmux..."
-_install tmuxinator
+install_package tmux
 
-git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+install_package tmuxinator
 
-echo_info "Symling .tmux.conf..."
-ln -sfT ~/.dotfiles/tmux/tmux.conf ~/.tmux.conf
+execute "git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm" "Clonning tmux plugin manager..."
 
-echo_done "Tmux configuration!"
+symlink ~/.dotfiles/tmux/tmux.conf ~/.tmux.conf

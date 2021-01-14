@@ -1,13 +1,19 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# shellcheck source=distro.sh
-. ../distro.sh
-# shellcheck source=helpers.sh
-. ../helpers.sh
+BASE_DIR=$(dirname "${BASH_SOURCE[0]:-$0}")
+cd "${BASE_DIR}/.." || exit 127
 
-echo_info "Symling rebar.config..."
+# shellcheck source=../scripts/extras.sh
+. scripts/extras.sh
+
+#TODO: change wget to download
+install_rebar3() {
+  wget https://s3.amazonaws.com/rebar3/rebar3
+  chmod +x rebar3
+  sudo mv rebar3 /usr/bin/
+}
+
+execute install_rebar3 "Downloading and installing rebar3..."
+
 mkdir -p ~/.config/rebar
-ln -sfT ~/.dotfiles/erlang/rebar.config ~/.config/rebar/rebar.config
-
-echo_done "rebar3 configuration!"
-
+symlink ~/.dotfiles/erlang/rebar.config ~/.config/rebar/rebar.config

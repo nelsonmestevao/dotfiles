@@ -1,15 +1,13 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# shellcheck source=distro.sh
-. ../distro.sh
-# shellcheck source=helpers.sh
-. ../helpers.sh
+#set -Eeuo pipefail
 
-echo "Add NodeJS keys..."
-bash ~/.asdf/plugins/nodejs/bin/import-release-team-keyring
+BASE_DIR=$(dirname "${BASH_SOURCE[0]:-$0}")
+cd "${BASE_DIR}/.." || exit 127
 
-echo "Symling .default-npm-packages..."
-ln -sfT ~/.dotfiles/nodejs/default-npm-packages ~/.default-npm-packages
+# shellcheck source=../scripts/extras.sh
+. scripts/extras.sh
 
-echo_done "NodeJS configuration!"
+execute "bash $HOME/.asdf/plugins/nodejs/bin/import-release-team-keyring" "Adding nodejs gpg keys..."
 
+symlink "$HOME/.dotfiles/nodejs/default-npm-packages" "$HOME/.default-npm-packages"

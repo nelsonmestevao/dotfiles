@@ -1,15 +1,12 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# shellcheck source=distro.sh
-. ../distro.sh
-# shellcheck source=helpers.sh
-. ../helpers.sh
+BASE_DIR=$(dirname "${BASH_SOURCE[0]:-$0}")
+cd "${BASE_DIR}/.." || exit 127
 
-echo_info "Installing rofi..."
-_install rofi
+# shellcheck source=../scripts/extras.sh
+. scripts/extras.sh
 
-echo_info "Symlink rofi config"
+install_package rofi
+
 mkdir -p ~/.config/rofi
-ln -sfT ~/.dotfiles/rofi/config ~/.config/rofi/config
-
-echo_done "Rofi configuration!"
+symlink ~/.dotfiles/rofi/config ~/.config/rofi/config

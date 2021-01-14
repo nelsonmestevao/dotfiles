@@ -1,15 +1,12 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# shellcheck source=distro.sh
-. ../distro.sh
-# shellcheck source=helpers.sh
-. ../helpers.sh
+BASE_DIR=$(dirname "${BASH_SOURCE[0]:-$0}")
+cd "${BASE_DIR}/.." || exit 127
 
-echo_info "Installing Ranger..."
-sudo pacman -S ranger --need --noconfirm
+# shellcheck source=../scripts/extras.sh
+. scripts/extras.sh
 
-echo_info "Symlink rc.conf..."
+install_package ranger
+
 mkdir -p ~/.config/ranger
-ln -sfT ~/.dotfiles/ranger/rc.conf ~/.config/ranger/rc.conf
-
-echo_done "Ranger configuration!"
+symlink ~/.dotfiles/ranger/rc.conf ~/.config/ranger/rc.conf

@@ -1,14 +1,13 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# shellcheck source=distro.sh
-. ../distro.sh
-# shellcheck source=helpers.sh
-. ../helpers.sh
+#set -Eeuo pipefail
 
-echo_info "Installing LaTeX..."
-_install texlive-most
+BASE_DIR=$(dirname "${BASH_SOURCE[0]:-$0}")
+cd "${BASE_DIR}/.." || exit 127
 
-echo_info "Symlink ~/.latexmkrc"
-ln -sfT ~/.dotfiles/latex/latexmkrc ~/.latexmkrc
+# shellcheck source=../scripts/extras.sh
+. scripts/extras.sh
 
-echo_done "LaTeX configuration!"
+install_package texlive-most
+
+symlink "$HOME/.dotfiles/latex/latexmkrc" "$HOME/.latexmkrc"

@@ -1,11 +1,11 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# shellcheck source=distro.sh
-. ../distro.sh
-# shellcheck source=helpers.sh
-. ../helpers.sh
+#set -Eeuo pipefail
 
-echo "Symling .default-python-packages..."
-ln -sfT ~/.dotfiles/python/default-python-packages ~/.default-python-packages
+BASE_DIR=$(dirname "${BASH_SOURCE[0]:-$0}")
+cd "${BASE_DIR}/.." || exit 127
 
-echo_done "Python configuration!"
+# shellcheck source=../scripts/extras.sh
+. scripts/extras.sh
+
+symlink ~/.dotfiles/python/default-python-packages ~/.default-python-packages

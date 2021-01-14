@@ -19,7 +19,7 @@ export PKG=(
   firefox-developer-edition
   flameshot
   github-cli
-  go
+  # go
   # htop #
   # hyperfine #
   jq
@@ -52,7 +52,6 @@ export PKG=(
   rofimoji
   rofi-calc
   shfmt
-  sqlitebrowser
   sshpass
   # terminology #
   telegram-desktop
@@ -90,4 +89,3 @@ export AUR=(
   watchexec
   zeal
 )
-

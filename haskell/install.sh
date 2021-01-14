@@ -1,11 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# shellcheck source=distro.sh
-. ../distro.sh
-# shellcheck source=helpers.sh
-. ../helpers.sh
+BASE_DIR=$(dirname "${BASH_SOURCE[0]:-$0}")
+cd "${BASE_DIR}/.." || exit 127
 
-echo_info "Symling .ghci..."
-ln -sfT ~/.dotfiles/haskell/ghci ~/.ghci
+# shellcheck source=../scripts/extras.sh
+. scripts/extras.sh
 
-echo_done "Haskell configuration!"
+symlink "$HOME/.dotfiles/haskell/ghci" "$HOME/.ghci"

@@ -1,14 +1,13 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# shellcheck source=distro.sh
-. ../distro.sh
-# shellcheck source=helpers.sh
-. ../helpers.sh
+#set -Eeuo pipefail
 
-echo_info "Installing Mercurial..."
-_install mercurial
+BASE_DIR=$(dirname "${BASH_SOURCE[0]:-$0}")
+cd "${BASE_DIR}/.." || exit 127
 
-echo_info "Symlink ~/.hgrc"
-ln -sfT ~/.dotfiles/hg/hgrc ~/.hgrc
+# shellcheck source=../scripts/extras.sh
+. scripts/extras.sh
 
-echo_done "Mercurial configuration!"
+install_package mercurial
+
+symlink "$HOME/.dotfiles/hg/hgrc" "$HOME/.hgrc"

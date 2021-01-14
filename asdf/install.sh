@@ -1,41 +1,36 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# shellcheck source=distro.sh
-. ../distro.sh
-# shellcheck source=helpers.sh
-. ../helpers.sh
+BASE_DIR=$(dirname "${BASH_SOURCE[0]:-$0}")
+cd "${BASE_DIR}/.." || exit 127
 
-echo_info "Cloning asdf..."
-git clone https://github.com/asdf-vm/asdf.git ~/.asdf
+# shellcheck source=../scripts/extras.sh
+. scripts/extras.sh
 
-SAVED_DIR=$PWD
+ASDF_PATH_DIR="$HOME/.asdf"
 
-cd ~/.asdf || exit
+execute "git clone https://github.com/asdf-vm/asdf.git $ASDF_PATH_DIR" "Clonning asdf git repository..."
 
-git checkout "$(git describe --abbrev=0 --tags)"
+execute 'git -C $ASDF_PATH_DIR checkout "$(git -C $ASDF_PATH_DIR describe --abbrev=0 --tags)"' "Checking out most recent git tag..."
 
-cd "$SAVED_DIR" || exit
+execute "asdf update" "Update asdf itself..."
 
-echo_info "Symling .asdfrc..."
-ln -sfT ~/.dotfiles/asdf/asdfrc ~/.asdfrc
+plugins=(
+  R
+  golang
+  haskell
+  java
+  nodejs
+  python
+  ruby
+  rust
+)
 
-echo_info "Symling .tool-versions..."
-ln -sfT ~/.dotfiles/asdf/tool-versions ~/.tool-versions
+for plugin in "${plugins[@]}"; do
+  execute "asdf plugin-add $plugin" "Adding $plugin plugin to asdf"
+done
 
-echo_info "Update asdf itself..."
-asdf update
+execute "asdf plugin-update --all" "Update all plugins..."
 
-echo_info "Add asdf plugins..."
-asdf plugin-add R
-asdf plugin-add golang
-asdf plugin-add haskell
-asdf plugin-add java
-asdf plugin-add nodejs
-asdf plugin-add python 
-asdf plugin-add ruby
-asdf plugin-add rust
+symlink ~/.dotfiles/asdf/asdfrc ~/.asdfrc
 
-echo_info "Update all plugins..."
-asdf plugin-update --all
-
-echo_done "asdf configuration!"
+symlink ~/.dotfiles/asdf/tool-versions ~/.tool-versions

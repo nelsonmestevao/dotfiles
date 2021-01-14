@@ -1,12 +1,11 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# shellcheck source=distro.sh
-. ../distro.sh
-# shellcheck source=helpers.sh
-. ../helpers.sh
+BASE_DIR=$(dirname "${BASH_SOURCE[0]:-$0}")
+cd "${BASE_DIR}/.." || exit 127
 
-echo_info "Configuring .sqliterc..."
-ln -sfT ~/.dotfiles/sqlite/sqliterc ~/.sqliterc
+# shellcheck source=../scripts/extras.sh
+. scripts/extras.sh
 
-echo_done "SQLite configuration!"
+symlink ~/.dotfiles/sqlite/sqliterc ~/.sqliterc
 
+install_package sqlitebrowser

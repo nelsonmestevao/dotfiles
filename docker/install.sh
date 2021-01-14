@@ -1,17 +1,15 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# shellcheck source=distro.sh
-. ../distro.sh
-# shellcheck source=helpers.sh
-. ../helpers.sh
+#set -Eeuo pipefail
 
-echo_info "Installing docker..."
-_install docker
+BASE_DIR=$(dirname "${BASH_SOURCE[0]:-$0}")
+cd "${BASE_DIR}/.." || exit 127
 
-echo_info "Installing docker-compose..."
-_install docker-compose
+# shellcheck source=../scripts/extras.sh
+. scripts/extras.sh
 
-# add docker to usergroup
-sudo usermod -aG docker "${USER}"
+install_package docker
 
-echo_done "Rofi configuration!"
+install_package docker-compose
+
+execute "sudo usermod -aG docker ${USER}" "Adding docker to usergroup..."

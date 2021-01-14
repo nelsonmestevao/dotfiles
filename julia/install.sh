@@ -1,12 +1,12 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# shellcheck source=distro.sh
-. ../distro.sh
-# shellcheck source=helpers.sh
-. ../helpers.sh
+#set -Eeuo pipefail
 
-echo_info "Symling startup.jl..."
-mkdir -p ~/.julia/config
-ln -sfT ~/.dotfiles/julia/startup.jl ~/.julia/config/startup.jl
+BASE_DIR=$(dirname "${BASH_SOURCE[0]:-$0}")
+cd "${BASE_DIR}/.." || exit 127
 
-echo_done "Julia configuration!"
+# shellcheck source=../scripts/extras.sh
+. scripts/extras.sh
+
+mkdir -p "$HOME/.julia/config"
+symlink "$HOME/.dotfiles/julia/startup.jl" "$HOME/.julia/config/startup.jl"

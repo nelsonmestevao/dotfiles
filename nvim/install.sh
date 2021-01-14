@@ -1,29 +1,30 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# shellcheck source=distro.sh
-. ../distro.sh
-# shellcheck source=helpers.sh
-. ../helpers.sh
+#set -Eeuo pipefail
 
-echo_info "Installling Neovim..."
-_install neovim
+BASE_DIR=$(dirname "${BASH_SOURCE[0]:-$0}")
+cd "${BASE_DIR}/.." || exit 127
 
-_install python2-neovim
-_install python-neovim
+# shellcheck source=../scripts/extras.sh
+. scripts/extras.sh
 
-if [[ -x "$(command -v yay)" ]]; then
-  yay -Sy ruby-neovim --needed --noconfirm
-  yay -Sy nodejs-neovim --needed --noconfirm
-fi
+download_vim_plug() {
+  curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+}
 
-echo_info "Installing vim-plug..."
-curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
-  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+install_package neovim
 
-echo_info "Symling init.vim..."
+install_package ruby-neovim
+install_package nodejs-neovim
+
+execute download_vim_plug "Installing vim-plug..."
+
 mkdir -p ~/.config/nvim
-ln -sfT ~/.dotfiles/nvim/init.vim ~/.config/nvim/init.vim
+symlink ~/.dotfiles/nvim/init.vim ~/.config/nvim/init.vim
 
-ln -s ~/.dotfiles/nvim/ftplugin ~/.config/nvim
+symlink_ftplugin() {
+  ln -s ~/.dotfiles/nvim/ftplugin ~/.config/nvim
+}
 
-echo_done "Neovim configuration!"
+execute symlink_ftplugin "Symlinking ftplugin folder..."

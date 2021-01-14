@@ -1,17 +1,18 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# shellcheck source=distro.sh
-. ../distro.sh
-# shellcheck source=helpers.sh
-. ../helpers.sh
+BASE_DIR=$(dirname "${BASH_SOURCE[0]:-$0}")
+cd "${BASE_DIR}/.." || exit 127
 
-echo_info "Installing Git LFS..."
-_install git-lfs
+# shellcheck source=../scripts/extras.sh
+. scripts/extras.sh
 
-echo_info "Installing Git Fuzzy..."
-git clone https://github.com/bigH/git-fuzzy.git "$HOME/.git-fuzzy"
+install_package git-lfs
 
-echo_info "Symlink ~/.gitconfig"
-ln -sfT "$HOME/.dotfiles/git/gitconfig" "$HOME/.gitconfig"
+GIT_FUZZY_PATH_DIR="$HOME/.git-fuzzy"
 
-echo_done "Git configuration!"
+execute "git clone https://github.com/bigH/git-fuzzy.git $GIT_FUZZY_PATH_DIR" "Clonning Git Fuzzy..."
+
+# TODO add auto update
+execute "git -C $GIT_FUZZY_PATH_DIR pull" "Updating Git Fuzzy..."
+
+symlink "$HOME/.dotfiles/git/gitconfig" "$HOME/.gitconfig"

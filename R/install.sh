@@ -1,20 +1,17 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# shellcheck source=distro.sh
-. ../distro.sh
-# shellcheck source=helpers.sh
-. ../helpers.sh
+BASE_DIR=$(dirname "${BASH_SOURCE[0]:-$0}")
+cd "${BASE_DIR}/.." || exit 127
 
-echo_info "Installing Dependencies..."
-sudo pacman -S gcc-fortran --need --noconfirm
+# shellcheck source=../scripts/extras.sh
+. scripts/extras.sh
 
-echo_info "Symlink .Rprofile..."
-ln -sfT ~/.dotfiles/R/Rprofile ~/.Rprofile
+install_package gcc-fortran
 
-echo_info "Symlink .Renviron..."
-ln -sfT ~/.dotfiles/R/Renviron ~/.Renviron
+install_package rstudio-desktop
 
-echo_info "Installing R packages..."
-Rscript rpkgs.R
+symlink ~/.dotfiles/R/Rprofile ~/.Rprofile
 
-echo_done "R configuration!"
+symlink ~/.dotfiles/R/Renviron ~/.Renviron
+
+execute "Rscript rpkgs.R" "Installing R packages..."
