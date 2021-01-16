@@ -22,6 +22,7 @@ export PKG=(
   go
   # htop #
   # hyperfine #
+  jq
   languagetool
   # libreoffice-still #
   # lighttpd
