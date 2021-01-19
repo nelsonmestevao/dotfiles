@@ -39,6 +39,7 @@ export PKG=(
   # odt2txt
   playerctl
   polybar
+  ponysay
   # pulseaudio
   # pulseaudio-alsa
   # pulseaudio-bluetooth
