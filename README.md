@@ -1,4 +1,3 @@
-[semaphoreci]: https://semaphoreci.com/nelsonmestevao/dotfiles
 [releases]: https://github.com/nelsonmestevao/dotfiles/releases/latest
 [license]: #memo-license
 
@@ -6,7 +5,6 @@
   <img alt="dotfiles" src=".github/header.png" width="750px">
 </h1>
 
-[![Build Status](https://semaphoreci.com/api/v1/nelsonmestevao/dotfiles/branches/master/badge.svg)][semaphoreci]
 [![Latest Release](https://img.shields.io/github/release-pre/nelsonmestevao/dotfiles.svg?style=flat-square)][releases]
 [![License](https://img.shields.io/github/license/nelsonmestevao/dotfiles?logo=WTFNMFPL&style=flat-square)][license]
 ![Repo size](https://img.shields.io/github/repo-size/nelsonmestevao/dotfiles.svg?style=flat-square)
