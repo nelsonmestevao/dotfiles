@@ -17,12 +17,12 @@ alias ocv="cd $HOME/Code/online-curriculum/ && exa --long --header --git"
 
 alias um="cd $HOME/Code/uminho/"
 
+alias ls="exa"
 alias cat="bat"
 alias r="ranger"
 alias scim="sc-im"
 alias p="sudo pacman"
 alias y="yay"
-alias e="exa --group-directories-first --long --git --sort type"
 alias ka="killall"
 alias :q="exit"
 
