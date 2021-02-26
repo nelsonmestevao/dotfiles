@@ -1,0 +1,62 @@
+---
+defaults:
+  myname: &myname git config --global user.name
+  myemail: &myemail git config --global user.email
+  myusername: &myusername git config --global github.user
+
+matches:
+  - trigger: "cmps"
+    replace: |-
+      Cumprimentos,
+      {{name}}.
+    vars:
+      - name: name
+        type: shell
+        params:
+          cmd: *myname
+
+  - trigger: ":sig"
+    replace: |-
+      Sincerely,
+      {{name}}.
+    vars:
+      - name: name
+        type: shell
+        params:
+          cmd: *myname
+
+  - trigger: "@@"
+    replace: "{{email}}"
+    vars:
+      - name: email
+        type: shell
+        params:
+          cmd: *myemail
+
+  - trigger: ":@"
+    replace: "{{username}}"
+    vars:
+      - name: username
+        type: shell
+        params:
+          cmd: *myusername
+
+  - trigger: ":date"
+    replace: "{{mydate}}"
+    vars:
+      - name: mydate
+        type: date
+        params:
+          format: "%d/%m/%Y"
+
+  - trigger: ":ip"
+    replace: "{{myip}}"
+    vars:
+      - name: myip
+        type: shell
+        params:
+          cmd: "ifconfig wlp3s0 | awk '$1 == \"inet\" {print $2}'"
+
+  - trigger: ":hb"
+    replace: |
+      Feliz aniversário, $|$! 🎂
