@@ -76,6 +76,8 @@ alias joão="date -d '+2 hour' '+%T' && weather Tampere Finland 0"
 alias cesium="xrandr --output HDMI1 --auto --above eDP1"
 alias ip='ip -c=auto'
 
+alias activate-ssh='eval $(ssh-agent -s); ssh-add ~/.ssh/id_rsa'
+
 # useful comands
 # xdotool key Caps_Lock
 # setxkbmap -option ctrl:nocaps
