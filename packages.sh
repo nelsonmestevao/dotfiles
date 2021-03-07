@@ -53,6 +53,7 @@ export PKG=(
   rofi-calc
   shfmt
   sshpass
+  shotcut
   # terminology #
   telegram-desktop
   # texstudio #
