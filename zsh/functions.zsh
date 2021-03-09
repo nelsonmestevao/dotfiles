@@ -13,6 +13,11 @@ function mkcd() {
   cd $@
 }
 
+function gclcd() {
+  git clone --recurse-submodules $@
+  cd "$(basename "$_" .git)"
+}
+
 function open() {
   xdg-open $@ & disown
 }
