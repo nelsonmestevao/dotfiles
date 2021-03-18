@@ -249,7 +249,6 @@ Plug 'ludwig/split-manpage.vim'
 
 " Elixir
 Plug 'elixir-editors/vim-elixir'
-Plug 'carlosgaldino/elixir-snippets'
 
 " Go
 Plug 'zchee/deoplete-go', { 'do': 'make'}
