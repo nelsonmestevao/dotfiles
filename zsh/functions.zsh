@@ -79,7 +79,7 @@ function coding() {
 }
 
 function find-tmuxinator-project() {
-  local PROJECT=$(ls -l ~/.dotfiles/tmux/projects | grep "^-" | awk {'print $9'} | cut -d. -f1 | awk '!/code/' | fzf)
+  local PROJECT=$(ls -1 ~/.dotfiles/tmux/projects | cut -d. -f1 | awk '!/code/' | fzf)
   [ -z "$PROJECT" ] && return
 
   tmuxinator start $PROJECT
