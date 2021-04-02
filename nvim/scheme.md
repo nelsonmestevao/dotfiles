@@ -1,12 +1,7 @@
-# Scheme                                                                      "
+# Scheme
 
 ```vim
-syntax on
 filetype plugin indent on
-
-if (has("termguicolors"))
- set termguicolors
-endif
 
 set wrap
 set ruler
@@ -17,7 +12,7 @@ set showmatch             " set show matching parenthesis
 set colorcolumn=80
 
 set cursorline            " underline the current line, for quick orientation
-"set cursorcolumn
+" set cursorcolumn
 
 " Highlight whitespaces
 set list
@@ -26,13 +21,8 @@ set listchars+=tab:>-
 set listchars+=trail:•
 set listchars+=nbsp:•
 
-
 " Theme
-syntax enable
-colorscheme one
-hi Normal guibg=NONE ctermbg=NONE
-" colorscheme OceanicNext
-" let g:gruvbox_contrast_dark = 'hard'
+source ~/.dotfiles/nvim/themes/one.vim
 
 " vim-airline
 " let g:airline_theme='gruvbox'
