@@ -1,0 +1,13 @@
+configuration {
+	modi: "drun,window,calc,run";
+	lines: 10;
+	font: "Hack NF 16";
+	show-icons: true;
+	combi-modi: "drun,window";
+	theme: "~/.dotfiles/rofi/themes/oxide.rafi";
+	display-window: "Window";
+	display-run: "Run";
+	display-drun: "Search";
+	display-combi: "";
+	display-calc: "Calculator";
+}
