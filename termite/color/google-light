@@ -13,7 +13,8 @@ background          = rgba(255, 255, 255)
 # Black, Gray, Silver, White
 color0  = #ffffff
 color8  = #b4b7b4
-color7  = #373b41
+color7  = #b4b7b4
+# color7  = #373b41
 color15 = #1d1f21
 
 # Red
