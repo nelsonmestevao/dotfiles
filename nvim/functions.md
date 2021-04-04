@@ -63,3 +63,20 @@ nnoremap <leader>l :call Gitline()<cr><cr>
 nnoremap <leader>c :if bufwinnr("Gitlog") > 0 \| bdelete Gitlog \| endif<cr>
 ```
 
+## Darkmode and lightmode
+
+```vim
+function! Dark()
+  set background=dark
+  silent !mode dark
+endfunction
+
+function! Light()
+  set background=light
+  silent !mode light
+endfunction
+
+command! Dark call Dark()
+command! Light call Light()
+```
+
