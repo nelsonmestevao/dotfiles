@@ -41,7 +41,7 @@ function install_packages() {
       # ===============================================
       # Install packages from repo (--repo)
       # ===============================================
-      for pkg in "${PKG[@]}"; do
+      for pkg in "${REPO[@]}"; do
         install_package "$pkg"
       done
       ;;
@@ -49,8 +49,8 @@ function install_packages() {
       # ===============================================
       # Install packages from aur (--aur)
       # ===============================================
-      for aur in "${AUR[@]}"; do
-        install_package "$aur"
+      for pkg in "${AUR[@]}"; do
+        install_package "$pkg"
       done
       ;;
     all)

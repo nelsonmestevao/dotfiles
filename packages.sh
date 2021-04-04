@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export PKG=(
+export REPO=(
   # acpi #
   ansible
   ansible-lint
