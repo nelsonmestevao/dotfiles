@@ -164,11 +164,29 @@ nnoremap <localleader>r :silent !browser.refresh<CR>
 ## Plugin Related maps
 
 Imagine you have something like `is_logged_in = True` and want it changed to
-false just use `leader <a>`. Same shortcut as increasing a number.
+false just use `leader <a>`. Its similar to the shortcut as increasing of a
+number [`Ctrl` `+` `a`].
 
 ```vim
 " Switch
 nnoremap <leader>a :Switch<CR>
+```
+
+### COC
+
+Shortcuts such as this (and many more which you can check on the [help
+page](https://github.com/neoclide/coc.nvim/blob/master/doc/coc.txt#L912))
+provides quick contextual navigation within Elixir functions.
+
+```vim
+nmap <leader>cd <Plug>(coc-definition)
+nmap <leader>cr <Plug>(coc-references)
+```
+
+View an outline of current file.
+
+```vim
+nnoremap <leader>co :<C-u>CocList outline<CR>
 ```
 
 ```vim
@@ -194,16 +212,16 @@ nnoremap <leader>e :Files<CR>
 nnoremap <leader>f :Rg<CR>
 
 " terminal emulation in floating mode
-nnoremap <silent> <leader>sh  :FloatermNew --height=0.4 --width=0.95 --wintype=floating --position=bottom --autoclose=2 --title=
-tnoremap <silent> <leader>sh  <C-\><C-n>:FloatermNew --height=0.4 --width=0.98 --wintype=floating --position=bottom --autoclose=2 --title=
-nnoremap <silent> <leader>st  :FloatermToggle<CR>
-tnoremap <silent> <leader>st  <C-\><C-n>:FloatermToggle<CR>
-nnoremap <silent> <leader>sn  :FloatermNext<CR>
-tnoremap <silent> <leader>sn  <C-\><C-n>:FloatermNext<CR>
+nnoremap <leader>sh  :FloatermNew --height=0.4 --width=0.95 --wintype=floating --position=bottom --autoclose=2 --title=
+tnoremap <leader>sh  <C-\><C-n>:FloatermNew --height=0.4 --width=0.98 --wintype=floating --position=bottom --autoclose=2 --title=
+nnoremap <leader>st  :FloatermToggle<CR>
+tnoremap <leader>st  <C-\><C-n>:FloatermToggle<CR>
+nnoremap <leader>sn  :FloatermNext<CR>
+tnoremap <leader>sn  <C-\><C-n>:FloatermNext<CR>
 
 " Send code to a floaterm
-nnoremap   <C-c><C-c> :FloatermSend<CR>
-vnoremap   <C-c><C-c> :FloatermSend<CR>
+nnoremap <C-c><C-c> :FloatermSend<CR>
+vnoremap <C-c><C-c> :FloatermSend<CR>
 
 " Session management
 nnoremap <leader>so :OpenSession<Space>

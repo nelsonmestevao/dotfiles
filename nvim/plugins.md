@@ -107,7 +107,11 @@ Plug 'dpelle/vim-LanguageTool'
 #### Ale
 
 ```vim
-Plug 'w0rp/ale'
+Plug 'dense-analysis/ale'
+
+let g:ale_fixers = { 'elixir': ['mix_format'] }
+
+let g:ale_fix_on_save = 1
 
 " Error and warning signs.
 let g:ale_sign_error = '✗'
@@ -123,18 +127,10 @@ Plug 'sheerun/vim-polyglot'
 Plug 'vim-syntastic/syntastic'
 ```
 
-#### Deoplete
+#### COC
 
 ```vim
-if has('nvim')
-  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-else
-  Plug 'Shougo/deoplete.nvim'
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
-endif
-
-let g:deoplete#enable_at_startup = 1
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 ```
 
 #### Switch
