@@ -16,3 +16,7 @@ Host search
      HostName search.di.uminho.pt
      User a76434
 
+Host epl
+     HostName epl.di.uminho.pt
+     User cesium
+
