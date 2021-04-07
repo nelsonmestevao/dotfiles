@@ -25,10 +25,13 @@ set listchars+=nbsp:•
 source ~/.dotfiles/nvim/themes/one.vim
 
 " vim-airline
-" let g:airline_theme='gruvbox'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#formatter = 'default'
+
 let g:airline_powerline_fonts = 1
+let g:airline_left_sep = "\uE0B4"
+let g:airline_right_sep = "\uE0B6"
+
 let g:airline#extensions#syntastic#enabled = 1
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#tabline#enabled = 1
