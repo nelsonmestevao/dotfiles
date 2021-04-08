@@ -1,0 +1,30 @@
+[colors]
+cursor = #0074E8
+cursor_foreground = #FFFFFF
+
+foreground = #38383D
+background = #FFFFFF
+
+color0  = #FFFFFF
+color8  = #737373
+
+color1  = #d70022
+color9  = #DD00A9
+
+color2  = #058B00
+color10 = #058B00
+
+color3  = #A47F00
+color11 = #A47F00
+
+color4  = #003EAA
+color12 = #003EAA
+
+color5  = #8000D7
+color13 = #8000D7
+
+color6  = #0074E8
+color14 = #0074E8
+
+color7  = #38383D
+color15 = #535351

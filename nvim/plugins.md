@@ -230,6 +230,7 @@ let g:session_command_aliases = 1
 " vim-airline
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'kjssad/quantum.vim'
 
 " Color Scheme
 Plug 'rafi/awesome-vim-colorschemes'
