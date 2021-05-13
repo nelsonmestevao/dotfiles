@@ -42,14 +42,14 @@ accordingly.
 
 ```shell
 cd ~/.dotfiles
-make install
+./install
 ```
 
 ## :bomb: Uninstalling
 
 ```shell
 cd ~/.dotfiles
-make uninstall
+./uninstall.sh
 cd ~
 rm -rf ~/.dotfiles
 rm -rf ~/.spells
@@ -57,10 +57,9 @@ rm -rf ~/.spells
 
 ## :warning: Disclaimer
 
-As you probably know, you shouldn't just run my Makefile without reading it
-first. And if you read it, you will understand that it calls other scripts like
-`install.sh` which depend on `helpers.sh`. Read those, it's the only way that
-you can trust what it is doing.
+As you probably know, you shouldn't just run any script that you do not trust.
+You shouldn't just trust my `install` script. You should read it and all the
+helpers that it relies on.
 
 ## :memo: License
 
