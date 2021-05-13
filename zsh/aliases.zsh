@@ -56,6 +56,9 @@ alias br="bin/run"
 alias bt="bin/test"
 alias bf="bin/format"
 alias bl="bin/lint"
+alias bcs="bin/console"
+alias bcl="bin/clean"
+alias bst="bin/setup"
 
 alias mk=make
 alias mkc="make clean"
