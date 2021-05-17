@@ -59,6 +59,8 @@ alias bl="bin/lint"
 alias bcs="bin/console"
 alias bcl="bin/clean"
 alias bst="bin/setup"
+alias bsr="bin/start"
+alias bsp="bin/stop"
 
 alias mk=make
 alias mkc="make clean"
