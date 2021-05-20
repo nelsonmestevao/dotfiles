@@ -41,6 +41,14 @@ matches:
         params:
           cmd: *myusername
 
+  - trigger: ":nemo"
+    replace: "{{name}}"
+    vars:
+      - name: name
+        type: shell
+        params:
+          cmd: *myname
+
   - trigger: ":date"
     replace: "{{mydate}}"
     vars:
