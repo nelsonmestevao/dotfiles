@@ -24,12 +24,12 @@ IEx.configure(
   default_prompt:
   "#{IO.ANSI.green}%prefix#{IO.ANSI.reset} " <>
     "[#{IO.ANSI.magenta}#{timestamp.()}#{IO.ANSI.reset} " <>
-      "#{IO.ANSI.cyan}%counter#{IO.ANSI.reset}] |>",
+      "#{IO.ANSI.cyan}%counter#{IO.ANSI.reset}]",
   alive_prompt:
   "#{IO.ANSI.green}%prefix#{IO.ANSI.reset} " <>
     "(#{IO.ANSI.yellow}%node#{IO.ANSI.reset}) " <>
       "[#{IO.ANSI.magenta}#{timestamp.()}#{IO.ANSI.reset} " <>
-        "#{IO.ANSI.cyan}%counter#{IO.ANSI.reset}] |>",
+        "#{IO.ANSI.cyan}%counter#{IO.ANSI.reset}]",
   history_size: 50,
   inspect: [
     pretty: true,
