@@ -63,6 +63,7 @@ alias bsr="bin/start"
 alias bsp="bin/stop"
 
 alias mk=make
+alias mkh="make help"
 alias mkc="make clean"
 alias mkr="make run"
 alias mkt="make test"
