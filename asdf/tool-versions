@@ -4,5 +4,5 @@ java system
 python system
 ruby system
 rust nightly
-nodejs 15.7.0
+nodejs 15.11.0
 golang system
