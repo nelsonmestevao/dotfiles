@@ -9,3 +9,5 @@ cd "${BASE_DIR}/.." || exit 127
 . scripts/extras.sh
 
 symlink ~/.dotfiles/python/default-python-packages ~/.default-python-packages
+
+symlink ~/.dotfiles/python/ipython.py ~/.ipython/profile_default/ipython_config.py
