@@ -122,7 +122,7 @@ bindsym $mod+Shift+Right move right
 # workspace_auto_back_and_forth yes
 bindsym $mod+Tab workspace back_and_forth
 bindsym $mod+Shift+Tab move container to workspace back_and_forth; workspace back_and_forth
-bindsym $mod+m move workspace to output left
+bindsym $mod+m exec ~/.spells/i3wm/move_screen.py
 
 # split orientation
 bindsym $mod+b split h;exec notify-send 'tile horizontally'
