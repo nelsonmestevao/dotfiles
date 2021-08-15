@@ -3,6 +3,7 @@ du-dust
 exa
 fd-find
 git-delta
+gping
 grex
 hyperfine
 procs
