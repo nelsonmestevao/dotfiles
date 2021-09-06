@@ -1,0 +1,4 @@
+# vim: ft=zsh
+
+export ERL_AFLAGS="-kernel shell_history enabled"
+
