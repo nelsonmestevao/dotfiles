@@ -1,5 +1,5 @@
 configuration {
-	modi: "drun,window,calc,run";
+	modi: "drun,window,emoji,calc,run";
 	lines: 10;
 	font: "Hack NF 16";
 	show-icons: true;
@@ -9,5 +9,6 @@ configuration {
 	display-run: "Run";
 	display-drun: "Search";
 	display-combi: "";
+	display-emoji: "Emoji";
 	display-calc: "Calculator";
 }

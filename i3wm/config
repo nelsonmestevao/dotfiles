@@ -61,7 +61,7 @@ bindsym $mod+Escape exec --no-startup-id betterlockscreen -l dim
 
 # start program launcher
 bindsym Mod1+space exec --no-startup-id rofi -show combi
-bindsym $mod+period exec --no-startup-id rofimoji
+bindsym $mod+period exec --no-startup-id rofi -show emoji
 #bindsym $mod+d exec --no-startup-id dmenu_recency
 #bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
 

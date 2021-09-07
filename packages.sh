@@ -49,8 +49,8 @@ export REPO=(
   rclone
   redshift
   rofi
-  rofimoji
   rofi-calc
+  rofi-emoji
   shfmt
   sshpass
   shotcut
