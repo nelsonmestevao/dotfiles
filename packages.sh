@@ -51,6 +51,7 @@ export REPO=(
   rofi
   rofi-calc
   rofi-emoji
+  rsync
   shfmt
   sshpass
   shotcut
