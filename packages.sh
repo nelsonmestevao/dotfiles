@@ -4,6 +4,7 @@ export REPO=(
   # acpi #
   ansible
   ansible-lint
+  autorandr
   # bat #
   # bind-tools
   # catdoc
@@ -37,6 +38,7 @@ export REPO=(
   obs-studio
   # octave
   # odt2txt
+  pactl
   playerctl
   polybar
   ponysay
