@@ -4,3 +4,5 @@ CURRENT_HASKELL=$(asdf current haskell | cut -d ' ' -f 1)
 
 export PATH=$PATH:$HOME/.asdf/installs/haskell/$CURRENT_HASKELL/bin
 
+[ -f "/home/nelson/.ghcup/env" ] && source "/home/nelson/.ghcup/env" # ghcup-env
+

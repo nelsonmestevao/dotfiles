@@ -1,8 +1,8 @@
 R 4.1.0
-haskell 8.8.4
+golang system
+haskell 9.0.1
 java system
+nodejs 15.11.0
 python system
 ruby system
 rust nightly
-nodejs 15.11.0
-golang system
