@@ -1,22 +1,22 @@
 Host rpi
-     HostName raspberrypi.local
-     User nelson
+    HostName raspberrypi.local
+    User nelson
 
 Host storm
-     HostName storm.cesium.di.uminho.pt
-     Port 2345
-     User nelson
+    HostName storm.cesium.di.uminho.pt
+    Port 2345
+    User nelson
 
 Host trooper
-     HostName trooper.cesium.di.uminho.pt
-     Port 101
-     User nelson
+    HostName trooper.cesium.di.uminho.pt
+    Port 101
+    User nelson
 
 Host search
-     HostName search.di.uminho.pt
-     User a76434
+    HostName s7edu.di.uminho.pt
+    User pg47535
 
 Host epl
-     HostName epl.di.uminho.pt
-     User cesium
+    HostName epl.di.uminho.pt
+    User cesium
 
