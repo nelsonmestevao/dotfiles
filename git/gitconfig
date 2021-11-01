@@ -14,10 +14,10 @@
 [init]
   defaultBranch = main
 [interactive]
-    diffFilter = delta --color-only
+  diffFilter = delta --color-only
 [delta]
-    features = decorations
-    whitespace-error-style = 22 reverse
+  features = decorations
+  whitespace-error-style = 22 reverse
 [commit]
   gpgsign = true
   verbose = true
