@@ -68,6 +68,11 @@ alias mkc="make clean"
 alias mkr="make run"
 alias mkt="make test"
 
+alias stg="stack ghci"
+alias str="stack run"
+alias stc="stack test --coverage"
+alias sth="stack haddock"
+
 alias n="npm"
 alias nr="npm-run-all"
 
