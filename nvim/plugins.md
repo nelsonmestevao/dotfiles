@@ -70,7 +70,9 @@ strip whitespace on save is activated so it asks before saving.
 
 ```vim
 Plug 'ntpeters/vim-better-whitespace'
+let g:better_whitespace_enabled=1
 let g:strip_whitespace_on_save=1
+let g:strip_whitespace_confirm=0
 ```
 
 This plugin aim is to integrate Direnv and Vim. Because Vim can shell out to
