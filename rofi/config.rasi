@@ -1,10 +1,11 @@
+@theme "~/.dotfiles/rofi/themes/oxide.rafi"
+
 configuration {
 	modi: "drun,window,emoji,calc,run";
 	lines: 10;
 	font: "Hack NF 16";
 	show-icons: true;
 	combi-modi: "drun,window";
-	theme: "~/.dotfiles/rofi/themes/oxide.rafi";
 	display-window: "Window";
 	display-run: "Run";
 	display-drun: "Search";
@@ -12,3 +13,4 @@ configuration {
 	display-emoji: "Emoji";
 	display-calc: "Calculator";
 }
+
