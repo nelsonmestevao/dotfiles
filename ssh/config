@@ -3,6 +3,7 @@ Host rpi
     User nelson
 
 Host storm
+    PubkeyAcceptedKeyTypes +ssh-rsa
     HostName storm.cesium.di.uminho.pt
     Port 2345
     User nelson
