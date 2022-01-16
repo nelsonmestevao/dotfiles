@@ -109,11 +109,11 @@ Plug 'dpelle/vim-LanguageTool'
 #### Ale
 
 ```vim
-Plug 'dense-analysis/ale'
+" Plug 'dense-analysis/ale'
 
-let g:ale_fixers = { 'elixir': ['mix_format'] }
+" let g:ale_fixers = { 'elixir': ['mix_format'] }
 
-let g:ale_fix_on_save = 1
+" let g:ale_fix_on_save = 1
 
 " Error and warning signs.
 let g:ale_sign_error = '✗'
@@ -132,7 +132,7 @@ Plug 'vim-syntastic/syntastic'
 #### COC
 
 ```vim
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" Plug 'neoclide/coc.nvim', {'branch': 'release'}
 ```
 
 #### Switch
@@ -241,14 +241,17 @@ Plug 'ryanoasis/vim-devicons'
 
 ### Languages
 
+#### Elixir
+
+```vim
+" Plug 'elixir-editors/vim-elixir'
+```
+
 ```vim
 " C
 Plug 'vim-scripts/c.vim', {'for': ['c', 'cpp']}
 Plug 'ludwig/split-manpage.vim'
 " Plug 'justinmk/vim-syntax-extra', { 'for': ['c', 'cpp', 'flex'] }
-
-" Elixir
-Plug 'elixir-editors/vim-elixir'
 
 " Go
 Plug 'zchee/deoplete-go', { 'do': 'make'}
