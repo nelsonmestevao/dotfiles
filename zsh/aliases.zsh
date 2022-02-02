@@ -74,7 +74,7 @@ alias stc="stack test --coverage"
 alias sth="stack haddock"
 
 alias n="npm"
-alias nr="npm-run-all"
+alias nr="npx npm-run-all"
 
 alias a="ansible"
 alias ac="ansible-console"
