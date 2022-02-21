@@ -36,6 +36,7 @@ export REPO=(
   maven
   numlockx
   obs-studio
+  onefetch
   # octave
   # odt2txt
   pactl
