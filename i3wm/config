@@ -35,15 +35,15 @@ bindsym $mod+F2       exec firefox-developer-edition
 bindsym $mod+F3       exec ranger
 bindsym $mod+F5       exec terminal -e 'mocp'
 bindsym $mod+Ctrl+t   exec compton -b
-bindsym $mod+Ctrl+m   exec termite -e 'alsamixer'
+bindsym $mod+Ctrl+m   exec alacritty -e 'alsamixer'
 bindsym $mod+Shift+d --release exec "killall dunst; exec notify-send 'restart dunst'"
 bindsym $mod+Ctrl+x  --release exec --no-startup-id xkill
 
 # start a terminal
-bindsym $mod+Return exec termite
+bindsym $mod+Return exec alacritty
 
 # start a terminal with tmux
-bindsym $mod+Shift+Return exec termite -e 'tmux'
+bindsym $mod+Shift+Return exec alacritty -e 'tmux'
 
 bindsym $mod+Shift+t exec terminology
 
