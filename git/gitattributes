@@ -13,3 +13,6 @@
 *.pptx  diff=ppt
 *.ppt   diff=ppt
 
+mix.lock merge=binary
+package-lock.json merge=binary
+
