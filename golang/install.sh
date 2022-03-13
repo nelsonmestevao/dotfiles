@@ -7,4 +7,3 @@ cd "${BASE_DIR}/.." || exit 127
 . scripts/extras.sh
 
 symlink ~/.dotfiles/golang/default-golang-pkgs ~/.default-golang-pkgs
-

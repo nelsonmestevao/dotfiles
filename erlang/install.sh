@@ -5,8 +5,11 @@ cd "${BASE_DIR}/.." || exit 127
 
 # shellcheck source=../scripts/extras.sh
 . scripts/extras.sh
+# shellcheck source=../scripts/utils.sh
+. scripts/utils.sh
 
-#TODO: change wget to download
+ask_for_sudo
+
 install_rebar3() {
   wget https://s3.amazonaws.com/rebar3/rebar3
   chmod +x rebar3

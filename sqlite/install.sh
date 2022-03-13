@@ -5,7 +5,11 @@ cd "${BASE_DIR}/.." || exit 127
 
 # shellcheck source=../scripts/extras.sh
 . scripts/extras.sh
+# shellcheck source=../scripts/utils.sh
+. scripts/utils.sh
 
-symlink ~/.dotfiles/sqlite/sqliterc ~/.sqliterc
+ask_for_sudo
 
 install_package sqlitebrowser
+
+symlink ~/.dotfiles/sqlite/sqliterc ~/.sqliterc

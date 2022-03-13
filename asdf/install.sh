@@ -16,6 +16,8 @@ execute "asdf update" "Update asdf itself..."
 
 plugins=(
   R
+  elixir
+  erlang
   golang
   haskell
   java
