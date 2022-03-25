@@ -28,7 +28,7 @@ alias :q="exit"
 
 alias o=open
 alias f=find-file
-alias m=find-tmuxinator-project
+alias ft=find-tmuxinator-project
 
 alias bsc=backup
 alias pls=please
@@ -61,6 +61,13 @@ alias bcl="bin/clean"
 alias bst="bin/setup"
 alias bsr="bin/start"
 alias bsp="bin/stop"
+
+alias m=mix
+alias ms="mix phx.server"
+alias mc="mix do clean, compile"
+alias mf="mix format"
+alias ml="mix credo --strict --all"
+alias mt="mix test"
 
 alias mk=make
 alias mkh="make help"
