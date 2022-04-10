@@ -7,7 +7,10 @@ set wrap
 set ruler
 set title                 " change the terminal's title
 set showmode              " always show what mode we're currently editing in
-set number relativenumber " set hybrid line numbers
+set number relativenumber
+" set hybrid line numbers
+autocmd InsertEnter * :set norelativenumber
+autocmd InsertLeave * :set relativenumber
 set showmatch             " set show matching parenthesis
 set colorcolumn=80
 
