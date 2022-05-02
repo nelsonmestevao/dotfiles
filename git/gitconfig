@@ -37,6 +37,7 @@
   rw = review
   st = status
 
+  co-pr = !sh -c 'git fetch origin pull/$1/head:pr/$1 && git checkout pr/$1' -
   patch   = !git --no-pager diff
   standup = !git log --all --author=$USER --format=%s --since '9am last week'
 [branch]
