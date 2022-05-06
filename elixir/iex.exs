@@ -5,6 +5,10 @@ timestamp = fn ->
   |> Enum.join(":")
 end
 
+elixir_icon = fn ->
+  "#{IO.ANSI.magenta}#{IO.ANSI.reset}"
+end
+
 IEx.configure(
   colors: [
     syntax_colors: [
@@ -24,12 +28,12 @@ IEx.configure(
   default_prompt:
   "#{IO.ANSI.green}%prefix#{IO.ANSI.reset} " <>
     "[#{IO.ANSI.magenta}#{timestamp.()}#{IO.ANSI.reset} " <>
-      "#{IO.ANSI.cyan}%counter#{IO.ANSI.reset}]",
+      "#{IO.ANSI.cyan}%counter#{IO.ANSI.reset}] #{elixir_icon.()}",
   alive_prompt:
   "#{IO.ANSI.green}%prefix#{IO.ANSI.reset} " <>
     "(#{IO.ANSI.yellow}%node#{IO.ANSI.reset}) " <>
       "[#{IO.ANSI.magenta}#{timestamp.()}#{IO.ANSI.reset} " <>
-        "#{IO.ANSI.cyan}%counter#{IO.ANSI.reset}]",
+        "#{IO.ANSI.cyan}%counter#{IO.ANSI.reset}] #{elixir_icon.()}",
   history_size: 50,
   inspect: [
     pretty: true,
