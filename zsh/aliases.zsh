@@ -63,6 +63,7 @@ alias bsr="bin/start"
 alias bsp="bin/stop"
 
 alias m=mix
+alias im="iex -S mix"
 alias ms="mix phx.server"
 alias mc="mix do clean, compile"
 alias mf="mix format"
