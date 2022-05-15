@@ -1,10 +1,7 @@
----
-name: beatriz
 parent: default
 
 matches:
   - trigger: ":ly"
     replace: Amo-te muito fofinha ❤️
-
   - trigger: ":my"
     replace: Tenho saudades tuas 🥺

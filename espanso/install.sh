@@ -8,9 +8,11 @@ cd "${BASE_DIR}/.." || exit 127
 # shellcheck source=../scripts/utils.sh
 . scripts/utils.sh
 
-ask_for_sudo
+# ask_for_sudo
 
-install_package espanso
+# install_package espanso
 
-ln -s "$HOME/.dotfiles/espanso/user/" "$HOME/.config/espanso"
-symlink "$HOME/.dotfiles/espanso/default.yml" "$HOME/.config/espanso/default.yml"
+mkdir -p "$HOME/.config/espanso"
+
+ln -s "$HOME/.dotfiles/espanso/config" "$HOME/.config/espanso/config"
+ln -s "$HOME/.dotfiles/espanso/match" "$HOME/.config/espanso/match"
