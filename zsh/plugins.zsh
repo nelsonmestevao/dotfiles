@@ -1,4 +1,3 @@
-
 # OMZ PLUGINS
 
 plugins=(

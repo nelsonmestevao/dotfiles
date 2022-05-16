@@ -22,6 +22,8 @@ for module in $(ls $DOTFILES/zsh/*.zsh); do
   source $module
 done
 
+source $DOTFILES/zsh/aliases.zsh
+
 # go to working directory if it has one
 gtwd
 
@@ -50,4 +52,3 @@ if [[ "${terminfo[kcud1]}" != "" ]]; then
 fi
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-

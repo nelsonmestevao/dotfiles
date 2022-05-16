@@ -19,22 +19,22 @@ function gclcd() {
 }
 
 function open() {
-  xdg-open $@ & disown
+  xdg-open $@ &
+  disown
 }
 
 function most_used_commands() {
-  omz_history | awk '{print $2}' | sort | uniq -c | sort -nr | column -t |  nl | head -n40
+  omz_history | awk '{print $2}' | sort | uniq -c | sort -nr | column -t | nl | head -n40
 }
-
 
 function mark() {
   file="$HOME/.markfile"
   [ -f $file ] || touch $file
-  if grep "^$1=" $file > /dev/null; then
+  if grep "^$1=" $file >/dev/null; then
     sed -i -e "s:$1\=.*$:$1\=${PWD}:g" $file
     echo "entry $1 changed"
   else
-    echo "$1=$PWD" >> $file
+    echo "$1=$PWD" >>$file
     echo "entry $1 added"
   fi
 }
@@ -98,7 +98,7 @@ function send-sms() {
     --data-urlencode phone="$1" \
     --data-urlencode message="$2" \
     -d key=textbelt
-  }
+}
 
 function please() {
   local CMD=$(history -1 | tr -s ' ' | cut -d' ' -f2-)
