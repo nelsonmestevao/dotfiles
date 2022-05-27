@@ -1,5 +1,5 @@
 Host rpi
-    HostName raspberrypi.local
+    HostName rpi4.local
     User nelson
 
 Host storm
