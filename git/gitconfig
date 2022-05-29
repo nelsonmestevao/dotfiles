@@ -1,14 +1,16 @@
 [user]
   name = Nelson Estevão
-  email = nelsonmestevao@gmail.com
-  signingkey = 291BB791776952AD
-[github]
-  user = nelsonmestevao
+[include]
+    path = ~/.dotfiles/git/personal.config
+[includeIf "gitdir:~/Code/Marmelasoft/"]
+    path = ~/.dotfiles/git/marmela.config
+[includeIf "gitdir:~/Code/Bikub/"]
+    path = ~/.dotfiles/git/bikub.config
 [web]
   browser = firefox-developer-edition
 [core]
   editor = nvim
-  excludesfile = ~/.dotfiles/git/gitignore_global
+  excludesfile = ~/.dotfiles/git/gitignore
   attributesfile = ~/.dotfiles/git/gitattributes
   pager = delta
 [init]
@@ -22,6 +24,8 @@
   gpgsign = true
   verbose = true
   template = ~/.dotfiles/git/git-commit-msg-template
+[tag]
+  gpgsign = true
 [alias]
   a = add
   b = branch
