@@ -1,1 +1,1 @@
-setlocal equalprg=mix\ format\ -
+nnoremap <leader>gf :w<CR>:MixFormat<CR>

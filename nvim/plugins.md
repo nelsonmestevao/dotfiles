@@ -244,7 +244,8 @@ Plug 'ryanoasis/vim-devicons'
 #### Elixir
 
 ```vim
-" Plug 'elixir-editors/vim-elixir'
+Plug 'elixir-editors/vim-elixir'
+Plug 'mhinz/vim-mix-format'
 ```
 
 ```vim
