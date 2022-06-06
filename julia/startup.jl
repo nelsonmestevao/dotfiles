@@ -7,10 +7,12 @@ PKGS = [
         "Missings",
         "Parsers",
         "RData",
-     ]
+       ]
+
+deps = [pair.second.name for pair in Pkg.dependencies()]
 
 for pkg in PKGS
-  if pkg ∉ keys(Pkg.installed())
+  if pkg ∉ deps
     Pkg.add(pkg)
   end
 end
