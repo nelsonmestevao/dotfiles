@@ -1,5 +1,6 @@
 [user]
   name = Nelson Estevão
+  useConfigOnly = true
 [include]
     path = ~/.dotfiles/git/personal.config
 [includeIf "gitdir:~/Code/Marmelasoft/"]
