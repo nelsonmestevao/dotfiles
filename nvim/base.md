@@ -39,6 +39,12 @@ set autoindent            " always set autoindenting on
 set copyindent            " copy the previous indentation on autoindenting
 ```
 
+## Scrolling
+
+```vim
+set scrolloff=10
+```
+
 ## Spelling
 
 This will make the default spell language to English.
