@@ -1,6 +1,6 @@
-/* docsify-cli */
+# docsify-cli
 eslint
-/* np */
+# np
 npm-run-all
 npx
 prettier
