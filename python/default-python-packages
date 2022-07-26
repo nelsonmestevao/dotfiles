@@ -1,6 +1,8 @@
+black
 ipython
-mycli
+isort
+# mycli
 mypy
-pipenv
-shovel
-yapf
+# pipenv
+# shovel
+# yapf
