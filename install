@@ -15,7 +15,7 @@ cd "${ROOT_DIR}" || exit 127
 . scripts/utils.sh
 
 PROGRAM=$(basename "${BASH_SOURCE[0]:-$0}")
-VERSION=0.4.1
+VERSION=0.7.0
 
 function display_help() {
   cat <<EOF

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -Eeuo pipefail
+
 import() {
   local -r SCRIPTS_DIR=$(dirname "${BASH_SOURCE[0]:-$0}")
 
@@ -15,12 +17,16 @@ function __log() {
   local COLOR="$2"
   shift 2
   local MSG=("$@")
+
+  local SIZE
+  [[ $(tput cols) -ge 80 ]] && SIZE=80 || SIZE=$(tput cols)
+
   # Get symbols from https://coolsymbol.com/
-  printf "_${COLOR}${BOLD}${LABEL}${RESET}_╞%*s\n" $(($(tput cols) - ${#LABEL} - 3)) " " | sed -e 's/ /═/g' | sed -e 's/_/ /g'
+  printf "_${COLOR}${BOLD}${LABEL}${RESET}_╞%*s\n" $((SIZE - ${#LABEL} - 3)) " " | sed -e 's/ /═/g' | sed -e 's/_/ /g'
   for M in "${MSG[@]}"; do
     echo "• $M"
   done
-  printf "%*s\n" "$(tput cols)" " " | sed -e 's/ /═/g'
+  printf "%*s\n" "$SIZE" " " | sed -e 's/ /═/g'
 }
 
 function log_error() {
@@ -46,4 +52,4 @@ function log_info() {
   __log "${LABEL}" "$CYAN" "$@"
 }
 
-[ "$0" = "${BASH_SOURCE[0]}" ] && display_version 0.4.2 || true
+[ "$0" = "${BASH_SOURCE[0]}" ] && display_version 0.7.0 || true

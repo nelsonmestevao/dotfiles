@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -Eeuo pipefail
+
 import() {
   local -r SCRIPTS_DIR=$(dirname "${BASH_SOURCE[0]:-$0}")
 
@@ -29,4 +31,4 @@ function help_title_section() {
   echo -e "${BOLD}${TITLE}${RESET}"
 }
 
-[ "$0" = "${BASH_SOURCE[0]}" ] && display_version 0.4.2 || true
+[ "$0" = "${BASH_SOURCE[0]}" ] && display_version 0.7.0 || true

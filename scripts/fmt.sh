@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -Eeuo pipefail
+
 import() {
   local -r SCRIPTS_DIR=$(dirname "${BASH_SOURCE[0]:-$0}")
 
@@ -112,13 +114,19 @@ function format() {
     echo -en "\\033[0;${TYPE:-0}m"
   fi
 
-  if [[ ${#TEXT[@]} -gt 0 ]]; then
+  if [[ ${#TEXT[@]} -gt 1 ]]; then
     for text in "${TEXT[@]}"; do
       echo "$text"
+    done
+
+    echo -en '\033[0;0m'
+  elif [[ ${#TEXT[@]} -eq 1 ]]; then
+    for text in "${TEXT[@]}"; do
+      echo -n "$text"
     done
 
     echo -en '\033[0;0m'
   fi
 }
 
-[ "$0" = "${BASH_SOURCE[0]}" ] && display_version 0.4.2 || true
+[ "$0" = "${BASH_SOURCE[0]}" ] && display_version 0.7.0 || true
