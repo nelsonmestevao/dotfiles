@@ -39,7 +39,6 @@ export REPO=(
   onefetch
   # octave
   # odt2txt
-  pactl
   playerctl
   polybar
   ponysay
@@ -59,7 +58,7 @@ export REPO=(
   sshpass
   shotcut
   # terminology #
-  telegram-desktop
+  # telegram-desktop
   # texstudio #
   tldr
   tree
