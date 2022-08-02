@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-set -Eeuo pipefail
-
 import() {
   local -r SCRIPTS_DIR=$(dirname "${BASH_SOURCE[0]:-$0}")
 

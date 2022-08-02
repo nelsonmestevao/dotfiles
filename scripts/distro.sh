@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# DOTFILES EXTRA's
 
 function log_section() {
   local LABEL="$1"
