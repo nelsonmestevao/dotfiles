@@ -12,5 +12,5 @@ cd "${BASE_DIR}/.." || exit 127
 
 ask_for_sudo
 
-mkdir -p "$HOME/.i3"
-symlink "$HOME/.dotfiles/i3wm/config" "$HOME/.i3/config"
+mkdir -p "$HOME/.config/i3"
+symlink "$HOME/.dotfiles/i3wm/config" "$HOME/.config/i3/config"
