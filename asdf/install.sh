@@ -15,16 +15,16 @@ execute 'git -C $ASDF_PATH_DIR checkout "$(git -C $ASDF_PATH_DIR describe --abbr
 execute "asdf update" "Update asdf itself..."
 
 plugins=(
-  R
+  # R
   elixir
   erlang
   golang
-  haskell
-  java
+  # haskell
+  # java
   nodejs
   python
-  ruby
-  rust
+  # ruby
+  # rust
 )
 
 for plugin in "${plugins[@]}"; do
