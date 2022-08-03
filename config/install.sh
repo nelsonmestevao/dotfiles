@@ -22,8 +22,10 @@ download_fonts() {
   wget -O ~/Downloads/fonts/fontawesome.zip \
     https://use.fontawesome.com/releases/v5.7.1/fontawesome-free-5.7.1-desktop.zip
 
-  sudo cp ~/.dotfiles/config/50-noto-color-emoji.conf /etc/fonts/conf.d/
+  wget -O ~/Downloads/fonts/jetbrains-mono.zip \
+	  https://github.com/ryanoasis/nerd-fonts/releases/download/2.2.0-RC/JetBrainsMono.zip
 
+  sudo cp ~/.dotfiles/config/50-noto-color-emoji.conf /etc/fonts/conf.d/
 }
 
 download_wallpapers() {
