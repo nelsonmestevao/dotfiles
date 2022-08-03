@@ -19,8 +19,8 @@ download_vim_plug() {
 
 install_package neovim
 
-install_package ruby-neovim
-install_package nodejs-neovim
+#install_package ruby-neovim
+#install_package nodejs-neovim
 
 execute download_vim_plug "Installing vim-plug..."
 

@@ -1,6 +1,6 @@
 # vim: ft=zsh
 
-CURRENT_HASKELL=$(asdf current haskell | cut -d ' ' -f 1)
+#CURRENT_HASKELL=$(asdf current haskell | cut -d ' ' -f 1)
 
-export PATH=$PATH:$HOME/.asdf/installs/haskell/$CURRENT_HASKELL/bin
+#export PATH=$PATH:$HOME/.asdf/installs/haskell/$CURRENT_HASKELL/bin
 

@@ -84,14 +84,6 @@ It also adds syntax highlighting for `.envrc` files.
 Plug 'direnv/direnv.vim'
 ```
 
-In order to see immediately the color from something like #rrggbb, #rgb,
-hsl(r,g,b) etc, this plugin does it asynchronously. It requires go to be
-installed.
-
-```vim
-Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' }
-```
-
 #### Secure Modelines
 
 ```vim

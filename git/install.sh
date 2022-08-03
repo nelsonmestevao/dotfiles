@@ -10,8 +10,6 @@ cd "${BASE_DIR}/.." || exit 127
 
 ask_for_sudo
 
-install_package git-lfs
-
 GIT_FUZZY_PATH_DIR="$HOME/.git-fuzzy"
 
 execute "git clone https://github.com/bigH/git-fuzzy.git $GIT_FUZZY_PATH_DIR" "Clonning Git Fuzzy..."

@@ -1,0 +1,4 @@
+# vim: ft=zsh
+
+#. ~/.asdf/plugins/java/set-java-home.zsh
+
