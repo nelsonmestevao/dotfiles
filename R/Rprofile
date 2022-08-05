@@ -1,6 +1,0 @@
-
-options(prompt="\033[0;34mℜ > \033[0m")
-makeActiveBinding(".", function(){.Last.value}, .GlobalEnv)
-
-message("\n*** Successfully loaded .Rprofile ***\n")
-
