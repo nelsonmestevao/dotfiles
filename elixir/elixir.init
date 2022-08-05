@@ -3,4 +3,3 @@
 export PLUG_EDITOR="vscode://file/__FILE__:__LINE__"
 export ELIXIR_EDITOR="code -g __FILE__:__LINE__"
 export ERL_AFLAGS="-kernel shell_history enabled"
-

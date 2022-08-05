@@ -16,7 +16,5 @@ install_rebar3() {
   sudo mv rebar3 /usr/bin/
 }
 
-execute install_rebar3 "Downloading and installing rebar3..."
-
 mkdir -p ~/.config/rebar
 symlink ~/.dotfiles/erlang/rebar.config ~/.config/rebar/rebar.config
