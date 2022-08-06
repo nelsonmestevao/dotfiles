@@ -2,27 +2,27 @@
 
 export REPO=(
   # acpi #
-  ansible
-  ansible-lint
+  # ansible #
+  # ansible-lint #
   autorandr
-  # bat #
+  bat
   # bind-tools
   # catdoc
-  ctags
+  # ctags
   # curl #
   # diff-so-fancy
-  diffpdf
-  # dunst #
-  # exa #
+  # diffpdf
+  dunst
+  exa
   # feh
-  figlet
+  # figlet #
   # firefox #
   firefox-developer-edition
   flameshot
   github-cli
   # go
   # htop #
-  # hyperfine #
+  hyperfine
   jq
   languagetool
   # libreoffice-still #
@@ -33,29 +33,29 @@ export REPO=(
   # mupdf #
   # nitrogen
   neofetch
-  maven
+  # maven
   numlockx
   obs-studio
-  onefetch
+  # onefetch
   # octave
   # odt2txt
   playerctl
   polybar
-  ponysay
+  # ponysay
   # pulseaudio
   # pulseaudio-alsa
   # pulseaudio-bluetooth
   pv
-  libqalculate
+  # libqalculate
   ranger
-  rclone
+  # rclone
   redshift
   rofi
   rofi-calc
   rofi-emoji
   rsync
   shfmt
-  sshpass
+  # sshpass
   shotcut
   # terminology #
   # telegram-desktop
@@ -63,13 +63,13 @@ export REPO=(
   tldr
   tree
   unzip
-  vagrant
+  # vagrant
   wget
   wmctrl
   xarchiver
   xcape
   # xclip #
-  zathura-pdf-mupdf
+  # zathura-pdf-mupdf
 )
 
 export AUR=(
@@ -84,12 +84,12 @@ export AUR=(
   # mailspring #
   neovim
   # pokemon-terminal-git #
-  rainbow
+  # rainbow
   # sc-im
   screenkey
   slack-desktop
   spotify
   # trello #
-  watchexec
-  zeal
+  # watchexec
+  # zeal
 )
