@@ -48,13 +48,6 @@ matches:
         type: date
         params:
           format: "%d/%m/%Y"
-  - trigger: ":ip"
-    replace: "{{myip}}"
-    vars:
-      - name: myip
-        type: shell
-        params:
-          cmd: "ifconfig wlp3s0 | awk '$1 == \"inet\" {print $2}'"
   - trigger: ":hb"
     replace: |
       Feliz aniversário, $|$! 🎂

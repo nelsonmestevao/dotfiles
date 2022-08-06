@@ -25,6 +25,8 @@ download_fonts() {
   wget -O ~/Downloads/fonts/jetbrains-mono.zip \
 	  https://github.com/ryanoasis/nerd-fonts/releases/download/2.2.0-RC/JetBrainsMono.zip
 
+  mkdir -p /etc/fonts/conf.avail
+  sudo cp ~/.dotfiles/config/66-noto-mono-compat.conf /etc/fonts/conf.avail
   sudo cp ~/.dotfiles/config/50-noto-color-emoji.conf /etc/fonts/conf.d/
 }
 
