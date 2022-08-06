@@ -46,6 +46,7 @@ symlink ~/.dotfiles/config/user-dirs.dirs ~/.config/user-dirs.dirs
 xdg-user-dirs-update
 
 symlink ~/.dotfiles/config/shutdown.desktop ~/.local/share/applications/shutdown.desktop
+symlink ~/.dotfiles/config/logout.desktop ~/.local/share/applications/logout.desktop
 
 execute download_fonts "Downloading fonts..."
 
