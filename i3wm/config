@@ -8,8 +8,8 @@ set $mod Mod4
 # workspace_layout tabbed <stacking|tabbed>
 
 # Configure border style <normal|1pixel|pixel xx|none|pixel>
-new_window pixel 1
-new_float normal
+default_border pixel 1
+default_floating_border normal
 
 # Hide borders
 hide_edge_borders none
@@ -26,73 +26,55 @@ font xft:Hack NF Regular 12
 # Use Mouse+$mod to drag floating windows
 floating_modifier $mod
 
-# Aplications
-bindsym $mod+e        exec pcmanfm
-bindsym $mod+i        exec manjaro-settings-manager
-bindsym $mod+Ctrl+b   exec terminal -e 'bmenu'
-bindsym $mod+F1       exec mupdf /usr/share/doc/manjaro/i3_help.pdf
-bindsym $mod+F2       exec firefox-developer-edition
-bindsym $mod+F3       exec ranger
-bindsym $mod+F5       exec terminal -e 'mocp'
-bindsym $mod+Ctrl+t   exec compton -b
-bindsym $mod+Ctrl+m   exec alacritty -e 'alsamixer'
-bindsym $mod+Shift+d --release exec "killall dunst; exec notify-send 'restart dunst'"
-bindsym $mod+Ctrl+x  --release exec --no-startup-id xkill
-
 # start a terminal
 bindsym $mod+Return exec alacritty
 
 # start a terminal with tmux
 bindsym $mod+Shift+Return exec alacritty -e 'tmux'
 
-bindsym $mod+Shift+t exec terminology
-
 # kill focused window
 bindsym $mod+Shift+q kill
-
-# reload the configuration file
-bindsym $mod+Shift+c reload
-
-# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
-bindsym $mod+Shift+r restart
-
-# lock screen
-bindsym $mod+Escape exec --no-startup-id betterlockscreen -l dim
 
 # start program launcher
 bindsym Mod1+space exec --no-startup-id rofi -show combi
 bindsym $mod+period exec --no-startup-id rofi -show emoji
-#bindsym $mod+d exec --no-startup-id dmenu_recency
-#bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
 
 # launch categorized menu
 bindsym $mod+z exec --no-startup-id morc_menu
 
+################################################################################################
+## sound-section - DO NOT EDIT if you wish to automatically upgrade Alsa -> Pulseaudio later! ##
+################################################################################################
+
+#exec --no-startup-id volumeicon
+#bindsym $mod+Ctrl+m exec terminal -e 'alsamixer'
+exec --no-startup-id start-pulseaudio-x11
+exec --no-startup-id pa-applet
+bindsym $mod+Ctrl+m exec pavucontrol
+
+################################################################################################
+
+# Screen brightness controls
+bindsym XF86MonBrightnessUp exec "xbacklight -inc 10; notify-send 'brightness up'"
+bindsym XF86MonBrightnessDown exec "xbacklight -dec 10; notify-send 'brightness down'"
+
+# Applications
+bindsym $mod+e exec pcmanfm
+bindsym $mod+Ctrl+b exec terminal -e 'bmenu'
+bindsym $mod+p exec --no-startup-id pkill picom
+bindsym $mod+Ctrl+p exec --no-startup-id picom -C -b
+bindsym $mod+Shift+d --release exec "killall dunst; exec notify-send 'restart dunst'"
+bindsym $mod+? exec xdg-open /usr/share/doc/manjaro/i3_help.pdf
+bindsym $mod+Ctrl+x --release exec --no-startup-id xkill
+bindsym $mod+Escape exec --no-startup-id betterlockscreen -l dim
+
 # Printscreen
 set $print_path ~/Pictures/Screenshots
-bindsym Print                      exec --no-startup-id flameshot gui #-p $print_path
-bindsym $mod+Print       --release exec --no-startup-id i3-scrot -wc
-# bindsym $mod+Print       --release exec --no-startup-id flameshot screen -c -p $print_path
+bindsym Print                      exec --no-startup-id flameshot gui #-p $print_pat
+bindsym $mod+Print       --release exec --no-startup-id flameshot screen -c -p $print_path
 bindsym $mod+Shift+Print --release exec --no-startup-id flameshot full -c -p $print_path
 
-# Media player controls
-bindsym XF86AudioPlay  exec playerctl play-pause
-bindsym XF86AudioNext  exec playerctl next
-bindsym XF86AudioPrev  exec playerctl previous
-
-# Pulse Audio controls
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5%
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5%
-bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle
-
-# Sreen brightness controls
-# bindsym XF86MonBrightnessUp exec xbacklight -inc 5
-# bindsym XF86MonBrightnessDown exec xbacklight -dec 5
-
-
-###############################################################################
-# Navigation bindings
-###############################################################################
+# focus_follows_mouse no
 
 # change focus
 bindsym $mod+h focus left
@@ -130,10 +112,10 @@ bindsym $mod+v split v;exec notify-send 'tile vertically'
 bindsym $mod+q split toggle
 
 # change container layout (stacked, tabbed, toggle split, toggle fullscreen)
+bindsym $mod+f fullscreen toggle
 bindsym $mod+s layout stacking
 bindsym $mod+w layout tabbed
 bindsym $mod+t layout toggle split
-bindsym $mod+f fullscreen toggle
 
 # toggle tiling / floating
 bindsym $mod+Shift+space floating toggle
@@ -224,14 +206,14 @@ for_window [class="Spotify"] move to workspace $ws10
 
 # Open specific applications in floating mode
 for_window [title="alsamixer"] floating enable border pixel 1
-for_window [class="Calamares"] floating enable border normal
+for_window [class="calamares"] floating enable border normal
 for_window [class="Clipgrab"] floating enable
 for_window [title="File Transfer*"] floating enable
+for_window [class="fpakman"] floating enable
 for_window [class="Galculator"] floating enable border pixel 1
 for_window [class="GParted"] floating enable border normal
 for_window [title="i3_help"] floating enable sticky enable border normal
 for_window [class="Lightdm-settings"] floating enable
-# for_window [title="Google Hangouts*"] floating enable; resize set 640 480
 for_window [class="Lxappearance"] floating enable sticky enable border normal
 for_window [class="Manjaro-hello"] floating enable
 for_window [class="Manjaro Settings Manager"] floating enable border normal
@@ -250,15 +232,15 @@ for_window [class="Skype"] floating enable border normal
 for_window [class="Timeset-gui"] floating enable border normal
 for_window [class="(?i)virtualbox"] floating enable border normal
 for_window [class="Xfburn"] floating enable
-for_window [class="JetBrains Toolbox"] floating enable border pixel 1
-
-# Change border pixel for specific aplications
-for_window [class="albert"] border pixel 0
 
 # switch to workspace with urgent window automatically
 for_window [urgent=latest] focus
 
-###############################################################################
+# reload the configuration file
+bindsym $mod+Shift+c reload
+
+# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+bindsym $mod+Shift+r restart
 
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
@@ -304,7 +286,39 @@ mode "resize" {
         bindsym Escape mode "default"
 }
 
-###############################################################################
+# Autostart applications
+exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+exec --no-startup-id nitrogen --restore; sleep 1; picom -C -b
+exec --no-startup-id manjaro-hello
+exec --no-startup-id nm-applet
+exec --no-startup-id xfce4-power-manager
+exec --no-startup-id pamac-tray
+exec --no-startup-id clipit
+exec --no-startup-id blueman-applet
+exec_always --no-startup-id sbxkb
+#exec --no-startup-id start_conky_maia
+#exec --no-startup-id start_conky_green
+exec --no-startup-id xautolock -time 10 -locker betterlockscreen -l dim
+exec --no-startup-id redshift -l 41:-8 -t 5700:3600
+exec_always --no-startup-id ff-theme-util
+exec_always --no-startup-id fix_xcursor
+
+# Keyboard configuration
+exec --no-startup-id numlockx on
+exec --no-startup-id setxkbmap -option ctrl:nocaps
+exec --no-startup-id xcape -e 'Control_L=Escape'
+
+# Touchpad controls
+bindsym XF86TouchpadToggle exec ~/.spells/i3wm/toggletouchpad.sh # toggle touchpad
+# Natural Scroll
+exec_always --no-startup-id ~/.spells/i3wm/naturalScrollOn.sh
+exec_always --no-startup-id xinput --set-prop 12 319 1
+
+# Spiral layout
+exec_always --no-startup-id ~/.spells/i3wm/alternating_layouts.py
+
+# Polybar
+exec_always --no-startup-id ~/.spells/i3wm/polybarlaunch.sh
 # Color palette used for the terminal ( ~/.Xresources file )
 # Colors are gathered based on the documentation:
 # https://i3wm.org/docs/userguide.html#xresources
@@ -336,38 +350,6 @@ set_from_resource $term_color13    color13
 set_from_resource $term_color14    color14
 set_from_resource $term_color15    color15
 
-## Start i3bar to display a workspace bar (plus the system information i3status if available)
-#bar {
-#	i3bar_command i3bar
-#	status_command i3status
-#	position bottom
-
-### please set your primary output first. Example: 'xrandr --output eDP1 --primary'
-##	tray_output primary
-##	tray_output eDP1
-
-#	bindsym button4 nop
-#	bindsym button5 nop
-##   font xft:URWGothic-Book 11
-#	strip_workspace_numbers yes
-
-#    colors {
-#        background #202A2E
-#        statusline #F9FAF9
-#        separator  #454947
-
-##                      border  backgr. text
-#        focused_workspace  #F9FAF9 #16a085 #292F34
-#        active_workspace   #595B5B #353836 #FDF6E3
-#        inactive_workspace #595B5B #202A2E #EEE8D5
-#        binding_mode       #16a085 #2C2C2C #F9FAF9
-#        urgent_workspace   #16a085 #FDF6E3 #E5201D
-#    }
-#}
-
-# hide/unhide i3status bar
-#bindsym $mod+m bar mode toggle
-
 # Theme colors
 # class                   border  backgr. text    indic.   child_border
   client.focused          #556064 #556064 #80FFF9 #FDF6E3
@@ -377,11 +359,10 @@ set_from_resource $term_color15    color15
   client.placeholder      #000000 #0c0c0c #ffffff #000000
 
   client.background       #2B2C2B
-###############################################################################
 
-###############################################################################
-# i3-gaps
-###############################################################################
+#############################
+### settings for i3-gaps: ###
+#############################
 
 # Set inner/outer gaps
 gaps inner 10
@@ -394,8 +375,6 @@ gaps outer 10
 
 # Smart gaps (gaps used if only more than one container on the workspace)
 #smart_gaps on
-#smart_gaps inverse_outer
-
 
 # Smart borders (draw borders around container only if it is not the only container on this workspace)
 # on|no_gaps (on=always activate and no_gaps=only activate if the gap size to the edge of the screen is 0)
@@ -437,49 +416,3 @@ mode "$mode_gaps_outer" {
         bindsym Return mode "default"
         bindsym Escape mode "default"
 }
-
-###############################################################################
-
-# Autostart applications
-# exec --no-startup-id albert
-# exec --no-startup-id mailspring
-exec --no-startup-id flameshot
-exec --no-startup-id nm-applet
-exec --no-startup-id redshift -l 41:-8 -t 5700:3600
-exec --no-startup-id volumeicon
-exec --no-startup-id clipit
-# exec --no-startup-id copyq
-
-exec --no-startup-id nitrogen --restore; sleep 1; picom -C -b
-exec --no-startup-id xautolock -time 10 -locker betterlockscreen -l dim
-exec chmod go-w ~/.dotfiles/haskell/ghci
-
-exec_always --no-startup-id ~/.spells/i3wm/polybarlaunch.sh
-
-exec_always --no-startup-id ~/.local/bin/dynamicx
-
-exec xrandr --output HDMI1 --auto --right-of eDP1
-
-# Keyboard Remaps
-exec --no-startup-id numlockx on
-#exec --no-startup-id setxkbmap -option caps:escape
-exec --no-startup-id setxkbmap -option ctrl:nocaps
-exec --no-startup-id xcape -e 'Control_L=Escape'
-
-# Touchpad controls
-bindsym XF86TouchpadToggle exec ~/.spells/i3wm/toggletouchpad.sh # toggle touchpad
-
-# Natural Scroll
-exec_always --no-startup-id ~/.spells/i3wm/naturalScrollOn.sh
-exec_always --no-startup-id ~/.spells/i3wm/natural_scroll.sh
-
-# Spiral layout
-exec_always --no-startup-id ~/.spells/i3wm/alternating_layouts.py
-
-# others
-exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
-exec --no-startup-id xfce4-power-manager
-exec --no-startup-id pamac-tray
-exec --no-startup-id blueman-applet
-# exec_always --no-startup-id sbxkb
-# exec --no-startup-id start_conky_maia

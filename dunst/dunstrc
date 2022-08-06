@@ -2,7 +2,7 @@
     frame_width = 1
     frame_color = "#788388"
 
-    font = Hack NF 12
+    font = Hack NF Regular 12
 
     # Allow a small subset of html markup:
     #   <b>bold</b>
