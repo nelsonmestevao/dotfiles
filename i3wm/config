@@ -74,6 +74,10 @@ bindsym Print                      exec --no-startup-id flameshot gui #-p $print
 bindsym $mod+Print       --release exec --no-startup-id flameshot screen -c -p $print_path
 bindsym $mod+Shift+Print --release exec --no-startup-id flameshot full -c -p $print_path
 
+# Notifications
+bindsym $mod+n        exec --no-startup-id dunstctl close-all
+bindsym $mod+Shift+n  exec --no-startup-id dunstctl history-pop
+
 # focus_follows_mouse no
 
 # change focus
