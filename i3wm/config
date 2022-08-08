@@ -302,7 +302,7 @@ exec --no-startup-id blueman-applet
 exec_always --no-startup-id sbxkb
 #exec --no-startup-id start_conky_maia
 #exec --no-startup-id start_conky_green
-exec --no-startup-id xautolock -time 10 -locker betterlockscreen -l dim
+exec --no-startup-id xautolock -time 10 -locker "betterlockscreen -l dim"
 exec --no-startup-id redshift -l 41:-8 -t 5700:3600
 exec_always --no-startup-id ff-theme-util
 exec_always --no-startup-id fix_xcursor
