@@ -39,6 +39,7 @@ alias ght=git-history
 alias gfz=git-fuzzy
 
 alias v="nvim -p"
+alias vi="nvim"
 alias vim="nvim"
 
 alias py="ipython -i"
