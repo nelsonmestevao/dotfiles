@@ -3,6 +3,8 @@
   useConfigOnly = true
 [include]
     path = ~/.dotfiles/git/personal.config
+[includeIf "gitdir:~/Code/Kelvin/"]
+    path = ~/.dotfiles/git/kelvin.config
 [includeIf "gitdir:~/Code/Marmelasoft/"]
     path = ~/.dotfiles/git/marmela.config
 [includeIf "gitdir:~/Code/Bikub/"]
