@@ -84,6 +84,9 @@ alias sth="stack haddock"
 
 alias n="npm"
 alias nr="npx npm-run-all"
+alias nd="npm run dev"
+alias nl="npm run lint"
+alias nt="npm run test"
 
 alias a="ansible"
 alias ac="ansible-console"
