@@ -308,15 +308,14 @@ exec_always --no-startup-id ff-theme-util
 exec_always --no-startup-id fix_xcursor
 
 # Keyboard configuration
-exec --no-startup-id numlockx on
-exec --no-startup-id setxkbmap -option ctrl:nocaps
-exec --no-startup-id xcape -e 'Control_L=Escape'
+exec_always --no-startup-id numlockx on
+exec_always --no-startup-id setxkbmap -option ctrl:nocaps
+exec_always --no-startup-id xcape -e 'Control_L=Escape'
 
 # Touchpad controls
-bindsym XF86TouchpadToggle exec ~/.spells/i3wm/toggletouchpad.sh # toggle touchpad
+# bindsym XF86TouchpadToggle exec ~/.spells/i3wm/toggletouchpad.sh # toggle touchpad
 # Natural Scroll
 exec_always --no-startup-id ~/.spells/i3wm/naturalScrollOn.sh
-exec_always --no-startup-id xinput --set-prop 12 319 1
 
 # Spiral layout
 exec_always --no-startup-id ~/.spells/i3wm/alternating_layouts.py
