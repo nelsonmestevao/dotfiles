@@ -58,6 +58,12 @@ bindsym $mod+Ctrl+m exec pavucontrol
 bindsym XF86MonBrightnessUp exec "xbacklight -inc 10; notify-send 'brightness up'"
 bindsym XF86MonBrightnessDown exec "xbacklight -dec 10; notify-send 'brightness down'"
 
+# Music controls
+bindsym XF86AudioPlay exec playerctl play-pause
+bindsym XF86AudioPause exec playerctl play-pause
+bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPrev exec playerctl previous
+
 # Applications
 bindsym $mod+e exec pcmanfm
 bindsym $mod+Ctrl+b exec terminal -e 'bmenu'
