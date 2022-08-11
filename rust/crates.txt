@@ -8,4 +8,5 @@ grex
 hyperfine
 procs
 ripgrep
+silicon
 tokei
