@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+#set -Eeuo pipefail
+
 BASE_DIR=$(dirname "${BASH_SOURCE[0]:-$0}")
 cd "${BASE_DIR}/.." || exit 127
 
@@ -10,4 +12,12 @@ cd "${BASE_DIR}/.." || exit 127
 
 ask_for_sudo
 
-install_package polybar
+install_package autorandr
+
+mkdir -p "$HOME/.config/autorandr"
+
+symlink_profiles() {
+  ln -s ~/.dotfiles/autorandr/kelvin ~/.config/autorandr
+}
+
+execute symlink_profiles "Symlinking profiles folders..."
