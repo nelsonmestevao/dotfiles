@@ -21,6 +21,7 @@ export REPO=(
   flameshot
   github-cli
   # go
+  inkscape
   # htop #
   hyperfine
   jq
@@ -36,6 +37,7 @@ export REPO=(
   # maven
   numlockx
   obs-studio
+  okular
   # onefetch
   # octave
   # odt2txt
