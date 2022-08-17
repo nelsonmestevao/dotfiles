@@ -50,7 +50,6 @@ export REPO=(
   # libqalculate
   ranger
   # rclone
-  redshift
   rofi
   rofi-calc
   rofi-emoji
