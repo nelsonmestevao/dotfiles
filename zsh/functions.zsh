@@ -117,3 +117,7 @@ function tre() {
 function show_ip() {
   ifconfig wlp3s0 | awk '$1 == "inet" {print $2}'
 }
+
+function get_location_gps() {
+  curl -s "https://location.services.mozilla.com/v1/geolocate?key=geoclue" | awk 'OFS=":" {print $3,$5}' | tr -d ',}'
+}
