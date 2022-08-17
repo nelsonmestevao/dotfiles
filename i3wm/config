@@ -64,6 +64,9 @@ bindsym XF86AudioPause exec playerctl play-pause
 bindsym XF86AudioNext exec playerctl next
 bindsym XF86AudioPrev exec playerctl previous
 
+# Other special keys
+bindsym XF86Calculator exec alacritty -e 'insect'
+
 # Applications
 bindsym $mod+e exec pcmanfm
 bindsym $mod+Ctrl+b exec terminal -e 'bmenu'
