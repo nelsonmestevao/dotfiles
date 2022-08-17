@@ -1,7 +1,8 @@
 #!/bin/bash
 
 export REPO=(
-  # acpi #
+  acpi
+  acpilight
   # ansible #
   # ansible-lint #
   autorandr
