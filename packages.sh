@@ -91,5 +91,6 @@ export AUR=(
   spotify
   # trello #
   # watchexec
+  xidlehook
   # zeal
 )
