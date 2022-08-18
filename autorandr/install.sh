@@ -17,6 +17,7 @@ install_package autorandr
 mkdir -p "$HOME/.config/autorandr"
 
 symlink_profiles() {
+  ln -s ~/.dotfiles/autorandr/home ~/.config/autorandr
   ln -s ~/.dotfiles/autorandr/kelvin ~/.config/autorandr
 }
 
