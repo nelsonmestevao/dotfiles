@@ -46,7 +46,7 @@
 
   co-pr = !sh -c 'git fetch origin pull/$1/head:pr/$1 && git checkout pr/$1' -
   patch   = !git --no-pager diff
-  standup = !git log --all --author=$USER --format=%s --since '9am last week'
+  standup = !git log --oneline --graph --all --no-merges --author=$USER --since '9am last week'
 [branch]
   autosetuprebase = always
 [log]
