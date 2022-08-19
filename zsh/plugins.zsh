@@ -13,7 +13,7 @@ plugins=(
   # globalias
   # golang #
   # npm #
-  rails
+  # rails #
   sudo
   tmux
   tmuxinator
