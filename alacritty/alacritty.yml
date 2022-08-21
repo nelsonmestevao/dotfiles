@@ -1,5 +1,14 @@
 tabspaces: 4
 
+cursor:
+  #   - ▇ Block
+  #   - _ Underline
+  #   - | Beam
+  style: Block
+
+window:
+  opacity: 0.9
+
 font:
   normal:
     family: JetBrains Mono NF
