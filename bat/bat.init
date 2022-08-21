@@ -1,4 +1,11 @@
 # vim: ft=zsh
 
-alias b="bat"
-alias cat="bat"
+get_bat_theme() {
+  if [[ "$(mode --theme)" =~ .*"light".* ]]; then
+    echo -n "GitHub"
+  else
+    echo -n "default"
+  fi
+}
+
+alias cat='bat --theme=$(get_bat_theme)'
