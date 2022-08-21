@@ -10,7 +10,7 @@ if (has("termguicolors"))
   set termguicolors
 endif
 
-if system("echo -n $(color get)") == "google-light"
+if system("echo -n $(mode --theme)") =~ "light"
   set background=light
 else
   set background=dark

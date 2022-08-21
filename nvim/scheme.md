@@ -26,6 +26,8 @@ set listchars+=nbsp:•
 
 " Theme
 source ~/.dotfiles/nvim/themes/one.vim
+"source ~/.dotfiles/nvim/themes/onedark.vim
+"source ~/.dotfiles/nvim/themes/onehalflight.vim
 
 " vim-airline
 let g:airline#extensions#tabline#enabled = 1
