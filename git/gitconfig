@@ -12,6 +12,7 @@
 [web]
   browser = firefox-developer-edition
 [core]
+  autocrlf = true
   editor = nvim
   excludesfile = ~/.dotfiles/git/gitignore
   attributesfile = ~/.dotfiles/git/gitattributes
