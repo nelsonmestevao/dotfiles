@@ -21,3 +21,6 @@ Host epl
     HostName epl.di.uminho.pt
     User cesium
 
+Host github.com
+    HostName github.com
+    IdentityFile ~/.ssh/id_ed25519
