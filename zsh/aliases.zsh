@@ -85,6 +85,7 @@ alias n="npm"
 alias nr="npx npm-run-all"
 alias nd="npm run dev"
 alias nb="npm run build"
+alias nbw="npm run build:watch"
 alias nl="npm run lint"
 alias nt="npm run test"
 
