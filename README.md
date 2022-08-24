@@ -29,6 +29,10 @@ I follow a very modular approach. If you don't want something you can just
 remove it's folder. Imagine you don't want Neovim. You can just delete `nvim`
 folder. It's that simple.
 
+> **Warning**
+> As you probably know, you shouldn't just run any script that you do not trust.
+You shouldn't just trust my `install` script. You should read it and all the
+helpers that it relies on.
 
 Start by cloning my `dotfiles` into `~/.dotfiles`. You should do the same with
 my `spells` repository. Some scripts needed are there.
@@ -55,12 +59,6 @@ cd ~
 rm -rf ~/.dotfiles
 rm -rf ~/.spells
 ```
-
-## :warning: Disclaimer
-
-As you probably know, you shouldn't just run any script that you do not trust.
-You shouldn't just trust my `install` script. You should read it and all the
-helpers that it relies on.
 
 ## :memo: License
 
