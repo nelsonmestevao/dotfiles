@@ -74,6 +74,7 @@ export REPO=(
 )
 
 export AUR=(
+  autojump
   betterlockscreen
   bitwarden-cli
   # copyq #
