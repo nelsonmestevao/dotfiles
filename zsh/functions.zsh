@@ -24,7 +24,7 @@ function open() {
 }
 
 function most_used_commands() {
-  omz_history | awk '{print $2}' | sort | uniq -c | sort -nr | column -t | nl | head -n40
+  omz_history | awk '{print $2}' | sort | uniq -c | sort -nr | column -t | \nl | head -n40
 }
 
 function mark() {
