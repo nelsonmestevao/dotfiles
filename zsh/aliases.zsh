@@ -82,7 +82,7 @@ alias stc="stack test --coverage"
 alias sth="stack haddock"
 
 alias n="npm"
-alias nr="npx npm-run-all"
+alias nr="npm run"
 alias nd="npm run dev"
 alias nb="npm run build"
 alias nbw="npm run build:watch"
