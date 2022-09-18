@@ -19,6 +19,7 @@ mkdir -p "$HOME/.config/autorandr"
 symlink_profiles() {
   ln -s ~/.dotfiles/autorandr/home ~/.config/autorandr
   ln -s ~/.dotfiles/autorandr/kelvin ~/.config/autorandr
+  ln -s ~/.dotfiles/autorandr/chill ~/.config/autorandr
 }
 
 execute symlink_profiles "Symlinking profiles folders..."
