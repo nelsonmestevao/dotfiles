@@ -88,6 +88,7 @@ alias nb="npm run build"
 alias nbw="npm run build:watch"
 alias nl="npm run lint"
 alias nt="npm run test"
+alias nsb="npm run storybook"
 
 alias a="ansible"
 alias ac="ansible-console"
