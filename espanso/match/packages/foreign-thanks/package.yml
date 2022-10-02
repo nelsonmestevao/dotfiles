@@ -1,0 +1,144 @@
+# MIT License
+# Copyright (c) 2022 Ihor Kopach https://github.com/kopach
+
+matches:
+  - replace: شكرا
+    triggers:
+      - ':arthx'
+      - ':arabicthx'
+      - ':arabicthanks'
+  - replace: Շնորհակալություն
+    triggers:
+      - ':hythx'
+      - ':armenianthx'
+      - ':armenianthanks'
+  - replace: Eskerrik asko
+    triggers:
+      - ':euthx'
+      - ':basquethx'
+      - ':basquethanks'
+  - replace: Дзякуй
+    triggers:
+      - ':bethx'
+      - ':belarusianthx'
+      - ':belarusianthanks'
+  - replace: 谢谢
+    triggers:
+      - ':zhthx'
+      - ':chinesethx'
+      - ':chinesethanks'
+  - replace: Díky
+    triggers:
+      - ':csthx'
+      - ':czechthx'
+      - ':czechthanks'
+  - replace: Dank je wel
+    triggers:
+      - ':nlthx'
+      - ':dutchthx'
+      - ':dutchthanks'
+  - replace: Salamat
+    triggers:
+      - ':tlthx'
+      - ':filipinothx'
+      - ':filipinothanks'
+  - replace: Kiitos
+    triggers:
+      - ':fithx'
+      - ':finnishthx'
+      - ':finnishthanks'
+  - replace: Merci
+    triggers:
+      - ':frthx'
+      - ':frenchthx'
+      - ':frenchthanks'
+  - replace: Danke
+    triggers:
+      - ':dethx'
+      - ':germanthx'
+      - ':germanthanks'
+  - replace: धन्यवाद
+    triggers:
+      - ':hithx'
+      - ':hindithx'
+      - ':hindithanks'
+  - replace: Takk
+    triggers:
+      - ':isthx'
+      - ':icelandicthx'
+      - ':icelandicthanks'
+  - replace: Terima kasih
+    triggers:
+      - ':idthx'
+      - ':indonesianthx'
+      - ':indonesianthanks'
+  - replace: Grazie
+    triggers:
+      - ':itthx'
+      - ':italianthx'
+      - ':italianthanks'
+  - replace: ありがとうございます
+    triggers:
+      - ':jathx'
+      - ':japanesethx'
+      - ':japanesethanks'
+  - replace: Qa tlho'
+    triggers:
+      - ':tlhthx'
+      - ':klingonthx'
+      - ':klingonthanks'
+  - replace: 감사합니다
+    triggers:
+      - ':kothx'
+      - ':koreanthx'
+      - ':koreanthanks'
+  - replace: ډیره مننه
+    triggers:
+      - ':psthx'
+      - ':pashtothx'
+      - ':pashtothanks'
+  - replace: متشکرم
+    triggers:
+      - ':fathx'
+      - ':persianthx'
+      - ':persianthanks'
+  - replace: Dzięki
+    triggers:
+      - ':plthx'
+      - ':polishthx'
+      - ':polishthanks'
+  - replace: Multumesc
+    triggers:
+      - ':rothx'
+      - ':romanianthx'
+      - ':romanianthanks'
+  - replace: Gracias
+    triggers:
+      - ':esthx'
+      - ':spanishthx'
+      - ':spanishthanks'
+  - replace: Tack
+    triggers:
+      - ':svthx'
+      - ':swedishthx'
+      - ':swedishthanks'
+  - replace: Sağol
+    triggers:
+      - ':trthx'
+      - ':turkishthx'
+      - ':turkishthanks'
+  - replace: Дякую
+    triggers:
+      - ':ukthx'
+      - ':ukrainianthx'
+      - ':ukrainianthanks'
+  - replace: شکریہ
+    triggers:
+      - ':urthx'
+      - ':urduthx'
+      - ':urduthanks'
+  - replace: Cảm ơn
+    triggers:
+      - ':vithx'
+      - ':vietnamesethx'
+      - ':vietnamesethanks'

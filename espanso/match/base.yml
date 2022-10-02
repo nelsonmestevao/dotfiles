@@ -2,7 +2,9 @@
 # Original file: default.yml
 
 matches:
-  - trigger: cmps
+  - triggers:
+      - cmps
+      - cumps
     replace: |-
       Cumprimentos,
       {{name}}.
@@ -11,7 +13,9 @@ matches:
         type: shell
         params:
           cmd: git config --global user.name
-  - trigger: ":sig"
+  - triggers:
+      - ",sig"
+      - ",sin"
     replace: |-
       Sincerely,
       {{name}}.
@@ -20,21 +24,16 @@ matches:
         type: shell
         params:
           cmd: git config --global user.name
-  - trigger: "@@"
-    replace: "{{email}}"
+  - trigger: ",kr"
+    replace: |-
+      Kind regards,
+      {{name}}.
     vars:
-      - name: email
+      - name: name
         type: shell
         params:
-          cmd: git config --global user.email
-  - trigger: ":@"
-    replace: "{{username}}"
-    vars:
-      - name: username
-        type: shell
-        params:
-          cmd: git config --global github.user
-  - trigger: ":nemo"
+          cmd: git config --global user.name
+  - trigger: ",name"
     replace: "{{name}}"
     vars:
       - name: name
