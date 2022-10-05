@@ -94,6 +94,10 @@ alias a="ansible"
 alias ac="ansible-console"
 alias ap="ansible-playbook"
 
+alias dld="docker-compose -f docker-compose.dev.yml -f linux.yml"
+alias dldud="docker-compose -f docker-compose.dev.yml -f linux.yml up -d"
+alias dldudb="docker-compose -f docker-compose.dev.yml -f linux.yml up -d db"
+
 alias todo='git grep -l TODO | xargs -n1 git blame -f -n -w | grep "$(git config user.name)" | grep TODO | sed "s/.\{9\}//" | sed "s/(.*)[[:space:]]*//"'
 
 alias firefox=firefox-developer-edition
