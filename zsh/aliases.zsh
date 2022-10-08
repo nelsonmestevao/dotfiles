@@ -109,6 +109,3 @@ alias ip='ip -c=auto'
 
 alias activate-ssh='eval $(ssh-agent -s); ssh-add ~/.ssh/id_rsa'
 
-# useful comands
-# xdotool key Caps_Lock
-# setxkbmap -option ctrl:nocaps

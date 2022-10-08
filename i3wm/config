@@ -322,9 +322,10 @@ exec --no-startup-id redshift -P -t 5700:3600 -b 1
 
 # Keyboard configuration
 #exec_always --no-startup-id sbxkb
+exec_always --no-startup-id setcapslock off
 exec_always --no-startup-id numlockx on
 exec_always --no-startup-id setxkbmap -option ctrl:nocaps
-exec_always --no-startup-id xcape -e 'Control_L=Escape'
+# exec_always --no-startup-id xcape -e 'Control_L=Escape'
 
 # Touchpad controls
 # bindsym XF86TouchpadToggle exec ~/.spells/i3wm/toggletouchpad.sh # toggle touchpad

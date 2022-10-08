@@ -89,6 +89,7 @@ export AUR=(
   # rainbow
   # sc-im
   screenkey
+  setcapslock
   slack-desktop
   spotify
   # trello #
