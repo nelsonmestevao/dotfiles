@@ -40,13 +40,17 @@ matches:
         type: shell
         params:
           cmd: git config --global user.name
-  - trigger: ":date"
+  - triggers:
+      - ":date"
+      - ",date"
     replace: "{{mydate}}"
     vars:
       - name: mydate
         type: date
         params:
           format: "%d/%m/%Y"
-  - trigger: ":hb"
+  - triggers:
+      - ":hb"
+      - ",hb"
     replace: |
       Feliz aniversário, $|$! 🎂
