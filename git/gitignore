@@ -77,6 +77,8 @@ tags
 .idea/artifacts
 .idea/compiler.xml
 .idea/jarRepositories.xml
+.idea/vcs.xml
+.idea/workspace.xml
 .idea/modules.xml
 .idea/*.iml
 .idea/modules
