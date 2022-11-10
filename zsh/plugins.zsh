@@ -2,7 +2,6 @@
 
 plugins=(
   asdf
-  autojump
   colored-man-pages
   command-not-found
   # common-aliases
@@ -22,6 +21,7 @@ plugins=(
   vagrant
   # vi-mode #
   web-search
+  zoxide
   zsh-autosuggestions
   zsh-syntax-highlighting
 )

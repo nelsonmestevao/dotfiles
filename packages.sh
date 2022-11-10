@@ -74,7 +74,7 @@ export REPO=(
 )
 
 export AUR=(
-  autojump
+  # autojump
   betterlockscreen
   bitwarden-cli
   # copyq #
@@ -96,4 +96,5 @@ export AUR=(
   # watchexec
   xidlehook
   # zeal
+  zoxide
 )

@@ -46,6 +46,8 @@ alias pm="python -m"
 
 alias r3="rebar3"
 
+alias j=z
+
 alias t=tmux
 alias tc=tmux-connect
 alias mux=tmuxinator
