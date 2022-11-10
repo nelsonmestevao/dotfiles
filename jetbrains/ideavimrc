@@ -1,0 +1,32 @@
+"  Mouseless Driven Development by Hadi Hariri https://www.youtube.com/watch?v=UH6YVv9js3s
+" https://github.com/JetBrains/ideavim
+" https://github.com/Valloric/dotfiles/blob/master/intellij/ideavimrc
+" https://resources.jetbrains.com/storage/products/intellij-idea/docs/IntelliJIDEA_ReferenceCard.pdf
+let mapleader =' '
+
+set surround
+set commentary
+
+" These are leader-based alternative shortcuts for actions whose corresponding
+" idea shortcuts require hand-stretching combinations, function keys, Home or
+" Insert.
+
+" Shift + F6
+map <Leader>r :action RenameElement<CR>
+
+" Ctrl + F12
+map <Leader>s :action FileStructurePopup<CR>
+
+" Ctrl-Alt-B
+map <Leader>i :action GotoImplementation<CR>
+
+" Alt + F7
+map <Leader>u :action FindUsages<CR>
+
+" Alt + Insert
+map ,g :action Generate<CR>
+
+" Custom
+map <Leader>gf :action ReformatCode<CR>
+map <Leader>e :action SearchEverywhere<CR>
+
