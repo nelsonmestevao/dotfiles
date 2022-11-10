@@ -51,6 +51,8 @@ export REPO=(
   # libqalculate
   ranger
   # rclone
+  ripgrep
+  ripgrep-all
   rofi
   rofi-calc
   rofi-emoji
