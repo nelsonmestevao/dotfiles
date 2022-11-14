@@ -24,3 +24,8 @@ Host epl
 Host github.com
     HostName github.com
     IdentityFile ~/.ssh/id_ed25519
+
+Host bitbucket.org
+    HostName bitbucket.org
+    User git
+    IdentityFile ~/.ssh/id_kelvin
