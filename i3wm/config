@@ -160,10 +160,10 @@ bindsym $mod+Ctrl+Left workspace prev
 # Workspace names
 set $ws1   "1:  Slack"
 set $ws2   "2:  Terminal"
-set $ws3   "3:  Browser"
+set $ws3   "3:  Browser"
 set $ws4   "4:  General"
 set $ws5   "5:  Terminal"
-set $ws6   "6:  IntelliJ"
+set $ws6   "6:  GoLand"
 set $ws7   "7:  Playground"
 set $ws8   "8:  Code"
 set $ws9   "9:  Chat"
