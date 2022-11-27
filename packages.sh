@@ -7,6 +7,7 @@ export REPO=(
   # ansible-lint #
   autorandr
   bind-tools
+  blueman
   # catdoc
   # ctags
   # curl #
