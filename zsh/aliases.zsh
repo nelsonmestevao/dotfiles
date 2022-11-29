@@ -74,6 +74,7 @@ alias mt="mix test"
 
 alias mk=make
 alias mkh="make help"
+alias mkl="make lint"
 alias mkc="make clean"
 alias mkr="make run"
 alias mkt="make test"
