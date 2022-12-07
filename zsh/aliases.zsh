@@ -78,6 +78,7 @@ alias mkl="make lint"
 alias mkc="make clean"
 alias mkr="make run"
 alias mkt="make test"
+alias mkut="make unit-tests"
 alias mkts="make tests"
 
 alias stg="stack ghci"
