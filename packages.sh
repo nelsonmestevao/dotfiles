@@ -21,6 +21,7 @@ export REPO=(
   firefox-developer-edition
   flameshot
   github-cli
+  glab
   # go
   inkscape
   # htop #
