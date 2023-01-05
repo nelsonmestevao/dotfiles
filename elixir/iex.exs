@@ -43,6 +43,12 @@ IEx.configure(
   width: 80
   )
 
+defmodule :_utils do
+  defdelegate exit(), to: System, as: :halt
+end
+
+import :_utils
+
 if function_exported?(Mix, :__info__, 1) and Mix.env() == :dev do
   # if statement guards you from running it in prod, which could result in loss of logs.
   Logger.configure_backend(:console, device: Process.group_leader())
