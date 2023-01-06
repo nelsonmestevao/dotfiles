@@ -108,8 +108,8 @@ Plug 'dpelle/vim-LanguageTool'
 " let g:ale_fix_on_save = 1
 
 " Error and warning signs.
-let g:ale_sign_error = '✗'
-let g:ale_sign_warning = '⚠'
+" let g:ale_sign_error = '✗'
+" let g:ale_sign_warning = '⚠'
 
 " Enable integration with airline.
 let g:airline#extensions#ale#enabled = 1
@@ -295,10 +295,9 @@ Plug 'JuliaEditorSupport/julia-vim'
 Plug 'junegunn/goyo.vim' " distraction free writing
 Plug 'godlygeek/tabular'
 Plug 'junegunn/vim-emoji'
-Plug 'iamcco/markdown-preview.nvim', { 'do': ':call mkdp#util#install()', 'for': 'markdown', 'on': 'MarkdownPreview' }
 
 
-Plug 'plasticboy/vim-markdown'
+" Plug 'plasticboy/vim-markdown'
 let g:vim_markdown_math = 1
 let g:vim_markdown_toc_autofit = 1
 let g:vim_markdown_frontmatter = 1
@@ -329,7 +328,7 @@ call plug#end()
 
 Set python locations.
 
-```
+```vim
 let g:python_host_prog = "/bin/python2"
 let g:python3_host_prog = "/bin/python3"
 ```
