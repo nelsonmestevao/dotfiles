@@ -17,13 +17,13 @@ download_fonts() {
     -o ~/Downloads/fonts/emoji-font.zip
 
   wget -O ~/Downloads/fonts/Hack.zip \
-    https://github.com/ryanoasis/nerd-fonts/releases/download/v2.0.0/Hack.zip
+    https://github.com/ryanoasis/nerd-fonts/releases/download/v2.2.2/Hack.zip
 
   wget -O ~/Downloads/fonts/fontawesome.zip \
     https://use.fontawesome.com/releases/v6.2.1/fontawesome-free-6.2.1-desktop.zip
 
   wget -O ~/Downloads/fonts/jetbrains-mono.zip \
-    https://github.com/ryanoasis/nerd-fonts/releases/download/2.2.0-RC/JetBrainsMono.zip
+    https://github.com/ryanoasis/nerd-fonts/releases/download/v2.2.2/JetBrainsMono.zip
 
   mkdir -p /etc/fonts/conf.avail
   sudo cp ~/.dotfiles/config/66-noto-mono-compat.conf /etc/fonts/conf.avail
