@@ -16,7 +16,6 @@ execute "asdf update" "Update asdf itself..."
 
 old_plugins=(
   R
-  golang
   haskell
   java
   nodejs
@@ -28,6 +27,7 @@ old_plugins=(
 plugins=(
   elixir
   erlang
+  golang
   nodejs
   python
 )
