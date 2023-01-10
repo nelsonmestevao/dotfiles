@@ -20,7 +20,7 @@ download_fonts() {
     https://github.com/ryanoasis/nerd-fonts/releases/download/v2.0.0/Hack.zip
 
   wget -O ~/Downloads/fonts/fontawesome.zip \
-    https://use.fontawesome.com/releases/v6.2.0/fontawesome-free-6.2.0-desktop.zip
+    https://use.fontawesome.com/releases/v6.2.1/fontawesome-free-6.2.1-desktop.zip
 
   wget -O ~/Downloads/fonts/jetbrains-mono.zip \
     https://github.com/ryanoasis/nerd-fonts/releases/download/2.2.0-RC/JetBrainsMono.zip
