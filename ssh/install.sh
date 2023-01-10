@@ -6,8 +6,4 @@ cd "${BASE_DIR}/.." || exit 127
 # shellcheck source=../scripts/extras.sh
 . scripts/extras.sh
 
-mkdir -p ~/.config/systemd/user
-
-symlink ~/.dotfiles/ssh/sshagent.service ~/.config/systemd/user/sshagent.service
-
 symlink ~/.dotfiles/ssh/config ~/.ssh/config

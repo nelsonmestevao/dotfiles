@@ -27,6 +27,7 @@ export REPO=(
   # htop #
   hyperfine
   jq
+  keychain
   languagetool
   # libreoffice-still #
   # lighttpd
