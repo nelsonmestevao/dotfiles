@@ -71,7 +71,7 @@ bindsym XF86Calculator exec alacritty -e 'insect'
 bindsym $mod+e exec pcmanfm
 bindsym $mod+Ctrl+b exec terminal -e 'bmenu'
 bindsym $mod+p exec --no-startup-id pkill picom
-bindsym $mod+Ctrl+p exec --no-startup-id picom -C -b
+bindsym $mod+Ctrl+p exec --no-startup-id picom --config ~/.dotfiles/picom/picom.conf -b
 bindsym $mod+Shift+d --release exec "killall dunst; exec notify-send 'restart dunst'"
 bindsym $mod+? exec xdg-open /usr/share/doc/manjaro/i3_help.pdf
 bindsym $mod+Ctrl+x --release exec --no-startup-id xkill
@@ -304,7 +304,7 @@ mode "resize" {
 
 # Autostart applications
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
-exec --no-startup-id nitrogen --restore; sleep 1; picom -C -b
+exec --no-startup-id nitrogen --restore; sleep 1; picom --config ~/.dotfiles/picom/picom.conf -b
 exec --no-startup-id nm-applet
 exec --no-startup-id xfce4-power-manager
 exec --no-startup-id pamac-tray
