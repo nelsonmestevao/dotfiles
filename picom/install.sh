@@ -11,6 +11,3 @@ cd "${BASE_DIR}/.." || exit 127
 ask_for_sudo
 
 install_package picom
-
-mkdir -p ~/.config/picom
-symlink ~/.dotfiles/picom/picom.conf ~/.config/picom/picom.conf
