@@ -1,3 +1,5 @@
+AddKeysToAgent  yes
+
 Host rpi
     HostName rpi4.local
     User nelson
