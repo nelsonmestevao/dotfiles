@@ -26,17 +26,8 @@ function install_tools() {
   done
 }
 
-function install_extensions() {
-  declare -a extensions=("haskell.haskell")
-
-  for extension in "${extensions[@]}"; do
-    code --install-extension $extension
-  done
-}
-
 symlink "$HOME/.dotfiles/haskell/ghci" "$HOME/.ghci"
 
 execute install_ghcup "Installing GHCup..."
 execute install_libraries "Installing Haskell libraries..."
 execute install_tools "Installing Haskell tools..."
-execute install_extensions "Install VS Code Haskell extensions..."
