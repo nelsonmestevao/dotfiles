@@ -30,10 +30,6 @@ for init_file in $(ls $DOTFILES/**/*.init); do
   source $init_file
 done
 
-for key in id_rsa id_ed25519 id_kelvin; do
-  eval $(keychain --eval $key)
-done
-
 # zplug
 source ~/.zplug/init.zsh
 
