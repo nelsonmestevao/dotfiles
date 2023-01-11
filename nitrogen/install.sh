@@ -17,6 +17,8 @@ download_wallpapers() {
 
   curl -o ~/Pictures/login.jpg "https://images.unsplash.com/photo-1548354911-457c10eaf236"
 
+  curl -o ~/Pictures/lockscreen.jpg "https://images.unsplash.com/photo-1661705969607-cde73828023d"
+
   sudo cp ~/Pictures/desktop.jpg /usr/share/backgrounds/i3_default_background.jpg
 }
 
