@@ -12,6 +12,7 @@ plugins=(
   gitignore
   # globalias
   # golang #
+  mix
   # npm #
   # rails #
   sudo

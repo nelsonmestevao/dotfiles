@@ -10,5 +10,6 @@ cd "${BASE_DIR}/.." || exit 127
 
 install_package fop
 install_package erlang-unixodbc
+install_package inotify-tools
 
 symlink ~/.dotfiles/elixir/iex.exs ~/.iex.exs
