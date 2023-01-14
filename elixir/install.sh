@@ -5,5 +5,10 @@ cd "${BASE_DIR}/.." || exit 127
 
 # shellcheck source=../scripts/extras.sh
 . scripts/extras.sh
+# shellcheck source=../scripts/utils.sh
+. scripts/utils.sh
+
+install_package fop
+install_package erlang-unixodbc
 
 symlink ~/.dotfiles/elixir/iex.exs ~/.iex.exs
