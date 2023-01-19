@@ -25,6 +25,7 @@ export REPO=(
   # go
   inkscape
   # htop #
+  httpie
   hyperfine
   jq
   keychain
