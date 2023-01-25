@@ -1,0 +1,4 @@
+# vim: ft=zsh
+
+export FLYCTL_INSTALL="/home/nelson/.fly"
+export PATH="$FLYCTL_INSTALL/bin:$PATH"
