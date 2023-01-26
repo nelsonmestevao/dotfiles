@@ -24,9 +24,11 @@ Host epl
     User cesium
 
 Host github.com
+    User git
     HostName github.com
     IdentityFile ~/.ssh/id_ed25519
 
 Host bitbucket.org
+    User git
     HostName bitbucket.org
     IdentityFile ~/.ssh/id_kelvin
