@@ -71,6 +71,7 @@ export REPO=(
   tree
   unzip
   # vagrant
+  watchexec
   wget
   wmctrl
   xarchiver
@@ -99,7 +100,6 @@ export AUR=(
   slack-desktop
   spotify
   # trello #
-  # watchexec
   xidlehook
   # zeal
   zoxide
