@@ -1,1 +1,1 @@
-setlocal equalprg=gofmt
+setlocal equalprg=goimports
