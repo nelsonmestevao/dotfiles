@@ -1,0 +1,16 @@
+{
+    "workbench.colorTheme": "GitHub Dark",
+    "window.menuBarVisibility": "toggle",
+    "workbench.productIconTheme": "fluent-icons",
+    "workbench.iconTheme": "material-icon-theme",
+    "files.autoSave": "onFocusChange",
+    "editor.renderWhitespace": "trailing",
+    "editor.cursorStyle": "block",
+    "workbench.sideBar.location": "right",
+    "haskell.manageHLS": "GHCup",
+    "editor.fontFamily": "JetBrains Mono NF",
+    "editor.fontSize": 16,
+    "terminal.integrated.fontFamily": "JetBrains Mono NF, Hack NF",
+    "editor.minimap.enabled": false,
+    "terminal.integrated.sendKeybindingsToShell": true
+}
