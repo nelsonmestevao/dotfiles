@@ -8,12 +8,15 @@ cd "${BASE_DIR}/.." || exit 127
 
 function install_extensions() {
   declare -a extensions=(
-    elixir-lsp.elixir-ls
     GitHub.github-vscode-theme
+    JakeBecker.elixir-ls
+    PKief.material-icon-theme
+    eamodio.gitlens
     haskell.haskell
     justusadam.language-haskell
     miguelsolorio.fluent-icons
-    PKief.material-icon-theme
+    pantajoe.vscode-elixir-credo
+    saratravi.elixir-formatter
     victorbjorklund.phoenix
     vscodevim.vim
   )
