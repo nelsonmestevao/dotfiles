@@ -12,5 +12,14 @@
     "editor.fontSize": 16,
     "terminal.integrated.fontFamily": "JetBrains Mono NF, Hack NF",
     "editor.minimap.enabled": false,
-    "terminal.integrated.sendKeybindingsToShell": true
+    "terminal.integrated.sendKeybindingsToShell": true,
+    "workbench.startupEditor": "none",
+    "vim.cursorStylePerMode.insert": "line",
+    "vim.useSystemClipboard": true,
+    "vim.handleKeys": {
+        "<C-d>": true,
+        "<C-s>": false,
+        "<C-z>": false
+    },
+    "vim.leader": "space"
 }
