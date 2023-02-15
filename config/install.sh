@@ -13,6 +13,9 @@ ask_for_sudo
 download_fonts() {
   mkdir -p ~/.fonts ~/Downloads/fonts
 
+  # remove /etc/fonts/conf.d/10-scale-bitmap-fonts.conf if having alacritty
+  # emoji size problems (see https://github.com/alacritty/alacritty/issues/3791)
+
   curl https://noto-website-2.storage.googleapis.com/pkgs/NotoColorEmoji-unhinted.zip \
     -o ~/Downloads/fonts/emoji-font.zip
 
