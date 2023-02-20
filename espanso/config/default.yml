@@ -1,2 +1,5 @@
 search_shortcut: off
 search_trigger: .search
+backend: Inject
+clipboard_threshold: 1000
+inject_delay: 3
