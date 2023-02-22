@@ -10,6 +10,7 @@ function install_extensions() {
   declare -a extensions=(
     GitHub.github-vscode-theme
     JakeBecker.elixir-ls
+    MS-vsliveshare.vsliveshare
     PKief.material-icon-theme
     eamodio.gitlens
     haskell.haskell
