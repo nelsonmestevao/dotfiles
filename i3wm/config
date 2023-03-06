@@ -37,6 +37,7 @@ bindsym $mod+Shift+q kill
 
 # start program launcher
 bindsym Mod1+space exec --no-startup-id rofi -show combi
+bindsym $mod+comma exec --no-startup-id rofi -show window
 bindsym $mod+period exec --no-startup-id rofi -show emoji
 
 # launch categorized menu
