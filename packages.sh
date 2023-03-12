@@ -31,6 +31,7 @@ export REPO=(
   keychain
   languagetool
   # libreoffice-still #
+  lightdm
   # lighttpd
   lolcat
   # lxappearance #
@@ -82,7 +83,6 @@ export REPO=(
 
 export AUR=(
   # autojump
-  betterlockscreen
   bitwarden-cli
   # copyq #
   direnv

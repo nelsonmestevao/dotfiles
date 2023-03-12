@@ -76,7 +76,7 @@ bindsym $mod+Ctrl+p exec --no-startup-id picom --config ~/.dotfiles/picom/picom.
 bindsym $mod+Shift+d --release exec "killall dunst; exec notify-send 'restart dunst'"
 bindsym $mod+? exec xdg-open /usr/share/doc/manjaro/i3_help.pdf
 bindsym $mod+Ctrl+x --release exec --no-startup-id xkill
-bindsym $mod+Escape exec --no-startup-id betterlockscreen -l dim
+bindsym $mod+Escape exec --no-startup-id dm-tool lock
 
 # Printscreen
 set $print_path ~/Pictures/Screenshots

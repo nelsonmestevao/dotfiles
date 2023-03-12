@@ -99,7 +99,6 @@ dotfiles_setup() {
       ask_for_sudo
       execute "yay -Syyu --needed --noconfirm" "Updating all system packages..."
       xdg-mime default pcmanfm.desktop inode/directory
-      betterlockscreen -u ~/Pictures/login.jpg
       ;;
     clean)
       ask_for_sudo
