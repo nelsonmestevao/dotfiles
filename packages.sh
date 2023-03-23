@@ -40,6 +40,7 @@ export REPO=(
   # nitrogen
   neofetch
   # maven
+  nethogs
   numlockx
   obs-studio
   okular
