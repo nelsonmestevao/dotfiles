@@ -80,6 +80,7 @@ export REPO=(
   xcape
   # xclip #
   # zathura-pdf-mupdf
+  zellij
 )
 
 export AUR=(

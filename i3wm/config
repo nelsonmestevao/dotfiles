@@ -29,8 +29,8 @@ floating_modifier $mod
 # start a terminal
 bindsym $mod+Return exec alacritty
 
-# start a terminal with tmux
-bindsym $mod+Shift+Return exec alacritty -e 'tmux'
+# start a terminal with zellij
+bindsym $mod+Shift+Return exec alacritty -e 'zellij'
 
 # kill focused window
 bindsym $mod+Shift+q kill
