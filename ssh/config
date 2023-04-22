@@ -1,5 +1,9 @@
 AddKeysToAgent  yes
 
+Host aur.archlinux.org
+  IdentityFile ~/.ssh/id_ed25519
+  User aur
+
 Host rpi
     HostName rpi4.local
     User nelson
