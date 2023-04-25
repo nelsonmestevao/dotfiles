@@ -47,6 +47,7 @@ alias pm="python -m"
 alias r3="rebar3"
 
 alias j=z
+alias ji=zi
 
 alias zj=zellij
 
