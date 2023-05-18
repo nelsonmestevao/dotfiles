@@ -38,7 +38,8 @@ IEx.configure(
   inspect: [
     pretty: true,
     limit: :infinity,
-    width: 80
+    width: 80,
+    custom_options: [sort_maps: true]
   ],
   width: 80
   )
