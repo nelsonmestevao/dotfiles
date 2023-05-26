@@ -36,6 +36,8 @@ alias g-='cd $(git rev-parse --show-toplevel || echo ".")'
 alias grw=git-review
 alias ght=git-history
 alias gfz=git-fuzzy
+alias grbma='git fetch origin; git fetch origin --prune; git rebase origin/$(git_main_branch)'
+alias grbdv='git fetch origin; git fetch origin --prune; git rebase origin/$(git_develop_branch)'
 
 alias v="nvim -p"
 alias vi="nvim"
