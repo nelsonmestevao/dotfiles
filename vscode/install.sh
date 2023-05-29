@@ -28,3 +28,6 @@ function install_extensions() {
 }
 
 execute install_extensions "Installing VS Code extensions..."
+
+mkdir -p ~/.config/Code/User
+symlink ~/.dotfiles/vscode/settings.json ~/.config/Code/User/settings.json
