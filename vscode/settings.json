@@ -22,5 +22,6 @@
         "<C-z>": false
     },
     "vim.leader": "space",
-    "editor.inlineSuggest.enabled": true
+    "editor.inlineSuggest.enabled": true,
+    "solidity.telemetry": false
 }
