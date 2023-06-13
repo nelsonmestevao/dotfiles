@@ -12,4 +12,5 @@ install_package fop
 install_package erlang-unixodbc
 install_package inotify-tools
 
+symlink ~/.dotfiles/elixir/default-mix-commands ~/.default-mix-commands
 symlink ~/.dotfiles/elixir/iex.exs ~/.iex.exs
