@@ -87,6 +87,7 @@ export AUR=(
   # autojump
   bitwarden-cli
   # copyq #
+  difftastic
   direnv
   emojify
   # franz
