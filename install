@@ -5,8 +5,10 @@ cd "${ROOT_DIR}" || exit 127
 
 # shellcheck source=./packages.sh
 . packages.sh
-# shellcheck source=scripts/extras.sh
-. scripts/extras.sh
+# shellcheck source=../scripts/distro.sh
+. scripts/distro.sh
+# shellcheck source=scripts/execs.sh
+. scripts/execs.sh
 # shellcheck source=scripts/helpers.sh
 . scripts/helpers.sh
 # shellcheck source=scripts/logging.sh
@@ -15,7 +17,7 @@ cd "${ROOT_DIR}" || exit 127
 . scripts/utils.sh
 
 PROGRAM=$(basename "${BASH_SOURCE[0]:-$0}")
-VERSION=0.7.0
+VERSION=0.14.0
 
 function display_help() {
   cat <<EOF

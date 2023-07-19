@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -Eeuo pipefail
+
 import() {
   local -r SCRIPTS_DIR=$(dirname "${BASH_SOURCE[0]:-$0}")
 
@@ -9,8 +11,6 @@ import() {
 
 # shellcheck source=./helpers.sh
 import helpers.sh
-# shellcheck source=./distro.sh
-import distro.sh
 
 __set_trap() {
   trap -p "$1" | grep "$2" &>/dev/null ||
@@ -107,9 +107,7 @@ function execute() {
   __set_trap "EXIT" "__kill_all_subprocesses"
 
   # Execute commands in background
-  eval "$CMDS" \
-    &>/dev/null \
-    2>"$TMP_FILE" &
+  eval "$CMDS" &>"$TMP_FILE" &
 
   cmdsPID=$!
 
@@ -133,4 +131,4 @@ function execute() {
   return $exitCode
 }
 
-[ "$0" = "${BASH_SOURCE[0]}" ] && display_version 0.7.0 || true
+([ "$0" = "${BASH_SOURCE[0]}" ] && display_version 0.14.0) || true
