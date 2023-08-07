@@ -312,6 +312,7 @@ exec --no-startup-id xfce4-power-manager
 exec --no-startup-id pamac-tray
 exec --no-startup-id clipit
 exec --no-startup-id blueman-applet
+exec --no-startup-id surfshark
 #exec --no-startup-id start_conky_maia
 #exec --no-startup-id start_conky_green
 exec --no-startup-id ~/.spells/i3wm/autolock.sh
