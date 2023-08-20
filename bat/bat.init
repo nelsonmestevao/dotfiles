@@ -8,4 +8,7 @@ get_bat_theme() {
   fi
 }
 
-alias cat='bat --theme=$(get_bat_theme)'
+#alias cat='bat --theme=$(get_bat_theme)'
+
+alias cat=bat
+

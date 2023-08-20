@@ -18,9 +18,11 @@ function gclcd() {
   cd "$(basename "$_" .git)"
 }
 
-function open() {
-  xdg-open $@ &
-  disown
+function start-ticket() {
+  git checkout master
+  git pull
+  git checkout -b "$1"
+  git push -u origin HEAD
 }
 
 function most_used_commands() {

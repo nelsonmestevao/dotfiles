@@ -1,4 +1,4 @@
 # vim: ft=zsh
 
-. $HOME/.asdf/asdf.sh
+#. $HOME/.asdf/asdf.sh
 

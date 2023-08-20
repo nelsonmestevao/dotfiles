@@ -1,18 +1,10 @@
 [user]
   name = Nelson Estevão
-  useConfigOnly = true
+  signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN8WO8j3xxVGTeBhO8J4gm6dPMLDb6mrulzjog69wzk/
 [include]
-    path = ~/.dotfiles/git/personal.config
-[includeIf "gitdir:~/Code/Docência/"]
-    path = ~/.dotfiles/git/uminho.config
-[includeIf "gitdir:~/Code/Kelvin/"]
-    path = ~/.dotfiles/git/kelvin.config
-[includeIf "gitdir:~/Code/Marmelasoft/"]
+    path = ~/.dotfiles/git/remote.config
+[includeIf "gitdir:~/Code/Marmela/"]
     path = ~/.dotfiles/git/marmela.config
-[includeIf "gitdir:~/Code/Bikub/"]
-    path = ~/.dotfiles/git/bikub.config
-[web]
-  browser = firefox-developer-edition
 [core]
   autocrlf = input
   editor = nvim
@@ -27,6 +19,10 @@
   light = false
   features = decorations
   whitespace-error-style = 22 reverse
+[gpg]
+  format = ssh
+[gpg "ssh"]
+  program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
 [commit]
   gpgsign = true
   verbose = true

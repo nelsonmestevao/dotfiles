@@ -18,16 +18,11 @@ alias ocv="cd $HOME/Code/online-curriculum/ && exa --long --header --git"
 alias um="cd $HOME/Code/uminho/"
 
 alias ls="exa"
-alias r="ranger"
-alias scim="sc-im"
-alias p="sudo pacman"
-alias y="yay"
 alias ka="killall"
 alias :q="exit"
 
 alias o=open
 alias f=find-file
-alias ft=find-tmuxinator-project
 
 alias bsc=backup
 alias pls=please
@@ -53,10 +48,6 @@ alias ji=zi
 
 alias zj=zellij
 
-alias t=tmux
-alias tc=tmux-connect
-alias mux=tmuxinator
-
 alias bs="bin/server"
 alias bb="bin/build"
 alias br="bin/run"
@@ -71,12 +62,22 @@ alias bsr="bin/start"
 alias bsp="bin/stop"
 
 alias m=mix
-alias im="iex -S mix"
 alias ms="mix phx.server"
-alias mc="mix do clean, compile"
+alias mc="mix compile"
+alias mcf="mix compile --force"
+alias mcc="mix do clean, compile"
+alias mccf="mix do clean, compile --force"
 alias mf="mix format"
 alias ml="mix lint"
+alias mlc="mix lint.credo"
+alias mld="mix lint.dialyzer"
+alias mls="mix lint.sobelow"
 alias mt="mix test"
+alias mtw="mix test.watch"
+alias im="iex -S mix"
+alias ims="iex -S mix phx.server"
+alias iw="iex --sname iex --remsh web@$(hostname)"
+alias es="elixir --sname web -S mix phx.server"
 
 alias mk=make
 alias mkh="make help"
@@ -115,9 +116,5 @@ alias firefox=firefox-developer-edition
 
 alias joão="date -d '+2 hour' '+%T' && weather Tampere Finland 0"
 
-alias hollywood='docker run --rm -it bcbcarl/hollywood'
-alias cesium="xrandr --output HDMI1 --auto --above eDP1"
 alias ip='ip -c=auto'
-
-alias activate-ssh='eval $(ssh-agent -s); ssh-add ~/.ssh/id_rsa'
 

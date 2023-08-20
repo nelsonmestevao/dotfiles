@@ -1,4 +1,8 @@
 {
+    "workbench.tree.indent": 15,
+    "workbench.tree.renderIndentGuides": "always",
+    "workbench.colorCustomizations": {
+    "tree.indentGuidesStroke": "#05ef3c",
     "workbench.colorTheme": "GitHub Dark",
     "window.menuBarVisibility": "toggle",
     "workbench.productIconTheme": "fluent-icons",
@@ -23,5 +27,6 @@
     },
     "vim.leader": "space",
     "editor.inlineSuggest.enabled": true,
-    "solidity.telemetry": false
+    "solidity.telemetry": false,
+    "terminal.integrated.fontSize": 16
 }

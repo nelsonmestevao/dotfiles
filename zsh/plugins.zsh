@@ -1,9 +1,9 @@
 # OMZ PLUGINS
 
 plugins=(
-  asdf
+  #asdf
   colored-man-pages
-  command-not-found
+  #command-not-found
   # common-aliases
   extract
   docker-compose
@@ -15,13 +15,14 @@ plugins=(
   mix
   # npm #
   # rails #
-  sudo
-  tmux
-  tmuxinator
+  #sudo
+  #tmux
+  #tmuxinator
   # themes #
-  vagrant
+  #vagrant
   # vi-mode #
-  web-search
+  #web-search
+  rtx
   zoxide
   zsh-autosuggestions
   zsh-syntax-highlighting

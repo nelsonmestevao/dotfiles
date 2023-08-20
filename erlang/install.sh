@@ -10,11 +10,11 @@ cd "${BASE_DIR}/.." || exit 127
 # shellcheck source=../scripts/utils.sh
 . scripts/utils.sh
 
-ask_for_sudo
+#ask_for_sudo
 
-install_package fop
-install_package erlang-unixodbc
-install_package inotify-tools
+#install_package fop
+#install_package erlang-unixodbc
+#install_package inotify-tools
 
 install_rebar3() {
   wget https://s3.amazonaws.com/rebar3/rebar3
@@ -23,4 +23,4 @@ install_rebar3() {
 }
 
 mkdir -p ~/.config/rebar
-symlink ~/.dotfiles/erlang/rebar.config ~/.config/rebar/rebar.config
+ln -s ~/.dotfiles/erlang/rebar.config ~/.config/rebar/rebar.config

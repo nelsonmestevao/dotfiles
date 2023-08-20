@@ -6,15 +6,15 @@ BASE_DIR=$(dirname "${BASH_SOURCE[0]:-$0}")
 cd "${BASE_DIR}/.." || exit 127
 
 # shellcheck source=../scripts/distro.sh
-. scripts/distro.sh
+#. scripts/distro.sh
 # shellcheck source=../scripts/execs.sh
-. scripts/execs.sh
+#. scripts/execs.sh
 # shellcheck source=../scripts/utils.sh
-. scripts/utils.sh
+#. scripts/utils.sh
 
-ask_for_sudo
+#ask_for_sudo
 
-install_package bat
+#install_package bat
 
 mkdir -p "$HOME/.config/bat"
-symlink "$HOME/.dotfiles/bat/config" "$HOME/.config/bat/config"
+ln -s "$HOME/.dotfiles/bat/config" "$HOME/.config/bat/config"

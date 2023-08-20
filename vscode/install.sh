@@ -4,7 +4,7 @@ BASE_DIR=$(dirname "${BASH_SOURCE[0]:-$0}")
 cd "${BASE_DIR}/.." || exit 127
 
 # shellcheck source=../scripts/execs.sh
-. scripts/execs.sh
+#. scripts/execs.sh
 
 function install_extensions() {
   declare -a extensions=(
@@ -13,12 +13,8 @@ function install_extensions() {
     MS-vsliveshare.vsliveshare
     PKief.material-icon-theme
     eamodio.gitlens
-    haskell.haskell
-    justusadam.language-haskell
     miguelsolorio.fluent-icons
     pantajoe.vscode-elixir-credo
-    saratravi.elixir-formatter
-    victorbjorklund.phoenix
     vscodevim.vim
   )
 
@@ -27,7 +23,20 @@ function install_extensions() {
   done
 }
 
-execute install_extensions "Installing VS Code extensions..."
+install_extensions
 
-mkdir -p ~/.config/Code/User
-symlink ~/.dotfiles/vscode/settings.json ~/.config/Code/User/settings.json
+mkdir -p "$HOME/Library/Application Support/Code/User"
+ln -s ~/.dotfiles/vscode/settings.json "$HOME/Library/Application Support/Code/User/settings.json"
+
+
+
+
+
+
+
+
+
+
+
+
+

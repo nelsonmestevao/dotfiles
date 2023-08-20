@@ -8,4 +8,4 @@ cd "${BASE_DIR}/.." || exit 127
 # shellcheck source=../scripts/execs.sh
 . scripts/execs.sh
 
-symlink "$HOME/.dotfiles/nodejs/default-npm-packages" "$HOME/.default-npm-packages"
+ln -s "$HOME/.dotfiles/nodejs/default-npm-packages" "$HOME/.default-npm-packages"
