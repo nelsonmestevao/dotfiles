@@ -7,7 +7,7 @@
     path = ~/.dotfiles/git/uminho.config
 [includeIf "gitdir:~/Code/Kelvin/"]
     path = ~/.dotfiles/git/kelvin.config
-[includeIf "gitdir:~/Code/Marmelasoft/"]
+[includeIf "gitdir:~/Code/Marmela/"]
     path = ~/.dotfiles/git/marmela.config
 [includeIf "gitdir:~/Code/Bikub/"]
     path = ~/.dotfiles/git/bikub.config
