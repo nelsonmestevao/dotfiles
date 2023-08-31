@@ -72,10 +72,15 @@ alias bsp="bin/stop"
 
 alias m=mix
 alias im="iex -S mix"
+alias ims="iex -S mix phx.server"
 alias ms="mix phx.server"
-alias mc="mix do clean, compile"
+alias mcf="mix compile --force"
+alias mcc="mix do clean, compile"
 alias mf="mix format"
 alias ml="mix lint"
+alias mlc="mix lint.credo"
+alias mld="mix lint.dialyzer"
+alias mls="mix lint.sobelow"
 alias mt="mix test"
 
 alias mk=make
