@@ -71,9 +71,8 @@ alias bsr="bin/start"
 alias bsp="bin/stop"
 
 alias m=mix
-alias im="iex -S mix"
-alias ims="iex -S mix phx.server"
 alias ms="mix phx.server"
+alias mc="mix compile"
 alias mcf="mix compile --force"
 alias mcc="mix do clean, compile"
 alias mf="mix format"
@@ -82,6 +81,11 @@ alias mlc="mix lint.credo"
 alias mld="mix lint.dialyzer"
 alias mls="mix lint.sobelow"
 alias mt="mix test"
+alias mtw="mix test.watch"
+alias im="iex -S mix"
+alias ims="iex -S mix phx.server"
+alias iw="iex --sname iex --remsh web@$(hostname)"
+alias es="elixir --sname web -S mix phx.server"
 
 alias mk=make
 alias mkh="make help"
