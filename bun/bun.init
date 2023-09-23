@@ -1,0 +1,6 @@
+# vim: ft=zsh
+
+[ -s "/home/nelson/.bun/_bun" ] && source "/home/nelson/.bun/_bun"
+
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"

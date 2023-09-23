@@ -1,0 +1,6 @@
+# vim: ft=zsh
+
+# eval "$(rtx activate zsh)"
+# eval "$(rtx complete --shell zsh)"
+
+alias x=rtx

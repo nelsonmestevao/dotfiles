@@ -1,7 +1,7 @@
 # OMZ PLUGINS
 
 plugins=(
-  asdf
+  # asdf
   colored-man-pages
   command-not-found
   # common-aliases
@@ -15,9 +15,10 @@ plugins=(
   mix
   # npm #
   # rails #
+  rtx
   sudo
-  tmux
-  tmuxinator
+  # tmux
+  # tmuxinator
   # themes #
   vagrant
   # vi-mode #
