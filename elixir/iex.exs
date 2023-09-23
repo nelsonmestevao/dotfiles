@@ -45,12 +45,14 @@ IEx.configure(
   )
 
 defmodule :_utils do
+  defdelegate bye(), to: System, as: :halt
   defdelegate exit(), to: System, as: :halt
+  defdelegate quit(), to: System, as: :halt
 end
 
 import :_utils
 
-if function_exported?(Mix, :__info__, 1) and Mix.env() == :dev do
+if function_exported?(Mix, :__info__, 1) and Mix.State in :ets.all() and Mix.env() == :dev do
   # if statement guards you from running it in prod, which could result in loss of logs.
   Logger.configure_backend(:console, device: Process.group_leader())
 end
