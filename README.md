@@ -2,8 +2,11 @@
 [license]: #memo-license
 
 <h1 align="center">
-  <img src=".github/header-DARK.png#gh-light-mode-only" width="750">
-  <img src=".github/header-LIGHT.png#gh-dark-mode-only" width="750">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="/.github/header-LIGHT.png">
+  <source media="(prefers-color-scheme: light)" srcset="/.github/header-DARK.png">
+  <img alt="Dotfiles" src="/.github/header-DARK.png" width="750">
+</picture>
 </h1>
 
 [![Latest Release](https://img.shields.io/github/release-pre/nelsonmestevao/dotfiles.svg?style=flat-square)][releases]
