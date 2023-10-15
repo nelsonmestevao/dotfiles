@@ -9,15 +9,19 @@ cd "${BASE_DIR}/.." || exit 127
 function install_extensions() {
   declare -a extensions=(
     GitHub.github-vscode-theme
-    JakeBecker.elixir-ls
+    # JakeBecker.elixir-ls
+    lexical-lsp.lexical
     MS-vsliveshare.vsliveshare
+    ms-vscode.makefile-tools
     PKief.material-icon-theme
+    SimonSiefke.svg-preview
+    bradlc.vscode-tailwindcss
     eamodio.gitlens
+    streetsidesoftware.code-spell-checker
     haskell.haskell
     justusadam.language-haskell
     miguelsolorio.fluent-icons
-    pantajoe.vscode-elixir-credo
-    saratravi.elixir-formatter
+    # pantajoe.vscode-elixir-credo
     victorbjorklund.phoenix
     vscodevim.vim
   )
