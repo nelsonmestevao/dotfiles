@@ -1,3 +1,4 @@
 :set prompt "\ESC[35m%s \ESC[1;35mλ\ESC[2;35m: \ESC[0m"
 :set +s
 :set +t
+:set -package random
