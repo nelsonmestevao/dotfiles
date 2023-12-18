@@ -33,8 +33,6 @@ done
 # zplug
 source ~/.zplug/init.zsh
 
-zplug "hlissner/zsh-autopair", defer:2
-
 zplug load
 
 # start typing + [Up-Arrow] - fuzzy find history forward
