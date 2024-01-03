@@ -12,6 +12,7 @@ plugins=(
   gitignore
   # globalias
   # golang #
+  mise
   mix
   # npm #
   # rails #
@@ -22,7 +23,6 @@ plugins=(
   #vagrant
   # vi-mode #
   #web-search
-  rtx
   zoxide
   zsh-autosuggestions
   zsh-syntax-highlighting
