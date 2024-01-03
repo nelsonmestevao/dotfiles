@@ -15,4 +15,4 @@ ask_for_sudo
 install_package alacritty
 
 mkdir -p ~/.config/alacritty
-symlink ~/.dotfiles/alacritty/alacritty.yml ~/.config/alacritty/alacritty.yml
+symlink ~/.dotfiles/alacritty/alacritty.toml ~/.config/alacritty/alacritty.toml
