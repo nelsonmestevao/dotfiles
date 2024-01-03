@@ -18,7 +18,7 @@ module DynamicPrompt
 
 private
   def self.current_ruby
-    @@current_ruby ||= `rtx current ruby`.strip.split(' ').first
+    @@current_ruby ||= `mise current ruby`.strip.split(' ').first
   end
 
   def self.cwd

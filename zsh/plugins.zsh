@@ -12,10 +12,10 @@ plugins=(
   gitignore
   # globalias
   # golang #
+  mise
   mix
   # npm #
   # rails #
-  rtx
   sudo
   # tmux
   # tmuxinator
