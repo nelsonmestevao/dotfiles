@@ -3,3 +3,5 @@
 eval "$(mise activate zsh)"
 
 alias x=mise
+alias mr='mise run'
+
