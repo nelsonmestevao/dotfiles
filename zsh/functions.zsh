@@ -4,7 +4,7 @@ function backup() {
   git add --all
   git commit \
     -m ":wrench: [WIP] Done for today, cya tomorrow [ci skip] :wave:" \
-    -m "$(curl -s http://whatthecommit.com/index.txt)"
+    -m "$(curl -s https://whatthecommit.com/index.txt)"
   git push $@
 }
 
