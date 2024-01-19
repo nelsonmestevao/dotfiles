@@ -1,4 +1,4 @@
 export KERL_BUILD_DOCS=yes
 export KERL_INSTALL_HTMLDOCS=yes
 export KERL_INSTALL_MANPAGES=yes
-export KERL_CONFIGURE_OPTIONS="--without-javac --with-ssl=$(brew --prefix openssl@1.1)"
+export KERL_CONFIGURE_OPTIONS="--disable-debug --disable-silent-rules --without-javac --enable-shared-zlib --enable-dynamic-ssl-lib --enable-hipe --enable-smp-support --enable-threads --enable-kernel-poll --enable-wx --enable-darwin-64bit --with-ssl=$(brew --prefix openssl@1.1)"
