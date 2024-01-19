@@ -1,0 +1,5 @@
+export POSTGRES_EXTRA_CONFIGURE_OPTIONS="
+    --with-lz4
+    --with-uuid=e2fs
+    --with-libraries=/usr/local/lib:$(brew --prefix openssl@1.1)/lib
+    --with-includes=/usr/local/include:$(brew --prefix openssl@1.1)/include"
