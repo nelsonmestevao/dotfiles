@@ -2,9 +2,9 @@
 
 function backup() {
   git add --all
-  git commit \
-    -m ":wrench: [WIP] Done for today, cya tomorrow [ci skip] :wave:" \
-    -m "$(curl -s https://whatthecommit.com/index.txt)"
+  git commit --no-verify --no-gpg-sign \
+    --message ":wrench: [WIP] Done for today, cya tomorrow [ci skip] :wave:" \
+    --message "$(curl -s https://whatthecommit.com/index.txt)"
   git push $@
 }
 
