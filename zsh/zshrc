@@ -21,14 +21,14 @@ for module in $(ls $DOTFILES/zsh/*.zsh); do
   source $module
 done
 
+for init_file in $(ls $DOTFILES/**/*.init); do
+  source $init_file
+done
+
 source $DOTFILES/zsh/aliases.zsh
 
 # go to working directory if it has one
 gtwd
-
-for init_file in $(ls $DOTFILES/**/*.init); do
-  source $init_file
-done
 
 # zplug
 source ~/.zplug/init.zsh
@@ -51,35 +51,35 @@ if [[ "${terminfo[kcud1]}" != "" ]]; then
 fi
 
 () {
-  function prompt_mise() {
-    local plugins=("${(@f)$(mise current | grep -v "system" 2>/dev/null)}")
-    local plugin
-    for plugin in ${(k)plugins}; do
-      local parts=("${(@s/ /)plugin}")
-      local tool=${(U)parts[1]}
-      local version=${parts[2]}
-      p10k segment -r -i "${tool}_ICON" -s $tool -t "$version"
-    done
-  }
-  typeset -g POWERLEVEL9K_MISE_FOREGROUND=66
-  typeset -g POWERLEVEL9K_MISE_DOTNET_CORE_FOREGROUND=134
-  typeset -g POWERLEVEL9K_MISE_ELIXIR_FOREGROUND=129
-  typeset -g POWERLEVEL9K_MISE_ERLANG_FOREGROUND=125
-  typeset -g POWERLEVEL9K_MISE_FLUTTER_FOREGROUND=38
-  typeset -g POWERLEVEL9K_MISE_GOLANG_FOREGROUND=37
-  typeset -g POWERLEVEL9K_MISE_HASKELL_FOREGROUND=172
-  typeset -g POWERLEVEL9K_MISE_JAVA_FOREGROUND=32
-  typeset -g POWERLEVEL9K_MISE_JULIA_FOREGROUND=70
-  typeset -g POWERLEVEL9K_MISE_LUA_FOREGROUND=32
-  typeset -g POWERLEVEL9K_MISE_NODEJS_FOREGROUND=70
-  typeset -g POWERLEVEL9K_MISE_PERL_FOREGROUND=67
-  typeset -g POWERLEVEL9K_MISE_PHP_FOREGROUND=99
-  typeset -g POWERLEVEL9K_MISE_POSTGRES_FOREGROUND=31
-  typeset -g POWERLEVEL9K_MISE_PYTHON_FOREGROUND=37
-  typeset -g POWERLEVEL9K_MISE_RUBY_FOREGROUND=168
-  typeset -g POWERLEVEL9K_MISE_RUST_FOREGROUND=37
-  # Substitute the default asdf prompt element
-  typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=("${POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS[@]/asdf/mise}")
+function prompt_mise() {
+  local plugins=("${(@f)$(mise current | grep -v "system" 2>/dev/null)}")
+  local plugin
+  for plugin in ${(k)plugins}; do
+    local parts=("${(@s/ /)plugin}")
+    local tool=${(U)parts[1]}
+    local version=${parts[2]}
+    p10k segment -r -i "${tool}_ICON" -s $tool -t "$version"
+  done
+}
+typeset -g POWERLEVEL9K_MISE_FOREGROUND=66
+typeset -g POWERLEVEL9K_MISE_DOTNET_CORE_FOREGROUND=134
+typeset -g POWERLEVEL9K_MISE_ELIXIR_FOREGROUND=129
+typeset -g POWERLEVEL9K_MISE_ERLANG_FOREGROUND=125
+typeset -g POWERLEVEL9K_MISE_FLUTTER_FOREGROUND=38
+typeset -g POWERLEVEL9K_MISE_GOLANG_FOREGROUND=37
+typeset -g POWERLEVEL9K_MISE_HASKELL_FOREGROUND=172
+typeset -g POWERLEVEL9K_MISE_JAVA_FOREGROUND=32
+typeset -g POWERLEVEL9K_MISE_JULIA_FOREGROUND=70
+typeset -g POWERLEVEL9K_MISE_LUA_FOREGROUND=32
+typeset -g POWERLEVEL9K_MISE_NODEJS_FOREGROUND=70
+typeset -g POWERLEVEL9K_MISE_PERL_FOREGROUND=67
+typeset -g POWERLEVEL9K_MISE_PHP_FOREGROUND=99
+typeset -g POWERLEVEL9K_MISE_POSTGRES_FOREGROUND=31
+typeset -g POWERLEVEL9K_MISE_PYTHON_FOREGROUND=37
+typeset -g POWERLEVEL9K_MISE_RUBY_FOREGROUND=168
+typeset -g POWERLEVEL9K_MISE_RUST_FOREGROUND=37
+# Substitute the default asdf prompt element
+typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=("${POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS[@]/asdf/mise}")
 }
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
