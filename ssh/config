@@ -27,6 +27,14 @@ Host epl
     HostName epl.di.uminho.pt
     User cesium
 
+Host prod-eeg
+    HostName eegs.eeg.uminho.pt
+    User deployer
+
+Host stg-eeg
+    HostName stg-eegs.eeg.uminho.pt
+    User deployer
+
 Host github.com
     HostName github.com
     IdentityFile ~/.ssh/id_ed25519
