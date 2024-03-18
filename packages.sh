@@ -15,7 +15,7 @@ export REPO=(
   # diff-so-fancy
   # diffpdf
   dunst
-  exa
+  eza
   # feh
   # figlet #
   # firefox #

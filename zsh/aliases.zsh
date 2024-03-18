@@ -12,12 +12,12 @@ alias dot="cd $DOTFILES"
 alias c="coding $HOME/Code"
 alias s="coding $HOME/Snippets"
 
-alias cv="cd $HOME/Code/curriculum-vitae/ && exa --long --header --git"
-alias ocv="cd $HOME/Code/online-curriculum/ && exa --long --header --git"
+alias cv="cd $HOME/Code/curriculum-vitae/ && eza --long --header --git"
+alias ocv="cd $HOME/Code/online-curriculum/ && eza --long --header --git"
 
 alias um="cd $HOME/Code/uminho/"
 
-alias ls="exa"
+alias ls="eza"
 alias r="ranger"
 alias scim="sc-im"
 alias p="sudo pacman"
