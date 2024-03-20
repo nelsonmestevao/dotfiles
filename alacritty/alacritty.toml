@@ -7,7 +7,7 @@ import = ["~/.dotfiles/alacritty/themes/google.dark.toml"]
 style = "Block"
 
 [font]
-size = 14.0
+size = 16.0
 
 [font.bold]
 family = "JetBrains Mono NF"
