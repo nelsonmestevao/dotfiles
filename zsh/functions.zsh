@@ -24,7 +24,7 @@ function open() {
 }
 
 function timestamp() {
-  TZ=UTC date '+%Y%m%d%H%M%S'
+  date --utc '+%Y%m%d%H%M%S'
 }
 
 function most_used_commands() {
