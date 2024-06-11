@@ -6,5 +6,5 @@ python  system
 ruby    system
 rust    system
 haskell system
-elixir  latest
-erlang  latest
+elixir  system
+erlang  system
