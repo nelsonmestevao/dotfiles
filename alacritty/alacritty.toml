@@ -1,5 +1,7 @@
 import = ["~/.dotfiles/alacritty/themes/google.dark.toml"]
 
+working_directory = "Code/Remote/tiger"
+
 [cursor]
 # - ▇ Block
 # - _ Underline
