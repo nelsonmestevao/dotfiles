@@ -223,8 +223,10 @@ nnoremap <leader>e :Files<CR>
 nnoremap <leader>f :Rg<CR>
 
 " terminal emulation in floating mode
-nnoremap <leader>sh  :FloatermNew --height=0.4 --width=0.95 --wintype=floating --position=bottom --autoclose=2 --title=
-tnoremap <leader>sh  <C-\><C-n>:FloatermNew --height=0.4 --width=0.98 --wintype=floating --position=bottom --autoclose=2 --title=
+nnoremap <leader>sv  :FloatermNew --width=0.5 --wintype=vsplit --autoclose=2 --title=shell<CR>
+nnoremap <leader>sh  :FloatermNew --height=0.5 --wintype=split --autoclose=2 --title=shell<CR>
+" nnoremap <leader>sh  <C-\><C-n>:FloatermNew --height=0.4 --width=0.98 --wintype=floating --position=bottom --autoclose=2 --title=
+" tnoremap <leader>sh  <C-\><C-n>:FloatermNew --height=0.4 --width=0.98 --wintype=floating --position=bottom --autoclose=2 --title=
 nnoremap <leader>st  :FloatermToggle<CR>
 tnoremap <leader>st  <C-\><C-n>:FloatermToggle<CR>
 nnoremap <leader>sn  :FloatermNext<CR>
