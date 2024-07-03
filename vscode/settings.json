@@ -31,5 +31,21 @@
     "<C-z>": false
   },
   "vim.leader": "space",
-  "lexical.server.releasePathOverride": "/home/nelson/Code/OpenSource/lexical/_build/dev/package/lexical/bin"
+  "tailwind-fold.autoFold": true,
+  "tailwind-fold.supportedLanguages": [
+    "html",
+    "typescriptreact",
+    "javascriptreact",
+    "typescript",
+    "javascript",
+    "vue-html",
+    "vue",
+    "phoenix-heex",
+    "php",
+    "markdown",
+    "coffeescript",
+    "svelte",
+    "astro",
+    "erb"
+  ]
 }
