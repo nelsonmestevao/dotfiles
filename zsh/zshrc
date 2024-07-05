@@ -90,4 +90,8 @@ export AWS_PROFILE=sts
   typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=("${POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS[@]/asdf/mise}")
 }
 
+export HOMEBREW_PREFIX="/opt/homebrew"
+export PKG_CONFIG_PATH="/opt/homebrew/bin/pkg-config:$(brew --prefix icu4c)/lib/pkgconfig:$(brew --prefix curl)/lib/pkgconfig:$(brew --prefix zlib)/lib/pkgconfig"
+
+
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
