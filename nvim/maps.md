@@ -91,6 +91,11 @@ nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
+
+nnoremap <C-S-h> <C-w>H
+nnoremap <C-S-j> <C-w>J
+nnoremap <C-S-k> <C-w>K
+nnoremap <C-S-l> <C-w>L
 ```
 
 Better pane movement.
@@ -417,4 +422,3 @@ let g:tagbar_type_ruby = {
       \ ]
       \ }
 ```
-
