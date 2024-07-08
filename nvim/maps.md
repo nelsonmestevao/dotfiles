@@ -84,7 +84,7 @@ noremap <leader>h :split<CR>
 noremap <leader>v :vsplit<CR>
 ```
 
-Better pane movement.
+Better pane switching.
 
 ```vim
 nnoremap <C-h> <C-w>h
@@ -93,13 +93,13 @@ nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 ```
 
-Better pane switching.
+Better pane movement.
 
 ```vim
-nnoremap <M-h> <C-w>H
-nnoremap <M-j> <C-w>J
-nnoremap <M-k> <C-w>K
-nnoremap <M-l> <C-w>L
+nnoremap <C-S-h> <C-w>H
+nnoremap <C-S-j> <C-w>J
+nnoremap <C-S-k> <C-w>K
+nnoremap <C-S-l> <C-w>L
 ```
 
 ## Tab & Buffer management
@@ -128,6 +128,12 @@ nnoremap <localleader><leader> :noh<cr>
 " search will center on the line it's found in.
 nnoremap n nzzzv
 nnoremap N Nzzzv
+```
+
+## Marks management
+
+```vim
+noremap <leader>m :Marks<CR>
 ```
 
 ## Visual Mode Mappings
