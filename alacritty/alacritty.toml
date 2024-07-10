@@ -9,7 +9,7 @@ working_directory = "Code/Remote/tiger"
 style = "Block"
 
 [font]
-size = 18.0
+size = 20.1
 
 [font.bold]
 family = "JetBrainsMono NF"
