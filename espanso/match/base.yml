@@ -56,4 +56,4 @@ matches:
       Feliz aniversário, $|$! 🎂
   - triggers:
     - ",rev"
-    replace: "/assign_reviewer @thang.pham4123439 @david.el-ghoul @jesseherrick17 @hugo.goncalves25 @jamesbaldwin"
+    replace: "/assign_reviewer @antonio-silva @amalbuquerque @david.el-ghoul @jamesbaldwin @hugo.goncalves25 @thang.pham4123439"
