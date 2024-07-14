@@ -1,10 +1,6 @@
-R       system
+elixir  system
+erlang  system
 golang  system
-julia   system
 nodejs  system
 python  system
 ruby    system
-rust    system
-haskell system
-elixir  system
-erlang  system
