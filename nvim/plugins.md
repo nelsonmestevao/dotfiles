@@ -229,9 +229,15 @@ Plug 'kjssad/quantum.vim'
 " Color Scheme
 Plug 'rafi/awesome-vim-colorschemes'
 Plug 'ryanoasis/vim-devicons'
+
+Plug 'projekt0n/github-nvim-theme'
 ```
 
 ### Languages
+
+```vim
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+```
 
 #### Elixir
 
