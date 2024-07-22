@@ -17,7 +17,7 @@ alias ocv="cd $HOME/Code/online-curriculum/ && eza --long --header --git"
 
 alias um="cd $HOME/Code/uminho/"
 
-alias ls="eza"
+alias ls="eza --icons"
 alias ka="killall"
 alias :q="exit"
 
