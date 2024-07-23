@@ -21,7 +21,7 @@ config.enable_scroll_bar = false
 config.enable_tab_bar = false
 
 config.leader = {
-  key = 'a',
+  key = '.',
   mods = 'CTRL',
   timeout_milliseconds = 1000
 }
