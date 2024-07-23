@@ -13,8 +13,22 @@ function symlink() {
   execute "ln -sfT ${SRC} ${DST}" "Symlinking $(basename $DST)"
 }
 
+function is_installed() {
+  [ -x "$(command -v "$@")" ]
+}
+
 function install_package() {
   local PKG="$1"
 
-  execute "yay -Syyu ${PKG} --needed --noconfirm" "Installing ${BOLD}${PKG}${RESET}..."
+  if is_installed apt; then
+    execute "sudo apt -y ${PKG}" "Installing ${BOLD}${PKG}${RESET}..."
+  elif is_installed dnf; then
+    execute "sudo dnf install -y ${PKG}" "Installing ${BOLD}${PKG}${RESET}..."
+  elif is_installed yay; then
+    execute "yay -Syyu ${PKG} --needed --noconfirm" "Installing ${BOLD}${PKG}${RESET}..."
+  elif is_installed pacman; then
+    execute "sudo pacman -Syyu ${PKG} --needed --noconfirm" "Installing ${BOLD}${PKG}${RESET}..."
+  elif is_installed brew; then
+    execute "brew install -y ${PKG}" "Installing ${BOLD}${PKG}${RESET}..."
+  fi
 }
