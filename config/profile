@@ -1,9 +1,10 @@
-export QT_QPA_PLATFORMTHEME="qt5ct"
-export QT_SCALE_FACTOR=1
-export GTK2_RC_FILES="$HOME/.gtkrc-2.0"
+# export QT_QPA_PLATFORMTHEME="qt5ct"
+# export QT_SCALE_FACTOR=1
+# export GTK2_RC_FILES="$HOME/.gtkrc-2.0"
+# export WAYLAND_DISPLAY=wayland-1
+# export GTK_THEME=adwaita
 export EDITOR=/usr/bin/nvim
 export BROWSER=/usr/bin/firefox-developer-edition
-export TERM=/usr/bin/termite
 export HISTFILESIZE=1000000000
 export HISTSIZE=1000000000
 
