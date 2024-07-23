@@ -8,14 +8,14 @@
 export DOTFILES="$HOME/.dotfiles"
 export SPELLS="$HOME/.spells"
 
-source $SPELLS/spells.init
-
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
+
+source $SPELLS/spells.init
 
 for module in $(ls $DOTFILES/zsh/*.zsh); do
   source $module
@@ -29,13 +29,6 @@ source $DOTFILES/zsh/aliases.zsh
 
 # go to working directory if it has one
 gtwd
-
-# zplug
-source ~/.zplug/init.zsh
-
-zplug "hlissner/zsh-autopair", defer:2
-
-zplug load
 
 # start typing + [Up-Arrow] - fuzzy find history forward
 if [[ "${terminfo[kcuu1]}" != "" ]]; then

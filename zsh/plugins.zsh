@@ -16,14 +16,15 @@ plugins=(
   mix
   # npm #
   # rails #
-  sudo
+  # sudo
   # tmux
   # tmuxinator
   # themes #
-  vagrant
+  # vagrant
   # vi-mode #
-  web-search
+  # web-search
   zoxide
+  zsh-autopair
   zsh-autosuggestions
   zsh-syntax-highlighting
 )
