@@ -21,7 +21,8 @@ config.enable_scroll_bar = false
 config.enable_tab_bar = false
 
 config.leader = {
-  key = '.',
+  -- https://github.com/wez/wezterm/issues/4055#issuecomment-2137129562
+  key = ' ',
   mods = 'CTRL',
   timeout_milliseconds = 1000
 }
