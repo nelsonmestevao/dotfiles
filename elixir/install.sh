@@ -11,7 +11,7 @@ cd "${BASE_DIR}/.." || exit 127
 . scripts/utils.sh
 
 install_package fop
-install_package erlang-unixodbc
+install_package erlang-odbc
 install_package inotify-tools
 
 symlink ~/.dotfiles/elixir/default-mix-commands ~/.default-mix-commands
