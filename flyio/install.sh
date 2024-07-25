@@ -7,4 +7,3 @@ cd "${BASE_DIR}/.." || exit 127
 . scripts/execs.sh
 
 curl -L https://fly.io/install.sh | sh
-
