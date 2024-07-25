@@ -17,12 +17,12 @@ fi
 
 source $SPELLS/spells.init
 
-for module in $(ls $DOTFILES/zsh/*.zsh); do
-  source $module
-done
-
 for init_file in $(ls $DOTFILES/**/*.init); do
   source $init_file
+done
+
+for module in $(ls $DOTFILES/zsh/*.zsh); do
+  source $module
 done
 
 source $DOTFILES/zsh/aliases.zsh
