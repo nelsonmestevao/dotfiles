@@ -8,14 +8,18 @@
 export DOTFILES="$HOME/.dotfiles"
 export SPELLS="$HOME/.spells"
 
-source $SPELLS/spells.init
-
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
+
+source $SPELLS/spells.init
+
+for init_file in $(ls $DOTFILES/**/*.init); do
+  source $init_file
+done
 
 for module in $(ls $DOTFILES/zsh/*.zsh); do
   source $module
@@ -25,15 +29,6 @@ source $DOTFILES/zsh/aliases.zsh
 
 # go to working directory if it has one
 gtwd
-
-for init_file in $(ls $DOTFILES/**/*.init); do
-  source $init_file
-done
-
-# zplug
-source ~/.zplug/init.zsh
-
-zplug load
 
 # start typing + [Up-Arrow] - fuzzy find history forward
 if [[ "${terminfo[kcuu1]}" != "" ]]; then
@@ -54,16 +49,16 @@ compdef _remotectl remotectl
 source <(remotectl completion zsh)
 
 () {
-  function prompt_mise() {
-    local plugins=("${(@f)$(mise ls --current 2>/dev/null | awk '!/\(symlink\)/ && $3!="~/.tool-versions" && $3!="~/.config/mise/config.toml" {print $1, $2}')}")
-    local plugin
-    for plugin in ${(k)plugins}; do
-      local parts=("${(@s/ /)plugin}")
-      local tool=${(U)parts[1]}
-      local version=${parts[2]}
-      p10k segment -r -i "${tool}_ICON" -s $tool -t "$version"
-    done
-  }
+function prompt_mise() {
+  local plugins=("${(@f)$(mise ls --current 2>/dev/null | awk '!/\(symlink\)/ && $3!="~/.tool-versions" && $3!="~/.config/mise/config.toml" {print $1, $2}')}")
+  local plugin
+  for plugin in ${(k)plugins}; do
+    local parts=("${(@s/ /)plugin}")
+    local tool=${(U)parts[1]}
+    local version=${parts[2]}
+    p10k segment -r -i "${tool}_ICON" -s $tool -t "$version"
+  done
+}
 
   # Colors
   typeset -g POWERLEVEL9K_MISE_BACKGROUND=1
@@ -92,6 +87,3 @@ source <(remotectl completion zsh)
 export AWS_PROFILE=sts
 export HOMEBREW_PREFIX="/opt/homebrew"
 export PKG_CONFIG_PATH="/opt/homebrew/bin/pkg-config:$(brew --prefix icu4c)/lib/pkgconfig:$(brew --prefix curl)/lib/pkgconfig:$(brew --prefix zlib)/lib/pkgconfig"
-
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

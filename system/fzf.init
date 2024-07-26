@@ -6,5 +6,4 @@ export FZF_ALT_C_COMMAND="fd -t d . $HOME"
 
 export FZF_DEFAULT_OPTS="--height 50% --bind=ctrl-j:preview-down,ctrl-k:preview-up --reverse --inline-info --preview-window=right:60%"
 
- [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
