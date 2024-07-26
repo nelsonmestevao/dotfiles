@@ -157,9 +157,7 @@ vnoremap K :m '<-2<CR>gv=gv
 nnoremap <leader>gf gg=G``zz
 
 "" Copy/Paste/Cut
-if has('unnamedplus')
-  set clipboard=unnamed,unnamedplus
-endif
+set clipboard=unnamedplus
 
 noremap YY "+y<CR>
 noremap <leader>p "+gP<CR>
