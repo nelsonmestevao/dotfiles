@@ -1,0 +1,88 @@
+/**
+ * App Window
+ */
+@define-color window_shadow rgba(255, 255,255, 0);
+@define-color window_bg rgb(35,35,35);
+@define-color prefs_backgroud rgba(255,255,255,0.08);
+
+/**
+ * Input
+ */
+@define-color selected_bg_color #99c1f1;
+@define-color selected_fg_color rgba(255,255,255,1);
+@define-color input_color rgba(255,255,255,1);
+@define-color caret_color rgba(255,255,255,1);
+
+/**
+ * Result items
+ */
+@define-color item_name rgba(255,255,255,1);
+@define-color item_text rgba(255,255,255,1);
+@define-color item_box_selected rgba(255,255,255,0.08);
+@define-color item_text_selected @item_text;
+@define-color item_name_selected @item_name;
+@define-color item_shortcut_color @item_text;
+@define-color item_shortcut_color_sel @item_text;
+
+.app {
+    background-color: @window_bg;
+    border: none;
+    border-radius: 12px;
+    margin: 40px -12px;
+}
+
+.input {
+    color: @input_color;
+    font-size: 170%;
+    padding: 5px 0 5px 7px;
+}
+
+
+/**
+ * Selected text in input
+ */
+.input *:selected,
+.input *:focus,
+    *:selected:focus {
+        background-color: alpha (@selected_bg_color, 0.9);
+        color: @selected_fg_color;
+    }
+
+    .item-text {
+        color: @item_text;
+    }
+    .item-name {
+        color: @item_name;
+    }
+
+    .selected.item-box {
+        background-color: @item_box_selected;
+        border-radius: 5px;
+    }
+    .selected.item-box .item-text {
+        color: @item_text_selected;
+    }
+    .selected.item-box .item-name {
+        color: @item_name_selected;
+    }
+    .item-shortcut {
+        color: @item_shortcut_color;
+    }
+    .selected.item-box .item-shortcut {
+        color: @item_shortcut_color_sel;
+    }
+
+    .result-box {
+        margin: 0px 6px -4px 6px;
+    }
+
+    .prefs-btn {
+        opacity: 0.8;
+    }
+    .prefs-btn:hover {
+        background-color: @prefs_backgroud;
+    }
+
+    .no-window-shadow {
+        margin: -20px;
+    }
