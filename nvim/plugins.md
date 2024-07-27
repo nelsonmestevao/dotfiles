@@ -229,15 +229,9 @@ Plug 'kjssad/quantum.vim'
 " Color Scheme
 Plug 'rafi/awesome-vim-colorschemes'
 Plug 'ryanoasis/vim-devicons'
-
-Plug 'projekt0n/github-nvim-theme'
 ```
 
 ### Languages
-
-```vim
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-```
 
 #### Elixir
 
@@ -338,7 +332,7 @@ call plug#end()
 Set python locations.
 
 ```vim
-"" let g:python_host_prog = "/bin/python2"
-"" let g:python3_host_prog = "/bin/python3"
+let g:python_host_prog = "/bin/python2"
+let g:python3_host_prog = "/bin/python3"
 ```
 

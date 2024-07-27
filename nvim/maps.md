@@ -84,7 +84,7 @@ noremap <leader>h :split<CR>
 noremap <leader>v :vsplit<CR>
 ```
 
-Better pane movement.
+Better pane switching.
 
 ```vim
 nnoremap <C-h> <C-w>h
@@ -98,13 +98,13 @@ nnoremap <C-S-k> <C-w>K
 nnoremap <C-S-l> <C-w>L
 ```
 
-Better pane switching.
+Better pane movement.
 
 ```vim
-nnoremap <M-h> <C-w>H
-nnoremap <M-j> <C-w>J
-nnoremap <M-k> <C-w>K
-nnoremap <M-l> <C-w>L
+nnoremap <C-S-h> <C-w>H
+nnoremap <C-S-j> <C-w>J
+nnoremap <C-S-k> <C-w>K
+nnoremap <C-S-l> <C-w>L
 ```
 
 ## Tab & Buffer management
@@ -135,7 +135,7 @@ nnoremap n nzzzv
 nnoremap N Nzzzv
 ```
 
-### Marks management
+## Marks management
 
 ```vim
 noremap <leader>m :Marks<CR>
@@ -157,9 +157,7 @@ vnoremap K :m '<-2<CR>gv=gv
 nnoremap <leader>gf gg=G``zz
 
 "" Copy/Paste/Cut
-if has('unnamedplus')
-  set clipboard=unnamed,unnamedplus
-endif
+set clipboard=unnamedplus
 
 noremap YY "+y<CR>
 noremap <leader>p "+gP<CR>
@@ -424,4 +422,3 @@ let g:tagbar_type_ruby = {
       \ ]
       \ }
 ```
-
