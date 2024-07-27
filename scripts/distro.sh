@@ -10,7 +10,7 @@ function symlink() {
   local SRC="$1"
   local DST="$2"
 
-  execute "ln -sfT ${SRC} ${DST}" "Symlinking $(basename $DST)"
+  execute "ln -sf ${SRC} ${DST}" "Symlinking $(basename $DST)"
 }
 
 function is_installed() {
