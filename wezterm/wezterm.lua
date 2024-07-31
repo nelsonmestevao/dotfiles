@@ -8,7 +8,7 @@
 -- A GPU-accelerated cross-platform terminal emulator
 local wezterm = require('wezterm')
 
-local config = {}
+local config = wezterm.config_builder()
 
 config.window_decorations = "RESIZE"
 config.window_background_opacity = 0.85
@@ -28,7 +28,12 @@ config.font = wezterm.font('JetBrainsMono NF')
 config.font_size = 18
 
 config.enable_scroll_bar = false
-config.enable_tab_bar = false
+
+config.enable_tab_bar = true
+config.use_fancy_tab_bar = false
+config.show_tabs_in_tab_bar = true
+config.show_new_tab_button_in_tab_bar = false
+config.tab_bar_at_bottom = true
 
 config.leader = {
   -- https://github.com/wez/wezterm/issues/4055#issuecomment-2137129562
