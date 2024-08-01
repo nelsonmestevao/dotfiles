@@ -85,5 +85,3 @@ function prompt_mise() {
 }
 
 export AWS_PROFILE=sts
-export HOMEBREW_PREFIX="/opt/homebrew"
-export PKG_CONFIG_PATH="/opt/homebrew/bin/pkg-config:$(brew --prefix icu4c)/lib/pkgconfig:$(brew --prefix curl)/lib/pkgconfig:$(brew --prefix zlib)/lib/pkgconfig"
