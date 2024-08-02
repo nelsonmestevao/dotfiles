@@ -11,8 +11,8 @@ local wezterm = require('wezterm')
 local config = wezterm.config_builder()
 
 config.window_decorations = "RESIZE"
-config.window_background_opacity = 0.85
-config.macos_window_background_blur = 50
+config.window_background_opacity = 0.7
+config.macos_window_background_blur = 30
 
 local function get_color_scheme_by(appearance)
   if appearance:find "Dark" then
