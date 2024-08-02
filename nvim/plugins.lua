@@ -175,6 +175,17 @@ local plugins = {
       })
     end,
   },
+  {
+    "supermaven-inc/supermaven-nvim",
+    config = function()
+      require("supermaven-nvim").setup({
+        keymaps = {
+          accept_suggestion = "<C-y>",
+          accept_word = "<C-j>",
+        }
+      })
+    end
+  },
   -- Markdown
   {
     "epwalsh/obsidian.nvim",
