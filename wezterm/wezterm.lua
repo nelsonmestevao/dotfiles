@@ -61,6 +61,26 @@ config.keys = {
       mode = 'Activate',
     },
   },
+  {
+    key = 'l',
+    mods = 'META',
+    action = wezterm.action.ActivatePaneDirection 'Right',
+  },
+  {
+    key = 'h',
+    mods = 'META',
+    action = wezterm.action.ActivatePaneDirection 'Left',
+  },
+  {
+    key = 'k',
+    mods = 'META',
+    action = wezterm.action.ActivatePaneDirection 'Up',
+  },
+  {
+    key = 'j',
+    mods = 'META',
+    action = wezterm.action.ActivatePaneDirection 'Down',
+  },
 }
 
 return config
