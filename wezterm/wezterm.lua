@@ -83,4 +83,12 @@ config.keys = {
   },
 }
 
+for i = 1, 9 do
+  table.insert(config.keys, {
+    key = tostring(i),
+    mods = 'META',
+    action = wezterm.action.ActivateTab(i - 1),
+  })
+end
+
 return config
