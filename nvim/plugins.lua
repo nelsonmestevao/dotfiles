@@ -77,7 +77,7 @@ local plugins = {
           lualine_a = { { 'mode', separator = { left = '' } } },
           lualine_b = { 'branch', 'diff', 'diagnostics' },
           lualine_c = { 'filename' },
-          lualine_x = { 'encoding', 'fileformat', 'filetype' },
+          lualine_x = { 'encoding', 'filetype' },
           lualine_y = { 'progress' },
           lualine_z = { { 'location', separator = { right = '' } } },
         },
