@@ -4,41 +4,22 @@ Host aur.archlinux.org
   IdentityFile ~/.ssh/id_ed25519
   User aur
 
+Host github.com
+    HostName github.com
+    IdentityFile ~/.ssh/id_ed25519
+
 Host rpi
     HostName rpi4.local
     User nelson
-
-Host storm
-    PubkeyAcceptedKeyTypes +ssh-rsa
-    HostName storm.cesium.di.uminho.pt
-    Port 2345
-    User nelson
-
-Host trooper
-    HostName trooper.cesium.di.uminho.pt
-    Port 101
-    User nelson
-
-Host search
-    HostName s7edu.di.uminho.pt
-    User pg47535
 
 Host epl
     HostName epl.di.uminho.pt
     User cesium
 
-Host prod-eeg
-    HostName eegs.eeg.uminho.pt
-    User deployer
-
 Host stg-eeg
     HostName stg-eegs.eeg.uminho.pt
     User deployer
 
-Host github.com
-    HostName github.com
-    IdentityFile ~/.ssh/id_ed25519
-
-Host bitbucket.org
-    HostName bitbucket.org
-    IdentityFile ~/.ssh/id_kelvin
+Host prod-eeg
+    HostName eegs.eeg.uminho.pt
+    User deployer
