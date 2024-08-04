@@ -61,7 +61,9 @@ alias bt="bin/test"
 alias bf="bin/format"
 alias bl="bin/lint"
 alias bd="bin/dockerw"
+alias bp="bin/podmanw"
 alias bsh="bin/console"
+alias bcs="bin/console"
 alias bcl="bin/clean"
 alias bst="bin/setup"
 alias bsr="bin/start"
@@ -119,11 +121,6 @@ alias todo='git grep -l TODO | xargs -n1 git blame -f -n -w | grep "$(git config
 
 alias firefox=firefox-developer-edition
 
-alias joão="date -d '+2 hour' '+%T' && weather Tampere Finland 0"
-
 alias hollywood='docker run --rm -it bcbcarl/hollywood'
-alias cesium="xrandr --output HDMI1 --auto --above eDP1"
 alias ip='ip -c=auto'
-
-alias activate-ssh='eval $(ssh-agent -s); ssh-add ~/.ssh/id_rsa'
 
