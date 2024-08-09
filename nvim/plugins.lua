@@ -103,7 +103,7 @@ local plugins = {
     },
     config = function()
       require("notify").setup({
-        max_width = 120,
+        max_width = 80,
       })
 
       require("noice").setup()
@@ -297,6 +297,44 @@ local plugins = {
       require("oil").setup()
     end,
   },
+  -- Terminal
+  {
+    'akinsho/toggleterm.nvim',
+    version = "*",
+    config = function()
+      require("toggleterm").setup({
+        size = function(term)
+          if term.direction == "horizontal" then
+            return vim.o.lines * 0.35
+          elseif term.direction == "vertical" then
+            return vim.o.columns * 0.45
+          end
+        end,
+        shell = vim.o.shell
+      })
+      local prefix = "<leader>s"
+
+      local maybe_escape = function(mode, command)
+        local tescape = "<C-\\><C-n>"
+
+        if mode == "n" then
+          return command
+        elseif mode == "t" then
+          return tescape .. command
+        end
+      end
+
+      for _i, mode in ipairs({ "n", "t" }) do
+        vim.keymap.set(mode, prefix .. "t", maybe_escape(mode, ":ToggleTerm<CR>"))
+        vim.keymap.set(mode, prefix .. "a", maybe_escape(mode, ":ToggleTermToggleAll<CR>"))
+        vim.keymap.set(mode, prefix .. "v", maybe_escape(mode, ":ToggleTerm direction=vertical name=vshell<CR>"))
+        vim.keymap.set(mode, prefix .. "h", maybe_escape(mode, ":ToggleTerm direction=horizontal name=hshell<CR>"))
+      end
+
+      vim.keymap.set("n", "<C-c><C-c>", ":ToggleTermSendCurrentLine<CR>")
+      vim.keymap.set("v", "<C-c><C-c>", ":ToggleTermSendVisualLines<CR>")
+    end
+  },
   -- Git
   {
     "lewis6991/gitsigns.nvim",
@@ -392,16 +430,23 @@ local plugins = {
     "neovim/nvim-lspconfig",
     config = function()
       require("lspconfig").lua_ls.setup({})
-      require("lspconfig").nextls.setup({
-        cmd = { HOME .. "/.local/share/nvim/mason/bin/nextls", "--stdio" },
-        init_options = {
-          extensions = {
-            credo = { enable = true },
-          },
-          experimental = {
-            completions = { enable = true },
-          },
-        },
+      -- require("lspconfig").nextls.setup({
+      --   cmd = { HOME .. "/.local/share/nvim/mason/bin/nextls", "--stdio" },
+      --   init_options = {
+      --     extensions = {
+      --       credo = { enable = true },
+      --     },
+      --     experimental = {
+      --       completions = { enable = true },
+      --     },
+      --   },
+      -- })
+      require 'lspconfig'.bashls.setup({
+        cmd = { HOME .. "/.local/share/nvim/mason/bin/bash-language-server", "start" },
+      })
+
+      require("lspconfig").lexical.setup({
+        cmd = { HOME .. "/.local/share/nvim/mason/bin/lexical", "--stdio" },
       })
 
       vim.keymap.set("n", "K", vim.lsp.buf.hover)
