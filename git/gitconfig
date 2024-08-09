@@ -4,6 +4,8 @@
   signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINt6s4KNjVHcH0qA0CPKWYPyCTPXkbwXFlfljrToN8b6
 [gpg]
   format = "ssh"
+[gpg "ssh"]
+  allowedSignersFile = ~/.dotfiles/git/allowed_signers
 [commit]
   gpgsign = true
   verbose = true
