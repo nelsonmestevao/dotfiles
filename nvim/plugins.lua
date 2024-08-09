@@ -313,23 +313,19 @@ local plugins = {
         shell = vim.o.shell
       })
       local prefix = "<leader>s"
+      local tescape = "<C-\\><C-n>"
 
-      local maybe_escape = function(mode, command)
-        local tescape = "<C-\\><C-n>"
+      vim.keymap.set("n", prefix .. "t", ":ToggleTerm<CR>")
+      vim.keymap.set("n", prefix .. "a", ":ToggleTermToggleAll<CR>")
+      vim.keymap.set("n", prefix .. "v", ":ToggleTerm direction=vertical name=vshell<CR>")
+      vim.keymap.set("n", prefix .. "h", ":ToggleTerm direction=horizontal name=hshell<CR>")
 
-        if mode == "n" then
-          return command
-        elseif mode == "t" then
-          return tescape .. command
-        end
-      end
+      vim.keymap.set("t", prefix .. "t", tescape .. ":ToggleTerm<CR>")
 
-      for _i, mode in ipairs({ "n", "t" }) do
-        vim.keymap.set(mode, prefix .. "t", maybe_escape(mode, ":ToggleTerm<CR>"))
-        vim.keymap.set(mode, prefix .. "a", maybe_escape(mode, ":ToggleTermToggleAll<CR>"))
-        vim.keymap.set(mode, prefix .. "v", maybe_escape(mode, ":ToggleTerm direction=vertical name=vshell<CR>"))
-        vim.keymap.set(mode, prefix .. "h", maybe_escape(mode, ":ToggleTerm direction=horizontal name=hshell<CR>"))
-      end
+      vim.keymap.set("t", "<C-h>", tescape .. "<C-w>h")
+      vim.keymap.set("t", "<C-j>", tescape .. "<C-w>j")
+      vim.keymap.set("t", "<C-k>", tescape .. "<C-w>k")
+      vim.keymap.set("t", "<C-l>", tescape .. "<C-w>l")
 
       vim.keymap.set("n", "<C-c><C-c>", ":ToggleTermSendCurrentLine<CR>")
       vim.keymap.set("v", "<C-c><C-c>", ":ToggleTermSendVisualLines<CR>")
