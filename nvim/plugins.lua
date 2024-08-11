@@ -441,6 +441,10 @@ local plugins = {
         cmd = { HOME .. "/.local/share/nvim/mason/bin/bash-language-server", "start" },
       })
 
+      require("lspconfig").sqlls.setup({
+        cmd = { HOME .. "/.local/share/nvim/mason/bin/sql-language-server", "up", "--method", "stdio" },
+      })
+
       require("lspconfig").lexical.setup({
         cmd = { HOME .. "/.local/share/nvim/mason/bin/lexical", "--stdio" },
       })
