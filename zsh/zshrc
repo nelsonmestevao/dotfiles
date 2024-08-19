@@ -75,4 +75,6 @@ typeset -g POWERLEVEL9K_MISE_RUST_FOREGROUND=37
 typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=("${POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS[@]/asdf/mise}")
 }
 
+export PATH="$HOME/.local/bin:$PATH"
+
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
