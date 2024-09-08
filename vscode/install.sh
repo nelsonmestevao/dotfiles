@@ -20,3 +20,4 @@ execute install_extensions "Installing VS Code extensions..."
 
 mkdir -p ~/.config/Code/User
 symlink ~/.dotfiles/vscode/settings.json ~/.config/Code/User/settings.json
+symlink ~/.dotfiles/vscode/keybindings.json ~/.config/Code/User/keybindings.json
