@@ -18,6 +18,6 @@ $bibtex_use = 1;
 $out_dir = 'build';
 
 $pdf_previewer = 'start zathura';
-# $pdf_update_method = 2;
+$pdf_update_method = 2;
 
 $clean_ext = "bbl nav out snm upa synctex.gz";
