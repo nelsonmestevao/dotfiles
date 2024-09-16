@@ -94,21 +94,21 @@ local plugins = {
       "nvim-tree/nvim-web-devicons",
     },
   },
-  {
-    "folke/noice.nvim",
-    event = "VeryLazy",
-    dependencies = {
-      "MunifTanjim/nui.nvim",
-      "rcarriga/nvim-notify",
-    },
-    config = function()
-      require("notify").setup({
-        max_width = 80,
-      })
-
-      require("noice").setup()
-    end,
-  },
+  -- {
+  --   "folke/noice.nvim",
+  --   event = "VeryLazy",
+  --   dependencies = {
+  --     "MunifTanjim/nui.nvim",
+  --     "rcarriga/nvim-notify",
+  --   },
+  --   config = function()
+  --     require("notify").setup({
+  --       max_width = 80,
+  --     })
+  --
+  --     require("noice").setup()
+  --   end,
+  -- },
   {
     "nvim-telescope/telescope.nvim",
     tag = "0.1.8",
@@ -183,6 +183,7 @@ local plugins = {
     "supermaven-inc/supermaven-nvim",
     config = function()
       require("supermaven-nvim").setup({
+        ignore_filetypes = { haskell = true },
         keymaps = {
           accept_suggestion = "<C-y>",
           accept_word = "<C-j>",
