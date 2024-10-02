@@ -1,5 +1,7 @@
 # vim: ft=zsh
 
-if [ -e ~/.nix-profile/etc/profile.d/nix.sh ]; then
-  . ~/.nix-profile/etc/profile.d/nix.sh;
-fi
+# if [ -e ~/.nix-profile/etc/profile.d/nix.sh ]; then
+#   . ~/.nix-profile/etc/profile.d/nix.sh;
+# fi
+
+. /nix/var/nix/profiles/default/etc/profile.d/nix.sh
