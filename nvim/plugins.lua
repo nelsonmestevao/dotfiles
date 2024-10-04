@@ -438,7 +438,7 @@ local plugins = {
       --     },
       --   },
       -- })
-      require 'lspconfig'.bashls.setup({
+      require("lspconfig").bashls.setup({
         cmd = { HOME .. "/.local/share/nvim/mason/bin/bash-language-server", "start" },
       })
 
@@ -448,6 +448,10 @@ local plugins = {
 
       require("lspconfig").lexical.setup({
         cmd = { HOME .. "/.local/share/nvim/mason/bin/lexical", "--stdio" },
+      })
+
+      require("lspconfig").hls.setup({
+        cmd = { HOME .. "/.local/share/nvim/mason/bin/haskell-language-server-wrapper" , "--lsp" },
       })
 
       vim.keymap.set("n", "K", vim.lsp.buf.hover)
