@@ -86,6 +86,12 @@ alias ims="iex -S mix phx.server"
 alias iw="iex --sname iex --remsh web@$(hostname)"
 alias es="elixir --sname web -S mix phx.server"
 
+alias cbe="cabal run --verbose=0"
+alias cbr="cabal repl"
+alias cbt="cabal test --enable-coverage --verbose=0"
+alias cbdt="cabal repl --build-depends=QuickCheck,doctest --with-ghc=doctest --verbose=0"
+alias cbh="cabal haddock"
+
 alias mk=make
 alias mkh="make help"
 alias mkl="make lint"
