@@ -16,6 +16,8 @@
     path = ~/.dotfiles/git/personal.config
 [includeIf "gitdir:~/Code/Docência/"]
     path = ~/.dotfiles/git/uminho.config
+[includeIf "gitdir:~/Code/UMinho/"]
+    path = ~/.dotfiles/git/uminho.config
 [includeIf "gitdir:~/Code/Marmela/"]
     path = ~/.dotfiles/git/marmela.config
 [web]
