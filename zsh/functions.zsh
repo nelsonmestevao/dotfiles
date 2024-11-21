@@ -125,3 +125,15 @@ function show_ip() {
 function get_location_gps() {
   curl -s "https://location.services.mozilla.com/v1/geolocate?key=geoclue" | awk 'OFS=":" {print $3,$5}' | tr -d ',}'
 }
+
+function grupo() {
+  printf -v group_number "%03d" "$1"
+
+  cd "$HOME/Code/UMinho/repos/projetos/2024li1g${group_number}"
+}
+
+function aluno() {
+  local uminho_id="$(echo $1 | tr '[:upper:]' '[:lower:]')"
+
+  cd "$HOME/Code/UMinho/repos/acompanhamento/${uminho_id}"
+}
