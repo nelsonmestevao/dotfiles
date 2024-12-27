@@ -1,0 +1,7 @@
+theme = dark:"GitHub Dark",light:"Github"
+shell-integration = zsh
+window-theme = system
+background-opacity = 0.9
+cursor-style = block
+font-family = "JetBrains Mono Nerd Font"
+font-size = 16
