@@ -90,8 +90,12 @@ function sanitize_name() {
   echo "${name//[^a-zA-Z0-9]/-}"
 }
 
-function timestamp() {
-  date --utc +%FT%TZ
+function datetime() {
+  date --utc '+%FT%TZ'
 }
 
-([ "$0" = "${BASH_SOURCE[0]}" ] && display_version 0.14.0) || true
+function timestamp() {
+  date --utc '+%Y%m%d%H%M%S'
+}
+
+([ "$0" = "${BASH_SOURCE[0]}" ] && display_version 0.15.0) || true

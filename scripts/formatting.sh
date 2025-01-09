@@ -129,4 +129,4 @@ function format() {
   fi
 }
 
-([ "$0" = "${BASH_SOURCE[0]}" ] && display_version 0.14.0) || true
+([ "$0" = "${BASH_SOURCE[0]}" ] && display_version 0.15.0) || true
