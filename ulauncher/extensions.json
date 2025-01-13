@@ -1,0 +1,51 @@
+{
+    "com.github.ulauncher.ulauncher-emoji": {
+        "id": "com.github.ulauncher.ulauncher-emoji",
+        "url": "https://github.com/Ulauncher/ulauncher-emoji",
+        "updated_at": "2024-07-25T10:52:46.877470",
+        "last_commit": "827cfe5e1d2f89f742f811f981759787b0654fa9",
+        "last_commit_time": "2023-11-04T18:37:13"
+    },
+    "com.github.leinardi.ulauncher-exit-gnome": {
+        "id": "com.github.leinardi.ulauncher-exit-gnome",
+        "url": "https://github.com/leinardi/ulauncher-exit-gnome",
+        "updated_at": "2024-07-25T10:53:13.326476",
+        "last_commit": "804710414d28128bbc9c8fada8fa9a7fbb572479",
+        "last_commit_time": "2020-02-02T09:03:27"
+    },
+    "com.github.pywkm.ulauncher-spotify": {
+        "id": "com.github.pywkm.ulauncher-spotify",
+        "url": "https://github.com/pywkm/ulauncher-spotify",
+        "updated_at": "2024-07-25T10:54:37.280063",
+        "last_commit": "89d9b02316aaccea0d70b458bb97b3976287f03e",
+        "last_commit_time": "2020-02-17T16:20:21"
+    },
+    "com.github.saini-anshul.ulauncher-surfshark": {
+        "id": "com.github.saini-anshul.ulauncher-surfshark",
+        "url": "https://github.com/saini-anshul/ulauncher-surfshark",
+        "updated_at": "2024-07-25T10:59:23.794959",
+        "last_commit": "73d476d4c2e35982de03581ec44f65d506059ccc",
+        "last_commit_time": "2022-01-06T19:20:59"
+    },
+    "com.github.ulauncher.ulauncher-hash": {
+        "id": "com.github.ulauncher.ulauncher-hash",
+        "url": "https://github.com/Ulauncher/ulauncher-hash",
+        "updated_at": "2024-07-25T11:04:04.347116",
+        "last_commit": "237dbb3610ff04df993c3223b12df42cb7df221f",
+        "last_commit_time": "2022-09-04T14:29:55"
+    },
+    "com.github.friday.ulauncher-clipboard": {
+        "id": "com.github.friday.ulauncher-clipboard",
+        "url": "https://github.com/friday/ulauncher-clipboard",
+        "updated_at": "2024-07-26T11:36:24.473416",
+        "last_commit": "dde8e6c9db80b0c9301ebdc9b13c4383b4789bc8",
+        "last_commit_time": "2023-11-27T22:23:17"
+    },
+    "com.github.ulauncher.ulauncher-kill": {
+        "id": "com.github.ulauncher.ulauncher-kill",
+        "url": "https://github.com/Ulauncher/ulauncher-kill",
+        "updated_at": "2024-07-26T11:36:36.017566",
+        "last_commit": "00ffe8266dbb6c2aea7d86a6363e51cec4b1981f",
+        "last_commit_time": "2022-11-26T16:15:05"
+    }
+}
