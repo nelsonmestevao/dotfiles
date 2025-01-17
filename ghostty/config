@@ -5,3 +5,12 @@ background-opacity = 0.9
 cursor-style = block
 font-family = "JetBrains Mono Nerd Font"
 font-size = 16
+
+keybind = alt+l=goto_split:right
+keybind = alt+h=goto_split:left
+keybind = alt+k=goto_split:top
+keybind = alt+j=goto_split:bottom
+
+keybind = alt+shift+h=new_split:down
+keybind = alt+shift+v=new_split:right
+
