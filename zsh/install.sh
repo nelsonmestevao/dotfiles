@@ -24,6 +24,8 @@ execute "git clone https://github.com/zsh-users/zsh-syntax-highlighting $ZSH_CUS
 
 execute "git clone https://github.com/hlissner/zsh-autopair $ZSH_CUSTOM/plugins/zsh-autopair" "Clonning zsh-autopair..."
 
+execute "git clone https://github.com/jeffreytse/zsh-vi-mode $ZSH_CUSTOM/plugins/zsh-vi-mode" "Clonning zsh-vi-mode..."
+
 execute "git clone https://github.com/Aloxaf/fzf-tab $ZSH_CUSTOM/plugins/fzf-tab" "Clonning fzf-tab..."
 
 execute "git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $ZSH_CUSTOM/themes/powerlevel10k" "Clonning powerlevel10k..."

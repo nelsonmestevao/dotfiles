@@ -1,16 +1,21 @@
 theme = dark:"MaterialDark",light:"Material"
+font-family = "JetBrains Mono Nerd Font"
+font-size = 16
+
 shell-integration = zsh
+
 window-theme = ghostty
 window-decoration = true
-background-opacity = 0.9
-background-blur-radius = 30
 gtk-adwaita = true
 gtk-wide-tabs = true
 gtk-tabs-location = bottom
 adw-toolbar-style = flat
+
 cursor-style = block
-font-family = "JetBrains Mono Nerd Font"
-font-size = 16
+cursor-color = #ffffff
+
+background-opacity = 0.9
+background-blur-radius = 30
 
 keybind = alt+l=goto_split:right
 keybind = alt+h=goto_split:left

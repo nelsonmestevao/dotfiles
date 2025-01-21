@@ -22,6 +22,7 @@ plugins=(
   # themes #
   # vagrant
   # vi-mode #
+  zsh-vi-mode
   # web-search
   zoxide
   zsh-autopair
