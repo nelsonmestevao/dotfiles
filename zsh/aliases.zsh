@@ -18,7 +18,7 @@ alias ocv="cd $HOME/Code/online-curriculum/ && eza --long --header --git"
 alias um="cd $HOME/Code/uminho/"
 
 alias ls="eza"
-alias r="ranger"
+alias r="yazi"
 alias scim="sc-im"
 alias p="sudo pacman"
 alias y="yay"
