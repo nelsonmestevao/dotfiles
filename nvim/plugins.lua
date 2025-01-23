@@ -68,6 +68,7 @@ local plugins = {
     config = function()
       require("lualine").setup({
         options = {
+          globalstatus = true,
           icons_enabled = true,
           theme = "auto",
           section_separators = { left = '', right = '' },
