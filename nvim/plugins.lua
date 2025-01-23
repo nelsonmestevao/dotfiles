@@ -24,43 +24,92 @@ end
 
 vim.opt.rtp:prepend(lazypath)
 
+-- Utilities
+
+-- Function to get the current GNOME theme mode
+local function get_gnome_theme_mode()
+  local command = "gsettings get org.gnome.desktop.interface color-scheme"
+  local ok, result = pcall(vim.fn.system, command)
+
+  if not ok then
+    return nil, "Failed to execute command to get GNOME theme."
+  end
+
+  result = string.lower(result:gsub("%s+", ""))
+
+  if result == "'prefer-dark'" then
+    return "dark"
+  elseif result == "'default'" then
+    return "light"
+  else
+    return nil, "Unexpected theme value from GNOME settings."
+  end
+end
+
 -- Configure Plugins
 
 local plugins = {
   {
     "projekt0n/github-nvim-theme",
+    dependencies = { "vimpostor/vim-lumen" },
+    lazy = false,
+    priority = 1000,
+    config = function()
+      require("github-theme").setup({
+        options = {
+          transparent = true,
+          styles = {
+            comments = "italic",
+          },
+        },
+      })
+
+      local current_os_theme = vim.fn.system("gsettings get org.gnome.desktop.interface color-scheme")
+      if string.match(current_os_theme, "dark") or string.match(current_os_theme, "Dark") then
+        vim.cmd.colorscheme("github_dark")
+      else
+        vim.cmd.colorscheme("github_light")
+      end
+
+      local mode, err = get_gnome_theme_mode()
+      if mode then
+        vim.cmd.colorscheme(mode == "dark" and "github_dark" or "github_light")
+      else
+        print("Error detecting theme: " .. err)
+        vim.cmd.colorscheme("github_dark")
+      end
+
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "LumenLight",
+        callback = function()
+          vim.cmd.colorscheme("github_light")
+        end,
+      })
+
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "LumenDark",
+        callback = function()
+          vim.cmd.colorscheme("github_dark")
+        end,
+      })
+    end,
+  },
+  {
+    "folke/tokyonight.nvim",
     -- lazy = false,
     -- priority = 1000,
     -- config = function()
-    --   require("github-theme").setup({
-    --     options = {
-    --       transparent = true,
-    --       styles = {
-    --         comments = "italic",
-    --       },
+    --   require("tokyonight").setup({
+    --     transparent = true,
+    --     styles = {
+    --       sidebars = "transparent",
+    --       floats = "transparent",
     --     },
     --   })
     --
     --   vim.opt.termguicolors = true
-    --   vim.cmd.colorscheme("github_dark")
+    --   vim.cmd.colorscheme("tokyonight")
     -- end,
-  },
-  {
-    "folke/tokyonight.nvim",
-    lazy = false,
-    priority = 1000,
-    config = function()
-      require("tokyonight").setup({
-        transparent = true,
-        styles = {
-          sidebars = "transparent",
-          floats = "transparent",
-        },
-      })
-
-      vim.opt.termguicolors = true
-      vim.cmd.colorscheme("tokyonight")
-    end,
   },
   {
     "nvim-lualine/lualine.nvim",
@@ -68,9 +117,9 @@ local plugins = {
     config = function()
       require("lualine").setup({
         options = {
+          theme = "auto",
           globalstatus = true,
           icons_enabled = true,
-          theme = "auto",
           section_separators = { left = '', right = '' },
           component_separators = { left = '', right = '' },
         },
