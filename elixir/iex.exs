@@ -17,7 +17,7 @@ format_env = fn
 end
 
 prefix =
-  if function_exported?(Mix, :__info__, 1) and Mix.State in :ets.all() do
+  if Process.whereis(Mix.State) do
     "#{IO.ANSI.light_blue()}#{Mix.Project.config()[:app]}#{IO.ANSI.reset()} (#{format_env.(Mix.env())}) "
   else
     "#{IO.ANSI.green()}%prefix#{IO.ANSI.reset()} "
