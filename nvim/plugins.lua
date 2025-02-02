@@ -271,29 +271,29 @@ local plugins = {
     opts = {},
     dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
   },
-  {
-    "3rd/image.nvim",
-    config = function()
-      require("image").setup({
-        -- default options
-        backed = "kitty",
-        max_width = 80,
-        max_height = 60,
-        integrations = {
-          markdown = {
-            resolve_image_path = function(document_path, image_path, fallback)
-              -- document_path is the path to the file that contains the image
-              -- image_path is the potentially relative path to the image. for
-              -- markdown it's `![](this text)`
-
-              -- you can call the fallback function to get the default behavior
-              return fallback(document_path, image_path)
-            end,
-          }
-        }
-      })
-    end
-  },
+  -- {
+  --   "3rd/image.nvim",
+  --   config = function()
+  --     require("image").setup({
+  --       -- default options
+  --       backed = "kitty",
+  --       max_width = 80,
+  --       max_height = 60,
+  --       integrations = {
+  --         markdown = {
+  --           resolve_image_path = function(document_path, image_path, fallback)
+  --             -- document_path is the path to the file that contains the image
+  --             -- image_path is the potentially relative path to the image. for
+  --             -- markdown it's `![](this text)`
+  --
+  --             -- you can call the fallback function to get the default behavior
+  --             return fallback(document_path, image_path)
+  --           end,
+  --         }
+  --       }
+  --     })
+  --   end
+  -- },
   -- Databases
   {
     "kndndrj/nvim-dbee",
@@ -338,7 +338,7 @@ local plugins = {
       "nvim-lua/plenary.nvim",
       "nvim-tree/nvim-web-devicons",
       "MunifTanjim/nui.nvim",
-      "3rd/image.nvim",
+      -- "3rd/image.nvim",
     },
     config = function()
       require("neo-tree").setup({
