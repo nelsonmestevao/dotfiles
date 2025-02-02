@@ -2,8 +2,16 @@
 
 function log_section() {
   local LABEL="$1"
-  local COLOR="$PURPLE"
+  local COLOR="${MAGENTA}"
   printf "[${COLOR}${BOLD}${LABEL}${RESET}]%*s\n" $(($(tput cols) - ${#LABEL} - 2)) | sed -e 's/ /═/g'
+}
+
+function mksymlink() {
+  local SRC="$1"
+  local DST="$2"
+
+  mkdir -p "$(dirname "${DST}")"
+  execute "ln -sf ${SRC} ${DST}" "Symlinking ${CYAN}${DST}${RESET} → $(dirname ${SRC})/${UNDERLINE}$(basename ${SRC})${RESET}"
 }
 
 function symlink() {

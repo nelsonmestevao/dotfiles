@@ -12,9 +12,9 @@ cd "${BASE_DIR}/.." || exit 127
 # shellcheck source=../scripts/utils.sh
 . scripts/utils.sh
 
-ask_for_sudo
+#ask_for_sudo
 
-install_package neovim
+#install_package neovim
 
 mkdir -p ~/.config/nvim
 symlink ~/.dotfiles/nvim/init.lua ~/.config/nvim/init.lua

@@ -12,9 +12,8 @@ cd "${BASE_DIR}/.." || exit 127
 # shellcheck source=../scripts/utils.sh
 . scripts/utils.sh
 
-ask_for_sudo
+#ask_for_sudo
 
-install_package bat
+#install_package bat
 
-mkdir -p "$HOME/.config/bat"
-symlink "$HOME/.dotfiles/bat/config" "$HOME/.config/bat/config"
+mksymlink "$HOME/.dotfiles/bat/config" "$HOME/.config/bat/config"

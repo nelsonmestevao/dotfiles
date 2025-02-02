@@ -10,6 +10,4 @@ cd "${BASE_DIR}/.." || exit 127
 # shellcheck source=../scripts/utils.sh
 . scripts/utils.sh
 
-#ask_for_sudo
-
-mksymlink ~/.dotfiles/nix/nix.conf ~/.config/nix/nix.conf
+mksymlink "$HOME/.dotfiles/ghostty/config" "$HOME/.config/ghostty/config"

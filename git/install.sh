@@ -10,15 +10,15 @@ cd "${BASE_DIR}/.." || exit 127
 # shellcheck source=../scripts/utils.sh
 . scripts/utils.sh
 
-ask_for_sudo
+#ask_for_sudo
 
-GIT_FUZZY_PATH_DIR="$HOME/.git-fuzzy"
+#GIT_FUZZY_PATH_DIR="$HOME/.git-fuzzy"
 
-execute "git clone https://github.com/bigH/git-fuzzy.git $GIT_FUZZY_PATH_DIR" "Clonning Git Fuzzy..."
+#execute "git clone https://github.com/bigH/git-fuzzy.git $GIT_FUZZY_PATH_DIR" "Clonning Git Fuzzy..."
 
 # TODO add auto update
-execute "git -C $GIT_FUZZY_PATH_DIR pull" "Updating Git Fuzzy..."
+#execute "git -C $GIT_FUZZY_PATH_DIR pull" "Updating Git Fuzzy..."
 
-install_package git-delta
+#install_package git-delta
 
 symlink "$HOME/.dotfiles/git/gitconfig" "$HOME/.gitconfig"

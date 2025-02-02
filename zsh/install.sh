@@ -34,4 +34,4 @@ execute "git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $ZSH_C
 
 symlink "$HOME/.dotfiles/zsh/zshrc" "$HOME/.zshrc"
 
-execute "sudo chsh --shell $(command -v zsh) $USER" "Changing $USER's shell to $(command -v zsh)"
+#execute "sudo chsh --shell $(command -v zsh) $USER" "Changing $USER's shell to $(command -v zsh)"
