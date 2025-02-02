@@ -10,9 +10,9 @@ cd "${BASE_DIR}/.." || exit 127
 # shellcheck source=../scripts/utils.sh
 . scripts/utils.sh
 
-install_package fop
-install_package erlang-odbc
-install_package inotify-tools
+# install_package fop
+# install_package erlang-odbc
+# install_package inotify-tools
 
 symlink ~/.dotfiles/elixir/default-mix-commands ~/.default-mix-commands
 symlink ~/.dotfiles/elixir/iex.exs ~/.iex.exs

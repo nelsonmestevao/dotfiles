@@ -1,0 +1,1 @@
+nix-collect-garbage -d --delete-older-than 14d
