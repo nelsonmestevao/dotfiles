@@ -139,6 +139,8 @@
   services.keybase.enable = true;
   services.kbfs.enable = true;
 
+  programs.nix-ld.enable = true;
+
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
