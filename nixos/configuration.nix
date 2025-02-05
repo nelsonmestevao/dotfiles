@@ -107,8 +107,6 @@
       inotify-tools
       wget
       # build tools
-      autoconf
-      automake
       gcc
       gnumake
       # git
@@ -119,15 +117,26 @@
       docker
       docker-compose
       # misc
-      termcap
       imagemagick
+      # mise erlang/elixir
+      autoconf
+      automake
+      bzip2
+      libressl
       libssh
       libtool
+      libxslt
+      mesa
       ncurses
-      openssl
-      unixODBC
+      ncurses.dev
       openjdk
+      openssl
+      openssl.dev
+      pkg-config
+      termcap
+      unixODBC
       wxGTK32
+      zlib
     ];
     shell = pkgs.zsh;
   };
@@ -157,12 +166,12 @@
     #tableplus
   ];
 
-  environment.variables = {
-    PKG_CONFIG_PATH = "${pkgs.ncurses}/lib/pkgconfig";
-    LD_LIBRARY_PATH = "${pkgs.ncurses}/lib:$LD_LIBRARY_PATH";
-    CFLAGS = "-O2 -I${pkgs.ncurses}/include -I${pkgs.termcap}/include $CFLAGS";
-    LDFLAGS = "-L${pkgs.ncurses}/lib -L${pkgs.termcap}/lib $LDFLAGS";
-  };
+  # environment.variables = {
+  #   PKG_CONFIG_PATH = "${pkgs.ncurses}/lib/pkgconfig";
+  #   LD_LIBRARY_PATH = "${pkgs.ncurses}/lib:$LD_LIBRARY_PATH";
+  #   CFLAGS = "-O2 -I${pkgs.ncurses}/include -I${pkgs.termcap}/include $CFLAGS";
+  #   LDFLAGS = "-L${pkgs.ncurses}/lib -L${pkgs.termcap}/lib $LDFLAGS";
+  # };
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
