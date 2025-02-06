@@ -109,6 +109,10 @@
       # build tools
       gcc
       gnumake
+      autoconf
+      automake
+      perl
+      pkg-config
       # git
       git
       gitleaks
@@ -119,21 +123,22 @@
       # misc
       imagemagick
       # mise erlang/elixir
-      autoconf
-      automake
       coreutils
       bzip2
       libressl
       libssh
       libtool
       libxslt
+      libGL
+      libGLU
+      jdk
+      glibc
       mesa
       ncurses
       ncurses.dev
       openjdk
       openssl
       openssl.dev
-      pkg-config
       termcap
       unixODBC
       wxGTK32
@@ -167,12 +172,13 @@
     #tableplus
   ];
 
-  # environment.variables = {
-  #   PKG_CONFIG_PATH = "${pkgs.ncurses}/lib/pkgconfig";
-  #   LD_LIBRARY_PATH = "${pkgs.ncurses}/lib:$LD_LIBRARY_PATH";
-  #   CFLAGS = "-O2 -I${pkgs.ncurses}/include -I${pkgs.termcap}/include $CFLAGS";
-  #   LDFLAGS = "-L${pkgs.ncurses}/lib -L${pkgs.termcap}/lib $LDFLAGS";
-  # };
+  environment.variables = {
+    PKG_CONFIG_PATH = "${pkgs.openssl}/lib/pkgconfig:${pkgs.ncurses}/lib/pkgconfig";
+    LD_LIBRARY_PATH = "${pkgs.ncurses}/lib:$LD_LIBRARY_PATH";
+    CFLAGS = "-O2 -I${pkgs.ncurses}/include -I${pkgs.openssl}/lib -I${pkgs.termcap}/include $CFLAGS";
+    LDFLAGS = "-L${pkgs.ncurses}/lib -L${pkgs.openssl} -L${pkgs.termcap}/lib $LDFLAGS";
+    KERL_CONFIGURE_OPTIONS = "--with-zlib=${pkgs.zlib} --with-ssl=${pkgs.openssl.dev} --with-ssl-include=${pkgs.openssl.dev}/include --with-ssl-lib=${pkgs.openssl.dev}/lib --enable-crypto";
+  };
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
