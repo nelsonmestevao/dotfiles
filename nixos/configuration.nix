@@ -121,6 +121,7 @@
       # mise erlang/elixir
       autoconf
       automake
+      coreutils
       bzip2
       libressl
       libssh
