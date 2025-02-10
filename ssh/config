@@ -12,6 +12,14 @@ Host rpi
     HostName rpi4.local
     User nelson
 
+Host pichu
+    HostName pichu.marmela.org
+    User root
+
+Host zubat
+    HostName zubat.marmela.org
+    User root
+
 Host epl
     HostName epl.di.uminho.pt
     User cesium
