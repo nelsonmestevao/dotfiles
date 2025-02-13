@@ -173,11 +173,15 @@
   ];
 
   environment.variables = {
-    PKG_CONFIG_PATH = "${pkgs.openssl}/lib/pkgconfig:${pkgs.ncurses}/lib/pkgconfig";
+    PKG_CONFIG_PATH =
+      "${pkgs.openssl}/lib/pkgconfig:${pkgs.ncurses}/lib/pkgconfig";
     LD_LIBRARY_PATH = "${pkgs.ncurses}/lib:$LD_LIBRARY_PATH";
-    CFLAGS = "-O2 -I${pkgs.ncurses}/include -I${pkgs.openssl}/lib -I${pkgs.termcap}/include $CFLAGS";
-    LDFLAGS = "-L${pkgs.ncurses}/lib -L${pkgs.openssl} -L${pkgs.termcap}/lib $LDFLAGS";
-    KERL_CONFIGURE_OPTIONS = "--with-zlib=${pkgs.zlib} --with-ssl=${pkgs.openssl.dev} --with-ssl-include=${pkgs.openssl.dev}/include --with-ssl-lib=${pkgs.openssl.dev}/lib --enable-crypto";
+    CFLAGS =
+      "-O2 -I${pkgs.ncurses}/include -I${pkgs.openssl}/lib -I${pkgs.termcap}/include $CFLAGS";
+    LDFLAGS =
+      "-L${pkgs.ncurses}/lib -L${pkgs.openssl} -L${pkgs.termcap}/lib $LDFLAGS";
+    KERL_CONFIGURE_OPTIONS =
+      "--with-zlib=${pkgs.zlib} --with-ssl=${pkgs.openssl.dev} --with-ssl-include=${pkgs.openssl.dev}/include --with-ssl-lib=${pkgs.openssl.dev}/lib --enable-crypto";
   };
 
   # Some programs need SUID wrappers, can be configured further or are
