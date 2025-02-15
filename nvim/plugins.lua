@@ -233,7 +233,7 @@ local plugins = {
     "supermaven-inc/supermaven-nvim",
     config = function()
       require("supermaven-nvim").setup({
-        ignore_filetypes = { haskell = true },
+        ignore_filetypes = { haskell = true, c = true },
         keymaps = {
           accept_suggestion = "<C-y>",
           accept_word = "<C-j>",
