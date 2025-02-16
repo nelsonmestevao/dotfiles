@@ -12,6 +12,10 @@ Host rpi
     HostName rpi4.local
     User nelson
 
+Host zeus
+    HostName zeus.estevao.org
+    User ubuntu
+
 Host pichu
     HostName pichu.marmela.org
     User root
