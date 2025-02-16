@@ -5,7 +5,7 @@ font-size = 16
 shell-integration = zsh
 
 window-theme = ghostty
-window-decoration = true
+window-decoration = auto
 gtk-adwaita = true
 gtk-wide-tabs = true
 gtk-tabs-location = bottom
@@ -24,4 +24,6 @@ keybind = alt+j=goto_split:bottom
 
 keybind = alt+shift+h=new_split:down
 keybind = alt+shift+v=new_split:right
+
+keybind = performable:ctrl+c=copy_to_clipboard
 
