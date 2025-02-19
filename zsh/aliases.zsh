@@ -18,10 +18,11 @@ alias ocv="cd $HOME/Code/online-curriculum/ && eza --long --header --git"
 alias um="cd $HOME/Code/uminho/"
 
 alias ls="eza"
+alias tree="eza -T"
 alias r="yazi"
 alias scim="sc-im"
-alias p="sudo pacman"
-alias y="yay"
+# alias p="sudo pacman"
+# alias y="yay"
 alias ka="killall"
 alias :q="exit"
 
