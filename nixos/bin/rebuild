@@ -1,1 +1,2 @@
-nixos-rebuild switch --use-remote-sudo --flake '.#'
+nixos-rebuild switch --use-remote-sudo --flake '.#framework'
+home-manager switch --flake '.#nelson'
