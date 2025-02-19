@@ -1,7 +1,13 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-{ config, lib, pkgs, ... }: {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+{
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
@@ -85,7 +91,11 @@
   users.users.nelson = {
     isNormalUser = true;
     description = "Nelson Estevão";
-    extraGroups = [ "docker" "networkmanager" "wheel" ];
+    extraGroups = [
+      "docker"
+      "networkmanager"
+      "wheel"
+    ];
     packages = with pkgs; [
       # dev tools
       bat
@@ -173,15 +183,11 @@
   ];
 
   environment.variables = {
-    PKG_CONFIG_PATH =
-      "${pkgs.openssl}/lib/pkgconfig:${pkgs.ncurses}/lib/pkgconfig";
+    PKG_CONFIG_PATH = "${pkgs.openssl}/lib/pkgconfig:${pkgs.ncurses}/lib/pkgconfig";
     LD_LIBRARY_PATH = "${pkgs.ncurses}/lib:$LD_LIBRARY_PATH";
-    CFLAGS =
-      "-O2 -I${pkgs.ncurses}/include -I${pkgs.openssl}/lib -I${pkgs.termcap}/include $CFLAGS";
-    LDFLAGS =
-      "-L${pkgs.ncurses}/lib -L${pkgs.openssl} -L${pkgs.termcap}/lib $LDFLAGS";
-    KERL_CONFIGURE_OPTIONS =
-      "--with-zlib=${pkgs.zlib} --with-ssl=${pkgs.openssl.dev} --with-ssl-include=${pkgs.openssl.dev}/include --with-ssl-lib=${pkgs.openssl.dev}/lib --enable-crypto";
+    CFLAGS = "-O2 -I${pkgs.ncurses}/include -I${pkgs.openssl}/lib -I${pkgs.termcap}/include $CFLAGS";
+    LDFLAGS = "-L${pkgs.ncurses}/lib -L${pkgs.openssl} -L${pkgs.termcap}/lib $LDFLAGS";
+    KERL_CONFIGURE_OPTIONS = "--with-zlib=${pkgs.zlib} --with-ssl=${pkgs.openssl.dev} --with-ssl-include=${pkgs.openssl.dev}/include --with-ssl-lib=${pkgs.openssl.dev}/lib --enable-crypto";
   };
 
   # Some programs need SUID wrappers, can be configured further or are
