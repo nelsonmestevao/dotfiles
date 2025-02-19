@@ -130,6 +130,8 @@
       # docker
       docker
       docker-compose
+      # security
+      fprintd
       # misc
       imagemagick
       # mise erlang/elixir
@@ -165,6 +167,9 @@
   services.kbfs.enable = true;
 
   programs.nix-ld.enable = true;
+
+  # Fingerprint reader
+  services.fprintd.enable = true;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
