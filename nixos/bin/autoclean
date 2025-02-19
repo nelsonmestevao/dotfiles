@@ -1,1 +1,2 @@
 nix-collect-garbage -d --delete-older-than 14d
+# sudo nix-collect-garbage -d --delete-older-than 14d
