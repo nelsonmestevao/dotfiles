@@ -121,6 +121,24 @@ with lib.hm.gvariant;
       ];
     };
 
+    "org/gnome/shell/extensions/space-bar/behavior" = {
+      always-show-numbers = false;
+      position = "left";
+      scroll-wheel = "workspaces-bar";
+      show-empty-workspaces = true;
+      toggle-overview = false;
+    };
+
+    "org/gnome/shell/extensions/space-bar/shortcuts" = {
+      enable-activate-workspace-shortcuts = true;
+      enable-move-to-workspace-shortcuts = true;
+    };
+
+    "org/gnome/shell/extensions/system-monitor" = {
+      show-download = false;
+      show-upload = false;
+    };
+
     "org/gnome/desktop/interface" = {
       show-battery-percentage = true;
     };
