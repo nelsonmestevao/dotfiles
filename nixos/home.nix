@@ -1,4 +1,11 @@
-{ config, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+
+with lib.hm.gvariant;
 
 {
   # Home Manager needs a bit of information about you and the paths it should
@@ -69,6 +76,25 @@
   #
   home.sessionVariables = {
     # EDITOR = "emacs";
+  };
+
+  dconf.settings = {
+    "org/gnome/desktop/interface" = {
+      show-battery-percentage = true;
+    };
+    "org/gnome/desktop/input-sources" = {
+      sources = [
+        (mkTuple [
+          "xkb"
+          "pt"
+        ])
+        (mkTuple [
+          "xkb"
+          "us"
+        ])
+      ];
+      xkb-options = [ "caps:ctrl_modifier" ];
+    };
   };
 
   # Let Home Manager install and manage itself.

@@ -111,6 +111,7 @@
       zsh
       neofetch
       onefetch
+      dconf2nix
       # dev env
       curl
       fop
