@@ -98,25 +98,10 @@
     ];
     packages = with pkgs; [
       # dev tools
-      bat
-      eza
-      fd
-      fzf
-      jq
-      mise
-      neovim
-      ripgrep
-      shellcheck
-      zoxide
-      zsh
-      neofetch
-      onefetch
       dconf2nix
       # dev env
-      curl
       fop
       inotify-tools
-      wget
       # build tools
       gcc
       gnumake
@@ -124,10 +109,6 @@
       automake
       perl
       pkg-config
-      # git
-      git
-      gitleaks
-      delta
       # docker
       docker
       docker-compose

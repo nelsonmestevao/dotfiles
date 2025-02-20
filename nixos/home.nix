@@ -24,10 +24,30 @@ with lib.hm.gvariant;
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
-  home.packages = [
-    # # Adds the 'hello' command to your environment. It prints a friendly
-    # # "Hello, world!" when run.
-    pkgs.sc-im
+  home.packages = with pkgs; [
+    # shell
+    zsh
+    # dev tools
+    bat
+    curl
+    delta
+    eza
+    fd
+    fzf
+    git
+    gitleaks
+    jq
+    mise
+    neovim
+    ripgrep
+    shellcheck
+    wget
+    zoxide
+    # tools
+    sc-im
+    # system tools
+    neofetch
+    onefetch
 
     # # It is sometimes useful to fine-tune packages, for example, by applying
     # # overrides. You can do that directly here, just don't forget the
