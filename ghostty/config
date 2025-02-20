@@ -1,4 +1,4 @@
-theme = dark:"Apple System Colors",light:"Apple System Colors Light"
+theme = dark:"MaterialDark",light:"Material"
 font-family = "JetBrains Mono Nerd Font"
 font-size = 16
 
