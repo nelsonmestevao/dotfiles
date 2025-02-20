@@ -1,6 +1,6 @@
 #!/bin/env bash
 
-# export WAYLAND_DISPLAY=wayland-1
-# export GTK_THEME=adwaita
+export WAYLAND_DISPLAY=wayland-1
+export GTK_THEME=adwaita
 
-/usr/bin/ghostty
+/usr/bin/wezterm

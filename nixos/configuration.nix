@@ -164,7 +164,6 @@
     ghostty
     slack
     spotify
-    ulauncher
     google-chrome
     #tableplus
   ];

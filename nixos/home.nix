@@ -48,8 +48,11 @@ with lib.hm.gvariant;
     # system tools
     neofetch
     onefetch
+
     # gnome
     wmctrl
+    # gnome-tweaks
+    ulauncher
 
     # Gnome Extensions
     gnomeExtensions.auto-move-windows
@@ -145,7 +148,10 @@ with lib.hm.gvariant;
     };
 
     "org/gnome/desktop/interface" = {
+      icon-theme = "Adwaita";
       show-battery-percentage = true;
+      gtk-enable-primary-paste = false;
+      button-layout = "close,minimize,maximize:appmenu";
     };
 
     "org/gnome/desktop/wm/preferences" = {
@@ -160,6 +166,10 @@ with lib.hm.gvariant;
 
     "org/gnome/mutter/wayland/keybindings" = {
       restore-shortcuts = [ ];
+    };
+
+    "org/gnome/desktop/screensaver" = {
+      picture-uri = "file:///home/nelson/Pictures/Wallpapers/desktop.jpg";
     };
 
     "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
