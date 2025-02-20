@@ -49,6 +49,13 @@ with lib.hm.gvariant;
     neofetch
     onefetch
 
+    # Gnome Extensions
+    gnomeExtensions.auto-move-windows
+    gnomeExtensions.blur-my-shell
+    gnomeExtensions.pop-shell
+    gnomeExtensions.space-bar
+    gnomeExtensions.system-monitor
+
     # # It is sometimes useful to fine-tune packages, for example, by applying
     # # overrides. You can do that directly here, just don't forget the
     # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
@@ -99,9 +106,25 @@ with lib.hm.gvariant;
   };
 
   dconf.settings = {
+    "org/gnome/shell" = {
+      disable-user-extensions = false; # enables user extensions
+      enabled-extensions = [
+        pkgs.gnomeExtensions.auto-move-windows.extensionUuid
+        pkgs.gnomeExtensions.blur-my-shell.extensionUuid
+        pkgs.gnomeExtensions.pop-shell.extensionUuid
+        pkgs.gnomeExtensions.space-bar.extensionUuid
+        pkgs.gnomeExtensions.system-monitor.extensionUuid
+
+        # Alternatively, you can manually pass UUID as a string.
+        # "blur-my-shell@aunetx"
+        # ...
+      ];
+    };
+
     "org/gnome/desktop/interface" = {
       show-battery-percentage = true;
     };
+
     "org/gnome/desktop/input-sources" = {
       sources = [
         (mkTuple [
