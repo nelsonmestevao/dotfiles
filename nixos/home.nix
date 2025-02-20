@@ -121,6 +121,13 @@ with lib.hm.gvariant;
       ];
     };
 
+    "org/gnome/shell/extensions/pop-shell" = {
+      tile-by-default = true;
+      smart-gaps = false;
+      gap-inner = mkUint32 3;
+      gap-outer = mkUint32 3;
+    };
+
     "org/gnome/shell/extensions/space-bar/behavior" = {
       always-show-numbers = false;
       position = "left";
