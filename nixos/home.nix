@@ -48,6 +48,8 @@ with lib.hm.gvariant;
     # system tools
     neofetch
     onefetch
+    # gnome
+    wmctrl
 
     # Gnome Extensions
     gnomeExtensions.auto-move-windows
@@ -121,11 +123,92 @@ with lib.hm.gvariant;
       ];
     };
 
+    "org/gnome/settings-daemon/plugins/color" = {
+      night-light-enabled = true;
+      night-light-schedule-automatic = true;
+      night-light-temperature = mkUint32 2000;
+    };
+
+    "org/gnome/settings-daemon/plugins/media-keys" = {
+      control-center = [ "<Super>i" ];
+      home = [ "<Super>e" ];
+      screensaver = [ "<Super>Escape" ];
+    };
+
+    "org/gnome/settings-daemon/plugins/power" = {
+      worspaces-only-on-primary = true;
+      power-button-action = "interactive";
+    };
+
+    "org/gnome/mutter" = {
+      dynamic-workspaces = false;
+    };
+
+    "org/gnome/desktop/interface" = {
+      show-battery-percentage = true;
+    };
+
+    "org/gnome/desktop/wm/preferences" = {
+      num-workspaces = 8;
+    };
+
+    "org/gnome/desktop/wm/keybindings" = {
+      close = [ "<Super>q" ];
+      toggle-maximized = [ "<Super>f" ];
+      switch-input-source = [ "<Super>space" ];
+    };
+
+    "org/gnome/mutter/wayland/keybindings" = {
+      restore-shortcuts = [ ];
+    };
+
+    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
+      name = "ULauncher";
+      command = "ulauncher-toggle";
+      binding = "<Alt>space";
+    };
+
+    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1" = {
+      name = "Terminal";
+      command = "ghostty";
+      binding = "<Super>Return";
+    };
+
+    "org/gnome/desktop/input-sources" = {
+      sources = [
+        (mkTuple [
+          "xkb"
+          "pt"
+        ])
+        (mkTuple [
+          "xkb"
+          "us"
+        ])
+      ];
+      xkb-options = [ "caps:ctrl_modifier" ];
+    };
+
+    "org/gnome/desktop/peripherals/mouse" = {
+      accel-profile = "default";
+      natural-scroll = false;
+    };
+
+    "org/gnome/desktop/peripherals/touchpad" = {
+      send-events = "enabled";
+      natural-scroll = true;
+      tap-to-click = true;
+      two-finger-scrolling-enabled = true;
+      disable-while-typing = true;
+    };
+
+    # Extension settings
+
     "org/gnome/shell/extensions/pop-shell" = {
       tile-by-default = true;
       smart-gaps = false;
       gap-inner = mkUint32 3;
       gap-outer = mkUint32 3;
+      tile-enter = [ "<Super><Shift>Return" ];
     };
 
     "org/gnome/shell/extensions/space-bar/behavior" = {
@@ -144,24 +227,6 @@ with lib.hm.gvariant;
     "org/gnome/shell/extensions/system-monitor" = {
       show-download = false;
       show-upload = false;
-    };
-
-    "org/gnome/desktop/interface" = {
-      show-battery-percentage = true;
-    };
-
-    "org/gnome/desktop/input-sources" = {
-      sources = [
-        (mkTuple [
-          "xkb"
-          "pt"
-        ])
-        (mkTuple [
-          "xkb"
-          "us"
-        ])
-      ];
-      xkb-options = [ "caps:ctrl_modifier" ];
     };
   };
 
