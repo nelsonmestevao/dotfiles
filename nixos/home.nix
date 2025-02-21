@@ -51,7 +51,7 @@ with lib.hm.gvariant;
 
     # gnome
     wmctrl
-    # gnome-tweaks
+    gnome-tweaks
     ulauncher
 
     # Gnome Extensions
@@ -151,10 +151,10 @@ with lib.hm.gvariant;
       icon-theme = "Adwaita";
       show-battery-percentage = true;
       gtk-enable-primary-paste = false;
-      button-layout = "close,minimize,maximize:appmenu";
     };
 
     "org/gnome/desktop/wm/preferences" = {
+      button-layout = "close,minimize,maximize:appmenu";
       num-workspaces = 8;
     };
 
@@ -235,8 +235,11 @@ with lib.hm.gvariant;
     };
 
     "org/gnome/shell/extensions/system-monitor" = {
-      show-download = false;
-      show-upload = false;
+      show-cpu = true;
+      show-memory = true;
+      show-swap = true;
+      show-download = true;
+      show-upload = true;
     };
   };
 
