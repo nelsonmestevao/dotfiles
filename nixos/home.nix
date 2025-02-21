@@ -29,6 +29,7 @@ with lib.hm.gvariant;
     zsh
     # dev tools
     bat
+    bruno
     curl
     delta
     eza

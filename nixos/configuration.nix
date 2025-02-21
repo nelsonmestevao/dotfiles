@@ -52,6 +52,16 @@
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.desktopManager.gnome.enable = true;
 
+  environment.gnome.excludePackages = with pkgs; [
+    epiphany
+    geary
+    gedit
+    gnome-characters
+    gnome-console
+    gnome-tour
+    yelp
+  ];
+
   # Configure keymap in X11
   services.xserver.xkb = {
     layout = "pt";
