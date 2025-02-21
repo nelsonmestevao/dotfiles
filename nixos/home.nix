@@ -154,6 +154,10 @@ with lib.hm.gvariant;
       gtk-enable-primary-paste = false;
     };
 
+    "org/gnome/desktop/media-handling" = {
+      autorun-never = false;
+    };
+
     "org/gnome/desktop/wm/preferences" = {
       button-layout = "close,minimize,maximize:appmenu";
       num-workspaces = 8;
