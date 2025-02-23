@@ -20,7 +20,10 @@ with lib.hm.gvariant;
 
     "org/gnome/Console" = {
       last-window-maximised = false;
-      last-window-size = mkTuple [ 2536 1520 ];
+      last-window-size = mkTuple [
+        2536
+        1520
+      ];
     };
 
     "org/gnome/Extensions" = {
@@ -49,16 +52,26 @@ with lib.hm.gvariant;
 
     "org/gnome/baobab/ui" = {
       is-maximized = false;
-      window-size = mkTuple [ 960 600 ];
+      window-size = mkTuple [
+        960
+        600
+      ];
     };
 
     "org/gnome/control-center" = {
       last-panel = "privacy";
-      window-state = mkTuple [ 1262 1384 false ];
+      window-state = mkTuple [
+        1262
+        1384
+        false
+      ];
     };
 
     "org/gnome/desktop/app-folders" = {
-      folder-children = [ "YaST" "Pardus" ];
+      folder-children = [
+        "YaST"
+        "Pardus"
+      ];
     };
 
     "org/gnome/desktop/app-folders/folders/Pardus" = {
@@ -83,8 +96,22 @@ with lib.hm.gvariant;
     };
 
     "org/gnome/desktop/input-sources" = {
-      mru-sources = [ (mkTuple [ "xkb" "pt" ]) ];
-      sources = [ (mkTuple [ "xkb" "pt" ]) (mkTuple [ "xkb" "us" ]) ];
+      mru-sources = [
+        (mkTuple [
+          "xkb"
+          "pt"
+        ])
+      ];
+      sources = [
+        (mkTuple [
+          "xkb"
+          "pt"
+        ])
+        (mkTuple [
+          "xkb"
+          "us"
+        ])
+      ];
       xkb-options = [ "caps:ctrl_modifier" ];
     };
 
@@ -103,7 +130,14 @@ with lib.hm.gvariant;
     };
 
     "org/gnome/desktop/notifications" = {
-      application-children = [ "org-gnome-console" "firefox" "gnome-power-panel" "org-gnome-software" "app-zen-browser-zen" "org-gnome-settings" ];
+      application-children = [
+        "org-gnome-console"
+        "firefox"
+        "gnome-power-panel"
+        "org-gnome-software"
+        "app-zen-browser-zen"
+        "org-gnome-settings"
+      ];
       show-banners = true;
       show-in-lock-screen = true;
     };
@@ -156,11 +190,15 @@ with lib.hm.gvariant;
     };
 
     "org/gnome/desktop/search-providers" = {
-      sort-order = [ "org.gnome.Settings.desktop" "org.gnome.Contacts.desktop" "org.gnome.Nautilus.desktop" ];
+      sort-order = [
+        "org.gnome.Settings.desktop"
+        "org.gnome.Contacts.desktop"
+        "org.gnome.Nautilus.desktop"
+      ];
     };
 
     "org/gnome/desktop/wm/keybindings" = {
-      activate-window-menu = [];
+      activate-window-menu = [ ];
       close = [ "<Super>q" ];
       move-to-workspace-1 = [ "<Super><Shift>1" ];
       move-to-workspace-10 = [ "<Super><Shift>0" ];
@@ -185,7 +223,10 @@ with lib.hm.gvariant;
 
     "org/gnome/epiphany/state" = {
       is-maximized = true;
-      window-size = mkTuple [ 2560 1568 ];
+      window-size = mkTuple [
+        2560
+        1568
+      ];
     };
 
     "org/gnome/evolution-data-server" = {
@@ -227,7 +268,7 @@ with lib.hm.gvariant;
     };
 
     "org/gnome/mutter/wayland/keybindings" = {
-      restore-shortcuts = [];
+      restore-shortcuts = [ ];
     };
 
     "org/gnome/nautilus/icon-view" = {
@@ -241,8 +282,14 @@ with lib.hm.gvariant;
     };
 
     "org/gnome/nautilus/window-state" = {
-      initial-size = mkTuple [ 1262 1544 ];
-      initial-size-file-chooser = mkTuple [ 890 550 ];
+      initial-size = mkTuple [
+        1262
+        1544
+      ];
+      initial-size-file-chooser = mkTuple [
+        890
+        550
+      ];
     };
 
     "org/gnome/portal/filechooser/app/zen_browser/zen" = {
@@ -265,7 +312,10 @@ with lib.hm.gvariant;
 
     "org/gnome/settings-daemon/plugins/media-keys" = {
       control-center = [ "<Super>i" ];
-      custom-keybindings = [ "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/" "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/" ];
+      custom-keybindings = [
+        "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
+        "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/"
+      ];
       home = [ "<Super>e" ];
       screensaver = [ "<Super>Escape" ];
     };
@@ -289,9 +339,28 @@ with lib.hm.gvariant;
 
     "org/gnome/shell" = {
       disable-user-extensions = false;
-      disabled-extensions = [ "light-style@gnome-shell-extensions.gcampax.github.com" "screenshot-window-sizer@gnome-shell-extensions.gcampax.github.com" "status-icons@gnome-shell-extensions.gcampax.github.com" "blurmylightshell@dikasp.gitlab" "native-window-placement@gnome-shell-extensions.gcampax.github.com" "apps-menu@gnome-shell-extensions.gcampax.github.com" ];
-      enabled-extensions = [ "auto-move-windows@gnome-shell-extensions.gcampax.github.com" "blur-my-shell@aunetx" "pop-shell@system76.com" "space-bar@luchrioh" "system-monitor@gnome-shell-extensions.gcampax.github.com" ];
-      favorite-apps = [ "slack.desktop" "com.mitchellh.ghostty.desktop" "app.zen_browser.zen.desktop" "org.gnome.Nautilus.desktop" "spotify.desktop" ];
+      disabled-extensions = [
+        "light-style@gnome-shell-extensions.gcampax.github.com"
+        "screenshot-window-sizer@gnome-shell-extensions.gcampax.github.com"
+        "status-icons@gnome-shell-extensions.gcampax.github.com"
+        "blurmylightshell@dikasp.gitlab"
+        "native-window-placement@gnome-shell-extensions.gcampax.github.com"
+        "apps-menu@gnome-shell-extensions.gcampax.github.com"
+      ];
+      enabled-extensions = [
+        "auto-move-windows@gnome-shell-extensions.gcampax.github.com"
+        "blur-my-shell@aunetx"
+        "pop-shell@system76.com"
+        "space-bar@luchrioh"
+        "system-monitor@gnome-shell-extensions.gcampax.github.com"
+      ];
+      favorite-apps = [
+        "slack.desktop"
+        "com.mitchellh.ghostty.desktop"
+        "app.zen_browser.zen.desktop"
+        "org.gnome.Nautilus.desktop"
+        "spotify.desktop"
+      ];
       last-selected-power-profile = "performance";
       welcome-dialog-last-shown-version = "47.2";
     };
@@ -371,11 +440,11 @@ with lib.hm.gvariant;
 
     "org/gnome/shell/weather" = {
       automatic-location = true;
-      locations = [];
+      locations = [ ];
     };
 
     "org/gnome/shell/world-clocks" = {
-      locations = [];
+      locations = [ ];
     };
 
     "org/gnome/software" = {

@@ -44,8 +44,18 @@ with lib.hm.gvariant;
     shellcheck
     wget
     zoxide
+    # dev utils
+    fop
+    inotify-tools
+    gcc
+    gnumake
+    autoconf
+    automake
+    perl
+    pkg-config
     # tools
     sc-im
+    imagemagick
     # system tools
     neofetch
     onefetch

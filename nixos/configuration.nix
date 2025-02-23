@@ -110,44 +110,12 @@
       # dev tools
       dconf2nix
       # dev env
-      fop
-      inotify-tools
       telegram-desktop
-      # build tools
-      gcc
-      gnumake
-      autoconf
-      automake
-      perl
-      pkg-config
       # docker
       docker
       docker-compose
       # security
       fprintd
-      # misc
-      imagemagick
-      # mise erlang/elixir
-      coreutils
-      bzip2
-      libressl
-      libssh
-      libtool
-      libxslt
-      libGL
-      libGLU
-      jdk
-      glibc
-      mesa
-      ncurses
-      ncurses.dev
-      openjdk
-      openssl
-      openssl.dev
-      termcap
-      unixODBC
-      wxGTK32
-      zlib
     ];
     shell = pkgs.zsh;
   };
