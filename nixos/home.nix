@@ -43,6 +43,7 @@ with lib.hm.gvariant;
     ripgrep
     shellcheck
     wget
+    yazi
     zoxide
     # dev utils
     fop
