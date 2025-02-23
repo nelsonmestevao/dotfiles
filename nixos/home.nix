@@ -184,7 +184,13 @@ with lib.hm.gvariant;
     };
 
     "org/gnome/desktop/screensaver" = {
+      picture-uri = "file:///home/nelson/Pictures/Wallpapers/lockscreen.jpg";
+      picture-uri-dark = "file:///home/nelson/Pictures/Wallpapers/lockscreen.jpg";
+    };
+
+    "org/gnome/desktop/background" = {
       picture-uri = "file:///home/nelson/Pictures/Wallpapers/desktop.jpg";
+      picture-uri-dark = "file:///home/nelson/Pictures/Wallpapers/desktop.jpg";
     };
 
     "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
