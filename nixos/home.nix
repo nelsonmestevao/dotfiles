@@ -35,6 +35,7 @@ with lib.hm.gvariant;
     eza
     fd
     fzf
+    gh
     git
     gitleaks
     jq
@@ -42,6 +43,7 @@ with lib.hm.gvariant;
     neovim
     ripgrep
     shellcheck
+    shfmt
     wget
     yazi
     zoxide

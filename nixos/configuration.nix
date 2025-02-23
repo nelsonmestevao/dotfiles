@@ -109,8 +109,6 @@
     packages = with pkgs; [
       # dev tools
       dconf2nix
-      # dev env
-      telegram-desktop
       # docker
       docker
       docker-compose
@@ -141,10 +139,16 @@
     #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     #  wget
     ghostty
+    gimp
+    google-chrome
+    inkscape
+    obs-cli
+    obs-cmd
+    obs-studio
     slack
     spotify
-    google-chrome
-    #tableplus
+    telegram-desktop
+    # tableplus
   ];
 
   environment.variables = {
