@@ -136,6 +136,7 @@ with lib.hm.gvariant;
         # "blur-my-shell@aunetx"
         # ...
       ];
+      favorite-apps = [ ];
     };
 
     "org/gnome/settings-daemon/plugins/color" = {
