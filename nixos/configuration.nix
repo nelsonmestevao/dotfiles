@@ -112,6 +112,7 @@
       # dev env
       fop
       inotify-tools
+      telegram-desktop
       # build tools
       gcc
       gnumake
