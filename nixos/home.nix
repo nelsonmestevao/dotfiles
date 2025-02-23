@@ -57,8 +57,10 @@ with lib.hm.gvariant;
     perl
     pkg-config
     # tools
-    sc-im
+    bitwarden-cli
     imagemagick
+    inkscape
+    sc-im
     # system tools
     neofetch
     onefetch

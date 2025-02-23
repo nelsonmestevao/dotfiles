@@ -121,6 +121,10 @@ function get_location_gps() {
   curl -s "https://location.services.mozilla.com/v1/geolocate?key=geoclue" | awk 'OFS=":" {print $3,$5}' | tr -d ',}'
 }
 
+function bwu(){
+  export BW_SESSION=$(bw unlock --raw $1)
+}
+
 function grupo() {
   printf -v group_number "%03d" "$1"
 
