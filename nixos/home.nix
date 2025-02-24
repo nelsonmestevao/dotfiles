@@ -56,6 +56,8 @@ with lib.hm.gvariant;
     automake
     perl
     pkg-config
+    podman
+    podman-compose
     # tools
     bitwarden-cli
     imagemagick
