@@ -120,7 +120,8 @@ with lib.hm.gvariant;
     Service = {
       Type = "simple";
       Restart = "always";
-      ExecStart = "env GBK_BACKEND=x11 ${pkgs.ulauncher}/bin/ulauncher --hide-window";
+      RestartSec = 1;
+      ExecStart = "${pkgs.ulauncher}/bin/ulauncher --hide-window";
     };
   };
 
