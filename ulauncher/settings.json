@@ -3,7 +3,7 @@
     "clear-previous-query": true,
     "disable-desktop-filters": false,
     "grab-mouse-pointer": false,
-    "hotkey-show-app": "null",
+    "hotkey-show-app": "<Primary><Shift><Alt>ccedilla",
     "render-on-screen": "mouse-pointer-monitor",
     "show-indicator-icon": true,
     "show-recent-apps": "0",

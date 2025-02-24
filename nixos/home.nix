@@ -69,6 +69,8 @@ with lib.hm.gvariant;
     wmctrl
     gnome-tweaks
     ulauncher
+    wl-clipboard
+    clipman
 
     # Gnome Extensions
     gnomeExtensions.auto-move-windows
@@ -240,11 +242,22 @@ with lib.hm.gvariant;
     # Extension settings
 
     "org/gnome/shell/extensions/pop-shell" = {
-      tile-by-default = true;
+      fullscreen-launcher = false;
       smart-gaps = false;
+      show-title = true;
       gap-inner = mkUint32 3;
       gap-outer = mkUint32 3;
+      tile-by-default = true;
       tile-enter = [ "<Super><Shift>Return" ];
+      tile-move-down = [ "<Super><Shift>j" ];
+      tile-move-down-global = [ "<Super><Shift>j" ];
+      tile-move-left = [ "<Super><Shift>h" ];
+      tile-move-left-global = [ "<Super><Shift>h" ];
+      tile-move-right = [ "<Super><Shift>l" ];
+      tile-move-right-global = [ "<Super><Shift>l" ];
+      tile-move-up = [ "<Super><Shift>k" ];
+      tile-move-up-global = [ "<Super><Shift>k" ];
+      toggle-floating = [ "<Meta><Shift>Space" ];
     };
 
     "org/gnome/shell/extensions/space-bar/behavior" = {

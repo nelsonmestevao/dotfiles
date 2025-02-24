@@ -12,7 +12,7 @@ cd "${BASE_DIR}/.." || exit 127
 
 ask_for_sudo
 
-mkdir -p ~/.config/ulauncher
-symlink ~/.dotfiles/ulauncher/settings.json ~/.config/ulauncher/settings.json
-symlink ~/.dotfiles/ulauncher/extensions.json ~/.config/ulauncher/extensions.json
-symlink ~/.dotfiles/ulauncher/shortcuts.json ~/.config/ulauncher/shortcuts.json
+mksymlink ~/.dotfiles/ulauncher/settings.json ~/.config/ulauncher/settings.json
+mksymlink ~/.dotfiles/ulauncher/extensions.json ~/.config/ulauncher/extensions.json
+mksymlink ~/.dotfiles/ulauncher/shortcuts.json ~/.config/ulauncher/shortcuts.json
+mv ~/.dotfiles/ulauncher/themes ~/.config/ulauncher/user-themes
