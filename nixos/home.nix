@@ -166,9 +166,17 @@ with lib.hm.gvariant;
     };
 
     "org/gnome/desktop/interface" = {
+      clock-format = "24h";
+      clock-show-seconds = false;
+      clock-show-weekday = true;
+      color-scheme = "prefer-dark";
+      enable-hot-corners = false;
+      gtk-enable-primary-paste = false;
+      gtk-key-theme = "Default";
+      gtk-theme = "Adwaita";
       icon-theme = "Adwaita";
       show-battery-percentage = true;
-      gtk-enable-primary-paste = false;
+      toolkit-accessibility = false;
     };
 
     "org/gnome/desktop/media-handling" = {
@@ -181,9 +189,49 @@ with lib.hm.gvariant;
     };
 
     "org/gnome/desktop/wm/keybindings" = {
-      close = [ "<Super>q" ];
-      toggle-maximized = [ "<Super>f" ];
       switch-input-source = [ "<Super>space" ];
+      switch-input-source-backward = [ "<Shift><Super>space" ];
+      maximize = [ ];
+      minimize = [ ];
+      move-to-monitor-down = [ ];
+      move-to-monitor-left = [ ];
+      move-to-monitor-right = [ ];
+      move-to-monitor-up = [ ];
+      move-to-workspace-down = [ ];
+      switch-to-workspace-down = [
+        "<Primary><Super>Down"
+        "<Primary><Super>j"
+      ];
+      switch-to-workspace-left = [ ];
+      switch-to-workspace-right = [ ];
+      switch-to-workspace-up = [
+        "<Primary><Super>Up"
+        "<Primary><Super>k"
+      ];
+      move-to-workspace-up = [ ];
+      move-to-workspace-1 = [ "<Super><Shift>1" ];
+      move-to-workspace-2 = [ "<Super><Shift>2" ];
+      move-to-workspace-3 = [ "<Super><Shift>3" ];
+      move-to-workspace-4 = [ "<Super><Shift>4" ];
+      move-to-workspace-5 = [ "<Super><Shift>5" ];
+      move-to-workspace-6 = [ "<Super><Shift>6" ];
+      move-to-workspace-7 = [ "<Super><Shift>7" ];
+      move-to-workspace-8 = [ "<Super><Shift>8" ];
+      move-to-workspace-9 = [ "<Super><Shift>9" ];
+      move-to-workspace-10 = [ "<Super><Shift>0" ];
+      switch-to-workspace-1 = [ "<Super>1" ];
+      switch-to-workspace-2 = [ "<Super>2" ];
+      switch-to-workspace-3 = [ "<Super>3" ];
+      switch-to-workspace-4 = [ "<Super>4" ];
+      switch-to-workspace-5 = [ "<Super>5" ];
+      switch-to-workspace-6 = [ "<Super>6" ];
+      switch-to-workspace-7 = [ "<Super>7" ];
+      switch-to-workspace-8 = [ "<Super>8" ];
+      switch-to-workspace-9 = [ "<Super>9" ];
+      switch-to-workspace-10 = [ "<Super>0" ];
+      toggle-fullscreen = [ ];
+      toggle-maximized = [ "<Super>f" ];
+      unmaximize = [ ];
     };
 
     "org/gnome/mutter/wayland/keybindings" = {
