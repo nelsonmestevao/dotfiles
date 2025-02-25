@@ -32,6 +32,7 @@ with lib.hm.gvariant;
     bruno
     curl
     delta
+    difftastic
     eza
     fd
     fzf
