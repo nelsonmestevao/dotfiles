@@ -194,37 +194,59 @@ with lib.hm.gvariant;
       num-workspaces = 8;
     };
 
+    "org/gnome/shell/keybindings" = {
+      switch-to-application-1 = [];
+      switch-to-application-2 = [];
+      switch-to-application-3 = [];
+      switch-to-application-4 = [];
+      toggle-overview = [ ];
+      toggle-application-view = [ "<Super>a" ];
+      toggle-message-tray = [ "<Super>m" ];
+      toggle-quick-settings = [ "<Super>s" ];
+      show-screen-ui = [ "Print" ];
+      show-screen-recording-ui = [ "<Control>Print" ];
+      screenshot = [ "Print" ];
+      screenshot-window = [ "<Alt>Print" ];
+    };
+
     "org/gnome/desktop/wm/keybindings" = {
       switch-input-source = [ "<Super>space" ];
       switch-input-source-backward = [ "<Shift><Super>space" ];
-      maximize = [ ];
-      minimize = [ ];
+      close = [ "<Super>q" ];
       move-to-monitor-down = [ ];
       move-to-monitor-left = [ ];
       move-to-monitor-right = [ ];
       move-to-monitor-up = [ ];
       move-to-workspace-down = [ ];
-      switch-to-workspace-down = [
-        "<Primary><Super>Down"
-        "<Primary><Super>j"
-      ];
+      move-to-workspace-up = [ ];
+      switch-to-workspace-down = [ ];
       switch-to-workspace-left = [ ];
       switch-to-workspace-right = [ ];
-      switch-to-workspace-up = [
-        "<Primary><Super>Up"
-        "<Primary><Super>k"
-      ];
-      move-to-workspace-up = [ ];
-      move-to-workspace-1 = [ "<Super><Shift>1" ];
-      move-to-workspace-2 = [ "<Super><Shift>2" ];
-      move-to-workspace-3 = [ "<Super><Shift>3" ];
-      move-to-workspace-4 = [ "<Super><Shift>4" ];
-      move-to-workspace-5 = [ "<Super><Shift>5" ];
-      move-to-workspace-6 = [ "<Super><Shift>6" ];
-      move-to-workspace-7 = [ "<Super><Shift>7" ];
-      move-to-workspace-8 = [ "<Super><Shift>8" ];
-      move-to-workspace-9 = [ "<Super><Shift>9" ];
-      move-to-workspace-10 = [ "<Super><Shift>0" ];
+      switch-to-workspace-up = [ ];
+      activate-window-menu = [ ];
+      panel-main-menu = [ ];
+      panel-run-dialog = [ ];
+      raise = [ ];
+      raise-or-lower = [ ];
+      lower = [ ];
+      maximize = [ ];
+      maximize-horizontally = [ ];
+      maximize-vertically = [ ];
+      minimize = [ ];
+      set-spew-mark = [ ];
+      show-desktop = [ ];
+      switch-windows = [ ];
+      switch-windows-backward = [ ];
+      move-to-workspace-1 = [ ];
+      move-to-workspace-2 = [ ];
+      move-to-workspace-3 = [ ];
+      move-to-workspace-4 = [ ];
+      move-to-workspace-5 = [ ];
+      move-to-workspace-6 = [ ];
+      move-to-workspace-7 = [ ];
+      move-to-workspace-8 = [ ];
+      move-to-workspace-9 = [ ];
+      move-to-workspace-10 = [ ];
       switch-to-workspace-1 = [ "<Super>1" ];
       switch-to-workspace-2 = [ "<Super>2" ];
       switch-to-workspace-3 = [ "<Super>3" ];
@@ -235,13 +257,29 @@ with lib.hm.gvariant;
       switch-to-workspace-8 = [ "<Super>8" ];
       switch-to-workspace-9 = [ "<Super>9" ];
       switch-to-workspace-10 = [ "<Super>0" ];
+      switch-to-workspace-11 = [ ];
+      switch-to-workspace-12 = [ ];
+      toggle-above = [ ];
       toggle-fullscreen = [ ];
+      toggle-on-all-workspaces = [ ];
       toggle-maximized = [ "<Super>f" ];
       unmaximize = [ ];
     };
 
     "org/gnome/mutter/wayland/keybindings" = {
       restore-shortcuts = [ ];
+      switch-to-session-1 = [ "<Primary><Alt>F1" ];
+      switch-to-session-2 = [ "<Primary><Alt>F2" ];
+      switch-to-session-3 = [ "<Primary><Alt>F3" ];
+      switch-to-session-4 = [ "<Primary><Alt>F4" ];
+      switch-to-session-5 = [ "<Primary><Alt>F5" ];
+      switch-to-session-6 = [ "<Primary><Alt>F6" ];
+      switch-to-session-7 = [ "<Primary><Alt>F7" ];
+      switch-to-session-8 = [ "<Primary><Alt>F8" ];
+      switch-to-session-9 = [ "<Primary><Alt>F9" ];
+      switch-to-session-10 = [ "<Primary><Alt>F10" ];
+      switch-to-session-11 = [ "<Primary><Alt>F11" ];
+      switch-to-session-12 = [ "<Primary><Alt>F12" ];
     };
 
     "org/gnome/desktop/screensaver" = {
@@ -296,9 +334,12 @@ with lib.hm.gvariant;
     # Extension settings
 
     "org/gnome/shell/extensions/pop-shell" = {
+      activate-launcher = [];
       fullscreen-launcher = false;
-      smart-gaps = false;
       show-title = true;
+      smart-gaps = false;
+      snap-to-grid = false;
+      stacking-with-mouse = false;
       gap-inner = mkUint32 3;
       gap-outer = mkUint32 3;
       tile-by-default = true;
