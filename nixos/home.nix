@@ -119,15 +119,17 @@ with lib.hm.gvariant;
   systemd.user.services.ulauncher = {
     Unit = {
       Description = "Linux Application Launcher";
-    };
-    Install = {
-      WantedBy = [ "graphical-session.target" ];
+      Documentation = "https://ulauncher.io/";
     };
     Service = {
       Type = "simple";
       Restart = "always";
       RestartSec = 1;
+      Environment = "GDK_BACKEND=x11";
       ExecStart = "${pkgs.ulauncher}/bin/ulauncher --hide-window";
+    };
+    Install = {
+      WantedBy = [ "graphical-session.target" ];
     };
   };
 
