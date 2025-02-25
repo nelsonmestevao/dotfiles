@@ -7,6 +7,7 @@ plugins=(
   # common-aliases
   extract
   docker-compose
+  fzf
   fzf-tab
   git
   gitignore
