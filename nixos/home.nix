@@ -60,6 +60,7 @@ with lib.hm.gvariant;
     distrobox
     podman
     podman-compose
+    unzip
     # tools
     bitwarden-cli
     imagemagick
