@@ -197,10 +197,10 @@ with lib.hm.gvariant;
     };
 
     "org/gnome/shell/keybindings" = {
-      switch-to-application-1 = [];
-      switch-to-application-2 = [];
-      switch-to-application-3 = [];
-      switch-to-application-4 = [];
+      switch-to-application-1 = [ ];
+      switch-to-application-2 = [ ];
+      switch-to-application-3 = [ ];
+      switch-to-application-4 = [ ];
       toggle-overview = [ ];
       toggle-application-view = [ "<Super>a" ];
       toggle-message-tray = [ "<Super>m" ];
@@ -336,7 +336,7 @@ with lib.hm.gvariant;
     # Extension settings
 
     "org/gnome/shell/extensions/pop-shell" = {
-      activate-launcher = [];
+      activate-launcher = [ ];
       fullscreen-launcher = false;
       show-title = true;
       smart-gaps = false;

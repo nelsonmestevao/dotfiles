@@ -5,6 +5,7 @@
   config,
   lib,
   pkgs,
+  zen-browser,
   ...
 }:
 {
@@ -146,6 +147,7 @@
     slack
     spotify
     telegram-desktop
+    zen-browser.packages.${pkgs.system}.default
   ];
 
   environment.variables = {
