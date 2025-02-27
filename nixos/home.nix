@@ -49,6 +49,7 @@ with lib.hm.gvariant;
     yazi
     zoxide
     # dev utils
+    watchman
     fop
     inotify-tools
     gcc
