@@ -62,6 +62,7 @@ with lib.hm.gvariant;
     podman-compose
     unzip
     # tools
+    bitwarden-desktop
     bitwarden-cli
     imagemagick
     inkscape
