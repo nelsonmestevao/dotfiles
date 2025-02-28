@@ -68,6 +68,7 @@ with lib.hm.gvariant;
     imagemagick
     inkscape
     sc-im
+    libreoffice
     # system tools
     neofetch
     onefetch
