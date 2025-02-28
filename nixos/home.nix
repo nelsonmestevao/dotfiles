@@ -40,7 +40,7 @@ with lib.hm.gvariant;
     git
     gitleaks
     jq
-    mise
+    # mise
     neovim
     ripgrep
     shellcheck

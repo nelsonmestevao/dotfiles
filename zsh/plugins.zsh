@@ -13,7 +13,7 @@ plugins=(
   gitignore
   # globalias
   # golang #
-  mise
+  # mise
   mix
   # npm #
   # rails #
