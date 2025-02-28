@@ -147,7 +147,7 @@
     slack
     spotify
     telegram-desktop
-    zen-browser.packages.${pkgs.system}.beta
+    zen-browser.packages.${pkgs.system}.default
   ];
 
   environment.variables = {
