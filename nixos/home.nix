@@ -62,6 +62,7 @@ with lib.hm.gvariant;
     podman
     podman-compose
     unzip
+    llvmPackages_20.clang-tools
     # tools
     bitwarden-desktop
     bitwarden-cli
