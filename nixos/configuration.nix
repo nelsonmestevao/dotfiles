@@ -113,8 +113,6 @@
       # docker
       docker
       docker-compose
-      # security
-      fprintd
     ];
     shell = pkgs.zsh;
   };
@@ -148,6 +146,8 @@
     spotify
     telegram-desktop
     zen-browser.packages.${pkgs.system}.default
+    # security
+    fprintd
   ];
 
   environment.variables = {
