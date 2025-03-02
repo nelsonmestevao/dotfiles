@@ -210,7 +210,7 @@ with lib.hm.gvariant;
       toggle-quick-settings = [ "<Super>s" ];
       show-screen-ui = [ "Print" ];
       show-screen-recording-ui = [ "<Control>Print" ];
-      screenshot = [ "Print" ];
+      screenshot = [ "<Super>Print" ];
       screenshot-window = [ "<Alt>Print" ];
     };
 
