@@ -139,6 +139,7 @@
     gimp
     google-chrome
     inkscape
+    kdePackages.kdenlive
     obs-cli
     obs-cmd
     obs-studio
