@@ -79,7 +79,7 @@ with lib.hm.gvariant;
     gnome-tweaks
     ulauncher
     wl-clipboard
-    clipman
+    copyq
 
     # Gnome Extensions
     gnomeExtensions.auto-move-windows
@@ -136,6 +136,10 @@ with lib.hm.gvariant;
     Install = {
       WantedBy = [ "graphical-session.target" ];
     };
+  };
+
+  services.copyq = {
+    enable = true;
   };
 
   dconf.settings = {
