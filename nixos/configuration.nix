@@ -139,6 +139,7 @@
     gimp
     google-chrome
     inkscape
+    jetbrains.datagrip
     kdePackages.kdenlive
     obs-cli
     obs-cmd
