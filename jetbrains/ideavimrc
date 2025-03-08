@@ -12,21 +12,21 @@ set commentary
 " Insert.
 
 " Shift + F6
-map <Leader>r :action RenameElement<CR>
+"map <Leader>r :action RenameElement<CR>
 
 " Ctrl + F12
-map <Leader>s :action FileStructurePopup<CR>
+map <Leader>o :action FileStructurePopup<CR>
 
 " Ctrl-Alt-B
-map <Leader>i :action GotoImplementation<CR>
+map gd :action GotoImplementation<CR>
 
 " Alt + F7
-map <Leader>u :action FindUsages<CR>
+"map <Leader>u :action FindUsages<CR>
 
 " Alt + Insert
-map ,g :action Generate<CR>
+"map ,g :action Generate<CR>
 
 " Custom
 map <Leader>gf :action ReformatCode<CR>
-map <Leader>e :action SearchEverywhere<CR>
+"map <Leader>f :action SearchEverywhere<CR>
 
