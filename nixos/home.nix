@@ -70,6 +70,7 @@ with lib.hm.gvariant;
     inkscape
     sc-im
     libreoffice
+    ffmpeg-full
     # system tools
     neofetch
     onefetch
