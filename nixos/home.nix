@@ -49,19 +49,20 @@ with lib.hm.gvariant;
     yazi
     zoxide
     # dev utils
-    watchman
-    fop
-    inotify-tools
-    gcc
-    gnumake
     autoconf
     automake
+    fop
+    gcc
+    gnumake
+    hyperfine
+    inotify-tools
+    llvmPackages_20.clang-tools
     perl
     pkg-config
     podman
     podman-compose
     unzip
-    llvmPackages_20.clang-tools
+    watchman
     # tools
     bitwarden-desktop
     bitwarden-cli
