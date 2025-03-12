@@ -58,7 +58,6 @@ with lib.hm.gvariant;
     automake
     perl
     pkg-config
-    distrobox
     podman
     podman-compose
     unzip
