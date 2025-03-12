@@ -12,9 +12,8 @@ cd "${BASE_DIR}/.." || exit 127
 
 ask_for_sudo
 
-desktop-file-install --dir=/home/nelson/.local/share/applications  wezterm/term.desktop
+#desktop-file-install --dir=/home/nelson/.local/share/applications  wezterm/term.desktop
 
-update-desktop-database /home/nelson/.local/share/applications
+#update-desktop-database /home/nelson/.local/share/applications
 
-mkdir -p ~/.config/wezterm
-symlink ~/.dotfiles/wezterm/wezterm.lua ~/.config/wezterm/wezterm.lua
+mksymlink ~/.dotfiles/wezterm/wezterm.lua ~/.config/wezterm/wezterm.lua
