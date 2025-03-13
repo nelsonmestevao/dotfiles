@@ -22,9 +22,6 @@ with lib.hm.gvariant;
   # release notes.
   home.stateVersion = "24.11"; # Please read the comment before changing.
 
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
-
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages = with pkgs; [
@@ -81,7 +78,6 @@ with lib.hm.gvariant;
     # gnome
     wmctrl
     gnome-tweaks
-    albert
     ulauncher
     wl-clipboard
     copyq
@@ -137,22 +133,6 @@ with lib.hm.gvariant;
 
   home.sessionVariables = {
     # EDITOR = "emacs";
-  };
-
-
-  systemd.user.services.albert = {
-    Unit = {
-      Description = "Linux Application Launcher";
-      Documentation = "https://albertlauncher.github.io/";
-    };
-    Service = {
-      Type = "simple";
-      Restart = "always";
-      ExecStart = "${pkgs.albert}/bin/albert";
-    };
-    Install = {
-      WantedBy = [ "graphical-session.target" ];
-    };
   };
 
   systemd.user.services.ulauncher = {
@@ -335,15 +315,9 @@ with lib.hm.gvariant;
       picture-uri-dark = "file:///home/nelson/Pictures/Wallpapers/desktop.jpg";
     };
 
-    # "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
-    #   name = "ULauncher";
-    #   command = "ulauncher-toggle";
-    #   binding = "<Alt>space";
-    # };
-
     "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
-      name = "Albert";
-      command = "albert toggle";
+      name = "ULauncher";
+      command = "ulauncher-toggle";
       binding = "<Alt>space";
     };
 
