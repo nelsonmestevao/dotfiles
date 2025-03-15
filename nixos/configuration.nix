@@ -121,8 +121,11 @@
   programs.firefox.enable = true;
 
   services.flatpak.enable = true;
+
   services.keybase.enable = true;
   services.kbfs.enable = true;
+
+  services.tailscale.enable = true;
 
   programs.nix-ld.enable = true;
 
