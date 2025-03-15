@@ -147,6 +147,7 @@
     obs-cli
     obs-cmd
     obs-studio
+    shotcut
     slack
     spotify
     telegram-desktop
