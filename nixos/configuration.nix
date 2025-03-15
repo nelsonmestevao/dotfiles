@@ -150,6 +150,7 @@
     slack
     spotify
     telegram-desktop
+    vscode
     zen-browser.packages.${pkgs.system}.default
     # security
     fprintd
