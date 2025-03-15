@@ -88,6 +88,7 @@ with lib.hm.gvariant;
     gnomeExtensions.pop-shell
     gnomeExtensions.space-bar
     gnomeExtensions.system-monitor
+    gnomeExtensions.caffeine
 
     elixir_1_18
     erlang_27
@@ -165,6 +166,7 @@ with lib.hm.gvariant;
         pkgs.gnomeExtensions.pop-shell.extensionUuid
         pkgs.gnomeExtensions.space-bar.extensionUuid
         pkgs.gnomeExtensions.system-monitor.extensionUuid
+        pkgs.gnomeExtensions.caffeine.extensionUuid
 
         # Alternatively, you can manually pass UUID as a string.
         # "blur-my-shell@aunetx"
