@@ -61,6 +61,7 @@ with lib.hm.gvariant;
     pkg-config
     podman
     podman-compose
+    speedtest-cli
     unzip
     watchman
     # tools
