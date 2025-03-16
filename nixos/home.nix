@@ -40,6 +40,7 @@ with lib.hm.gvariant;
     git
     gitleaks
     jq
+    k6
     # mise
     neovim
     ripgrep
