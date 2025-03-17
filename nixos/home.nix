@@ -62,6 +62,7 @@ with lib.hm.gvariant;
     podman
     podman-compose
     speedtest-cli
+    unzip
     watchman
     # tools
     bitwarden-desktop
@@ -87,7 +88,6 @@ with lib.hm.gvariant;
     # perl
     # termcap
     # unixODBC
-    # unzip
     # wxGTK32
     # wxc
 
