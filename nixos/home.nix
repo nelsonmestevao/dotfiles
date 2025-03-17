@@ -65,13 +65,14 @@ with lib.hm.gvariant;
     unzip
     watchman
     # tools
-    bitwarden-desktop
     bitwarden-cli
-    imagemagick
-    inkscape
-    sc-im
-    libreoffice
+    bitwarden-desktop
     ffmpeg-full
+    imagemagick
+    impression
+    inkscape
+    libreoffice
+    sc-im
     # system tools
     neofetch
     onefetch
