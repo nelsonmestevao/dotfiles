@@ -17,7 +17,7 @@ Host zeus
     User ubuntu
 
 Host hades
-    HostName 192.168.1.47
+    HostName 192.168.1.50
 
 Host pichu
     HostName pichu.marmela.org
