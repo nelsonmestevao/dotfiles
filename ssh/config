@@ -18,6 +18,11 @@ Host zeus
 
 Host hades
     HostName 192.168.1.50
+    User nelson
+
+Host hades.estevao.org
+    ProxyCommand cloudflared access ssh --hostname %h
+    User nelson
 
 Host pichu
     HostName pichu.marmela.org

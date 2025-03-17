@@ -30,6 +30,7 @@ with lib.hm.gvariant;
     # dev tools
     bat
     bruno
+    cloudflared
     curl
     delta
     difftastic
