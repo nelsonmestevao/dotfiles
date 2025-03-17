@@ -58,12 +58,10 @@ with lib.hm.gvariant;
     hyperfine
     inotify-tools
     llvmPackages_20.clang-tools
-    perl
     pkg-config
     podman
     podman-compose
     speedtest-cli
-    unzip
     watchman
     # tools
     bitwarden-desktop
@@ -76,6 +74,22 @@ with lib.hm.gvariant;
     # system tools
     neofetch
     onefetch
+
+    # build Erlang/OTP with Kerl
+    # flex
+    # gnused
+    # libGL
+    # libGLU
+    # libressl
+    # ncurses
+    # openjdk
+    # openssl
+    # perl
+    # termcap
+    # unixODBC
+    # unzip
+    # wxGTK32
+    # wxc
 
     # gnome
     wmctrl
