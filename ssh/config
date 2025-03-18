@@ -24,6 +24,10 @@ Host hades.estevao.org
     ProxyCommand cloudflared access ssh --hostname %h
     User nelson
 
+Host hades.marmela.org
+    ProxyCommand cloudflared access ssh --hostname %h
+    User nelson
+
 Host pichu
     HostName pichu.marmela.org
     User root
