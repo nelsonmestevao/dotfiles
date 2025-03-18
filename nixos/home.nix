@@ -53,6 +53,7 @@ with lib.hm.gvariant;
     # dev utils
     autoconf
     automake
+    btop
     fop
     gcc
     gnumake
