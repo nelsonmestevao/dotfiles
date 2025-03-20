@@ -42,6 +42,7 @@ with lib.hm.gvariant;
     gitleaks
     jq
     k6
+    stripe-cli
     # mise
     neovim
     ripgrep
