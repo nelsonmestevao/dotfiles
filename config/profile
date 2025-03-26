@@ -8,4 +8,4 @@ export BROWSER=/usr/bin/firefox-developer-edition
 export HISTFILESIZE=1000000000
 export HISTSIZE=1000000000
 
-eval `keychain --quiet --eval --agents ssh`
+# eval `keychain --quiet --eval --agents ssh`
