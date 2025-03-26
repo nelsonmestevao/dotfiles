@@ -230,6 +230,60 @@ local plugins = {
     end,
   },
   {
+    "tpope/vim-projectionist",
+    config = function()
+      local prefix = "<leader>a"
+
+      vim.keymap.set("n", prefix .. "a", ":A<CR>")
+      vim.keymap.set("n", prefix .. "v", ":AV<CR>")
+      vim.keymap.set("n", prefix .. "h", ":AS<CR>")
+
+      vim.g.projectionist_heuristics = {
+        ["*"] = {
+          ["lib/**/channels/*_channel.ex"] = {
+            type = "channel",
+            alternate = "test/{dirname}/channels/{basename}_channel_test.exs",
+            template = {
+              "defmodule {dirname|camelcase|capitalize}.{basename|camelcase|capitalize}Channel do",
+              "  use {dirname|camelcase|capitalize}, :channel",
+              "end"
+            }
+          },
+          ["test/**/channels/*_channel_test.exs"] = {
+            alternate = "lib/{dirname}/channels/{basename}_channel.ex",
+            type = "test",
+            template = {
+              "defmodule {dirname|camelcase|capitalize}.{basename|camelcase|capitalize}ChannelTest do",
+              "  use {dirname|camelcase|capitalize}.ChannelCase, async: true",
+              "",
+              "  alias {dirname|camelcase|capitalize}.{basename|camelcase|capitalize}Channel",
+              "end"
+            }
+          },
+          ["lib/*.ex"] = {
+            alternate = "test/{}_test.exs",
+            type = "source",
+            template = {
+              "defmodule {camelcase|capitalize|dot} do",
+              "end"
+            }
+          },
+          ["test/*_test.exs"] = {
+            alternate = "lib/{}.ex",
+            type = "test",
+            template = {
+              "defmodule {camelcase|capitalize|dot}Test do",
+              "  use ExUnit.Case, async: true",
+              "",
+              "  alias {camelcase|capitalize|dot}",
+              "end"
+            }
+          }
+        }
+      }
+    end
+  },
+  {
     "supermaven-inc/supermaven-nvim",
     config = function()
       require("supermaven-nvim").setup({

@@ -107,6 +107,9 @@ vim.keymap.set("n", "<C-S-l>", "<C-w>L")
 vim.keymap.set("n", "<leader>q", ":bp<CR>")
 vim.keymap.set("n", "<leader>w", ":bn<CR>")
 
+-- switch between last two files
+vim.keymap.set("n", "<tab>", ":b#<cr>")
+
 -- ### Visual Mode
 
 vim.keymap.set("v", "<", "<gv")
