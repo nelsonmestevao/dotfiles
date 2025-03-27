@@ -260,6 +260,26 @@ local plugins = {
               "end"
             }
           },
+          ["lib/**/live/*_live.ex"] = {
+            type = "liveview",
+            alternate = "test/{dirname}/live/{basename}_live_test.exs",
+            template = {
+              "defmodule {dirname|camelcase|capitalize}.{basename|camelcase|capitalize}Live do",
+              "  use {dirname|camelcase|capitalize}, :live_view",
+              "end"
+            }
+          },
+          ["test/**/live/*_live_test.exs"] = {
+            alternate = "lib/{dirname}/live/{basename}_live.ex",
+            type = "test",
+            template = {
+              "defmodule {dirname|camelcase|capitalize}.{basename|camelcase|capitalize}LiveTest do",
+              "  use {dirname|camelcase|capitalize}.ConnCase, async: true",
+              "",
+              "  alias {dirname|camelcase|capitalize}.{basename|camelcase|capitalize}Live",
+              "end"
+            }
+          },
           ["lib/*.ex"] = {
             alternate = "test/{}_test.exs",
             type = "source",
