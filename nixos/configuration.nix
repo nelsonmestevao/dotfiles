@@ -19,6 +19,11 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   networking.hostName = "framework"; # Define your hostname.
+
+  networking.extraHosts = ''
+  127.0.0.1 livecomp.test
+  '';
+
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
