@@ -478,6 +478,38 @@ local plugins = {
       vim.keymap.set("v", "<C-c><C-c>", ":ToggleTermSendVisualLines<CR>")
     end
   },
+  -- Tests
+  {
+    "nvim-neotest/neotest",
+    event = { "BufReadPost", "BufNewFile" },
+    dependencies = {
+      "nvim-neotest/nvim-nio",
+      "nvim-lua/plenary.nvim",
+      "antoinemadec/FixCursorHold.nvim",
+      "nvim-treesitter/nvim-treesitter",
+      "jfpedroza/neotest-elixir",
+    },
+    config = function()
+      local neotest = require("neotest")
+      neotest.setup({
+        adapters = {
+          require("neotest-elixir"),
+        }
+      })
+
+      local prefix = "<leader>t"
+
+      vim.keymap.set("n", prefix .. "t", function() neotest.run.run({ vim.fn.expand("%") }) end)
+      vim.keymap.set("n", prefix .. "T", function() neotest.run.run(vim.uv.cwd()) end)
+      vim.keymap.set("n", prefix .. "S", function() neotest.run.stop() end)
+      vim.keymap.set("n", prefix .. "r", function() neotest.run.run() end)
+      vim.keymap.set("n", prefix .. "s", function() neotest.summary.toggle() end)
+      vim.keymap.set("n", prefix .. "a", function() neotest.run.attach() end)
+      vim.keymap.set("n", prefix .. "o", function() neotest.output.open({ enter = true, auto_close = true }) end)
+      vim.keymap.set("n", prefix .. "p", function() neotest.output_panel.toggle() end)
+      vim.keymap.set("n", prefix .. "w", function() neotest.watch.toggle(vim.fn.expand("%")) end)
+    end,
+  },
   -- Git
   {
     "lewis6991/gitsigns.nvim",
