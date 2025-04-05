@@ -59,8 +59,8 @@
 [log]
   date = auto:human
 [merge]
-  tool = vimdiff
   log = true
+  conflictstyle = diff3
 [push]
   default = simple
   autoSetupRemote = true
@@ -68,9 +68,6 @@
   rebase = true
 [color]
   ui = true
-[diff]
-  tool = vimdiff
-  submodule = log
 [url "git@github.com:nelsonmestevao/"]
   insteadOf = gh:
 [url "git@github.com:"]
@@ -80,4 +77,4 @@
 [url "git@gitlab.com:"]
   insteadOf = glx:
 [url "git@bitbucket.org:"]
-	insteadOf = https://bitbucket.org/
+  insteadOf = https://bitbucket.org/
