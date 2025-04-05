@@ -14,8 +14,6 @@
   gpgsign = true
 [include]
     path = ~/.dotfiles/git/personal.config
-[includeIf "gitdir:~/Code/Docência/"]
-    path = ~/.dotfiles/git/uminho.config
 [includeIf "gitdir:~/Code/UMinho/"]
     path = ~/.dotfiles/git/uminho.config
 [includeIf "gitdir:~/Code/Marmela/"]
