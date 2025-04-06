@@ -12,10 +12,6 @@ Host rpi
     HostName rpi4.local
     User nelson
 
-Host zeus
-    HostName zeus.estevao.org
-    User ubuntu
-
 Host hades
     HostName 192.168.1.52
     User nelson
