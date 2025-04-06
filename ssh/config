@@ -8,9 +8,10 @@ Host github.com
     HostName github.com
     IdentityFile ~/.ssh/id_ed25519
 
-Host rpi
-    HostName rpi4.local
-    User nelson
+Host ha
+    HostName 192.168.1.44
+    Port 2222
+    User root
 
 Host hades
     HostName 192.168.1.52
