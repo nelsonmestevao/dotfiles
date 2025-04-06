@@ -46,6 +46,7 @@ with lib.hm.gvariant;
     # mise
     neovim
     ripgrep
+    scc
     shellcheck
     shfmt
     wget
