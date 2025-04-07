@@ -80,6 +80,7 @@ with lib.hm.gvariant;
     # system tools
     neofetch
     onefetch
+    cpufetch
 
     # build Erlang/OTP with Kerl
     # flex
