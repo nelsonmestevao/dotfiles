@@ -119,6 +119,7 @@ with lib.hm.gvariant;
 
     file
     image_optim
+    wkhtmltopdf
     # jpegoptim
     # optipng
     # pngquant
