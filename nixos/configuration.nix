@@ -118,6 +118,9 @@
       # docker
       docker
       docker-compose
+      # AppImage
+      fuse
+      appimage-run
     ];
     shell = pkgs.zsh;
   };
