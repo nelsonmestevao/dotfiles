@@ -43,6 +43,7 @@ with lib.hm.gvariant;
     jq
     k6
     stripe-cli
+    typst
     # mise
     neovim
     ripgrep
