@@ -10,10 +10,6 @@ cd "${BASE_DIR}/.." || exit 127
 # shellcheck source=../scripts/utils.sh
 . scripts/utils.sh
 
-ask_for_sudo
-
-install_package espanso
-
 mkdir -p "$HOME/.config/espanso"
 
 ln -s "$HOME/.dotfiles/espanso/config" "$HOME/.config/espanso/config"
