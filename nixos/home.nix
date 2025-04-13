@@ -341,6 +341,13 @@ with lib.hm.gvariant;
       picture-uri-dark = "file:///home/nelson/Pictures/Wallpapers/desktop.jpg";
     };
 
+    "org/gnome/settings-daemon/plugins/media-keys" = {
+      custom-keybindings = [
+        "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
+        "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/"
+      ];
+    };
+
     "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
       name = "ULauncher";
       command = "ulauncher-toggle";
