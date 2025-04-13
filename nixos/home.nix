@@ -44,7 +44,6 @@ with lib.hm.gvariant;
     k6
     stripe-cli
     typst
-    # mise
     neovim
     ripgrep
     scc
@@ -83,21 +82,6 @@ with lib.hm.gvariant;
     onefetch
     cpufetch
 
-    # build Erlang/OTP with Kerl
-    # flex
-    # gnused
-    # libGL
-    # libGLU
-    # libressl
-    # ncurses
-    # openjdk
-    # openssl
-    # perl
-    # termcap
-    # unixODBC
-    # wxGTK32
-    # wxc
-
     # gnome
     wmctrl
     gnome-tweaks
@@ -113,11 +97,14 @@ with lib.hm.gvariant;
     gnomeExtensions.system-monitor
     gnomeExtensions.caffeine
 
-    elixir_1_18
+    # programming
+    mise
+    # elixir_1_18
     erlang_27
     ruby_3_4
     nodejs_23
 
+    # projects dependencies
     file
     image_optim
     wkhtmltopdf
