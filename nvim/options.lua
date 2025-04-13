@@ -47,6 +47,14 @@ vim.opt.smartcase = true -- when searching try to be smart about cases
 
 -- ## Miscellaneous
 
+-- Virtual lines to show diagnostics.
+vim.diagnostic.config({
+  virtual_lines = {
+   -- Only show virtual line diagnostics for the current cursor line
+   current_line = true,
+  }
+})
+
 -- When a file has been detected to have been changed from the outside, automatically read it again.
 vim.opt.autoread = true
 
