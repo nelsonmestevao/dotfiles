@@ -633,6 +633,25 @@ local plugins = {
       })
 
       vim.keymap.set("n", "K", vim.lsp.buf.hover)
+      -- Open the documentation in a vertical split
+      vim.keymap.set("n", "<leader>K", function()
+        local params = vim.lsp.util.make_position_params()
+        vim.lsp.buf_request(0, 'textDocument/hover', params, function(err, result, ctx, config)
+          if err or not result or not result.contents then return end
+
+          local lines = vim.lsp.util.convert_input_to_markdown_lines(result.contents)
+          lines = vim.lsp.util.trim_empty_lines(lines)
+          if vim.tbl_isempty(lines) then return end
+
+          vim.cmd("vnew")
+          local buf = vim.api.nvim_get_current_buf()
+          vim.api.nvim_buf_set_option(buf, "buftype", "nofile")
+          vim.api.nvim_buf_set_option(buf, "bufhidden", "wipe")
+          vim.api.nvim_buf_set_option(buf, "swapfile", false)
+          vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+          vim.bo.filetype = 'markdown'
+        end)
+      end, { noremap = true, silent = true })
       vim.keymap.set("n", "gd", vim.lsp.buf.definition)
       vim.keymap.set("n", "<leader>gf", vim.lsp.buf.format)
       vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action)
