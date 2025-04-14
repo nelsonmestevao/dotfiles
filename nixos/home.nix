@@ -96,6 +96,7 @@ with lib.hm.gvariant;
     gnomeExtensions.space-bar
     gnomeExtensions.system-monitor
     gnomeExtensions.caffeine
+    gnomeExtensions.color-picker
 
     # programming
     mise
@@ -178,6 +179,7 @@ with lib.hm.gvariant;
         pkgs.gnomeExtensions.space-bar.extensionUuid
         pkgs.gnomeExtensions.system-monitor.extensionUuid
         pkgs.gnomeExtensions.caffeine.extensionUuid
+        pkgs.gnomeExtensions.color-picker.extensionUuid
 
         # Alternatively, you can manually pass UUID as a string.
         # "blur-my-shell@aunetx"
