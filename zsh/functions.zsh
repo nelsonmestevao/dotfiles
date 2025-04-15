@@ -13,6 +13,12 @@ function mkcd() {
   cd $@
 }
 
+function cd!() {
+  # if it was bash: cd $(dirname $_)
+  local last_arg=$(fc -ln -1 | awk '{print $NF}')
+  [[ -e "$last_arg" ]] && cd "${last_arg:h}"
+}
+
 function gclcd() {
   git clone --recurse-submodules $@
   cd "$(basename "$_" .git)"
