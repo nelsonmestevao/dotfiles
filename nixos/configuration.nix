@@ -159,6 +159,7 @@
     slack
     spotify
     telegram-desktop
+    discord
     terraform
     vscode
     zen-browser.packages.${pkgs.system}.default
