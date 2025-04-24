@@ -39,6 +39,7 @@ with lib.hm.gvariant;
     fzf
     gh
     git
+    git-who
     gitleaks
     jq
     k6
@@ -78,9 +79,9 @@ with lib.hm.gvariant;
     libreoffice
     sc-im
     # system tools
+    cpufetch
     neofetch
     onefetch
-    cpufetch
 
     # gnome
     wmctrl
