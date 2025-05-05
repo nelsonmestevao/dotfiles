@@ -21,4 +21,4 @@ cd "${BASE_DIR}/.." || exit 127
 
 #install_package git-delta
 
-symlink "$HOME/.dotfiles/git/gitconfig" "$HOME/.gitconfig"
+mksymlink "$HOME/.dotfiles/git/gitconfig" "$HOME/.config/git/config"

@@ -586,6 +586,36 @@ local plugins = {
   {
     "editorconfig/editorconfig-vim",
   },
+  -- Autocompletion
+  {
+    "hrsh7th/nvim-cmp",
+    dependencies = {
+      "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-buffer",
+      "hrsh7th/cmp-path",
+      "hrsh7th/cmp-cmdline",
+      "hrsh7th/cmp-emoji",
+      "hrsh7th/cmp-nvim-lua",
+    },
+    config = function()
+      local cmp = require("cmp")
+      require("cmp").setup({
+        mapping = cmp.mapping.preset.insert({
+          ["<C-p>"] = cmp.mapping.select_prev_item(),
+          ["<C-n>"] = cmp.mapping.select_next_item(),
+          ["<C-d>"] = cmp.mapping.scroll_docs(-4),
+          ["<C-f>"] = cmp.mapping.scroll_docs(4),
+          ["<C-Space>"] = cmp.mapping.complete(),
+          -- ["<C-e>"] = cmp.mapping.close(),
+          ["<CR>"] = cmp.mapping.confirm({ select = true }),
+        }),
+        sources = cmp.config.sources({
+          { name = "nvim_lsp" },
+          { name = "buffer" },
+        }),
+      })
+    end,
+  },
   -- LSPs
   {
     "williamboman/mason.nvim",
@@ -604,7 +634,21 @@ local plugins = {
   {
     "neovim/nvim-lspconfig",
     config = function()
-      require("lspconfig").lua_ls.setup({})
+      local lspconfig = require("lspconfig")
+      local capabilities = require("cmp_nvim_lsp").default_capabilities()
+      lspconfig.lua_ls.setup({})
+      lspconfig.bashls.setup({
+        cmd = { HOME .. "/.local/share/nvim/mason/bin/bash-language-server", "start" },
+      })
+
+      lspconfig.sqlls.setup({
+        cmd = { HOME .. "/.local/share/nvim/mason/bin/sql-language-server", "up", "--method", "stdio" },
+      })
+
+      lspconfig.lexical.setup({
+        cmd = { HOME .. "/.local/share/nvim/mason/bin/lexical", "--stdio" },
+        capabilities = capabilities,
+      })
       -- require("lspconfig").nextls.setup({
       --   cmd = { HOME .. "/.local/share/nvim/mason/bin/nextls", "--stdio" },
       --   init_options = {
@@ -616,20 +660,20 @@ local plugins = {
       --     },
       --   },
       -- })
-      require("lspconfig").bashls.setup({
-        cmd = { HOME .. "/.local/share/nvim/mason/bin/bash-language-server", "start" },
-      })
 
-      require("lspconfig").sqlls.setup({
-        cmd = { HOME .. "/.local/share/nvim/mason/bin/sql-language-server", "up", "--method", "stdio" },
-      })
-
-      require("lspconfig").lexical.setup({
-        cmd = { HOME .. "/.local/share/nvim/mason/bin/lexical", "--stdio" },
-      })
-
-      require("lspconfig").hls.setup({
+      lspconfig.hls.setup({
         cmd = { HOME .. "/.local/share/nvim/mason/bin/haskell-language-server-wrapper", "--lsp" },
+      })
+
+
+      lspconfig.tailwindcss.setup({
+        init_options = {
+          userLanguages = {
+            elixir = "html-eex",
+            eelixir = "html-eex",
+            heex = "html-eex",
+          },
+        },
       })
 
       vim.keymap.set("n", "K", vim.lsp.buf.hover)
