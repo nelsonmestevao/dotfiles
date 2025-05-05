@@ -42,14 +42,15 @@ with lib.hm.gvariant;
     git-who
     gitleaks
     jq
+    jujutsu
     k6
-    stripe-cli
-    typst
     neovim
     ripgrep
     scc
     shellcheck
     shfmt
+    stripe-cli
+    typst
     wget
     yazi
     zoxide
