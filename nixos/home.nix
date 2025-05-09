@@ -105,7 +105,7 @@ with lib.hm.gvariant;
     # elixir_1_18
     erlang_27
     ruby_3_4
-    nodejs_23
+    nodejs_24
 
     # projects dependencies
     file
