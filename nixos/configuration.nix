@@ -150,6 +150,7 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+    discord
     ghostty
     gimp
     google-chrome
@@ -163,9 +164,9 @@
     slack
     spotify
     telegram-desktop
-    discord
     terraform
     vscode
+    zed-editor
     zen-browser.packages.${pkgs.system}.default
     # security
     fprintd

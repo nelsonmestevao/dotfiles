@@ -10,15 +10,15 @@
     "auto_reveal_entries": true,
     "auto_fold_dirs": true
   },
-  "ui_font_size": 13,
-  "buffer_font_size": 26,
-  "buffer_font_family": "JetBrainsMonoNL Nerd Font Mono",
+  "ui_font_size": 14,
+  "buffer_font_size": 18,
+  "buffer_font_family": "Zed Plex Mono",
   "buffer_font_features": {
     "calt": false
   },
   "terminal": {
-    "font_family": "JetBrainsMonoNL Nerd Font Mono",
-    "font_size": 26
+    "font_family": "Zed Plex Mono",
+    "font_size": 18
   },
   "languages": {
     "C": { "format_on_save": "on" }
