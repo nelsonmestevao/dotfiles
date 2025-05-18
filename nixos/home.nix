@@ -79,6 +79,7 @@ with lib.hm.gvariant;
     inkscape
     libreoffice
     sc-im
+    zeal
     # system tools
     cpufetch
     neofetch
@@ -88,6 +89,7 @@ with lib.hm.gvariant;
     wmctrl
     gnome-tweaks
     ulauncher
+    albert
     wl-clipboard
     copyq
 
@@ -149,6 +151,9 @@ with lib.hm.gvariant;
   home.sessionVariables = {
     # EDITOR = "emacs";
   };
+
+  # Allow unfree packages
+  nixpkgs.config.allowUnfree = true;
 
   systemd.user.services.ulauncher = {
     Unit = {

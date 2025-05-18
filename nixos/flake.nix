@@ -1,11 +1,13 @@
 {
   description = "Nelson's Dotfiles";
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+
     home-manager = {
-      url = "github:nix-community/home-manager";
+      url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     zen-browser = {
       url = "github:youwen5/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -23,12 +25,14 @@
       pkgs = nixpkgs.legacyPackages.${system};
     in
     {
-      formatter.${system} = nixpkgs.legacyPackages.${system}.nixfmt-rfc-style;
+      formatter.${system} = pkgs.nixfmt-rfc-style;
+
       nixosConfigurations.framework = nixpkgs.lib.nixosSystem {
         inherit system;
         specialArgs = { inherit zen-browser; };
         modules = [ ./configuration.nix ];
       };
+
       homeConfigurations.nelson = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         modules = [
