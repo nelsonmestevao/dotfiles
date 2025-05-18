@@ -16,6 +16,10 @@ import logging.sh
 # shellcheck source=./helpers.sh
 import helpers.sh
 
+function is_installed() {
+  [ -x "$(command -v "$@")" ]
+}
+
 function not_installed() {
   [ ! -x "$(command -v "$@")" ]
 }
@@ -33,7 +37,7 @@ function load_env_file() {
   done
 
   if [ -f "$file" ]; then
-    log_info --label "Environment" "Loading ${BLUE}${file}${RESET}..."
+    log_info --label "Environment" "Loading ${CYAN}${file}${RESET}..."
     set -o allexport
     # shellcheck source=/dev/null
     source "$file"
@@ -98,4 +102,4 @@ function timestamp() {
   date --utc '+%Y%m%d%H%M%S'
 }
 
-([ "$0" = "${BASH_SOURCE[0]}" ] && display_version 0.15.0) || true
+([ "$0" = "${BASH_SOURCE[0]}" ] && display_version 0.16.0) || true

@@ -85,7 +85,7 @@ function log_info() {
 }
 
 function log_debug() {
-  __log "DEBUG" "DEBUG" "$PURPLE" "$@"
+  __log "DEBUG" "DEBUG" "$MAGENTA" "$@"
 }
 
-([ "$0" = "${BASH_SOURCE[0]}" ] && display_version 0.15.0) || true
+([ "$0" = "${BASH_SOURCE[0]}" ] && display_version 0.16.0) || true
