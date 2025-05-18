@@ -1,11 +1,10 @@
 {
   "float": [
     {
-      "class": "pop-shell-example",
-      "title": "pop-shell-example"
+      "class": "Ulauncher"
     },
     {
-      "class": "Ulauncher"
+      "title": "albert — Albert "
     },
     {
       "class": "Slack",
@@ -16,19 +15,19 @@
       "title": "Huddle: core - Marmela - Slack 🎤"
     },
     {
-      "class": "org.telegram.desktop",
-      "title": "Media viewer"
-    },
-    {
-      "class": "org.fedoraproject.MediaWriter"
-    },
-    {
       "class": "Slack",
       "title": "Huddle: @Luis - Marmela - Slack 🎤"
     },
     {
+      "class": "org.telegram.desktop",
+      "title": "Media viewer"
+    },
+    {
       "class": "xdg-desktop-portal-gnome",
       "title": "Share Screen"
+    },
+    {
+      "class": "org.fedoraproject.MediaWriter"
     },
     {
       "class": "org.raspberrypi.rpi-imager"

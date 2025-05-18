@@ -11,7 +11,7 @@
 {
   imports = [
     # Include the results of the hardware scan.
-    ./hardware/framework16.nix
+    ../hardware/framework16.nix
   ];
 
   # Bootloader.
@@ -58,9 +58,10 @@
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.desktopManager.gnome.enable = true;
   services.gnome.gnome-keyring.enable = true;
-  security.pam.services.gdm.enableGnomeKeyring = true;
-  # security.pam.services.sddm.enableGnomeKeyring = true;
-  security.pam.services.login.enableGnomeKeyring = true;
+  security.pam.services = {
+    login.enableGnomeKeyring = true;
+    gdm.enableGnomeKeyring = true;
+  };
 
   environment.gnome.excludePackages = with pkgs; [
     epiphany
@@ -152,9 +153,7 @@
   environment.systemPackages = with pkgs; [
     discord
     ghostty
-    gimp
     google-chrome
-    inkscape
     jetbrains.datagrip
     kdePackages.kdenlive
     obs-cli

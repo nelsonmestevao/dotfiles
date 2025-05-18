@@ -1,2 +1,59 @@
-nixos-rebuild switch --use-remote-sudo --flake '.#framework'
-home-manager switch --flake '.#nelson'
+#!/usr/bin/env bash
+
+set -Eeuo pipefail
+
+# shellcheck source=../scripts/helpers.sh
+. ../scripts/helpers.sh
+# shellcheck source=../scripts/logging.sh
+. ../scripts/logging.sh
+# shellcheck source=../scripts/utils.sh
+. ../scripts/utils.sh
+
+PROGRAM=$(basename "${BASH_SOURCE[0]:-$0}")
+VERSION=0.16.0
+
+function display_help() {
+  cat <<EOF
+  Rebuilds the system and home configuration.
+
+  $(help_title_section Usage)
+    ${PROGRAM} [options]
+
+  $(help_title_section Options)
+    -h --help         Show this screen.
+    -v --version      Show version.
+    --system          Rebuild the Operating System.
+    --home            Rebuild the Home Manager configuration.
+EOF
+}
+
+rebuild_system() {
+  nixos-rebuild switch --use-remote-sudo --flake '.#framework'
+}
+
+rebuild_home() {
+  home-manager switch --flake '.#nelson'
+}
+
+case ${1:-all} in
+  -h | --help)
+    display_help "$@"
+    ;;
+  -v | --version)
+    display_version "${VERSION}" "${PROGRAM}"
+    ;;
+  all)
+    rebuild_system
+    rebuild_home
+    ;;
+  -os | --system)
+    rebuild_system
+    ;;
+  -hm | --home)
+    rebuild_home
+    ;;
+  *)
+    display_help >&2
+    exit 1
+    ;;
+esac

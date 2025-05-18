@@ -30,13 +30,13 @@
       nixosConfigurations.framework = nixpkgs.lib.nixosSystem {
         inherit system;
         specialArgs = { inherit zen-browser; };
-        modules = [ ./configuration.nix ];
+        modules = [ ./system/configuration.nix ];
       };
 
       homeConfigurations.nelson = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         modules = [
-          ./home.nix
+          ./home/home.nix
         ];
       };
     };
