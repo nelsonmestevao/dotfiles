@@ -4,6 +4,7 @@ alias -g H='| head'
 alias -g T='| tail'
 alias -g G='| grep'
 alias -g L="| less"
+alias -g N="| nvim +'setlocal buftype=nofile noswapfile' +':0' -"
 
 # ALIASES
 
