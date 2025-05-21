@@ -48,5 +48,6 @@
     "svelte",
     "astro",
     "erb"
-  ]
+  ],
+  "github.copilot.nextEditSuggestions.enabled": true
 }
