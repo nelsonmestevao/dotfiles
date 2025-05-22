@@ -49,5 +49,5 @@
     "astro",
     "erb"
   ],
-  "github.copilot.nextEditSuggestions.enabled": true
+  "github.copilot.nextEditSuggestions.enabled": true,
 }
