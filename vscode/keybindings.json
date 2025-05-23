@@ -33,7 +33,35 @@
     "command": "-workbench.action.quickOpen"
   },
   {
-    "key": "ctrl+a",
+    "key": "alt+a",
     "command": "extension.elixirJumpToTest"
+  },
+  {
+    "key": "alt+h",
+    "command": "workbench.action.focusLeftGroup"
+  },
+  {
+    "key": "alt+l",
+    "command": "workbench.action.focusRightGroup"
+  },
+  {
+    "key": "alt+j",
+    "command": "workbench.action.focusBelowGroup"
+  },
+  {
+    "key": "alt+k",
+    "command": "workbench.action.focusAboveGroup"
+  },
+  {
+    "key": "alt+shift+v",
+    "command": "workbench.action.splitEditorRight"
+  },
+  {
+    "key": "alt+shift+h",
+    "command": "workbench.action.splitEditorDown"
+  },
+  {
+    "key": "alt+shift+b",
+    "command": "workbench.action.toggleSidebarVisibility"
   }
 ]
