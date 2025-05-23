@@ -108,11 +108,12 @@
     ## image processing and optimization
     file
     image_optim
+    # gifsicle
     # jpegoptim
+    # libwebp
+    nodePackages.svgo
     # optipng
     # pngquant
-    nodePackages.svgo
-    # gifsicle
 
     ## programming environments
     mise
