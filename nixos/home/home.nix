@@ -111,7 +111,7 @@
     # jpegoptim
     # optipng
     # pngquant
-    # nodePackages.svgo
+    nodePackages.svgo
     # gifsicle
 
     ## programming environments
