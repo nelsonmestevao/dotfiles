@@ -17,12 +17,12 @@
   {
     "key": "ctrl+n",
     "command": "workbench.action.quickOpenSelectNext",
-    "when": "inQuickOpen || inQuickNavigate || suggestWidgetVisible || inFilesPicker || inCommandPalette"
+    "when": "suggestWidgetVisible || inQuickOpen || inQuickNavigate || inFilesPicker || inCommandPalette || inQuickInput || inActionsMenu || inQuickFixWidget || inSourceActionMenu"
   },
   {
     "key": "ctrl+p",
     "command": "workbench.action.quickOpenSelectPrevious",
-    "when": "inQuickOpen || inQuickNavigate || suggestWidgetVisible || inFilesPicker || inCommandPalette"
+    "when": "suggestWidgetVisible || inQuickOpen || inQuickNavigate || inFilesPicker || inCommandPalette || inQuickInput || inActionsMenu || inQuickFixWidget || inSourceActionMenu"
   },
   {
     "key": "ctrl+k",
@@ -63,5 +63,9 @@
   {
     "key": "alt+shift+b",
     "command": "workbench.action.toggleSidebarVisibility"
+  },
+  {
+    "key": "shift+k",
+    "command": "editor.action.showHover"
   }
 ]
