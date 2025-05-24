@@ -118,7 +118,7 @@
     ## programming environments
     mise
     # elixir_1_18
-    erlang_28
+    erlang_27
     ruby_3_4
     nodejs_24
 
