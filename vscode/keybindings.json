@@ -1,5 +1,18 @@
 [
   {
+    "key": "ctrl+p",
+    "command": "-workbench.action.quickOpen"
+  },
+  {
+    "key": "ctrl+n",
+    "command": "-workbench.action.files.newUntitledFile"
+  },
+  {
+    "key": "tab",
+    "command": "-editor.action.inlineSuggest.commit",
+    "when": "inlineSuggestionHasIndentationLessThanTabSize && inlineSuggestionVisible && !editorHoverFocused && !editorTabMovesFocus && !suggestWidgetVisible"
+  },
+  {
     "key": "ctrl+y",
     "command": "editor.action.inlineSuggest.commit",
     "when": "inlineSuggestionHasIndentationLessThanTabSize && inlineSuggestionVisible && !editorHoverFocused && !editorTabMovesFocus && !suggestWidgetVisible"
@@ -10,9 +23,18 @@
     "when": "inlineSuggestionVisible && !editorReadonly"
   },
   {
-    "key": "tab",
-    "command": "-editor.action.inlineSuggest.commit",
-    "when": "inlineSuggestionHasIndentationLessThanTabSize && inlineSuggestionVisible && !editorHoverFocused && !editorTabMovesFocus && !suggestWidgetVisible"
+    "key": "ctrl+o",
+    "command": "workbench.view.explorer"
+  },
+  {
+    "key": "ctrl+i",
+    "command": "workbench.panel.chat.view.copilot.focus",
+    "when": "workbench.panel.chat.view.copilot.visible && !chatInputHasFocus && !chatViewFocus"
+  },
+  {
+    "key": "ctrl+i",
+    "command": "workbench.action.chat.toggle",
+    "when": "!workbench.panel.chat.view.copilot.visible || chatInputHasFocus || chatViewFocus"
   },
   {
     "key": "ctrl+n",
@@ -49,10 +71,6 @@
     "command": "workbench.action.quickOpen",
   },
   {
-    "key": "ctrl+p",
-    "command": "-workbench.action.quickOpen"
-  },
-  {
     "key": "alt+a",
     "command": "extension.elixirJumpToTest"
   },
@@ -67,6 +85,11 @@
   {
     "key": "alt+j",
     "command": "workbench.action.focusBelowGroup"
+  },
+  {
+    "key": "alt+l",
+    "command": "workbench.action.focusActiveEditorGroup",
+    "when": "chatInputHasFocus || chatViewFocus"
   },
   {
     "key": "alt+k",
@@ -85,7 +108,44 @@
     "command": "workbench.action.toggleSidebarVisibility"
   },
   {
-    "key": "shift+k",
-    "command": "editor.action.showHover"
+    "key": "a",
+    "command": "explorer.newFile",
+    "when": "explorerViewletVisible && filesExplorerFocus && !inputFocus"
+  },
+  {
+    "key": "r",
+    "command": "renameFile",
+    "when": "explorerViewletVisible && filesExplorerFocus && !inputFocus"
+  },
+  {
+    "key": "d d",
+    "command": "moveFileToTrash",
+    "when": "explorerViewletVisible && filesExplorerFocus && !inputFocus"
+  },
+  {
+    "key": "p",
+    "command": "filesExplorer.paste",
+    "when": "explorerViewletVisible && filesExplorerFocus && !inputFocus"
+  },
+  {
+    "key": "u",
+    "command": "workbench.action.files.restoreFromTrash",
+    "when": "explorerViewletVisible && filesExplorerFocus && !inputFocus"
+  },
+  {
+    "key": "ctrl+shift+h",
+    "command": "workbench.action.moveEditorToLeftGroup"
+  },
+  {
+    "key": "ctrl+shift+j",
+    "command": "workbench.action.moveEditorToBelowGroup"
+  },
+  {
+    "key": "ctrl+shift+k",
+    "command": "workbench.action.moveEditorToAboveGroup"
+  },
+  {
+    "key": "ctrl+shift+l",
+    "command": "workbench.action.moveEditorToRightGroup"
   }
 ]

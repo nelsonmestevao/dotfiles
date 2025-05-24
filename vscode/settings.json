@@ -1,39 +1,158 @@
 {
-  "window.autoDetectColorScheme": true,
-  "window.menuBarVisibility": "toggle",
-  "workbench.colorTheme": "GitHub Dark",
-  "workbench.preferredDarkColorTheme": "GitHub Dark",
-  "workbench.preferredLightColorTheme": "GitHub Light",
-  "workbench.preferredHighContrastColorTheme": "GitHub Dark High Contrast",
-  "workbench.preferredHighContrastLightColorTheme": "GitHub Light High Contrast",
-  "workbench.productIconTheme": "fluent-icons",
-  "workbench.iconTheme": "material-icon-theme",
-  "workbench.sideBar.location": "right",
-  "workbench.activityBar.location": "bottom",
-  "files.autoSave": "onFocusChange",
-  "editor.renderWhitespace": "trailing",
+  "chat.commandCenter.enabled": false,
   "editor.cursorStyle": "block",
   "editor.fontFamily": "JetBrains Mono Nerd Font",
   "editor.fontSize": 18,
-  "editor.wordWrapColumn": 120,
   "editor.formatOnSave": true,
-  "editor.minimap.enabled": false,
   "editor.inlineSuggest.enabled": true,
-  "github.copilot.nextEditSuggestions.enabled": true,
-  "terminal.integrated.fontSize": 16,
-  "terminal.integrated.fontFamily": "JetBrains Mono Nerd Font",
-  "terminal.integrated.sendKeybindingsToShell": true,
-  "haskell.manageHLS": "GHCup",
+  "editor.minimap.enabled": false,
+  "editor.renderWhitespace": "trailing",
+  "editor.wordWrapColumn": 120,
+  "editor.cursorBlinking": "blink",
+  "editor.scrollBeyondLastLine": true,
+  "editor.rulers": [120],
   "elixirLS.enableTestLenses": true,
   "elixirLS.fetchDeps": true,
+  "explorer.confirmDelete": false,
+  "explorer.confirmDragAndDrop": false,
+  "files.autoSave": "onFocusChange",
+  "github.copilot.nextEditSuggestions.enabled": true,
+  "haskell.manageHLS": "GHCup",
+  "terminal.integrated.fontFamily": "JetBrains Mono Nerd Font",
+  "terminal.integrated.fontSize": 16,
+  "terminal.integrated.sendKeybindingsToShell": true,
   "vim.cursorStylePerMode.insert": "line",
   "vim.useSystemClipboard": true,
+  "window.autoDetectColorScheme": true,
+  "window.commandCenter": false,
+  "workbench.activityBar.location": "top",
+  "workbench.colorTheme": "GitHub Dark",
+  "workbench.iconTheme": "material-icon-theme",
+  "workbench.layoutControl.enabled": false,
+  "workbench.list.automaticKeyboardNavigation": false,
+  "workbench.navigationControl.enabled": false,
+  "workbench.preferredDarkColorTheme": "GitHub Dark",
+  "workbench.preferredHighContrastColorTheme": "GitHub Dark High Contrast",
+  "workbench.preferredHighContrastLightColorTheme": "GitHub Light High Contrast",
+  "workbench.preferredLightColorTheme": "GitHub Light",
+  "workbench.productIconTheme": "fluent-icons",
+  "workbench.sideBar.location": "right",
   "vim.handleKeys": {
     "<C-d>": true,
+    "<C-f>": false,
     "<C-s>": false,
     "<C-z>": false
   },
   "vim.leader": "space",
+  "vim.easymotion": true,
+  "vim.incsearch": true,
+  "vim.hlsearch": true,
+  "vim.smartRelativeLine": false,
+  "vim.foldfix": true,
+  "vim.surround": true,
+  "vim.sneakUseIgnorecaseAndSmartcase": true,
+  "vim.normalModeKeyBindingsNonRecursive": [
+    {
+      "before": [
+        "<leader>",
+        "f"
+      ],
+      "commands": [
+        "workbench.action.quickOpen"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "b"
+      ],
+      "commands": [
+        "workbench.action.showAllEditors"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "o"
+      ],
+      "commands": [
+        "workbench.view.explorer"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "h"
+      ],
+      "commands": [
+        "workbench.action.splitEditorDown"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "v"
+      ],
+      "commands": [
+        "workbench.action.splitEditorRight"
+      ]
+    },
+    {
+      "before": [
+        "g",
+        "d"
+      ],
+      "commands": [
+        "editor.action.revealDefinition"
+      ]
+    },
+    {
+      "before": [
+        "g",
+        "r"
+      ],
+      "commands": [
+        "editor.action.goToReferences"
+      ]
+    },
+    {
+      "before": [
+        "K"
+      ],
+      "commands": [
+        "editor.action.showHover"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "q"
+      ],
+      "commands": [
+        "workbench.action.nextEditor"
+      ]
+    },
+    {
+      "before": [
+        ",",
+        "<leader>"
+      ],
+      "commands": [
+        ":nohl"
+      ]
+    },
+  ],
+  "vim.insertModeKeyBindings": [
+    {
+      "before": [
+        "j",
+        "k"
+      ],
+      "after": [
+        "<Esc>"
+      ]
+    }
+  ],
   "tailwind-fold.autoFold": true,
   "tailwind-fold.supportedLanguages": [
     "html",
