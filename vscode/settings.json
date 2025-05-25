@@ -141,6 +141,16 @@
       "commands": [
         ":nohl"
       ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "g",
+        "f"
+      ],
+      "commands": [
+        "editor.action.formatDocument"
+      ]
     }
   ],
   "vim.insertModeKeyBindings": [
@@ -170,5 +180,8 @@
     "svelte",
     "astro",
     "erb"
-  ]
+  ],
+  "[elixir]": {
+    "editor.defaultFormatter": "JakeBecker.elixir-ls"
+  }
 }

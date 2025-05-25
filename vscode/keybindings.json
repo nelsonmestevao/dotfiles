@@ -9,13 +9,13 @@
   },
   {
     "key": "tab",
-    "command": "-editor.action.inlineSuggest.commit",
-    "when": "inlineSuggestionHasIndentationLessThanTabSize && inlineSuggestionVisible && !editorHoverFocused && !editorTabMovesFocus && !suggestWidgetVisible"
+    "command": "editor.action.inlineSuggest.commit",
+    "when": "inlineSuggestionVisible && !editorReadonly && !editorTabMovesFocus && !suggestWidgetVisible"
   },
   {
     "key": "ctrl+y",
     "command": "editor.action.inlineSuggest.commit",
-    "when": "inlineSuggestionHasIndentationLessThanTabSize && inlineSuggestionVisible && !editorHoverFocused && !editorTabMovesFocus && !suggestWidgetVisible"
+    "when": "inlineSuggestionVisible && !editorReadonly && !editorTabMovesFocus && !suggestWidgetVisible"
   },
   {
     "key": "ctrl+y",
@@ -26,6 +26,11 @@
     "key": "ctrl+y",
     "command": "github.copilot.acceptSolution",
     "when": "github.copilot.panelVisible"
+  },
+  {
+    "key": "ctrl+y",
+    "command": "github.copilot.inlineSuggest.acceptNext",
+    "when": "github.copilot.inlineSuggestVisible && editorTextFocus && !editorReadonly"
   },
   {
     "key": "ctrl+j",
