@@ -18,6 +18,16 @@
     "when": "inlineSuggestionHasIndentationLessThanTabSize && inlineSuggestionVisible && !editorHoverFocused && !editorTabMovesFocus && !suggestWidgetVisible"
   },
   {
+    "key": "ctrl+y",
+    "command": "github.copilot.acceptCursorPanelSolution",
+    "when": "github.copilot.cursorPanelVisible"
+  },
+  {
+    "key": "ctrl+y",
+    "command": "github.copilot.acceptSolution",
+    "when": "github.copilot.panelVisible"
+  },
+  {
     "key": "ctrl+j",
     "command": "editor.action.inlineSuggest.acceptNextWord",
     "when": "inlineSuggestionVisible && !editorReadonly"
@@ -68,7 +78,7 @@
   },
   {
     "key": "ctrl+k",
-    "command": "workbench.action.quickOpen",
+    "command": "workbench.action.quickOpen"
   },
   {
     "key": "alt+a",
@@ -147,5 +157,22 @@
   {
     "key": "ctrl+shift+l",
     "command": "workbench.action.moveEditorToRightGroup"
+  },
+  {
+    "key": "ctrl+c ctrl+c",
+    "command": "workbench.action.terminal.runSelectedText",
+    "when": "editorTextFocus && editorHasSelection"
+  },
+  {
+    "key": "ctrl+c ctrl+c",
+    "command": "runCommands",
+    "when": "editorTextFocus && !editorHasSelection",
+    "args": {
+      "commands": [
+        "expandLineSelection",
+        "workbench.action.terminal.runSelectedText",
+        "cancelSelection"
+      ]
+    }
   }
 ]

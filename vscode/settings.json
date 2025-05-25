@@ -10,7 +10,9 @@
   "editor.wordWrapColumn": 120,
   "editor.cursorBlinking": "blink",
   "editor.scrollBeyondLastLine": true,
-  "editor.rulers": [120],
+  "editor.rulers": [
+    120
+  ],
   "elixirLS.enableTestLenses": true,
   "elixirLS.fetchDeps": true,
   "explorer.confirmDelete": false,
@@ -50,7 +52,6 @@
   "vim.smartRelativeLine": false,
   "vim.foldfix": true,
   "vim.surround": true,
-  "vim.sneakUseIgnorecaseAndSmartcase": true,
   "vim.normalModeKeyBindingsNonRecursive": [
     {
       "before": [
@@ -140,7 +141,7 @@
       "commands": [
         ":nohl"
       ]
-    },
+    }
   ],
   "vim.insertModeKeyBindings": [
     {
