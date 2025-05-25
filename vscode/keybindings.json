@@ -44,12 +44,12 @@
   {
     "key": "ctrl+i",
     "command": "workbench.panel.chat.view.copilot.focus",
-    "when": "workbench.panel.chat.view.copilot.visible && !chatInputHasFocus && !chatViewFocus"
+    "when": "!chatViewFocus"
   },
   {
     "key": "ctrl+i",
-    "command": "workbench.action.chat.toggle",
-    "when": "!workbench.panel.chat.view.copilot.visible || chatInputHasFocus || chatViewFocus"
+    "command": "workbench.action.focusActiveEditorGroup",
+    "when": "chatViewFocus || chatInputHasFocus"
   },
   {
     "key": "ctrl+n",
@@ -179,5 +179,18 @@
         "cancelSelection"
       ]
     }
+  },
+  {
+    "key": "ctrl+shift+m",
+    "command": "workbench.action.toggleMaximizedPanel"
+  },
+  {
+    "key": "ctrl+shift+t",
+    "command": "workbench.action.terminal.focus"
+  },
+  {
+    "key": "ctrl+shift+t",
+    "command": "workbench.action.focusActiveEditorGroup",
+    "when": "terminalFocus"
   }
 ]
