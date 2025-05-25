@@ -167,6 +167,7 @@
     vscode
     zed-editor
     zen-browser.packages.${pkgs.system}.default
+    nerd-fonts.jetbrains-mono
     # security
     fprintd
   ];
