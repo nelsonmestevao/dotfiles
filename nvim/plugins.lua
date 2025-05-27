@@ -171,6 +171,7 @@ local plugins = {
       vim.keymap.set("n", "<leader>fg", builtin.live_grep, {})
       vim.keymap.set("n", "<leader>fb", builtin.buffers, {})
       vim.keymap.set("n", "<leader>fm", builtin.marks, {})
+      vim.keymap.set("n", "<leader>fr", builtin.lsp_references, {})
       vim.keymap.set("n", "<leader>fs", builtin.spell_suggest, {})
       vim.keymap.set("n", "<leader>fc", builtin.colorscheme, {})
       vim.keymap.set("n", "<leader>fh", builtin.help_tags, {})
