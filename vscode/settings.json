@@ -56,6 +56,30 @@
     {
       "before": [
         "<leader>",
+        "a",
+        "a"
+      ],
+      "commands": [
+        {
+          "command": "alternateFile.alternateFile"
+        }
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "a",
+        "v"
+      ],
+      "commands": [
+        {
+          "command": "alternateFile.alternateFile"
+        }
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
         "f"
       ],
       "commands": [
