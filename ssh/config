@@ -9,7 +9,7 @@ Host github.com
     IdentityFile ~/.ssh/id_ed25519
 
 Host ha
-    HostName 192.168.1.44
+    HostName 192.168.1.188
     Port 2222
     User root
 
@@ -26,7 +26,7 @@ Host plutus.estevao.org
     User nelson
 
 Host hades
-    HostName 192.168.1.52
+    HostName 192.168.1.136
     User nelson
 
 Host hades.estevao.org
