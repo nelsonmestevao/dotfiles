@@ -14,11 +14,11 @@ Host ha
     User root
 
 Host thinkpad
-    HostName 192.168.1.59
+    HostName 192.168.1.173
     User nelson
 
 Host plutus
-    HostName 192.168.1.59
+    HostName plutus.local
     User nelson
 
 Host plutus.estevao.org
@@ -26,7 +26,7 @@ Host plutus.estevao.org
     User nelson
 
 Host hades
-    HostName 192.168.1.136
+    HostName hades.local
     User nelson
 
 Host hades.estevao.org
