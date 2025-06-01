@@ -30,6 +30,7 @@
     # core utils
     bat
     curl
+    dig
     eza
     fd
     ffmpeg-full
