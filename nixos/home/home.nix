@@ -56,6 +56,7 @@
     # development tools
     bitwarden-cli
     bruno
+    httpie
     k6
     llvmPackages_20.clang-tools
     shellcheck
