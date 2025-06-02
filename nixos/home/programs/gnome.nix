@@ -25,6 +25,7 @@ with lib.hm.gvariant;
     gnomeExtensions.system-monitor
     gnomeExtensions.caffeine
     gnomeExtensions.color-picker
+    gnomeExtensions.freon
   ];
 
   # services.copyq = {
@@ -52,6 +53,7 @@ with lib.hm.gvariant;
         pkgs.gnomeExtensions.system-monitor.extensionUuid
         pkgs.gnomeExtensions.caffeine.extensionUuid
         pkgs.gnomeExtensions.color-picker.extensionUuid
+        pkgs.gnomeExtensions.freon.extensionUuid
 
         # Alternatively, you can manually pass UUID as a string.
         # "blur-my-shell@aunetx"
