@@ -9,33 +9,24 @@ Host github.com
     IdentityFile ~/.ssh/id_ed25519
 
 Host ha
-    HostName 192.168.1.188
+    HostName ha.local
     Port 2222
     User root
 
-Host thinkpad
-    HostName 192.168.1.173
-    User nelson
-
 Host plutus
     HostName plutus.local
-    User nelson
 
 Host plutus.estevao.org
     ProxyCommand cloudflared access ssh --hostname %h
-    User nelson
 
 Host hades
     HostName hades.local
-    User nelson
 
 Host hades.estevao.org
     ProxyCommand cloudflared access ssh --hostname %h
-    User nelson
 
 Host hades.marmela.org
     ProxyCommand cloudflared access ssh --hostname %h
-    User nelson
 
 Host pichu
     HostName pichu.marmela.org
