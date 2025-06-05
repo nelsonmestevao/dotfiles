@@ -12,9 +12,8 @@ cd "${BASE_DIR}/.." || exit 127
 # shellcheck source=../scripts/utils.sh
 . scripts/utils.sh
 
-ask_for_sudo
+# ask_for_sudo
 
-install_package python-i3ipc
+# install_package python-i3ipc
 
-mkdir -p "$HOME/.config/i3"
-symlink "$HOME/.dotfiles/i3wm/config" "$HOME/.config/i3/config"
+mksymlink "$HOME/.dotfiles/i3wm/config" "$HOME/.config/i3/config"

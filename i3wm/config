@@ -27,7 +27,7 @@ font xft:Hack NF Regular 12
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec alacritty
+bindsym $mod+Return exec ghostty
 
 # start a terminal with zellij
 bindsym $mod+Shift+Return exec alacritty -e 'zellij'
