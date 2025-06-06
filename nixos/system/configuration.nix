@@ -170,6 +170,10 @@
     nerd-fonts.jetbrains-mono
     # security
     fprintd
+    # networking
+    networkmanager-openconnect
+    networkmanager-openvpn
+    networkmanager-vpnc
   ];
 
   environment.variables = {
