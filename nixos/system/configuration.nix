@@ -151,11 +151,13 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+    brave
     discord
     ghostty
     google-chrome
     jetbrains.datagrip
     kdePackages.kdenlive
+    nerd-fonts.jetbrains-mono
     obs-cli
     obs-cmd
     obs-studio
@@ -167,7 +169,6 @@
     vscode
     zed-editor
     zen-browser.packages.${pkgs.system}.default
-    nerd-fonts.jetbrains-mono
     # security
     fprintd
     # networking
