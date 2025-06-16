@@ -56,6 +56,7 @@
     # development tools
     bitwarden-cli
     bruno
+    direnv
     httpie
     k6
     llvmPackages_20.clang-tools
@@ -122,7 +123,7 @@
     # elixir_1_18
     erlang_27
     ruby_3_4
-    nodejs_24
+    nodejs_22
 
     # misc
     cpufetch

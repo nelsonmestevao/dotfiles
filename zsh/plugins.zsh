@@ -5,8 +5,9 @@ plugins=(
   colored-man-pages
   command-not-found
   # common-aliases
-  extract
+  direnv
   docker-compose
+  extract
   fzf
   fzf-tab
   git
