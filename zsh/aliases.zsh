@@ -39,6 +39,7 @@ alias grw=git-review
 alias ght=git-history
 alias gfz=git-fuzzy
 alias grbma='git fetch origin; git fetch origin --prune; git rebase origin/$(git_main_branch)'
+alias grbfma='git fetch fork; git fetch fork --prune; git rebase fork/$(git_main_branch)'
 alias grbdv='git fetch origin; git fetch origin --prune; git rebase origin/$(git_develop_branch)'
 
 alias v="nvim -p"
