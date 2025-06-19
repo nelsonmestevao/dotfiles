@@ -54,6 +54,7 @@
     pkg-config
 
     # development tools
+    bc
     bitwarden-cli
     bruno
     direnv
