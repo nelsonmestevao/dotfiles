@@ -124,8 +124,9 @@
     mise
     # elixir_1_18
     erlang_27
-    ruby_3_4
+    ghc
     nodejs_22
+    ruby_3_4
 
     # misc
     cpufetch
