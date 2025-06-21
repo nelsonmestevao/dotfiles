@@ -40,6 +40,7 @@
     jq
     poppler_utils # pdftotext, pdftohtml, etc
     ripgrep
+    tldr
     unzip
     wget
     yazi
