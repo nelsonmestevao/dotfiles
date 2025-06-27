@@ -15,17 +15,19 @@ with lib.hm.gvariant;
     ulauncher
     albert
     wl-clipboard
+    adwaita-icon-theme
     # copyq
 
     # Gnome Extensions
     gnomeExtensions.auto-move-windows
     gnomeExtensions.blur-my-shell
-    gnomeExtensions.pop-shell
-    gnomeExtensions.space-bar
-    gnomeExtensions.system-monitor
     gnomeExtensions.caffeine
     gnomeExtensions.color-picker
     gnomeExtensions.freon
+    gnomeExtensions.pop-shell
+    gnomeExtensions.space-bar
+    gnomeExtensions.system-monitor
+    gnomeExtensions.wiggle
   ];
 
   # services.copyq = {
@@ -48,12 +50,13 @@ with lib.hm.gvariant;
       enabled-extensions = [
         pkgs.gnomeExtensions.auto-move-windows.extensionUuid
         pkgs.gnomeExtensions.blur-my-shell.extensionUuid
-        pkgs.gnomeExtensions.pop-shell.extensionUuid
-        pkgs.gnomeExtensions.space-bar.extensionUuid
-        pkgs.gnomeExtensions.system-monitor.extensionUuid
         pkgs.gnomeExtensions.caffeine.extensionUuid
         pkgs.gnomeExtensions.color-picker.extensionUuid
         pkgs.gnomeExtensions.freon.extensionUuid
+        pkgs.gnomeExtensions.pop-shell.extensionUuid
+        pkgs.gnomeExtensions.space-bar.extensionUuid
+        pkgs.gnomeExtensions.system-monitor.extensionUuid
+        pkgs.gnomeExtensions.wiggle.extensionUuid
 
         # Alternatively, you can manually pass UUID as a string.
         # "blur-my-shell@aunetx"
@@ -93,6 +96,7 @@ with lib.hm.gvariant;
       gtk-key-theme = "Default";
       gtk-theme = "Adwaita";
       icon-theme = "Adwaita";
+      cursor-theme = "Adwaita";
       show-battery-percentage = true;
       toolkit-accessibility = false;
     };
@@ -104,6 +108,7 @@ with lib.hm.gvariant;
     "org/gnome/desktop/wm/preferences" = {
       button-layout = "close,minimize,maximize:appmenu";
       num-workspaces = 8;
+      focus-mode = "sloppy";
     };
 
     "org/gnome/shell/keybindings" = {

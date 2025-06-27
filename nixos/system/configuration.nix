@@ -63,6 +63,13 @@
     gdm.enableGnomeKeyring = true;
   };
 
+  programs.hyprland = {
+    # Install the packages from nixpkgs
+    enable = true;
+    # Whether to enable XWayland
+    xwayland.enable = true;
+  };
+
   environment.gnome.excludePackages = with pkgs; [
     epiphany
     geary
@@ -107,6 +114,12 @@
   programs.zsh.enable = true;
 
   virtualisation.docker.enable = true;
+  virtualisation.libvirtd.enable = true;
+  virtualisation.virtualbox.host.enable = true;
+  virtualisation.virtualbox.host.enableExtensionPack = true;
+
+  # Allow unfree packages
+  nixpkgs.config.allowUnfree = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.nelson = {
@@ -114,7 +127,9 @@
     description = "Nelson Estevão";
     extraGroups = [
       "docker"
+      "libvirtd"
       "networkmanager"
+      "vboxusers"
       "wheel"
     ];
     packages = with pkgs; [
@@ -145,16 +160,28 @@
   # Fingerprint reader
   services.fprintd.enable = true;
 
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
-
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+    hyprcursor
+    hypridle
+    hyprlock
+    hyprpaper
+    hyprpicker
+    pyprland
+    waybar
+
+    vagrant
+    virtualbox
+    libvirt
+
+    chromedriver
+    google-chrome
+
     brave
     discord
     ghostty
-    google-chrome
+    wezterm
     jetbrains.datagrip
     kdePackages.kdenlive
     nerd-fonts.jetbrains-mono
