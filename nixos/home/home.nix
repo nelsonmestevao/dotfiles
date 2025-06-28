@@ -55,6 +55,7 @@
     pkg-config
 
     # development tools
+    ast-grep
     bc
     bitwarden-cli
     bruno
@@ -123,9 +124,9 @@
     ## programming environments
     mise
     # elixir_1_18
-    erlang_27
+    # erlang_27
     ghc
-    nodejs_22
+    # nodejs_22
     ruby_3_4
 
     # misc
