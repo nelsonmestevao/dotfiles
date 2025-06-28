@@ -41,16 +41,14 @@ matches:
         params:
           cmd: git config --global user.name
   - triggers:
-      - ":date"
       - ",date"
-    replace: "{{mydate}}"
+    replace: "{{today}}"
     vars:
-      - name: mydate
+      - name: today
         type: date
         params:
           format: "%d/%m/%Y"
   - triggers:
-      - ":hb"
       - ",hb"
     replace: |
       Feliz aniversário, $|$! 🎂

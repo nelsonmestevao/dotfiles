@@ -60,6 +60,7 @@
     bitwarden-cli
     bruno
     direnv
+    # espanso-wayland
     httpie
     k6
     llvmPackages_20.clang-tools

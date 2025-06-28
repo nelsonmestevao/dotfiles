@@ -1,5 +1,7 @@
-search_shortcut: off
-search_trigger: .search
-backend: Inject
-clipboard_threshold: 1000
-inject_delay: 3
+# search_shortcut: off
+# search_trigger: .search
+backend: wayland
+# clipboard_threshold: 1000
+# inject_delay: 3
+keyboard_layout:
+  layout: "pt"
