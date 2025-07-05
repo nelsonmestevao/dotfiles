@@ -59,6 +59,9 @@ IEx.configure(
 )
 
 defmodule :_utils do
+  def format, do: Mix.Tasks.Format.run([])
+
+  defdelegate f, to: __MODULE__, as: :format
   defdelegate bye(), to: System, as: :halt
   defdelegate exit(), to: System, as: :halt
   defdelegate quit(), to: System, as: :halt
