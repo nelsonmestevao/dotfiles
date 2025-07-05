@@ -99,6 +99,7 @@
 
     # desktop apps
     bitwarden-desktop
+    calibre
     gimp
     inkscape
     libreoffice
