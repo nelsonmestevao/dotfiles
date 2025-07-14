@@ -560,6 +560,9 @@ local plugins = {
     end,
   },
   {
+    "sitiom/nvim-numbertoggle"
+  },
+  {
     "RRethy/nvim-treesitter-endwise",
     dependencies = { "nvim-treesitter/nvim-treesitter" }, -- if you install parsers with `nvim-treesitter`
     config = function()
