@@ -39,7 +39,6 @@
     imagemagick
     jq
     poppler_utils # pdftotext, pdftohtml, etc
-    rclone
     ripgrep
     tldr
     unzip

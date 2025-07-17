@@ -135,6 +135,7 @@
     packages = with pkgs; [
       # dev tools
       dconf2nix
+      rclone
       # docker
       docker
       docker-compose
@@ -205,6 +206,29 @@
   ];
 
   environment.variables = {
+  };
+
+  systemd.timers."backup-books" = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      Unit = "backup-books.service";
+      # OnBootSec = "5m";
+      # OnUnitActiveSec = "5m";
+      OnCalendar = "Mon..Fri 17:00";
+      Persistent = true;
+    };
+  };
+
+  systemd.services."backup-books" = {
+    script = ''
+      set -eu
+      mkdir -p ~/.logs/rclone
+      ${pkgs.rclone}/bin/rclone sync ~/Books gdrive:Documents/Calibre -v >> ~/.logs/rclone/backup-books.log 2>&1
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+      User = "nelson";
+    };
   };
 
   # This value determines the NixOS release from which the default
