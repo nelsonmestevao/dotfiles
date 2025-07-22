@@ -223,7 +223,7 @@
     script = ''
       set -eu
       mkdir -p ~/.logs/rclone
-      ${pkgs.rclone}/bin/rclone sync ~/Books gdrive:Documents/Calibre -v >> ~/.logs/rclone/backup-books.log 2>&1
+      ${pkgs.rclone}/bin/rclone sync ~/Books gdrive:Backups/Calibre -v >> ~/.logs/rclone/backup-books.log 2>&1
     '';
     serviceConfig = {
       Type = "oneshot";
