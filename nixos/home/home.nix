@@ -55,6 +55,7 @@
     pkg-config
 
     # development tools
+    age
     ast-grep
     bc
     bitwarden-cli
