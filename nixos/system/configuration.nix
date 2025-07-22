@@ -136,7 +136,6 @@
       # dev tools
       dconf2nix
       rclone
-      rclone-browser
       # docker
       docker
       docker-compose
