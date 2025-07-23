@@ -136,6 +136,7 @@
       # dev tools
       dconf2nix
       rclone
+      xonsh
       # docker
       docker
       docker-compose
