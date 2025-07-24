@@ -222,7 +222,30 @@
     script = ''
       set -eu
       mkdir -p ~/.logs/rclone
-      ${pkgs.rclone}/bin/rclone sync ~/Books gdrive:Backups/Calibre -v >> ~/.logs/rclone/backup-books.log 2>&1
+      ${pkgs.rclone}/bin/rclone sync ~/Books gdrive:Backups/Calibre -v --log-file=~/.logs/rclone/backup-books.log
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+      User = "nelson";
+    };
+  };
+
+  systemd.timers."backup-home-assistant" = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      Unit = "backup-home-assistant.service";
+      # OnBootSec = "5m";
+      # OnUnitActiveSec = "5m";
+      OnCalendar = "Tue,Fri 11:00";
+      Persistent = true;
+    };
+  };
+
+  systemd.services."backup-home-assistant" = {
+    script = ''
+      set -eu
+      mkdir -p ~/.logs/rclone
+      ${pkgs.rclone}/bin/rclone copy ha:/backup gdrive:Backups/home-assistant -v --log-file=~/.logs/rclone/backup-home-assistant.log
     '';
     serviceConfig = {
       Type = "oneshot";
