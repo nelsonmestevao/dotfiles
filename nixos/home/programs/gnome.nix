@@ -14,6 +14,7 @@ with lib.hm.gvariant;
     gnome-tweaks
     ulauncher
     albert
+    walker
     wl-clipboard
     adwaita-icon-theme
     # copyq
@@ -23,11 +24,14 @@ with lib.hm.gvariant;
     gnomeExtensions.blur-my-shell
     gnomeExtensions.caffeine
     gnomeExtensions.color-picker
-    gnomeExtensions.freon
     gnomeExtensions.pop-shell
     gnomeExtensions.space-bar
-    gnomeExtensions.system-monitor
+    gnomeExtensions.top-bar-organizer
+    gnomeExtensions.vitals
+    gnomeExtensions.wake-on-lan
     gnomeExtensions.wiggle
+    # gnomeExtensions.freon
+    # gnomeExtensions.system-monitor
   ];
 
   # services.copyq = {
@@ -52,11 +56,15 @@ with lib.hm.gvariant;
         pkgs.gnomeExtensions.blur-my-shell.extensionUuid
         pkgs.gnomeExtensions.caffeine.extensionUuid
         pkgs.gnomeExtensions.color-picker.extensionUuid
-        pkgs.gnomeExtensions.freon.extensionUuid
         pkgs.gnomeExtensions.pop-shell.extensionUuid
         pkgs.gnomeExtensions.space-bar.extensionUuid
-        pkgs.gnomeExtensions.system-monitor.extensionUuid
+        pkgs.gnomeExtensions.top-bar-organizer.extensionUuid
+        pkgs.gnomeExtensions.vitals.extensionUuid
+        pkgs.gnomeExtensions.wake-on-lan.extensionUuid
         pkgs.gnomeExtensions.wiggle.extensionUuid
+
+        # pkgs.gnomeExtensions.freon.extensionUuid
+        # pkgs.gnomeExtensions.system-monitor.extensionUuid
 
         # Alternatively, you can manually pass UUID as a string.
         # "blur-my-shell@aunetx"
@@ -290,6 +298,28 @@ with lib.hm.gvariant;
     "org/gnome/shell/extensions/space-bar/shortcuts" = {
       enable-activate-workspace-shortcuts = true;
       enable-move-to-workspace-shortcuts = true;
+    };
+
+    "org/gnome/shell/extensions/top-bar-organizer" = {
+      left-box-order = [
+        "activities"
+        "Space Bar"
+      ];
+      center-box-order = [ "dateMenu" ];
+      right-box-order = [
+        "freonMenu"
+        "screenSharing"
+        "system-monitor@gnome-shell-extensions.gcampax.github.com"
+        "dwellClick"
+        "vitalsMenu"
+        "a11y"
+        "color-picker@tuberry"
+        "screenRecording"
+        "wol@mnorlin.se"
+        "keyboard"
+        "pop-shell"
+        "quickSettings"
+      ];
     };
 
     "org/gnome/shell/extensions/system-monitor" = {

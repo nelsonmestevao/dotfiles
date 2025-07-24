@@ -6,7 +6,6 @@
   lib,
   pkgs,
   zen-browser,
-  walker,
   ...
 }:
 {
@@ -194,7 +193,6 @@
     telegram-desktop
     terraform
     vscode
-    walker.packages.${pkgs.system}.default
     wezterm
     zed-editor
     zen-browser.packages.${pkgs.system}.default

@@ -41,44 +41,7 @@
       "inputs": {
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs",
-        "walker": "walker",
         "zen-browser": "zen-browser"
-      }
-    },
-    "systems": {
-      "locked": {
-        "lastModified": 1689347949,
-        "narHash": "sha256-12tWmuL2zgBgZkdoB6qXZsgJEH9LR3oUgpaQq2RbI80=",
-        "owner": "nix-systems",
-        "repo": "default-linux",
-        "rev": "31732fcf5e8fea42e59c2488ad31a0e651500f68",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-systems",
-        "repo": "default-linux",
-        "type": "github"
-      }
-    },
-    "walker": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "systems": "systems"
-      },
-      "locked": {
-        "lastModified": 1753295615,
-        "narHash": "sha256-3/P21ssgs02H75JZYF0G5AVQEEsH0QGonLCY7ZZm7Pk=",
-        "owner": "abenz1267",
-        "repo": "walker",
-        "rev": "3cb45b16482fefb4d33be43036121a9a93fa261f",
-        "type": "github"
-      },
-      "original": {
-        "owner": "abenz1267",
-        "repo": "walker",
-        "type": "github"
       }
     },
     "zen-browser": {
