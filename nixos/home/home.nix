@@ -69,6 +69,7 @@
     shfmt
     stripe-cli
     typst
+    wakeonlan
     watchman
 
     # version control
