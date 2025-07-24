@@ -6,6 +6,7 @@
   lib,
   pkgs,
   zen-browser,
+  walker,
   ...
 }:
 {
@@ -64,9 +65,7 @@
   };
 
   programs.hyprland = {
-    # Install the packages from nixpkgs
     enable = true;
-    # Whether to enable XWayland
     xwayland.enable = true;
   };
 
@@ -183,7 +182,6 @@
     brave
     discord
     ghostty
-    wezterm
     jetbrains.datagrip
     kdePackages.kdenlive
     nerd-fonts.jetbrains-mono
@@ -196,6 +194,8 @@
     telegram-desktop
     terraform
     vscode
+    walker.packages.${pkgs.system}.default
+    wezterm
     zed-editor
     zen-browser.packages.${pkgs.system}.default
     # security

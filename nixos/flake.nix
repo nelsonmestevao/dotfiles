@@ -12,6 +12,11 @@
       url = "github:youwen5/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    walker ={
+      url = "github:abenz1267/walker";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs =
     {
@@ -19,6 +24,7 @@
       nixpkgs,
       home-manager,
       zen-browser,
+      walker,
     }:
     let
       system = "x86_64-linux";
@@ -29,7 +35,7 @@
 
       nixosConfigurations.framework = nixpkgs.lib.nixosSystem {
         inherit system;
-        specialArgs = { inherit zen-browser; };
+        specialArgs = { inherit zen-browser; inherit walker; };
         modules = [ ./system/configuration.nix ];
       };
 
