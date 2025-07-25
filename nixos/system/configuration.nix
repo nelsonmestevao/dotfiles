@@ -199,6 +199,8 @@
     zen-browser.packages.${pkgs.system}.default
     # security
     fprintd
+      # file system
+    ntfs3g
     # networking
     networkmanager-openconnect
     networkmanager-openvpn
