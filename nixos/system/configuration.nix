@@ -199,7 +199,7 @@
     zen-browser.packages.${pkgs.system}.default
     # security
     fprintd
-      # file system
+    # file system
     ntfs3g
     # networking
     networkmanager-openconnect
