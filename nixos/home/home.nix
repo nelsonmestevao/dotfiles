@@ -144,6 +144,20 @@
     # # fonts?
     # (pkgs.nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
 
+    (pkgs.writeShellScriptBin "runex" ''
+      FILE="$1"
+      TMP="$(mktemp --suffix=.exs)"
+
+
+      awk '
+      /^```elixir/ { inblock = 1; next }
+      inblock && /^```/ { inblock = 0; next }
+      inblock { print }
+      ' "$FILE" > "$TMP"
+
+      elixir "$TMP"
+    '')
+
     (pkgs.writeShellScriptBin "wake-hades" ''
       ${pkgs.wakeonlan}/bin/wakeonlan 2c:f0:5d:59:3c:0d
     '')
