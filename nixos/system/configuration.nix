@@ -194,6 +194,7 @@
     spotify
     telegram-desktop
     terraform
+    vlc
     vscode
     wezterm
     zed-editor
