@@ -36,8 +36,10 @@
     ffmpeg-full
     fop
     fzf
+    gvfs
     imagemagick
     jq
+    lftp
     poppler_utils # pdftotext, pdftohtml, etc
     ripgrep
     tldr

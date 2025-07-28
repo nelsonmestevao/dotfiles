@@ -135,6 +135,7 @@
       # dev tools
       dconf2nix
       rclone
+      restic
       xonsh
       # docker
       docker
