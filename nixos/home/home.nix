@@ -104,6 +104,7 @@
     # desktop apps
     bitwarden-desktop
     calibre
+    digikam
     gimp
     inkscape
     libreoffice
