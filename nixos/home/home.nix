@@ -36,6 +36,7 @@
     ffmpeg-full
     fop
     fzf
+    gnupg
     gvfs
     imagemagick
     jq
