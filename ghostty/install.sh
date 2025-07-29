@@ -7,7 +7,6 @@ cd "${BASE_DIR}/.." || exit 127
 . scripts/distro.sh
 # shellcheck source=../scripts/execs.sh
 . scripts/execs.sh
-# shellcheck source=../scripts/utils.sh
-. scripts/utils.sh
 
-mksymlink "$HOME/.dotfiles/ghostty/config" "$HOME/.config/ghostty/config"
+mksymlink "$DOTFILES/ghostty/config" "$HOME/.config/ghostty/config"
+mksymlink "$DOTFILES/ghostty/themes" "$HOME/.config/ghostty/themes"

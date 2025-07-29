@@ -1,4 +1,4 @@
-theme = dark:"MaterialDark",light:"Material"
+theme = dark:"Night",light:"Day"
 font-family = "JetBrains Mono Nerd Font"
 font-size = 16
 
@@ -26,4 +26,3 @@ keybind = alt+shift+h=new_split:down
 keybind = alt+shift+v=new_split:right
 
 keybind = performable:ctrl+c=copy_to_clipboard
-

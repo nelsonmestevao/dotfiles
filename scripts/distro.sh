@@ -11,14 +11,14 @@ function mksymlink() {
   local DST="$2"
 
   mkdir -p "$(dirname "${DST}")"
-  execute "ln -sf ${SRC} ${DST}" "Symlinking ${CYAN}${DST}${RESET} → $(dirname ${SRC})/${UNDERLINE}$(basename ${SRC})${RESET}"
+  symlink "${SRC}" "${DST}"
 }
 
 function symlink() {
   local SRC="$1"
   local DST="$2"
 
-  execute "ln -sf ${SRC} ${DST}" "Symlinking $(basename $DST)"
+  execute "ln -sfn ${SRC} ${DST}" "Symlinking ${CYAN}${DST}${RESET} → $(dirname ${SRC})/${UNDERLINE}$(basename ${SRC})${RESET}"
 }
 
 function is_installed() {
