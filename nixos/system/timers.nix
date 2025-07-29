@@ -32,7 +32,7 @@ lib.mkMerge [
   # check logs with journalctl -fu backup-system.service
   (mkSystemTimer "backup-system" "Fri 18:00" ''
     ${pkgs.restic}/bin/restic -r rclone:tpshare:G/backups/framework.repo backup \
-      --password-file ~/.config/restic/restic.pw \
+      --password-file ~/.config/restic/restic.pw --exclude-file ~/.dotfiles/restic/exclude.txt -v \
       ~/Archive ~/Books ~/Code ~/Documents ~/Downloads ~/Pictures ~/Videos
   '')
 
