@@ -226,7 +226,7 @@ with lib.hm.gvariant;
 
     "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
       name = "Albert Launcher";
-      command = "albert toggle";
+      command = "albert --platformtheme gnome toggle";
       binding = "<Alt>Space";
     };
 
