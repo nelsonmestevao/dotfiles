@@ -1,4 +1,5 @@
 AddKeysToAgent  yes
+Compression yes
 
 Host aur.archlinux.org
   IdentityFile ~/.ssh/id_ed25519
