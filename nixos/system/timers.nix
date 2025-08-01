@@ -1,5 +1,8 @@
-{ pkgs, lib, ... }:
-
+{
+  pkgs,
+  lib,
+  ...
+}:
 let
   mkSystemTimer = name: onCalendar: scriptCmd: {
     systemd.timers."${name}" = {
@@ -21,7 +24,6 @@ let
   };
 in
 lib.mkMerge [
-
   (mkSystemTimer "backup-books" "Mon..Fri 17:00" ''
     set -eu
     mkdir -p ~/.logs/rclone
@@ -43,5 +45,4 @@ lib.mkMerge [
       --password-file ~/.config/restic/restic.pw --exclude-file ~/.dotfiles/restic/exclude.txt -v \
       ~/Archive ~/Books ~/Code ~/Documents ~/Downloads ~/Pictures ~/Videos
   '')
-
 ]

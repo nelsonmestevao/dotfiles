@@ -25,7 +25,7 @@
       pkgs = nixpkgs.legacyPackages.${system};
     in
     {
-      formatter.${system} = pkgs.nixfmt-rfc-style;
+      formatter.${system} = pkgs.nixfmt-tree;
 
       nixosConfigurations.framework = nixpkgs.lib.nixosSystem {
         inherit system;
