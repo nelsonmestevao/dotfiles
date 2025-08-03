@@ -209,6 +209,8 @@
     "editor.defaultFormatter": "JakeBecker.elixir-ls"
   },
   "cSpell.userWords": [
-    "Livecomp"
+    "Livecomp",
+    "Logflare",
+    "vercel"
   ]
 }
