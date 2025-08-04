@@ -44,6 +44,7 @@
     ripgrep
     tldr
     unzip
+    vdhcoapp
     wget
     yazi
     zoxide
