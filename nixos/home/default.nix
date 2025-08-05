@@ -40,6 +40,7 @@
     imagemagick
     jq
     lftp
+    mpv
     poppler_utils # pdftotext, pdftohtml, etc
     ripgrep
     tldr
@@ -109,6 +110,7 @@
     gimp
     inkscape
     libreoffice
+    pinta
     zeal
 
     # project dependencies

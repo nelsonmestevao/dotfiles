@@ -36,7 +36,7 @@
       homeConfigurations.nelson = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         modules = [
-          ./home/home.nix
+          ./home
         ];
       };
     };
