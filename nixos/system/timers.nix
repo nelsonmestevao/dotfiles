@@ -21,6 +21,16 @@ let
         User = "nelson";
       };
     };
+
+    environment.systemPackages = with pkgs; [
+      (pkgs.writeShellScriptBin "${name}" ''
+        systemctl start ${name}.service
+      '')
+
+      (pkgs.writeShellScriptBin "${name}-logs" ''
+        journalctl -eu ${name}.service
+      '')
+    ];
   };
 in
 lib.mkMerge [
@@ -28,25 +38,25 @@ lib.mkMerge [
     set -eu
     mkdir -p ~/.logs/rclone
     ${pkgs.rclone}/bin/rclone sync ~/Books gdrive:Backups/Calibre -v \
-      --log-file=~/.logs/rclone/backup-books.log
+      --log-file=$HOME/.logs/rclone/backup-books.log
   '')
 
   # check logs with journalctl -fu backup-system.service
   (mkSystemTimer "backup-system" "Fri 18:00" ''
     ${pkgs.restic}/bin/restic -r rclone:mega:Backups/restic/framework.repo backup \
-      --password-file ~/.config/restic/restic.pw --exclude-file ~/.dotfiles/restic/exclude.txt -v \
+      --compression max --password-file ~/.config/restic/restic.pw --exclude-file ~/.dotfiles/restic/exclude.txt -v \
       ~/Archive ~/Books ~/Code ~/Documents ~/Downloads ~/Pictures ~/Videos
 
     ${pkgs.restic}/bin/restic -r rclone:dropbox:Backups/restic/framework.repo backup \
-      --password-file ~/.config/restic/restic.pw --exclude-file ~/.dotfiles/restic/exclude.txt -v \
+      --compression max --password-file ~/.config/restic/restic.pw --exclude-file ~/.dotfiles/restic/exclude.txt -v \
       ~/Archive ~/Books ~/Code ~/Documents ~/Downloads ~/Pictures ~/Videos
 
-    ${pkgs.restic}/bin/restic -r rclone:mdrive:G/backups/framework.repo backup \
-      --password-file ~/.config/restic/restic.pw --exclude-file ~/.dotfiles/restic/exclude.txt -v \
+    ${pkgs.restic}/bin/restic -r rclone:mdrive:Backups/restic/framework.repo backup \
+      --compression max --password-file ~/.config/restic/restic.pw --exclude-file ~/.dotfiles/restic/exclude.txt -v \
       ~/Archive ~/Books ~/Code ~/Documents ~/Downloads ~/Pictures ~/Videos
 
     ${pkgs.restic}/bin/restic -r rclone:tpshare:G/backups/framework.repo backup \
-      --password-file ~/.config/restic/restic.pw --exclude-file ~/.dotfiles/restic/exclude.txt -v \
+      --compression max --password-file ~/.config/restic/restic.pw --exclude-file ~/.dotfiles/restic/exclude.txt -v \
       ~/Archive ~/Books ~/Code ~/Documents ~/Downloads ~/Pictures ~/Videos
   '')
 ]
