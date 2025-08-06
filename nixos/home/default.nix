@@ -65,6 +65,7 @@
     bitwarden-cli
     bruno
     direnv
+    eva
     # espanso-wayland
     httpie
     k6
