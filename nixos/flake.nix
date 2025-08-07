@@ -35,6 +35,7 @@
 
       homeConfigurations.nelson = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
+        extraSpecialArgs = { };
         modules = [
           ./home
         ];

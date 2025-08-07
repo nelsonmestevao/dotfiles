@@ -145,16 +145,9 @@
     neofetch
     onefetch
 
-    # # It is sometimes useful to fine-tune packages, for example, by applying
-    # # overrides. You can do that directly here, just don't forget the
-    # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
-    # # fonts?
-    # (pkgs.nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
-
     (pkgs.writeShellScriptBin "runex" ''
       FILE="$1"
       TMP="$(mktemp --suffix=.exs)"
-
 
       awk '
       /^```elixir/ { inblock = 1; next }
@@ -163,6 +156,16 @@
       ' "$FILE" > "$TMP"
 
       elixir "$TMP"
+    '')
+
+    (let flakeLockPath = ../flake.lock; in pkgs.writeShellScriptBin "pkgversion" ''
+      PACKAGE="$1"
+      REVISION="$2"
+
+      [[ -z "$PACKAGE" ]] && echo "Package name is required" && exit 1
+      [[ -z "$REVISION" ]] && REVISION=$(${pkgs.jq}/bin/jq -r '.nodes.nixpkgs.original.ref' ${flakeLockPath})
+
+      echo $(nix eval --raw "github:NixOS/nixpkgs/$REVISION#$PACKAGE.version")
     '')
 
     (pkgs.writeShellScriptBin "wake-hades" ''
