@@ -131,6 +131,7 @@
     # misc
     cpufetch
     neofetch
+    nix-search-tv
     onefetch
 
     (pkgs.writeShellScriptBin "runex" ''
