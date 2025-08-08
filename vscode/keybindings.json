@@ -8,6 +8,10 @@
     "command": "-workbench.action.files.newUntitledFile"
   },
   {
+    "key": "ctrl+e",
+    "command": "-workbench.action.quickOpen" // remove the default action
+  },
+  {
     "key": "tab",
     "command": "editor.action.inlineSuggest.commit",
     "when": "inlineSuggestionVisible && !editorReadonly && !editorTabMovesFocus && !suggestWidgetVisible"
@@ -185,11 +189,16 @@
     "command": "workbench.action.toggleMaximizedPanel"
   },
   {
-    "key": "ctrl+shift+t",
+    "key": "ctrl+shift+n",
+    "command": "workbench.action.closePanel",
+    "when": "terminalFocus"
+  },
+  {
+    "key": "ctrl+j",
     "command": "workbench.action.terminal.focus"
   },
   {
-    "key": "ctrl+shift+t",
+    "key": "ctrl+j",
     "command": "workbench.action.focusActiveEditorGroup",
     "when": "terminalFocus"
   }
