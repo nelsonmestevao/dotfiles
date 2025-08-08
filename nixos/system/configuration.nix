@@ -5,13 +5,14 @@
   config,
   lib,
   pkgs,
+  hostname,
   zen-browser,
   ...
 }:
 {
   imports = [
     # Include the results of the hardware scan.
-    ../hardware/framework16.nix
+    ./hosts/framework/hardware.nix
     ./timers.nix
   ];
 
@@ -19,7 +20,7 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "framework"; # Define your hostname.
+  networking.hostName = hostname;
 
   networking.extraHosts = ''
     127.0.0.1 livecomp.test

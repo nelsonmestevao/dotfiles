@@ -22,20 +22,22 @@
     }:
     let
       system = "x86_64-linux";
+      hostname = "framework";
+      username = "nelson";
       pkgs = nixpkgs.legacyPackages.${system};
     in
     {
       formatter.${system} = pkgs.nixfmt-tree;
 
-      nixosConfigurations.framework = nixpkgs.lib.nixosSystem {
+      nixosConfigurations.${hostname} = nixpkgs.lib.nixosSystem {
         inherit system;
-        specialArgs = { inherit zen-browser; };
+        specialArgs = { inherit zen-browser hostname; };
         modules = [ ./system/configuration.nix ];
       };
 
-      homeConfigurations.nelson = home-manager.lib.homeManagerConfiguration {
+      homeConfigurations.${username} = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
-        extraSpecialArgs = { };
+        extraSpecialArgs = { inherit username; };
         modules = [
           ./home
         ];
