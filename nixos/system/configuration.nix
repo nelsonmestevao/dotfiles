@@ -139,6 +139,7 @@
 
   services.keybase.enable = true;
   services.kbfs.enable = true;
+  services.kbfs.mountPoint = "/mnt/kbfs";
 
   services.tailscale.enable = true;
 
