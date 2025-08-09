@@ -1,5 +1,0 @@
-# vim: ft=zsh
-
-export TMUXINATOR_CONFIG=$DOTFILES/tmux/projects
-
-# source $DOTFILES/tmux/tmuxinator.zsh
