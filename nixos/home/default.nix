@@ -103,6 +103,13 @@
     pinta
     zeal
 
+    # fonts
+    font-awesome
+    nerd-fonts.hack
+    nerd-fonts.noto
+    nerd-fonts.jetbrains-mono
+    noto-fonts-color-emoji
+
     # project dependencies
 
     ## system utils

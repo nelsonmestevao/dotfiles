@@ -176,7 +176,6 @@
     ghostty
     jetbrains.datagrip
     kdePackages.kdenlive
-    nerd-fonts.jetbrains-mono
     obs-cli
     obs-cmd
     obs-studio
