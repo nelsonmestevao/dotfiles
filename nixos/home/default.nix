@@ -8,6 +8,7 @@
 {
   imports = [
     ./programs/gnome.nix
+    ./lib
   ];
 
   home.username = username;
@@ -167,11 +168,9 @@
     '')
   ];
 
-  xdg.configFile = {
-  };
-
-  home.file = {
-  };
+  # home.file.".config/teste/cena.txt" = config.lib.dotfiles.mkSymlink "nixos/cena.txt";
+  # xdg.configFile."teste/coisito.txt" = config.lib.dotfiles.mkSymlink "nixos/cena.txt";
+  # xdg.configFile."teste/hey.txt" = config.lib.dotfiles.mkSymlink "nixos/cena-nao-existente.txt";
 
   home.sessionVariables = {
     EDITOR = "nvim";
@@ -180,6 +179,7 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
+  programs.nh.enable = true;
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 

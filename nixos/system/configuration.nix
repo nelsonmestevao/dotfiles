@@ -11,7 +11,6 @@
 }:
 {
   imports = [
-    # Include the results of the hardware scan.
     ./hosts/framework/hardware.nix
     ./timers.nix
   ];
@@ -56,6 +55,10 @@
   # Enable the X11 windowing system.
   services.xserver.enable = true;
 
+  # Enable the Hyprland Window Manager
+  programs.hyprland.enable = true;
+  programs.hyprland.xwayland.enable = true;
+
   # Enable the GNOME Desktop Environment.
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.desktopManager.gnome.enable = true;
@@ -63,11 +66,6 @@
   security.pam.services = {
     login.enableGnomeKeyring = true;
     gdm.enableGnomeKeyring = true;
-  };
-
-  programs.hyprland = {
-    enable = true;
-    xwayland.enable = true;
   };
 
   environment.gnome.excludePackages = with pkgs; [
@@ -100,26 +98,7 @@
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
-
-    # use the example session manager (no others are packaged yet so this is enabled by default,
-    # no need to redefine it in your config for now)
-    #media-session.enable = true;
   };
-
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
-
-  programs.zsh.enable = true;
-
-  virtualisation.docker.enable = true;
-  virtualisation.libvirtd.enable = true;
-  virtualisation.virtualbox.host.enable = true;
-  virtualisation.virtualbox.host.enableExtensionPack = true;
-
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.nelson = {
@@ -137,8 +116,7 @@
       dconf2nix
       rclone
       restic
-      xonsh
-      # docker
+      # containers
       docker
       docker-compose
       # AppImage
@@ -148,7 +126,13 @@
     shell = pkgs.zsh;
   };
 
-  # Install firefox.
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
+
+  programs.zsh.enable = true;
+
   programs.firefox.enable = true;
 
   services.flatpak.enable = true;
@@ -160,11 +144,17 @@
 
   programs.nix-ld.enable = true;
 
+  virtualisation.docker.enable = true;
+  virtualisation.libvirtd.enable = true;
+  virtualisation.virtualbox.host.enable = true;
+  virtualisation.virtualbox.host.enableExtensionPack = true;
+
   # Fingerprint reader
   services.fprintd.enable = true;
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
+  # Allow unfree packages
+  nixpkgs.config.allowUnfree = true;
+
   environment.systemPackages = with pkgs; [
     hyprcursor
     hypridle
@@ -200,17 +190,18 @@
     wezterm
     zed-editor
     zen-browser.packages.${pkgs.system}.default
+
     # security
     fprintd
-    # file system
-    ntfs3g
+
     # networking
     networkmanager-openconnect
     networkmanager-openvpn
     networkmanager-vpnc
   ];
 
-  environment.variables = { };
+  environment.variables = {
+  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
@@ -218,5 +209,5 @@
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "24.11"; # Did you read the comment?
+  system.stateVersion = "25.05";
 }

@@ -1,6 +1,7 @@
 {
   pkgs,
   lib,
+  username,
   ...
 }:
 let
@@ -18,7 +19,7 @@ let
       script = scriptCmd;
       serviceConfig = {
         Type = "oneshot";
-        User = "nelson";
+        User = username;
       };
     };
 

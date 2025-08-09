@@ -22,17 +22,19 @@ function display_help() {
   $(help_title_section Options)
     -h --help         Show this screen.
     -v --version      Show version.
-    --system          Rebuild the Operating System.
-    --home            Rebuild the Home Manager configuration.
+    -os --system      Rebuild the Operating System.
+    -hm --home        Rebuild the Home Manager configuration.
 EOF
 }
 
 rebuild_system() {
-  nixos-rebuild switch --use-remote-sudo --flake '.#framework'
+  nix shell nixpkgs#nh --command nh os switch .
+  # nixos-rebuild switch --use-remote-sudo --flake '.'
 }
 
 rebuild_home() {
-  home-manager switch --flake '.#nelson'
+  nix shell nixpkgs#nh --command nh home switch .
+  # home-manager switch --flake '.'
 }
 
 case ${1:-all} in

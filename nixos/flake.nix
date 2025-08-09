@@ -31,7 +31,7 @@
 
       nixosConfigurations.${hostname} = nixpkgs.lib.nixosSystem {
         inherit system;
-        specialArgs = { inherit zen-browser hostname; };
+        specialArgs = { inherit zen-browser hostname username; };
         modules = [ ./system/configuration.nix ];
       };
 
