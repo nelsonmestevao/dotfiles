@@ -17,7 +17,7 @@ fi
 
 source $SPELLS/spells.init
 
-for init_file in $(ls $DOTFILES/**/*.init); do
+for init_file in $(find $DOTFILES -type f -name "*.init" | sort); do
   source $init_file
 done
 
