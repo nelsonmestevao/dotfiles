@@ -25,25 +25,37 @@ let
 
     environment.systemPackages = with pkgs; [
       (pkgs.writeShellScriptBin "${name}" ''
-        systemctl start ${name}.service
-      '')
+        COMMAND="$1"
 
-      (pkgs.writeShellScriptBin "${name}-logs" ''
-        journalctl -eu ${name}.service
+        [[ -z "$COMMAND" ]] && COMMAND="start"
+
+        case "$COMMAND" in
+          start)
+            systemctl start ${name}.service
+            ;;
+          status)
+            systemctl status ${name}.timer
+            systemctl status ${name}.service
+            ;;
+          logs)
+            journalctl -eu ${name}.service
+            ;;
+          *)
+            echo "Usage: ${name} (start | status | logs)"
+            exit 1
+            ;;
+        esac
       '')
     ];
   };
 in
 lib.mkMerge [
-  (mkSystemTimer "backup-books" "Mon..Fri 17:00" ''
-    set -eu
-    mkdir -p ~/.logs/rclone
-    ${pkgs.rclone}/bin/rclone sync ~/Books gdrive:Backups/Calibre -v \
-      --log-file=$HOME/.logs/rclone/backup-books.log
+  (mkSystemTimer "sync-books" "Mon..Fri 18:00" ''
+    ${pkgs.rclone}/bin/rclone sync ~/Books gdrive:Backups/Calibre -v
+    # --log-file=$HOME/.logs/rclone/backup-books.log
   '')
 
-  # check logs with journalctl -fu backup-system.service
-  (mkSystemTimer "backup-system" "Fri 18:00" ''
+  (mkSystemTimer "backup-system" "Mon..Fri 17:00" ''
     ${pkgs.restic}/bin/restic -r rclone:mega:Backups/restic/framework.repo backup \
       --compression max --password-file ~/.config/restic/restic.pw --exclude-file ~/.dotfiles/restic/exclude.txt -v \
       ~/Archive ~/Books ~/Code ~/Documents ~/Downloads ~/Pictures ~/Videos
