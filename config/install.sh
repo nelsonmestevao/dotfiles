@@ -35,12 +35,6 @@ download_fonts() {
   sudo cp ~/.dotfiles/config/50-noto-color-emoji.conf /etc/fonts/conf.d/
 }
 
-symlink ~/.dotfiles/config/profile ~/.profile
-
-symlink ~/.dotfiles/config/user-dirs.dirs ~/.config/user-dirs.dirs
-
-xdg-user-dirs-update
-
 install_package noto-color-emoji-fontconfig
 
 symlink ~/.dotfiles/config/shutdown.desktop ~/.local/share/applications/shutdown.desktop

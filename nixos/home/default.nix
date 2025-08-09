@@ -183,6 +183,20 @@
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
+  xdg.userDirs = {
+    enable = true;
+    createDirectories = true;
+
+    desktop = "$HOME/Desktop";
+    documents = "$HOME/Documents";
+    download = "$HOME/Downloads";
+    music = "$HOME/Music";
+    pictures = "$HOME/Pictures";
+    publicShare = "$HOME/Public";
+    templates = "$HOME/Code";
+    videos = "$HOME/Videos";
+  };
+
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
   # introduces backwards incompatible changes.
