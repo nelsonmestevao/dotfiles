@@ -131,7 +131,7 @@
     # mise
     # elixir_1_18
     # erlang_27
-    ghc
+    # ghc
     # nodejs_22
     ruby_3_4
 
