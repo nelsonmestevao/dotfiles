@@ -30,6 +30,7 @@
     jq
     lftp
     mpv
+    nushell
     poppler_utils # pdftotext, pdftohtml, etc
     ripgrep
     tldr
