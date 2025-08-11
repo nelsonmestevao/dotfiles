@@ -22,7 +22,7 @@
   "github.copilot.nextEditSuggestions.enabled": true,
   "haskell.manageHLS": "GHCup",
   "terminal.integrated.fontFamily": "JetBrainsMono Nerd Font,JetBrainsMono NF,JetBrainsMono Nerd Font Mono,JetBrainsMono NFM",
-  "terminal.integrated.fontSize": 16,
+  "terminal.integrated.fontSize": 18,
   "terminal.integrated.sendKeybindingsToShell": false,
   "vim.cursorStylePerMode.insert": "line",
   "vim.useSystemClipboard": true,
