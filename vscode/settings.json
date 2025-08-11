@@ -80,6 +80,45 @@
     {
       "before": [
         "<leader>",
+        "t",
+        "a"
+      ],
+      "commands": [
+        {
+          "command": "workbench.action.tasks.runTask",
+          "args": "mix: Run tests"
+        }
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "t",
+        "f"
+      ],
+      "commands": [
+        {
+          "command": "workbench.action.tasks.runTask",
+          "args": "mix: Run tests in current file"
+        }
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "t",
+        "r"
+      ],
+      "commands": [
+        {
+          "command": "workbench.action.tasks.runTask",
+          "args": "mix: Run test at cursor"
+        }
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
         "f"
       ],
       "commands": [
