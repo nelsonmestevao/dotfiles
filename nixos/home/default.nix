@@ -129,7 +129,7 @@
     # pngquant
 
     ## programming environments
-    # mise
+    mise
     # elixir_1_18
     # erlang_27
     # ghc
