@@ -139,8 +139,8 @@ with lib.hm.gvariant;
     };
 
     "org/gnome/desktop/wm/keybindings" = {
-      switch-input-source = [ "<Super>space" ];
-      switch-input-source-backward = [ "<Shift><Super>space" ];
+      switch-input-source = [ "<Super>Space" ];
+      switch-input-source-backward = [ "<Shift><Super>Space" ];
       close = [ "<Super>q" ];
       move-to-monitor-down = [ ];
       move-to-monitor-left = [ ];
@@ -276,18 +276,24 @@ with lib.hm.gvariant;
       smart-gaps = false;
       snap-to-grid = false;
       stacking-with-mouse = false;
+
       gap-inner = mkUint32 3;
       gap-outer = mkUint32 3;
+
       tile-by-default = true;
+
       tile-enter = [ "<Super><Shift>Return" ];
-      tile-move-down = [ "<Super><Shift>j" ];
-      tile-move-down-global = [ "<Super><Shift>j" ];
-      tile-move-left = [ "<Super><Shift>h" ];
-      tile-move-left-global = [ "<Super><Shift>h" ];
-      tile-move-right = [ "<Super><Shift>l" ];
+
+      tile-move-left  = [ ];
+      tile-move-right = [ ];
+      tile-move-up    = [ ];
+      tile-move-down  = [ ];
+
+      tile-move-left-global  = [ "<Super><Shift>h" ];
       tile-move-right-global = [ "<Super><Shift>l" ];
-      tile-move-up = [ "<Super><Shift>k" ];
-      tile-move-up-global = [ "<Super><Shift>k" ];
+      tile-move-up-global    = [ "<Super><Shift>k" ];
+      tile-move-down-global  = [ "<Super><Shift>j" ];
+
       toggle-floating = [ "<Meta><Shift>Space" ];
     };
 
