@@ -163,9 +163,12 @@
   environment.systemPackages = with pkgs; [
     hyprcursor
     hypridle
+    hypridle
     hyprlock
     hyprpaper
     hyprpicker
+    hyprshot
+    hyprsunset
     pyprland
     waybar
 
