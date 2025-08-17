@@ -19,6 +19,10 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  boot.plymouth.enable = true;
+  boot.plymouth.font = "${pkgs.hack-font}/share/fonts/truetype/Hack-Regular.ttf";
+  boot.plymouth.logo = "${pkgs.nixos-icons}/share/icons/hicolor/128x128/apps/nix-snowflake.png";
+
   networking.hostName = hostname;
 
   networking.extraHosts = ''

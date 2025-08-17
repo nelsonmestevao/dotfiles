@@ -294,6 +294,7 @@ with lib.hm.gvariant;
       tile-move-up-global    = [ "<Super><Shift>k" ];
       tile-move-down-global  = [ "<Super><Shift>j" ];
 
+      stack = [ ];
       toggle-floating = [ "<Meta><Shift>Space" ];
     };
 
