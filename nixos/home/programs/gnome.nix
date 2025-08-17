@@ -284,15 +284,15 @@ with lib.hm.gvariant;
 
       tile-enter = [ "<Super><Shift>Return" ];
 
-      tile-move-left  = [ ];
+      tile-move-left = [ ];
       tile-move-right = [ ];
-      tile-move-up    = [ ];
-      tile-move-down  = [ ];
+      tile-move-up = [ ];
+      tile-move-down = [ ];
 
-      tile-move-left-global  = [ "<Super><Shift>h" ];
+      tile-move-left-global = [ "<Super><Shift>h" ];
       tile-move-right-global = [ "<Super><Shift>l" ];
-      tile-move-up-global    = [ "<Super><Shift>k" ];
-      tile-move-down-global  = [ "<Super><Shift>j" ];
+      tile-move-up-global = [ "<Super><Shift>k" ];
+      tile-move-down-global = [ "<Super><Shift>j" ];
 
       stack = [ ];
       toggle-floating = [ "<Meta><Shift>Space" ];

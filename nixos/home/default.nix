@@ -138,6 +138,7 @@
 
     # misc
     cpufetch
+    fastfetch
     neofetch
     nix-search-tv
     onefetch
