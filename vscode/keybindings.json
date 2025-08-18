@@ -13,8 +13,11 @@
   },
   {
     "key": "tab",
-    "command": "editor.action.inlineSuggest.commit",
-    "when": "inlineSuggestionVisible && !editorReadonly && !editorTabMovesFocus && !suggestWidgetVisible"
+    "command": "-editor.action.inlineSuggest.commit",
+  },
+  {
+    "key": "tab",
+    "command": "-github.copilot.acceptInlineSuggestion",
   },
   {
     "key": "ctrl+y",
@@ -37,7 +40,17 @@
     "when": "github.copilot.inlineSuggestVisible && editorTextFocus && !editorReadonly"
   },
   {
-    "key": "ctrl+j",
+    "key": "ctrl+y",
+    "command": "acceptSelectedSuggestion",
+    "when": "suggestWidgetVisible && textInputFocus"
+  },
+  {
+    "key": "ctrl+l",
+    "command": "editor.action.inlineSuggest.acceptNextLine",
+    "when": "inlineSuggestionVisible && !editorReadonly"
+  },
+  {
+    "key": "ctrl+;",
     "command": "editor.action.inlineSuggest.acceptNextWord",
     "when": "inlineSuggestionVisible && !editorReadonly"
   },
