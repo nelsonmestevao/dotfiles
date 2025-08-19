@@ -92,6 +92,7 @@
     # editors & IDEs
     neovim
     sc-im
+    texliveFull
 
     # desktop apps
     bitwarden-desktop
