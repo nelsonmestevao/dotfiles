@@ -42,6 +42,19 @@ in
     Comment=Keyboard launcher
   '';
 
+  xdg.configFile."autostart/ulauncher.desktop".text = ''
+    [Desktop Entry]
+    Type=Application
+    Exec=${pkgs.ulauncher}/bin/ulauncher --hide-window
+    Restart=always
+    Hidden=false
+    X-GNOME-Autostart-enabled=true
+    Name=ULauncher
+    Comment=Keyboard launcher
+  '';
+
+  services.copyq.enable = true;
+
   dconf.settings = {
     "org/gnome/shell" = {
       disable-user-extensions = false;
@@ -91,7 +104,7 @@ in
 
     "org/gnome/desktop/wm/preferences" = {
       button-layout = "close,minimize,maximize:appmenu";
-      num-workspaces = 8;
+      num-workspaces = 10;
       focus-mode = "sloppy";
     };
 
@@ -207,10 +220,16 @@ in
     };
 
     "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
-      name = "Albert Launcher";
-      command = "albert --platformtheme gnome toggle";
+      name = "ULauncher";
+      command = "ulauncher-toggle";
       binding = "<Alt>Space";
     };
+
+    # "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
+    #   name = "Albert Launcher";
+    #   command = "albert --platformtheme gnome toggle";
+    #   binding = "<Alt>Space";
+    # };
 
     "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1" = {
       name = "Terminal";
