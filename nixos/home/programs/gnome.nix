@@ -5,9 +5,24 @@
   ...
 }:
 with lib.hm.gvariant;
+let
+  gnomeExtensions = with pkgs.gnomeExtensions; [
+    auto-move-windows
+    blur-my-shell
+    caffeine
+    color-picker
+    pop-shell
+    space-bar
+    top-bar-organizer
+    vitals
+    wake-on-lan
+    wiggle
+    # freon
+    # system-monitor
+  ];
+in
 {
   home.packages = with pkgs; [
-    # gnome
     wmctrl
     gnome-tweaks
     ulauncher
@@ -15,26 +30,7 @@ with lib.hm.gvariant;
     walker
     wl-clipboard
     adwaita-icon-theme
-    # copyq
-
-    # Gnome Extensions
-    gnomeExtensions.auto-move-windows
-    gnomeExtensions.blur-my-shell
-    gnomeExtensions.caffeine
-    gnomeExtensions.color-picker
-    gnomeExtensions.pop-shell
-    gnomeExtensions.space-bar
-    gnomeExtensions.top-bar-organizer
-    gnomeExtensions.vitals
-    gnomeExtensions.wake-on-lan
-    gnomeExtensions.wiggle
-    # gnomeExtensions.freon
-    # gnomeExtensions.system-monitor
-  ];
-
-  # services.copyq = {
-  #   enable = true;
-  # };
+  ] ++ gnomeExtensions;
 
   xdg.configFile."autostart/albert.desktop".text = ''
     [Desktop Entry]
@@ -48,26 +44,8 @@ with lib.hm.gvariant;
 
   dconf.settings = {
     "org/gnome/shell" = {
-      disable-user-extensions = false; # enables user extensions
-      enabled-extensions = [
-        pkgs.gnomeExtensions.auto-move-windows.extensionUuid
-        pkgs.gnomeExtensions.blur-my-shell.extensionUuid
-        pkgs.gnomeExtensions.caffeine.extensionUuid
-        pkgs.gnomeExtensions.color-picker.extensionUuid
-        pkgs.gnomeExtensions.pop-shell.extensionUuid
-        pkgs.gnomeExtensions.space-bar.extensionUuid
-        pkgs.gnomeExtensions.top-bar-organizer.extensionUuid
-        pkgs.gnomeExtensions.vitals.extensionUuid
-        pkgs.gnomeExtensions.wake-on-lan.extensionUuid
-        pkgs.gnomeExtensions.wiggle.extensionUuid
-
-        # pkgs.gnomeExtensions.freon.extensionUuid
-        # pkgs.gnomeExtensions.system-monitor.extensionUuid
-
-        # Alternatively, you can manually pass UUID as a string.
-        # "blur-my-shell@aunetx"
-        # ...
-      ];
+      disable-user-extensions = false;
+      enabled-extensions = map (extension: extension.extensionUuid) gnomeExtensions;
       favorite-apps = [ ];
     };
 

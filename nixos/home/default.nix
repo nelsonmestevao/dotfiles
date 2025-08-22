@@ -117,6 +117,7 @@
     inotify-tools
 
     ## pdf documents
+    k2pdfopt
     wkhtmltopdf
 
     ## image processing and optimization
