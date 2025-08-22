@@ -35,7 +35,7 @@ in
   xdg.configFile."autostart/albert.desktop".text = ''
     [Desktop Entry]
     Type=Application
-    Exec=albert
+    Exec=${pkgs.albert}/bin/albert
     Hidden=false
     X-GNOME-Autostart-enabled=true
     Name=Albert

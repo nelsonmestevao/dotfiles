@@ -10,8 +10,6 @@ cd "${BASE_DIR}/.." || exit 127
 # shellcheck source=../scripts/utils.sh
 . scripts/utils.sh
 
-ask_for_sudo
-
 mksymlink ~/.dotfiles/ulauncher/settings.json ~/.config/ulauncher/settings.json
 mksymlink ~/.dotfiles/ulauncher/extensions.json ~/.config/ulauncher/extensions.json
 mksymlink ~/.dotfiles/ulauncher/shortcuts.json ~/.config/ulauncher/shortcuts.json
