@@ -19,6 +19,7 @@
     bat
     curl
     dig
+    dust
     eza
     fd
     ffmpeg-full
@@ -31,6 +32,7 @@
     lftp
     mpv
     nushell
+    ouch
     poppler_utils # pdftotext, pdftohtml, etc
     ripgrep
     tldr
