@@ -22,6 +22,7 @@
   "explorer.confirmDelete": false,
   "explorer.confirmDragAndDrop": false,
   "files.autoSave": "onFocusChange",
+  "git.openRepositoryInParentFolders": "always",
   "github.copilot.nextEditSuggestions.enabled": true,
   "github.copilot.editor.enableAutoCompletions": true,
   "haskell.manageHLS": "GHCup",
@@ -255,5 +256,5 @@
     "Livecomp",
     "Logflare",
     "vercel"
-  ]
+  ],
 }
