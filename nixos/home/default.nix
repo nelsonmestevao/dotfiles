@@ -143,9 +143,11 @@
     # misc
     cpufetch
     fastfetch
+    figlet
     neofetch
     nix-search-tv
     onefetch
+    terminaltexteffects
 
     (pkgs.writeShellScriptBin "runex" ''
       FILE="$1"
