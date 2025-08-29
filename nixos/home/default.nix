@@ -96,6 +96,11 @@
     sc-im
     texliveFull
 
+    # TUIs
+    lazydocker
+    lazygit
+    lazysql
+
     # desktop apps
     bitwarden-desktop
     calibre
