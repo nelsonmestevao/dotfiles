@@ -1,64 +1,46 @@
-#!/usr/bin/env bash
+#!/usr/bin/env nix-shell
+#! nix-shell -I nixpkgs=channel:nixos-25.05
+#! nix-shell -p nh gum python313 python313Packages.xonsh python313Packages.docopt
+#! nix-shell -i xonsh
+"""
+Rebuilds the system and home configuration.
 
-set -Eeuo pipefail
+Usage:
+  {program}
+  {program} os
+  {program} home
+  {program} (-h | --help)
+  {program} (-v | --version)
 
-BASE_DIR=$(dirname "${BASH_SOURCE[0]:-$0}")
-cd "${BASE_DIR}/.." || exit 127
+Options:
+  -h --help         Show this screen.
+  -v --version      Show version.
+"""
+import os
 
-# shellcheck source=../scripts/helpers.sh
-. ../scripts/helpers.sh
-# shellcheck source=../scripts/logging.sh
-. ../scripts/logging.sh
-# shellcheck source=../scripts/utils.sh
-. ../scripts/utils.sh
+from docopt import docopt
 
-PROGRAM=$(basename "${BASH_SOURCE[0]:-$0}")
-VERSION=0.16.0
+os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-function display_help() {
-  cat <<EOF
-  Rebuilds the system and home configuration.
+def rebuild_system():
+  #nixos-rebuild switch --use-remote-sudo --flake '.'
+  nh os switch .
 
-  $(help_title_section Usage)
-    ${PROGRAM} [options]
-
-  $(help_title_section Options)
-    -h --help         Show this screen.
-    -v --version      Show version.
-    -os --system      Rebuild the Operating System.
-    -hm --home        Rebuild the Home Manager configuration.
-EOF
-}
-
-rebuild_system() {
-  nix shell nixpkgs#nh --command nh os switch .
-  # nixos-rebuild switch --use-remote-sudo --flake '.'
-}
-
-rebuild_home() {
-  nix shell nixpkgs#nh --command nh home switch .
+def rebuild_home():
   # home-manager switch --flake '.'
-}
+  nh home switch .
 
-case ${1:-all} in
-  -h | --help)
-    display_help "$@"
-    ;;
-  -v | --version)
-    display_version "${VERSION}" "${PROGRAM}"
-    ;;
-  all)
-    rebuild_system
-    rebuild_home
-    ;;
-  -os | --system)
-    rebuild_system
-    ;;
-  -hm | --home)
-    rebuild_home
-    ;;
-  *)
-    display_help >&2
-    exit 1
-    ;;
-esac
+def main(args):
+    if args['os']:
+        rebuild_system()
+    elif args['home']:
+        rebuild_home()
+    else:
+        rebuild_system()
+        rebuild_home()
+
+if __name__ == '__main__':
+    arguments = docopt(__doc__.format(program=__file__), version=f'{os.path.basename(__file__)} script version 1.0')
+    main(arguments)
+
+# vim: ft=xonsh
