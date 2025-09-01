@@ -26,21 +26,21 @@ in
     wmctrl
     gnome-tweaks
     ulauncher
-    albert
+    # albert
     walker
     wl-clipboard
     adwaita-icon-theme
   ] ++ gnomeExtensions;
 
-  xdg.configFile."autostart/albert.desktop".text = ''
-    [Desktop Entry]
-    Type=Application
-    Exec=${pkgs.albert}/bin/albert
-    Hidden=false
-    X-GNOME-Autostart-enabled=true
-    Name=Albert
-    Comment=Keyboard launcher
-  '';
+  # xdg.configFile."autostart/albert.desktop".text = ''
+  #   [Desktop Entry]
+  #   Type=Application
+  #   Exec=${pkgs.albert}/bin/albert
+  #   Hidden=false
+  #   X-GNOME-Autostart-enabled=true
+  #   Name=Albert
+  #   Comment=Keyboard launcher
+  # '';
 
   xdg.configFile."autostart/ulauncher.desktop".text = ''
     [Desktop Entry]

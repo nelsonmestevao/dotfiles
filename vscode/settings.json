@@ -257,4 +257,5 @@
     "Logflare",
     "vercel"
   ],
+  "makefile.configureOnOpen": true,
 }
