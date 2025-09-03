@@ -60,6 +60,15 @@ IEx.configure(
 
 defmodule :_utils do
   def format, do: Mix.Tasks.Format.run([])
+  def copy(term) do
+    text = if is_binary(term), do: term, else: inspect(term, limit: :infinity, pretty: true)
+
+    port = Port.open({:spawn, "wl-copy"}, [])
+    true = Port.command(port, text)
+    true = Port.close(port)
+
+    :ok
+  end
 
   defdelegate f, to: __MODULE__, as: :format
   defdelegate bye(), to: System, as: :halt
