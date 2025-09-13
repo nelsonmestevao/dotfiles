@@ -71,6 +71,8 @@ defmodule :_utils do
   end
 
   defdelegate f, to: __MODULE__, as: :format
+  defdelegate q, to: __MODULE__, as: :quit
+
   defdelegate bye(), to: System, as: :halt
   defdelegate exit(), to: System, as: :halt
   defdelegate quit(), to: System, as: :halt
