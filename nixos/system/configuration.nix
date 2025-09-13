@@ -111,7 +111,7 @@
       "docker"
       "libvirtd"
       "networkmanager"
-      "vboxusers"
+      # "vboxusers"
       "wheel"
     ];
     packages = with pkgs; [
@@ -150,8 +150,8 @@
 
   virtualisation.docker.enable = true;
   virtualisation.libvirtd.enable = true;
-  virtualisation.virtualbox.host.enable = true;
-  virtualisation.virtualbox.host.enableExtensionPack = true;
+  # virtualisation.virtualbox.host.enable = false;
+  # virtualisation.virtualbox.host.enableExtensionPack = false;
 
   # Fingerprint reader
   services.fprintd.enable = true;
@@ -172,7 +172,7 @@
     waybar
 
     vagrant
-    virtualbox
+    # virtualbox
     libvirt
 
     chromedriver
