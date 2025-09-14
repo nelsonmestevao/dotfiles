@@ -27,7 +27,7 @@ in
     gnome-tweaks
     ulauncher
     # albert
-    walker
+    # walker
     wl-clipboard
     adwaita-icon-theme
   ] ++ gnomeExtensions;
