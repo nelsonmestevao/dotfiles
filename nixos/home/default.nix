@@ -147,6 +147,13 @@
     # nodejs_22
     ruby_3_4
 
+    # OpenGL
+    freeglut
+    libGL
+    libGLU
+    mesa
+    mesa_glu
+
     # misc
     cpufetch
     fastfetch
