@@ -4,6 +4,10 @@
   pkgs,
   ...
 }:
+let
+  elixirFilesPath = "nixos/home/programs/elixir";
+  erlangFilesPath = "nixos/home/programs/erlang";
+ in
 {
   imports = [
     ../lib
@@ -31,8 +35,8 @@
     # pngquant
   ];
 
-  home.file.".iex.exs" = config.lib.dotfiles.mkSymlink "nixos/home/programs/elixir/iex.exs";
-  home.file.".default-mix-commands" = config.lib.dotfiles.mkSymlink "nixos/home/programs/elixir/default-mix-commands";
+  home.file.".iex.exs" = config.lib.dotfiles.mkSymlink "${elixirFilesPath}/iex.exs";
+  home.file.".default-mix-commands" = config.lib.dotfiles.mkSymlink "${elixirFilesPath}/default-mix-commands";
 
-  xdg.configFile."rebar/rebar.config" = config.lib.dotfiles.mkSymlink "nixos/home/programs/erlang/rebar.config";
+  xdg.configFile."rebar/rebar.config" = config.lib.dotfiles.mkSymlink "${erlangFilesPath}/rebar.config";
 }

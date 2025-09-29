@@ -20,6 +20,7 @@ let
     # freon
     # system-monitor
   ];
+  extensionsFilesPath = "nixos/home/programs/gnome/extensions";
 in
 {
   home.packages = with pkgs; [
@@ -38,7 +39,7 @@ in
   # gsettings set org.gnome.desktop.background picture-uri-dark file:///home/nelson/Pictures/desktop.jpg
   # gsettings set org.gnome.desktop.background picture-uri file:///home/nelson/Pictures/login.jpg
 
-  xdg.configFile."pop-shell/config.json" = config.lib.dotfiles.mkSymlink "nixos/home/programs/gnome/extensions/pop-shell/config.json";
+  xdg.configFile."pop-shell/config.json" = config.lib.dotfiles.mkSymlink "${extensionsFilesPath}/pop-shell/config.json";
 
   # xdg.configFile."autostart/albert.desktop".text = ''
   #   [Desktop Entry]
