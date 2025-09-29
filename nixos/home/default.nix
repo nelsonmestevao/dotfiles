@@ -8,6 +8,9 @@
 {
   imports = [
     ./programs/elixir.nix
+    ./programs/golang.nix
+    ./programs/nodejs.nix
+    ./programs/ruby.nix
 
     ./programs/direnv.nix
     ./programs/ghostty.nix
@@ -118,8 +121,6 @@
     ghc
     haskellPackages.cabal-install
     haskell-language-server
-    # nodejs_22
-    ruby_3_4
 
     # OpenGL
     freeglut
