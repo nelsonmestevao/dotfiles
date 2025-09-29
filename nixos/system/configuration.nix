@@ -180,7 +180,6 @@
 
     brave
     discord
-    ghostty
     jetbrains.datagrip
     kdePackages.kdenlive
     obs-cli

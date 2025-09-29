@@ -1,2 +1,4 @@
 # git fuzzy
 export PATH="$HOME/.git-fuzzy/bin:$PATH"
+# gitleaks
+eval $(gitleaks completion zsh)

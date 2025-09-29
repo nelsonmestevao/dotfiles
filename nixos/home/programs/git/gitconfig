@@ -5,26 +5,26 @@
 [gpg]
   format = "ssh"
 [gpg "ssh"]
-  allowedSignersFile = ~/.dotfiles/git/allowed_signers
+  allowedSignersFile = ~/.dotfiles/nixos/home/programs/git/allowed_signers
 [commit]
   gpgsign = true
   verbose = true
-  template = ~/.dotfiles/git/git-commit-msg-template
+  template = ~/.dotfiles/nixos/home/programs/git/git-commit-msg-template
 [tag]
   gpgsign = true
 [include]
-    path = ~/.dotfiles/git/personal.config
+    path = ~/.dotfiles/nixos/home/programs/git/personal.config
 [includeIf "gitdir:~/Code/UMinho/"]
-    path = ~/.dotfiles/git/uminho.config
+    path = ~/.dotfiles/nixos/home/programs/git/uminho.config
 [includeIf "gitdir:~/Code/Marmela/"]
-    path = ~/.dotfiles/git/marmela.config
+    path = ~/.dotfiles/nixos/home/programs/git/marmela.config
 [web]
   browser = firefox-developer-edition
 [core]
   autocrlf = input
   editor = nvim
-  excludesfile = ~/.dotfiles/git/gitignore
-  attributesfile = ~/.dotfiles/git/gitattributes
+  excludesfile = ~/.dotfiles/nixos/home/programs/git/gitignore
+  attributesfile = ~/.dotfiles/nixos/home/programs/git/gitattributes
   pager = delta
 [init]
   defaultBranch = main

@@ -10,5 +10,7 @@ cd "${BASE_DIR}/.." || exit 127
 # shellcheck source=../scripts/utils.sh
 . scripts/utils.sh
 
+mksymlink "$HOME/.dotfiles/gnome/extensions/pop-shell/config.json" "$HOME/.config/pop-shell/config.json"
 
-mksymlink "$HOME/.dotfiles/direnv/direnvrc" "$HOME/.config/direnv/direnvrc"
+
+

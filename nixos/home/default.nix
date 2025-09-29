@@ -7,7 +7,13 @@
 }:
 {
   imports = [
+    ./programs/elixir.nix
+
+    ./programs/direnv.nix
+    ./programs/ghostty.nix
+    ./programs/git.nix
     ./programs/gnome.nix
+
     ./lib
   ];
 
@@ -56,7 +62,6 @@
     bc
     bitwarden-cli
     bruno
-    direnv
     eva
     # espanso-wayland
     httpie
@@ -67,15 +72,6 @@
     stripe-cli
     typst
     watchman
-
-    # version control
-    delta
-    difftastic
-    gh
-    git
-    git-who
-    gitleaks
-    jujutsu
 
     # containers & cloud
     cloudflared
@@ -98,7 +94,6 @@
 
     # TUIs
     lazydocker
-    lazygit
     lazysql
 
     # desktop apps
@@ -118,29 +113,8 @@
     nerd-fonts.jetbrains-mono
     noto-fonts-color-emoji
 
-    # project dependencies
-
-    ## system utils
-    inotify-tools
-
-    ## pdf documents
-    k2pdfopt
-    wkhtmltopdf
-
-    ## image processing and optimization
-    file
-    image_optim
-    # gifsicle
-    # jpegoptim
-    # libwebp
-    nodePackages.svgo
-    # optipng
-    # pngquant
-
     ## programming environments
     mise
-    # elixir_1_18
-    # erlang_27
     ghc
     haskellPackages.cabal-install
     haskell-language-server
