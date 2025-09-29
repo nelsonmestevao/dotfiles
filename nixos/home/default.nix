@@ -10,6 +10,7 @@
     ./programs/elixir.nix
     ./programs/golang.nix
     ./programs/nodejs.nix
+    ./programs/python.nix
     ./programs/ruby.nix
 
     ./programs/direnv.nix
