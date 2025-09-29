@@ -1,2 +1,1 @@
-nvim/*.md linguist-language=vim
 *.rafi linguist-detectable=false

@@ -61,18 +61,3 @@ vim.api.nvim_create_autocmd("FileType", {
   pattern = "*.md,*.rmd",
   command = 'setlocal spell',
 })
-
--- ## Darkmode and lightmode
-
--- function! Dark()
---   set background=dark
---   silent !mode dark
--- endfunction
---
--- function! Light()
---   set background=light
---   silent !mode light
--- endfunction
---
--- command! Dark call Dark()
--- command! Light call Light()
