@@ -18,6 +18,7 @@
     ./programs/ghostty.nix
     ./programs/git.nix
     ./programs/gnome.nix
+    ./programs/latex.nix
     ./programs/mise.nix
     ./programs/nvim.nix
     ./programs/sqlite.nix
@@ -97,7 +98,6 @@
 
     # editors & IDEs
     sc-im
-    texliveFull
 
     # TUIs
     lazydocker
