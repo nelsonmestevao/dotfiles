@@ -10,7 +10,7 @@ local wezterm = require('wezterm')
 
 local config = wezterm.config_builder()
 
-config.window_decorations = "NONE"
+config.window_decorations = "NONE" -- "RESIZE"
 config.window_background_opacity = 0.9
 config.macos_window_background_blur = 30
 config.win32_system_backdrop = "Acrylic"
