@@ -25,6 +25,13 @@
     # haskellPackages.pandoc-citeproc
     # haskellPackages.pandoc-include-code
     # haskellPackages.patat
+
+    # OpenGL
+    freeglut
+    libGL
+    libGLU
+    mesa
+    mesa_glu
   ];
 
   home.file.".ghci" = config.lib.dotfiles.mkSymlink "nixos/home/programs/haskell/ghci";

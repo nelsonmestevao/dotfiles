@@ -18,6 +18,7 @@
     ./programs/ghostty.nix
     ./programs/git.nix
     ./programs/gnome.nix
+    ./programs/mise.nix
     ./programs/nvim.nix
 
     ./lib
@@ -117,16 +118,6 @@
     nerd-fonts.noto
     nerd-fonts.jetbrains-mono
     noto-fonts-color-emoji
-
-    ## programming environments
-    mise
-
-    # OpenGL
-    freeglut
-    libGL
-    libGLU
-    mesa
-    mesa_glu
 
     # misc
     cpufetch
