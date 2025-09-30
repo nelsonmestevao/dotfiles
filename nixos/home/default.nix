@@ -9,6 +9,7 @@
   imports = [
     ./programs/elixir.nix
     ./programs/golang.nix
+    ./programs/haskell.nix
     ./programs/nodejs.nix
     ./programs/python.nix
     ./programs/ruby.nix
@@ -119,9 +120,6 @@
 
     ## programming environments
     mise
-    ghc
-    haskellPackages.cabal-install
-    haskell-language-server
 
     # OpenGL
     freeglut
