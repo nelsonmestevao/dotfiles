@@ -20,6 +20,7 @@
     ./programs/gnome.nix
     ./programs/mise.nix
     ./programs/nvim.nix
+    ./programs/sqlite.nix
 
     ./lib
   ];
