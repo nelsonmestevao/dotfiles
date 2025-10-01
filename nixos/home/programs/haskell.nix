@@ -18,8 +18,8 @@
     haskellPackages.hindent
     haskellPackages.hlint
 
-    haskellPackages.HUnit
-    haskellPackages.gloss
+    # haskellPackages.HUnit
+    # haskellPackages.gloss
 
     # haskellPackages.pandoc
     # haskellPackages.pandoc-citeproc
@@ -30,6 +30,7 @@
     freeglut
     libGL
     libGLU
+    libGLU.dev
     mesa
     mesa_glu
   ];

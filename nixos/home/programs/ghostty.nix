@@ -6,7 +6,7 @@
 }:
 let
   ghosttyFilesPath = "nixos/home/programs/ghostty";
- in
+in
 {
   imports = [
     ../lib
@@ -17,6 +17,8 @@ let
   ];
 
   xdg.configFile."ghostty/config" = config.lib.dotfiles.mkSymlink "${ghosttyFilesPath}/config";
-  xdg.configFile."ghostty/themes/Day" = config.lib.dotfiles.mkSymlink "${ghosttyFilesPath}/themes/Day";
-  xdg.configFile."ghostty/themes/Night" = config.lib.dotfiles.mkSymlink "${ghosttyFilesPath}/themes/Night";
+  xdg.configFile."ghostty/themes/Day" =
+    config.lib.dotfiles.mkSymlink "${ghosttyFilesPath}/themes/Day";
+  xdg.configFile."ghostty/themes/Night" =
+    config.lib.dotfiles.mkSymlink "${ghosttyFilesPath}/themes/Night";
 }

@@ -13,5 +13,6 @@
     direnv
   ];
 
-  xdg.configFile."direnv/direnvrc" = config.lib.dotfiles.mkSymlink "nixos/home/programs/direnv/direnvrc";
+  xdg.configFile."direnv/direnvrc" =
+    config.lib.dotfiles.mkSymlink "nixos/home/programs/direnv/direnvrc";
 }

@@ -22,7 +22,10 @@
     "sd_mod"
   ];
   boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ "kvm-amd" "v4l2loopback" ];
+  boot.kernelModules = [
+    "kvm-amd"
+    "v4l2loopback"
+  ];
   boot.extraModulePackages = [ pkgs.linuxPackages.v4l2loopback ];
 
   boot.extraModprobeConfig = ''
