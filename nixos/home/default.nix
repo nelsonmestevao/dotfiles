@@ -129,19 +129,6 @@
     onefetch
     terminaltexteffects
 
-    (pkgs.writeShellScriptBin "runex" ''
-      FILE="$1"
-      TMP="$(mktemp --suffix=.exs)"
-
-      awk '
-      /^```elixir/ { inblock = 1; next }
-      inblock && /^```/ { inblock = 0; next }
-      inblock { print }
-      ' "$FILE" > "$TMP"
-
-      elixir "$TMP"
-    '')
-
     (
       let
         flakeLockPath = ../flake.lock;

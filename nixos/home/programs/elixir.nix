@@ -33,6 +33,19 @@ in
     nodePackages.svgo
     # optipng
     # pngquant
+
+    (pkgs.writeShellScriptBin "runex" ''
+      FILE="$1"
+      TMP="$(${pkgs.coreutils}/bin/mktemp --suffix=.exs)"
+
+      ${pkgs.gawk}/bin/awk '
+      /^```elixir/ { inblock = 1; next }
+      inblock && /^```/ { inblock = 0; next }
+      inblock { print }
+      ' "$FILE" > "$TMP"
+
+      ${pkgs.elixir}/bin/elixir "$TMP"
+    '')
   ];
 
   home.file.".iex.exs" = config.lib.dotfiles.mkSymlink "${elixirFilesPath}/iex.exs";
