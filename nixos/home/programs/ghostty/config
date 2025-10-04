@@ -4,8 +4,9 @@ font-size = 16
 
 shell-integration = zsh
 
-window-theme = ghostty
+window-theme = system
 window-decoration = true
+gtk-titlebar = false
 gtk-adwaita = true
 gtk-wide-tabs = true
 gtk-tabs-location = bottom
@@ -14,7 +15,7 @@ adw-toolbar-style = flat
 cursor-style = block
 cursor-color = #ffffff
 
-background-opacity = 0.45
+background-opacity = 0.5
 
 keybind = alt+l=goto_split:right
 keybind = alt+h=goto_split:left
