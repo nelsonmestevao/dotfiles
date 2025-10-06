@@ -19,6 +19,7 @@ let
     wiggle
     # freon
     # system-monitor
+    user-themes-x
   ];
   extensionsFilesPath = "nixos/home/programs/gnome/extensions";
 in
