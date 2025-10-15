@@ -76,6 +76,7 @@
     httpie
     k6
     llvmPackages_20.clang-tools
+    presenterm
     shellcheck
     shfmt
     stripe-cli
