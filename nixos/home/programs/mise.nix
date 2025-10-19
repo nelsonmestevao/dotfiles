@@ -4,12 +4,18 @@
   pkgs,
   ...
 }:
+let
+  cfg = config.dotfiles.programs.mise;
+in
 {
-  imports = [
-    ../lib
-  ];
+  options.dotfiles.programs.mise = {
+    enable = lib.mkEnableOption "Enable Mise configuration.";
+  };
 
-  home.packages = with pkgs; [
-    mise
-  ];
+  config = lib.mkIf cfg.enable {
+
+    home.packages = with pkgs; [
+      mise
+    ];
+  };
 }

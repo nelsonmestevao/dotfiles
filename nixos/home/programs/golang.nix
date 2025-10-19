@@ -4,15 +4,21 @@
   pkgs,
   ...
 }:
+let
+  cfg = config.dotfiles.programs.golang;
+in
 {
-  imports = [
-    ../lib
-  ];
+  options.dotfiles.programs.golang = {
+    enable = lib.mkEnableOption "Enable Go development environment.";
+  };
 
-  home.packages = with pkgs; [
-    # go_1_23
-  ];
+  config = lib.mkIf cfg.enable {
 
-  home.file.".default-golang-pkgs" =
-    config.lib.dotfiles.mkSymlink "nixos/home/programs/golang/default-golang-pkgs";
+    home.packages = with pkgs; [
+      # go_1_23
+    ];
+
+    home.file.".default-golang-pkgs" =
+      config.lib.dotfiles.mkSymlink "nixos/home/programs/golang/default-golang-pkgs";
+  };
 }

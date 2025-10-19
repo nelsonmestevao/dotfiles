@@ -4,14 +4,20 @@
   pkgs,
   ...
 }:
+let
+  cfg = config.dotfiles.programs.sqlite;
+in
 {
-  imports = [
-    ../lib
-  ];
+  options.dotfiles.programs.sqlite = {
+    enable = lib.mkEnableOption "Enable SQLite configuration.";
+  };
 
-  home.packages = with pkgs; [
-    sqlite
-  ];
+  config = lib.mkIf cfg.enable {
 
-  home.file.".sqliterc" = config.lib.dotfiles.mkSymlink "nixos/home/programs/sqlite/sqliterc";
+    home.packages = with pkgs; [
+      sqlite
+    ];
+
+    home.file.".sqliterc" = config.lib.dotfiles.mkSymlink "nixos/home/programs/sqlite/sqliterc";
+  };
 }

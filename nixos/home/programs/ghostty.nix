@@ -5,20 +5,24 @@
   ...
 }:
 let
+  cfg = config.dotfiles.programs.ghostty;
   ghosttyFilesPath = "nixos/home/programs/ghostty";
 in
 {
-  imports = [
-    ../lib
-  ];
+  options.dotfiles.programs.ghostty = {
+    enable = lib.mkEnableOption "Enable Ghostty configuration.";
+  };
 
-  home.packages = with pkgs; [
-    ghostty
-  ];
+  config = lib.mkIf cfg.enable {
 
-  xdg.configFile."ghostty/config" = config.lib.dotfiles.mkSymlink "${ghosttyFilesPath}/config";
-  xdg.configFile."ghostty/themes/Day" =
-    config.lib.dotfiles.mkSymlink "${ghosttyFilesPath}/themes/Day";
-  xdg.configFile."ghostty/themes/Night" =
-    config.lib.dotfiles.mkSymlink "${ghosttyFilesPath}/themes/Night";
+    home.packages = with pkgs; [
+      ghostty
+    ];
+
+    xdg.configFile."ghostty/config" = config.lib.dotfiles.mkSymlink "${ghosttyFilesPath}/config";
+    xdg.configFile."ghostty/themes/Day" =
+      config.lib.dotfiles.mkSymlink "${ghosttyFilesPath}/themes/Day";
+    xdg.configFile."ghostty/themes/Night" =
+      config.lib.dotfiles.mkSymlink "${ghosttyFilesPath}/themes/Night";
+  };
 }

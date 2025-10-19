@@ -4,15 +4,21 @@
   pkgs,
   ...
 }:
+let
+  cfg = config.dotfiles.programs.direnv;
+in
 {
-  imports = [
-    ../lib
-  ];
+  options.dotfiles.programs.direnv = {
+    enable = lib.mkEnableOption "Enable Direnv integration.";
+  };
 
-  home.packages = with pkgs; [
-    direnv
-  ];
+  config = lib.mkIf cfg.enable {
 
-  xdg.configFile."direnv/direnvrc" =
-    config.lib.dotfiles.mkSymlink "nixos/home/programs/direnv/direnvrc";
+    home.packages = with pkgs; [
+      direnv
+    ];
+
+    xdg.configFile."direnv/direnvrc" =
+      config.lib.dotfiles.mkSymlink "nixos/home/programs/direnv/direnvrc";
+  };
 }

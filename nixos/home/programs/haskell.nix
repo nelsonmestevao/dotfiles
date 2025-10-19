@@ -4,36 +4,42 @@
   pkgs,
   ...
 }:
+let
+  cfg = config.dotfiles.programs.haskell;
+in
 {
-  imports = [
-    ../lib
-  ];
+  options.dotfiles.programs.haskell = {
+    enable = lib.mkEnableOption "Enable Haskell development environment.";
+  };
 
-  home.packages = with pkgs; [
-    ghc
-    haskell-language-server
+  config = lib.mkIf cfg.enable {
 
-    haskellPackages.lhs2tex
-    haskellPackages.cabal-install
-    haskellPackages.hindent
-    haskellPackages.hlint
+    home.packages = with pkgs; [
+      ghc
+      haskell-language-server
 
-    # haskellPackages.HUnit
-    # haskellPackages.gloss
+      haskellPackages.lhs2tex
+      haskellPackages.cabal-install
+      haskellPackages.hindent
+      haskellPackages.hlint
 
-    # haskellPackages.pandoc
-    # haskellPackages.pandoc-citeproc
-    # haskellPackages.pandoc-include-code
-    # haskellPackages.patat
+      # haskellPackages.HUnit
+      # haskellPackages.gloss
 
-    # OpenGL
-    freeglut
-    libGL
-    libGLU
-    libGLU.dev
-    mesa
-    mesa_glu
-  ];
+      # haskellPackages.pandoc
+      # haskellPackages.pandoc-citeproc
+      # haskellPackages.pandoc-include-code
+      # haskellPackages.patat
 
-  home.file.".ghci" = config.lib.dotfiles.mkSymlink "nixos/home/programs/haskell/ghci";
+      # OpenGL
+      freeglut
+      libGL
+      libGLU
+      libGLU.dev
+      mesa
+      mesa_glu
+    ];
+
+    home.file.".ghci" = config.lib.dotfiles.mkSymlink "nixos/home/programs/haskell/ghci";
+  };
 }

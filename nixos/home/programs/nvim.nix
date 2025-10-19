@@ -4,18 +4,24 @@
   pkgs,
   ...
 }:
+let
+  cfg = config.dotfiles.programs.nvim;
+in
 {
-  imports = [
-    ../lib
-  ];
-
-  home.packages = with pkgs; [
-    neovim
-  ];
-
-  home.sessionVariables = {
-    EDITOR = "nvim";
+  options.dotfiles.programs.nvim = {
+    enable = lib.mkEnableOption "Enable Neovim configuration.";
   };
 
-  xdg.configFile."nvim/init.lua" = config.lib.dotfiles.mkSymlink "nixos/home/programs/nvim/init.lua";
+  config = lib.mkIf cfg.enable {
+
+    home.packages = with pkgs; [
+      neovim
+    ];
+
+    home.sessionVariables = {
+      EDITOR = "nvim";
+    };
+
+    xdg.configFile."nvim/init.lua" = config.lib.dotfiles.mkSymlink "nixos/home/programs/nvim/init.lua";
+  };
 }

@@ -25,6 +25,13 @@
       hostname = "framework";
       username = "nelson";
       pkgs = nixpkgs.legacyPackages.${system};
+
+      dotfilesModulesDir = builtins.readDir ./home/programs;
+      dotfilesHomeModules = builtins.map (name: ./home/programs/${name}) (
+        builtins.filter (name: dotfilesModulesDir.${name} == "regular") (
+          builtins.attrNames dotfilesModulesDir
+        )
+      );
     in
     {
       formatter.${system} = pkgs.nixfmt-tree;
@@ -40,7 +47,9 @@
         extraSpecialArgs = { inherit username; };
         modules = [
           ./home
-        ];
+          ./home/lib
+        ]
+        ++ dotfilesHomeModules;
       };
     };
 }

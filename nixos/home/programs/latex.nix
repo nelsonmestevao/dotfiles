@@ -4,14 +4,20 @@
   pkgs,
   ...
 }:
+let
+  cfg = config.dotfiles.programs.latex;
+in
 {
-  imports = [
-    ../lib
-  ];
+  options.dotfiles.programs.latex = {
+    enable = lib.mkEnableOption "Enable LaTeX configuration.";
+  };
 
-  home.packages = with pkgs; [
-    texliveFull
-  ];
+  config = lib.mkIf cfg.enable {
 
-  home.file.".latexmkrc" = config.lib.dotfiles.mkSymlink "nixos/home/programs/latex/latexmkrc";
+    home.packages = with pkgs; [
+      texliveFull
+    ];
+
+    home.file.".latexmkrc" = config.lib.dotfiles.mkSymlink "nixos/home/programs/latex/latexmkrc";
+  };
 }

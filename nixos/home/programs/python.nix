@@ -4,14 +4,20 @@
   pkgs,
   ...
 }:
+let
+  cfg = config.dotfiles.programs.python;
+in
 {
-  imports = [
-    ../lib
-  ];
+  options.dotfiles.programs.python = {
+    enable = lib.mkEnableOption "Enable Python development environment.";
+  };
 
-  home.packages = with pkgs; [
-  ];
+  config = lib.mkIf cfg.enable {
 
-  home.file.".default-python-packages" =
-    config.lib.dotfiles.mkSymlink "nixos/home/programs/python/default-python-packages";
+    home.packages = with pkgs; [
+    ];
+
+    home.file.".default-python-packages" =
+      config.lib.dotfiles.mkSymlink "nixos/home/programs/python/default-python-packages";
+  };
 }
