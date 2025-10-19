@@ -7,8 +7,8 @@
 }:
 {
   home.packages = with pkgs; [
-    direnv
+    # erlang_27
   ];
 
-  xdg.configFile."direnv/direnvrc" = mkSymlink "direnvrc";
+  xdg.configFile."rebar/rebar.config" = mkSymlink "rebar.config";
 }

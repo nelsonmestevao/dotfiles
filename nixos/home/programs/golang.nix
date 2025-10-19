@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  mkSymlink,
   ...
 }:
 {
@@ -9,6 +10,5 @@
     # go_1_23
   ];
 
-  home.file.".default-golang-pkgs" =
-    config.lib.dotfiles.mkSymlink "nixos/home/programs/golang/default-golang-pkgs";
+  home.file.".default-golang-pkgs" = mkSymlink "default-golang-pkgs";
 }

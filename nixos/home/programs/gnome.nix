@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  mkSymlink,
   ...
 }:
 with lib.hm.gvariant;
@@ -21,7 +22,6 @@ let
     # system-monitor
     user-themes-x
   ];
-  extensionsFilesPath = "nixos/home/programs/gnome/extensions";
 in
 {
   home.packages =
@@ -43,8 +43,11 @@ in
   # gsettings set org.gnome.desktop.background picture-uri-dark file:///home/nelson/Pictures/desktop.jpg
   # gsettings set org.gnome.desktop.background picture-uri file:///home/nelson/Pictures/login.jpg
 
-  xdg.configFile."pop-shell/config.json" =
-    config.lib.dotfiles.mkSymlink "${extensionsFilesPath}/pop-shell/config.json";
+  home.sessionVariables = {
+    GSETTINGS_SCHEMA_DIR = (builtins.concatStringsSep ":" (map (extension: "${extension}/share/gnome-shell/extensions/${extension.extensionUuid}/schemas") gnomeExtensions));
+  };
+
+  xdg.configFile."pop-shell/config.json" = mkSymlink "extensions/pop-shell/config.json";
 
   # xdg.configFile."autostart/albert.desktop".text = ''
   #   [Desktop Entry]

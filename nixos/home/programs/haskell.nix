@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  mkSymlink,
   ...
 }:
 {
@@ -31,5 +32,5 @@
     mesa_glu
   ];
 
-  home.file.".ghci" = config.lib.dotfiles.mkSymlink "nixos/home/programs/haskell/ghci";
+  home.file.".ghci" = mkSymlink "ghci";
 }

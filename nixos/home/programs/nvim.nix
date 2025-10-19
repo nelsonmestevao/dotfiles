@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  mkSymlink,
   ...
 }:
 {
@@ -13,5 +14,5 @@
     EDITOR = "nvim";
   };
 
-  xdg.configFile."nvim/init.lua" = config.lib.dotfiles.mkSymlink "nixos/home/programs/nvim/init.lua";
+  xdg.configFile."nvim/init.lua" = mkSymlink "init.lua";
 }

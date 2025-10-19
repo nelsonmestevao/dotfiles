@@ -2,12 +2,9 @@
   config,
   lib,
   pkgs,
+  mkSymlink,
   ...
 }:
-let
-  elixirFilesPath = "nixos/home/programs/elixir";
-  erlangFilesPath = "nixos/home/programs/erlang";
-in
 {
   home.packages = with pkgs; [
     # elixir_1_18
@@ -44,10 +41,6 @@ in
     '')
   ];
 
-  home.file.".iex.exs" = config.lib.dotfiles.mkSymlink "${elixirFilesPath}/iex.exs";
-  home.file.".default-mix-commands" =
-    config.lib.dotfiles.mkSymlink "${elixirFilesPath}/default-mix-commands";
-
-  xdg.configFile."rebar/rebar.config" =
-    config.lib.dotfiles.mkSymlink "${erlangFilesPath}/rebar.config";
+  home.file.".iex.exs" = mkSymlink "iex.exs";
+  home.file.".default-mix-commands" = mkSymlink "default-mix-commands";
 }

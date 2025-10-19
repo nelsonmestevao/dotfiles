@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  mkSymlink,
   ...
 }:
 {
@@ -9,5 +10,5 @@
     texliveFull
   ];
 
-  home.file.".latexmkrc" = config.lib.dotfiles.mkSymlink "nixos/home/programs/latex/latexmkrc";
+  home.file.".latexmkrc" = mkSymlink "latexmkrc";
 }

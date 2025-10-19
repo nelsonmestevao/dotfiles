@@ -7,8 +7,8 @@
 }:
 {
   home.packages = with pkgs; [
-    direnv
+    openssh
   ];
 
-  xdg.configFile."direnv/direnvrc" = mkSymlink "direnvrc";
+  home.file.".ssh/config" = mkSymlink "config";
 }

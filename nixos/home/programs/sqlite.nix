@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  mkSymlink,
   ...
 }:
 {
@@ -9,5 +10,5 @@
     sqlite
   ];
 
-  home.file.".sqliterc" = config.lib.dotfiles.mkSymlink "nixos/home/programs/sqlite/sqliterc";
+  home.file.".sqliterc" = mkSymlink "sqliterc";
 }
