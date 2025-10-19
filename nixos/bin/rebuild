@@ -6,11 +6,13 @@
 Rebuilds the system and home configuration.
 
 Usage:
-  {program}
-  {program} os
-  {program} home
+  {program} [os | home]
   {program} (-h | --help)
   {program} (-v | --version)
+
+Commands:
+  os                Rebuild only the NixOS system configuration.
+  home              Rebuild only the home-manager configuration.
 
 Options:
   -h --help         Show this screen.
@@ -31,13 +33,16 @@ def rebuild_home():
   nh home switch .
 
 def main(args):
-    if args['os']:
-        rebuild_system()
-    elif args['home']:
-        rebuild_home()
-    else:
-        rebuild_system()
-        rebuild_home()
+    tasks = {
+        'os': rebuild_system,
+        'home': rebuild_home,
+    }
+
+    run_all = not any(args[task] for task in tasks)
+
+    for task, func in tasks.items():
+        if args[task] or run_all:
+            func()
 
 if __name__ == '__main__':
     arguments = docopt(__doc__.format(program=__file__), version=f'{os.path.basename(__file__)} script version 1.0')
