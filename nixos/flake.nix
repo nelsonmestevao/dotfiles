@@ -25,13 +25,18 @@
       hostname = "framework";
       username = "nelson";
       pkgs = nixpkgs.legacyPackages.${system};
+      lib = nixpkgs.lib;
+
+      mkHomeModule = import ./home/lib/mkHomeModule.nix { inherit lib; };
 
       dotfilesModulesDir = builtins.readDir ./home/programs;
-      dotfilesHomeModules = builtins.map (name: ./home/programs/${name}) (
-        builtins.filter (name: dotfilesModulesDir.${name} == "regular") (
-          builtins.attrNames dotfilesModulesDir
-        )
-      );
+      dotfilesHomeModules =
+        builtins.map (name: mkHomeModule (lib.removeSuffix ".nix" name) (import ./home/programs/${name}))
+          (
+            builtins.filter (name: dotfilesModulesDir.${name} == "regular") (
+              builtins.attrNames dotfilesModulesDir
+            )
+          );
     in
     {
       formatter.${system} = pkgs.nixfmt-tree;
