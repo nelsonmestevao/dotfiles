@@ -30,9 +30,9 @@
       mkHomeModule = import ./home/lib/mkHomeModule.nix { inherit lib; };
 
       dotfilesModulesDir = builtins.readDir ./home/programs;
-      dotfilesHomeModules = map (
-        name: mkHomeModule (lib.removeSuffix ".nix" name) (import ./home/programs/${name})
-      ) (lib.attrNames (lib.filterAttrs (_: v: v == "regular") dotfilesModulesDir));
+      dotfilesHomeModules = map (name: mkHomeModule name (import ./home/programs/${name}/${name}.nix)) (
+        lib.attrNames dotfilesModulesDir
+      );
     in
     {
       formatter.${system} = pkgs.nixfmt-tree;

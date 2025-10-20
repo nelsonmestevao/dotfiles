@@ -21,9 +21,5 @@
           fi
         '';
       };
-
-    mkSymlink =
-      relativePath:
-      config.lib.dotfiles.mkSymlinkFrom "${config.home.homeDirectory}/.dotfiles" relativePath;
   };
 }

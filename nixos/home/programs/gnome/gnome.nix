@@ -44,7 +44,13 @@ in
   # gsettings set org.gnome.desktop.background picture-uri file:///home/nelson/Pictures/login.jpg
 
   home.sessionVariables = {
-    GSETTINGS_SCHEMA_DIR = (builtins.concatStringsSep ":" (map (extension: "${extension}/share/gnome-shell/extensions/${extension.extensionUuid}/schemas") gnomeExtensions));
+    GSETTINGS_SCHEMA_DIR = (
+      builtins.concatStringsSep ":" (
+        map (
+          extension: "${extension}/share/gnome-shell/extensions/${extension.extensionUuid}/schemas"
+        ) gnomeExtensions
+      )
+    );
   };
 
   xdg.configFile."pop-shell/config.json" = mkSymlink "extensions/pop-shell/config.json";
