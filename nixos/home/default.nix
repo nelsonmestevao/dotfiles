@@ -33,6 +33,7 @@
   dotfiles.programs.ruby.enable = true;
 
   # Programs and Tools
+  dotfiles.programs.bat.enable = true;
   dotfiles.programs.direnv.enable = true;
   dotfiles.programs.ghostty.enable = true;
   dotfiles.programs.git.enable = true;
@@ -42,6 +43,7 @@
   dotfiles.programs.nvim.enable = true;
   dotfiles.programs.sqlite.enable = true;
   dotfiles.programs.ssh.enable = true;
+  dotfiles.programs.zoxide.enable = true;
 
   dotfiles.packages.enable = true;
 

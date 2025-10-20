@@ -15,7 +15,6 @@ in
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [
       # core utils
-      bat
       curl
       dig
       dust
@@ -39,8 +38,6 @@ in
       vdhcoapp
       wget
       yazi
-      zoxide
-      zsh
 
       # build tools
       autoconf
