@@ -20,6 +20,9 @@
   programs.home-manager.enable = true;
   programs.nh.enable = true;
 
+  # Shell
+  dotfiles.programs.zsh.enable = true;
+
   # Programming Languages
   dotfiles.programs.elixir.enable = true;
   dotfiles.programs.erlang.enable = true;
