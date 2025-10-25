@@ -14,13 +14,19 @@
 ![Repo size](https://img.shields.io/github/repo-size/nelsonmestevao/dotfiles.svg?style=flat-square)
 
 I really like to configure my system in every possible way. This repository
-holds how I do it. If you are just starting out you could use mine (_I don't
-care or mind_, see [LICENSE][license]) but for your own sake **read them**. You
-will not get the most out of it without.
+holds how I do it, by storing and symlinking the configuration files of my tools
+as well the declarative configuration of my system by taking advantage of the
+Nix package manager, programming language and even OS.
+
+If you are just starting out you could use mine (_I don't care or mind_, see
+[LICENSE][license]) but for your own sake **read them**. You will not get the
+most out of it without.
+
+<div align="center">
+  <img alt="screenshot" src=".github/screenshot.png" width="85%"/>
+</div>
 
 ## 🧩 Overview
-
-The configuration is as modular as I could make it so far. It is divided into `home/` and `system/` folders. The `home/` folder has everything that should work at least in any Linux distribution and even most modules should work in macOS as well (except the ones like gnome and hyprland). The `system/` contains the configuration for NixOS and I try my best to keep only the things that is really needed.
 
 This configuration is as modular as I can make it. It’s split into two main
 directories:
@@ -31,10 +37,6 @@ Hyprland.
 
 - `system/`: NixOS-specific configuration, containing only what’s truly
 necessary for the system layer (at least I try to).
-
-<div align="center">
-  <img alt="screenshot" src=".github/screenshot.png" width="85%"/>
-</div>
 
 ## 🚀 Installing
 
