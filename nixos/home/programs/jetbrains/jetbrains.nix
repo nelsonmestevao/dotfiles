@@ -7,6 +7,8 @@
 }:
 {
   home.packages = with pkgs; [
-    rclone
+    jetbrains.datagrip
   ];
+
+  home.file.".ideavimrc" = mkSymlink "ideavimrc";
 }

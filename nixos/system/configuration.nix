@@ -163,7 +163,6 @@
 
     brave
     discord
-    jetbrains.datagrip
     kdePackages.kdenlive
     obs-cli
     obs-cmd

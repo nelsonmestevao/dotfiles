@@ -43,6 +43,7 @@
   dotfiles.programs.ghostty.enable = true;
   dotfiles.programs.git.enable = true;
   dotfiles.programs.gnome.enable = true;
+  dotfiles.programs.jetbrains.enable = true;
   dotfiles.programs.jj.enable = true;
   dotfiles.programs.latex.enable = true;
   dotfiles.programs.mise.enable = true;

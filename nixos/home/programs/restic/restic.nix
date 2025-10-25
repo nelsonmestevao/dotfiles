@@ -7,7 +7,7 @@
 }:
 {
   home.packages = with pkgs; [
-      restic
+    restic
   ];
 
   xdg.configFile."restic/exclude.txt" = mkSymlink "exclude.txt";
