@@ -191,7 +191,6 @@
     telegram-desktop
     terraform
     vlc
-    vscode
     wezterm
     zed-editor
     zen-browser.packages.${pkgs.system}.default

@@ -68,6 +68,7 @@ streetsidesoftware.code-spell-checker
 sumneko.lua
 supermaven.supermaven
 tal7aouy.icons
+tamasfe.even-better-toml
 testdouble.vscode-alternate-alternate-file
 tldraw-org.tldraw-vscode
 tomoki1207.pdf

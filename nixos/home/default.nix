@@ -43,6 +43,7 @@
   dotfiles.programs.nvim.enable = true;
   dotfiles.programs.sqlite.enable = true;
   dotfiles.programs.ssh.enable = true;
+  dotfiles.programs.vscode.enable = true;
   dotfiles.programs.zoxide.enable = true;
 
   dotfiles.packages.enable = true;
