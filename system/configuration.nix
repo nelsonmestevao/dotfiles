@@ -12,7 +12,7 @@
 }:
 {
   imports = [
-    ./hosts/framework/hardware.nix
+    ./hosts/${hostname}/hardware.nix
     ./timers.nix
   ];
 
