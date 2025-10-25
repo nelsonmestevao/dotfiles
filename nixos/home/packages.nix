@@ -22,7 +22,6 @@ in
       fd
       ffmpeg-full
       fop
-      fzf
       gnupg
       gping
       grex
