@@ -192,7 +192,6 @@
     terraform
     vlc
     wezterm
-    zed-editor
     zen-browser.packages.${pkgs.system}.default
 
     # security
