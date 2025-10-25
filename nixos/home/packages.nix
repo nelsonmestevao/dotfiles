@@ -24,6 +24,8 @@ in
       fop
       fzf
       gnupg
+      gping
+      grex
       gvfs
       imagemagick
       jq
@@ -60,6 +62,7 @@ in
       presenterm
       shellcheck
       shfmt
+      silicon
       stripe-cli
       typst
       watchman
@@ -77,6 +80,7 @@ in
       hyperfine
       scc
       speedtest-cli
+      tokei
 
       # editors & IDEs
       sc-im
