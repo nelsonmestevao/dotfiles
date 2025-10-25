@@ -191,7 +191,6 @@
     telegram-desktop
     terraform
     vlc
-    wezterm
     zen-browser.packages.${pkgs.system}.default
 
     # security
