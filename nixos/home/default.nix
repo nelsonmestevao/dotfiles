@@ -38,6 +38,7 @@
   # Programs and Tools
   dotfiles.programs.bat.enable = true;
   dotfiles.programs.direnv.enable = true;
+  dotfiles.programs.espanso.enable = false;
   dotfiles.programs.fzf.enable = true;
   dotfiles.programs.ghostty.enable = true;
   dotfiles.programs.git.enable = true;

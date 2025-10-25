@@ -54,7 +54,6 @@ in
       bitwarden-cli
       bruno
       eva
-      # espanso-wayland
       httpie
       k6
       llvmPackages_20.clang-tools
