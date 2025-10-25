@@ -23,6 +23,9 @@
   # Shell
   dotfiles.programs.zsh.enable = true;
 
+  # WM
+  dotfiles.programs.hyprland.enable = false;
+
   # Programming Languages
   dotfiles.programs.elixir.enable = true;
   dotfiles.programs.erlang.enable = true;
