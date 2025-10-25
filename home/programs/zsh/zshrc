@@ -25,7 +25,7 @@ for init_file in $(find $DOTFILES -type f -name "*.init" | sort); do
   source $init_file
 done
 
-for module in $(ls $DOTFILES/nixos/home/programs/zsh/*.zsh | sort); do
+for module in $(ls $DOTFILES/home/programs/zsh/*.zsh | sort); do
   source $module
 done
 

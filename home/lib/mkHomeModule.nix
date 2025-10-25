@@ -9,7 +9,7 @@ name: body:
 let
   mkSymlink =
     relativePath:
-    config.lib.dotfiles.mkSymlinkFrom "${config.home.homeDirectory}/.dotfiles/nixos/home/programs/${name}" relativePath;
+    config.lib.dotfiles.mkSymlinkFrom "${config.home.homeDirectory}/.dotfiles/home/programs/${name}" relativePath;
 in
 {
   options.dotfiles.programs.${name}.enable = lib.mkEnableOption "Enable ${name} configuration.";
