@@ -45,7 +45,7 @@ Every folder in `home/programs/*` is a module that brings the option
 or setting it to false. Complex setups can easily be built by composing and
 reusing these modular pieces.
 
-> **Warning**
+> [!WARNING]
 > Helper scripts are available in the bin/ directory.
 > Read them before running anything — as always, never execute code you don’t
 understand or trust.
