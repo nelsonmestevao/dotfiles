@@ -9,6 +9,14 @@ Host github.com
     HostName github.com
     IdentityFile ~/.ssh/id_ed25519
 
+Host dpworx.prod
+    HostName dpworx.de
+    User dpworx
+
+Host dpworx.stg
+    HostName staging.dpworx.de
+    User dpworx
+
 Host ha
     HostName ha.local
     Port 2222
