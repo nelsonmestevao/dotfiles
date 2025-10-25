@@ -13,7 +13,6 @@
     git
     git-who
     gitleaks
-    jujutsu
     lazygit
   ];
 
