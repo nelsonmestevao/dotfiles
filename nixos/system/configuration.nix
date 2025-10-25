@@ -114,7 +114,6 @@
       # dev tools
       dconf2nix
       rclone
-      restic
       # containers
       docker
       docker-compose
