@@ -24,6 +24,7 @@ let
   ];
 in
 {
+
   home.packages =
     with pkgs;
     [
@@ -65,16 +66,7 @@ in
   #   Comment=Keyboard launcher
   # '';
 
-  xdg.configFile."autostart/ulauncher.desktop".text = ''
-    [Desktop Entry]
-    Type=Application
-    Exec=${pkgs.ulauncher}/bin/ulauncher --hide-window
-    Restart=always
-    Hidden=false
-    X-GNOME-Autostart-enabled=true
-    Name=ULauncher
-    Comment=Keyboard launcher
-  '';
+  dotfiles.programs.ulauncher.enable = true;
 
   services.copyq.enable = true;
 
@@ -242,23 +234,11 @@ in
       ];
     };
 
-    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
-      name = "ULauncher";
-      command = "ulauncher-toggle";
-      binding = "<Alt>Space";
-    };
-
     # "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
     #   name = "Albert Launcher";
     #   command = "albert --platformtheme gnome toggle";
     #   binding = "<Alt>Space";
     # };
-
-    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1" = {
-      name = "Terminal";
-      command = "ghostty";
-      binding = "<Super>Return";
-    };
 
     "org/gnome/desktop/input-sources" = {
       sources = [
