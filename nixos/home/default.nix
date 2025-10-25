@@ -47,6 +47,7 @@
   dotfiles.programs.latex.enable = true;
   dotfiles.programs.mise.enable = true;
   dotfiles.programs.nvim.enable = true;
+  dotfiles.programs.rclone.enable = true;
   dotfiles.programs.restic.enable = false;
   dotfiles.programs.sqlite.enable = true;
   dotfiles.programs.ssh.enable = true;

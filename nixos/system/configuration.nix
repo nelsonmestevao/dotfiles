@@ -113,7 +113,6 @@
     packages = with pkgs; [
       # dev tools
       dconf2nix
-      rclone
       # containers
       docker
       docker-compose
