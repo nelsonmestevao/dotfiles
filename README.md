@@ -18,52 +18,49 @@ holds how I do it. If you are just starting out you could use mine (_I don't
 care or mind_, see [LICENSE][license]) but for your own sake **read them**. You
 will not get the most out of it without.
 
-Start by reading my Neovim configuration. It follows a literate configuration
-where it's documentation is the configuration files it selves. I write them
-using markdown and Neovim will interpret only the code blocks.
+## 🧩 Overview
+
+The configuration is as modular as I could make it so far. It is divided into `home/` and `system/` folders. The `home/` folder has everything that should work at least in any Linux distribution and even most modules should work in macOS as well (except the ones like gnome and hyprland). The `system/` contains the configuration for NixOS and I try my best to keep only the things that is really needed.
+
+This configuration is as modular as I can make it. It’s split into two main
+directories:
+
+- `home/`: portable configuration that works across any Linux distribution. Many
+modules even work on macOS, except for platform-specific ones like GNOME or
+Hyprland.
+
+- `system/`: NixOS-specific configuration, containing only what’s truly
+necessary for the system layer (at least I try to).
 
 <div align="center">
   <img alt="screenshot" src=".github/screenshot.png" width="85%"/>
 </div>
 
-## :rocket: Installing
+## 🚀 Installing
 
-I follow a very modular approach. If you don't want something you can just
-remove it's folder. Imagine you don't want Neovim. You can just delete `nvim`
-folder. It's that simple.
+Every folder in `home/programs/*` is a module that brings the option
+`dotfiles.programs.<name>.enable` and can be activated or deactivated but commenting
+or setting it to false. Complex setups can easily be built by composing and
+reusing these modular pieces.
 
 > **Warning**
-> As you probably know, you shouldn't just run any script that you do not trust.
-You shouldn't just trust my `install` script. You should read it and all the
-helpers that it relies on.
+> Helper scripts are available in the bin/ directory.
+> Read them before running anything — as always, never execute code you don’t
+understand or trust.
 
 Start by cloning my `dotfiles` into `~/.dotfiles`. You should do the same with
-my `spells` repository. Some scripts needed are there.
+my `spells` repository. The spells are not a requirement but there's a lot of
+goodies there.
 
 ```shell
 git clone https://github.com/nelsonmestevao/dotfiles ~/.dotfiles
 git clone https://github.com/nelsonmestevao/spells   ~/.spells
 ```
 
-Depending on your Linux distribution you should change the `distro.sh`
-accordingly.
+Then you are ready to build this configuration for your system. More
+documentation will be provided on exactly how to customize things.
 
-```shell
-cd ~/.dotfiles
-./install
-```
-
-## :bomb: Uninstalling
-
-```shell
-cd ~/.dotfiles
-./uninstall.sh
-cd ~
-rm -rf ~/.dotfiles
-rm -rf ~/.spells
-```
-
-## :memo: License
+## 📄 License
 
 This repository is licensed under the [WTFNMFPL](LICENSE.txt).
 

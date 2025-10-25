@@ -1,1 +1,0 @@
-Zen about:config zen.view.experimental-no-window-controls

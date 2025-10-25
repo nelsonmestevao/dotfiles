@@ -173,6 +173,7 @@
     telegram-desktop
     terraform
     vlc
+    # about:config zen.view.experimental-no-window-controls
     zen-browser.packages.${pkgs.system}.default
 
     # security
