@@ -42,5 +42,7 @@
   ];
 
   home.file.".iex.exs" = mkSymlink "iex.exs";
-  home.file.".default-mix-commands" = mkSymlink "default-mix-commands";
+  home.file.".default-mix-commands" = lib.mkIf config.dotfiles.programs.mise.enable (
+    mkSymlink "default-mix-commands"
+  );
 }
