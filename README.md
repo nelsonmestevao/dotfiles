@@ -13,14 +13,14 @@
 [![License](https://img.shields.io/github/license/nelsonmestevao/dotfiles?logo=WTFNMFPL&style=flat-square)][license]
 ![Repo size](https://img.shields.io/github/repo-size/nelsonmestevao/dotfiles.svg?style=flat-square)
 
-I really like to configure my system in every possible way. This repository
-holds how I do it, by storing and symlinking the configuration files of my tools
-as well the declarative configuration of my system by taking advantage of the
-Nix package manager, programming language and even OS.
+I enjoy customizing every aspect of my system. This repository contains my
+complete setup — from configuration files for the tools I use (managed through
+symlinks) to the declarative configuration of my entire system using the Nix
+package manager, language, and operating system.
 
-If you are just starting out you could use mine (_I don't care or mind_, see
-[LICENSE][license]) but for your own sake **read them**. You will not get the
-most out of it without.
+If you’re just getting started, feel free to use my setup (_I don’t mind_ — see
+the [LICENSE][license]). But for your own good, **take the time to read through
+it**. You won't get the most out of it otherwise.
 
 <div align="center">
   <img alt="screenshot" src=".github/screenshot.png" width="85%"/>
