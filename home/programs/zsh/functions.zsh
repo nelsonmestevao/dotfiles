@@ -76,25 +76,6 @@ function gtwd() {
   fi
 }
 
-function tmux-connect() {
-  local HOSTNAME=$1
-  ssh $HOSTNAME -t tmux new-session -A -d -s ssh_tmux
-}
-
-function coding() {
-  local PROJECT=$(ls $1 | fzf)
-  [ -z "$PROJECT" ] && return
-
-  tmuxinator start code "$1/$PROJECT"
-}
-
-function find-tmuxinator-project() {
-  local PROJECT=$(ls -1 ~/.dotfiles/tmux/projects | cut -d. -f1 | awk '!/code/' | fzf)
-  [ -z "$PROJECT" ] && return
-
-  tmuxinator start $PROJECT
-}
-
 function find-file() {
   local FILE=$(fzf --preview-window=right:60% --preview='bat --color "always" {}')
 
@@ -134,11 +115,5 @@ function bwu(){
 function grupo() {
   printf -v group_number "%03d" "$1"
 
-  cd "$HOME/Code/UMinho/repos/projetos/2024li1g${group_number}"
-}
-
-function aluno() {
-  local uminho_id="$(echo $1 | tr '[:upper:]' '[:lower:]')"
-
-  cd "$HOME/Code/UMinho/repos/acompanhamento/${uminho_id}"
+  cd "/tmp/repos/2025l1g${group_number}"
 }

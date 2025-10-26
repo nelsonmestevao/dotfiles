@@ -10,26 +10,15 @@ alias -g N="| nvim +'setlocal buftype=nofile noswapfile' +':0' -"
 
 alias dot="cd $DOTFILES"
 
-alias c="coding $HOME/Code"
-alias s="coding $HOME/Snippets"
-
-alias cv="cd $HOME/Code/curriculum-vitae/ && eza --long --header --git"
-alias ocv="cd $HOME/Code/online-curriculum/ && eza --long --header --git"
-
-alias um="cd $HOME/Code/uminho/"
-
 alias ls="eza"
 alias tree="eza -T"
 alias r="yazi"
 alias scim="sc-im"
-# alias p="sudo pacman"
-# alias y="yay"
 alias ka="killall"
 alias :q="exit"
 
 alias o=open
 alias f=find-file
-alias ft=find-tmuxinator-project
 
 alias bsc=backup
 alias pls=please
@@ -45,17 +34,6 @@ alias grbdv='git fetch origin; git fetch origin --prune; git rebase origin/$(git
 alias v="nvim -p"
 alias vi="nvim"
 alias vim="nvim"
-
-alias py="ipython -i"
-alias pm="python -m"
-
-alias r3="rebar3"
-
-alias zj=zellij
-
-alias t=tmux
-alias tc=tmux-connect
-alias mux=tmuxinator
 
 alias bs="bin/server"
 alias bb="bin/build"
@@ -105,11 +83,6 @@ alias mkst="make setup"
 alias mkt="make test"
 alias mkut="make unit-tests"
 alias mkts="make tests"
-
-alias stg="stack ghci"
-alias str="stack run"
-alias stc="stack test --coverage"
-alias sth="stack haddock"
 
 alias n="npm"
 alias nr="npm run"
