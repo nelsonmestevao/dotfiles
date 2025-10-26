@@ -16,7 +16,7 @@
           GREEN="\033[1;32m"
           RESET="\033[0m"
 
-          if [ ! -f "${targetPath}" ]; then
+          if [ ! -e "${targetPath}" ]; then
             echo -e "$YELLOW⚠ Warning$RESET: '${targetPath}' does not exist $RED✗$RESET" >&2
           fi
         '';

@@ -25,10 +25,7 @@
   xdg.configFile."ulauncher/extensions.json" = mkSymlink "extensions.json";
   xdg.configFile."ulauncher/shortcuts.json" = mkSymlink "shortcuts.json";
 
-  xdg.configFile."ulauncher/user-themes" = {
-    source = ./themes;
-    recursive = true;
-  };
+  xdg.configFile."ulauncher/user-themes" = mkSymlink "themes";
 
   dconf.settings = lib.mkIf config.dotfiles.programs.gnome.enable {
     "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
