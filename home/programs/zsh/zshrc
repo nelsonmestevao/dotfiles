@@ -76,5 +76,3 @@ fi
 # # Substitute the default asdf prompt element
 # typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=("${POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS[@]/asdf/mise}")
 # }
-
-export PATH="$HOME/.local/bin:$PATH"

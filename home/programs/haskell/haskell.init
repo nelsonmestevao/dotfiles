@@ -1,5 +1,0 @@
-# vim: ft=zsh
-
-export PATH="$HOME/.local/bin:$PATH"
-
-[ -f ~/.ghcup/env ] && source ~/.ghcup/env

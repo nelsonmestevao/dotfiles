@@ -1,5 +1,0 @@
-# vim: ft=zsh
-
-alias x=mise
-alias mr='mise run'
-

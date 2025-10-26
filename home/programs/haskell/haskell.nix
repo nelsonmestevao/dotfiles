@@ -32,5 +32,10 @@
     mesa_glu
   ];
 
+  programs.zsh.envExtra = lib.mkIf config.dotfiles.programs.zsh.enable ''
+    export PATH="$HOME/.local/bin:$PATH";
+    [ -f ~/.ghcup/env ] && source ~/.ghcup/env
+  '';
+
   home.file.".ghci" = mkSymlink "ghci";
 }

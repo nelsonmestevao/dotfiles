@@ -42,12 +42,14 @@
   ];
 
   home.sessionVariables = {
-    PATH = "$HOME/.mix/escripts:$PATH";
-
     PLUG_EDITOR = "vscode://file/__FILE__:__LINE__";
     ELIXIR_EDITOR = "code -g __FILE__:__LINE__";
     ERL_AFLAGS = "-kernel shell_history enabled";
   };
+
+  programs.zsh.envExtra = lib.mkIf config.dotfiles.programs.zsh.enable ''
+    export PATH="$HOME/.mix/escripts:$PATH";
+  '';
 
   home.file.".iex.exs" = mkSymlink "iex.exs";
   home.file.".default-mix-commands" = lib.mkIf config.dotfiles.programs.mise.enable (
