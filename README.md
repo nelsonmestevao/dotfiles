@@ -38,12 +38,12 @@ Hyprland.
 - `system/`: NixOS-specific configuration, containing only what’s truly
 necessary for the system layer (at least I try to).
 
-## 🚀 Installing
-
 Every folder in `home/programs/*` is a module that brings the option
 `dotfiles.programs.<name>.enable` and can be activated or deactivated but commenting
 or setting it to `false`. Complex setups can easily be built by composing and
 reusing these modular pieces.
+
+## 🚀 Installing
 
 > [!WARNING]
 > Helper scripts are available in the bin/ directory.
