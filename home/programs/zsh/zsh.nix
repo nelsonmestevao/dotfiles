@@ -14,5 +14,7 @@
     SHELL = "${pkgs.zsh}/bin/zsh";
   };
 
+  programs.zsh.enable = true;
+
   home.file.".zshrc" = mkSymlink "zshrc";
 }
