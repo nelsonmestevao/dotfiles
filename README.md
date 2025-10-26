@@ -42,12 +42,12 @@ necessary for the system layer (at least I try to).
 
 Every folder in `home/programs/*` is a module that brings the option
 `dotfiles.programs.<name>.enable` and can be activated or deactivated but commenting
-or setting it to false. Complex setups can easily be built by composing and
+or setting it to `false`. Complex setups can easily be built by composing and
 reusing these modular pieces.
 
 > [!WARNING]
 > Helper scripts are available in the bin/ directory.
-> Read them before running anything — as always, never execute code you don’t
+> **Read them before running anything** — as always, never execute code you don’t
 understand or trust.
 
 Start by cloning my `dotfiles` into `~/.dotfiles`. You should do the same with
@@ -59,8 +59,14 @@ git clone https://github.com/nelsonmestevao/dotfiles ~/.dotfiles
 git clone https://github.com/nelsonmestevao/spells   ~/.spells
 ```
 
-Then you are ready to build this configuration for your system. More
-documentation will be provided on exactly how to customize things.
+The only requirement would be to have NixOS or Nix package manager installed.
+Then you are ready to build this configuration for your system.
+
+```shell
+bin/rebuild (home | os)
+```
+
+More documentation will be provided on exactly how to customize things.
 
 ## 📄 License
 
