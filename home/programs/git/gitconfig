@@ -59,7 +59,8 @@
   date = auto:human
 [merge]
   log = true
-  conflictstyle = diff3
+  # tool = nvimdiff
+  conflictstyle = zdiff3
 [push]
   default = simple
   autoSetupRemote = true
