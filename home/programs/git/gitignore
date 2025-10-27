@@ -3,6 +3,7 @@ worktrees
 
 .elixir_ls
 .lexical
+.expert
 
 .projections.json
 

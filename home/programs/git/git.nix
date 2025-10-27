@@ -8,13 +8,13 @@
 {
   home.packages = with pkgs; [
     delta
+    diffpdf
     difftastic
     gh
     git
     git-who
     gitleaks
     lazygit
-    diffpdf
   ];
 
   programs.zsh.envExtra = lib.mkIf config.dotfiles.programs.zsh.enable ''
