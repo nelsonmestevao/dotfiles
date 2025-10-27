@@ -26,6 +26,17 @@ it**. You won't get the most out of it otherwise.
   <img alt="screenshot" src=".github/screenshot.png" width="85%"/>
 </div>
 
+<div align="center" class="flex">
+  <sub>Light and Dark mode support.</sub><br/>
+  <img alt="darkmode" src=".github/dark-mode.png" width="45%"/>
+  <img alt="lightmode" src=".github/light-mode.png" width="45%"/>
+</div>
+
+<div align="center">
+  <sub>Desktop apps like VS Code and Zen Browser.</sub><br/>
+  <img alt="apps" src=".github/desktop-apps.png" width="85%"/>
+</div>
+
 ## 🧩 Overview
 
 This configuration is as modular as I can make it. It’s split into two main
