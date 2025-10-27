@@ -1,5 +1,5 @@
 [releases]: https://github.com/nelsonmestevao/dotfiles/releases/latest
-[license]: #memo-license
+[license]: #-license
 
 <h1 align="center">
 <picture>
@@ -18,7 +18,7 @@ complete setup — from configuration files for the tools I use (managed through
 symlinks) to the declarative configuration of my entire system using the Nix
 package manager, language, and operating system.
 
-If you’re just getting started, feel free to use my setup (_I don’t mind_ — see
+If you're just getting started, feel free to use my setup (_I don’t mind_ — see
 the [LICENSE][license]). But for your own good, **take the time to read through
 it**. You won't get the most out of it otherwise.
 
