@@ -49,6 +49,7 @@
   rw = review
   st = status
 
+  undo = reset --mixed HEAD~1
   co-pr = !sh -c 'git fetch origin pull/$1/head:pr/$1 && git checkout pr/$1' -
   patch   = !git --no-pager diff
   standup = !git log --oneline --graph --all --no-merges --author=$USER --since '9am last week'
