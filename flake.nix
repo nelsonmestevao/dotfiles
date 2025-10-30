@@ -11,7 +11,7 @@
     zen-browser = {
       url = "github:youwen5/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
-  };
+    };
   };
   outputs =
     {
@@ -24,6 +24,7 @@
       system = "x86_64-linux";
       hostname = "framework";
       username = "nelson";
+      name = "Nelson Estevão";
       pkgs = nixpkgs.legacyPackages.${system};
       lib = nixpkgs.lib;
 
@@ -34,7 +35,14 @@
 
       nixosConfigurations.${hostname} = nixpkgs.lib.nixosSystem {
         inherit system;
-        specialArgs = { inherit zen-browser hostname username; };
+        specialArgs = {
+          inherit
+            zen-browser
+            hostname
+            username
+            name
+            ;
+        };
         modules = [ ./system/configuration.nix ];
       };
 

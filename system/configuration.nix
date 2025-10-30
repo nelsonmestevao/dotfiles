@@ -7,6 +7,7 @@
   pkgs,
   hostname,
   username,
+  name,
   zen-browser,
   ...
 }:
@@ -102,7 +103,7 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.${username} = {
     isNormalUser = true;
-    description = "Nelson Estevão";
+    description = name;
     extraGroups = [
       "docker"
       "libvirtd"
