@@ -65,10 +65,6 @@ in
       typst
       watchman
 
-      # database clients
-      mysql84
-      libxml2
-
       # containers & cloud
       cloudflared
       podman
