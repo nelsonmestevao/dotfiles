@@ -49,7 +49,7 @@
   dotfiles.programs.jj.enable = true;
   dotfiles.programs.latex.enable = true;
   dotfiles.programs.mise.enable = true;
-  dotfiles.programs.mysql.enable = true;
+  dotfiles.programs.mysql.enable = false;
   dotfiles.programs.nvim.enable = true;
   dotfiles.programs.rclone.enable = true;
   dotfiles.programs.restic.enable = false;

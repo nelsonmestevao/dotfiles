@@ -8,6 +8,7 @@
 {
   home.packages = with pkgs; [
     ruby_3_4
+    rubyfmt
   ];
 
   home.file.".irbrc" = mkSymlink "irbrc";
