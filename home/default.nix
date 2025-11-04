@@ -57,6 +57,7 @@
   dotfiles.programs.ssh.enable = true;
   dotfiles.programs.vscode.enable = true;
   dotfiles.programs.wezterm.enable = true;
+  dotfiles.programs.wine.enable = true;
   dotfiles.programs.zed.enable = true;
   dotfiles.programs.zoxide.enable = true;
 
