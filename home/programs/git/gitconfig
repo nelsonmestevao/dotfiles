@@ -51,6 +51,7 @@
 
   undo = reset --mixed HEAD~1
   co-pr = !sh -c 'git fetch origin pull/$1/head:pr/$1 && git checkout pr/$1' -
+  find = log --pretty=format:'%C(yellow)%h %Cblue%ad %Creset%s' --decorate --date=short --all -S
   patch   = !git --no-pager diff
   standup = !git log --oneline --graph --all --no-merges --author=$USER --since '9am last week'
 [branch]
