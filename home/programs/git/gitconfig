@@ -57,10 +57,17 @@
   autosetuprebase = always
 [log]
   date = auto:human
+[diff]
+  algorithm = histogram
+  renames = copies
+  mnemonicPrefix = true
 [merge]
   log = true
   # tool = nvimdiff
   conflictstyle = zdiff3
+  algorithm = histogram
+[fetch]
+  prune = true
 [push]
   default = simple
   autoSetupRemote = true
