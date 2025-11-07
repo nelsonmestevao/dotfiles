@@ -141,6 +141,8 @@
 
   services.tailscale.enable = true;
 
+  services.atd.enable = true;
+
   programs.nix-ld.enable = true;
 
   virtualisation.docker.enable = true;
