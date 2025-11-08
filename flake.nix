@@ -37,7 +37,6 @@
         inherit system;
         specialArgs = {
           inherit
-            zen-browser
             hostname
             username
             name
@@ -48,7 +47,7 @@
 
       homeConfigurations.${username} = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
-        extraSpecialArgs = { inherit username; };
+        extraSpecialArgs = { inherit username zen-browser; };
         modules = [
           ./home
           ./home/lib
