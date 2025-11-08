@@ -44,6 +44,7 @@
   dotfiles.programs.wezterm.enable = true;
   dotfiles.programs.wine.enable = true;
   dotfiles.programs.zed.enable = true;
+  dotfiles.programs.zen.enable = true;
   dotfiles.programs.zoxide.enable = true;
 
   dotfiles.packages.enable = true;

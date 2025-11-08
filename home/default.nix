@@ -22,11 +22,6 @@
   programs.home-manager.enable = true;
   programs.nh.enable = true;
 
-  home.packages = [
-    # about:config zen.view.experimental-no-window-controls
-    zen-browser.packages.${pkgs.system}.default
-  ];
-
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
   # introduces backwards incompatible changes.
