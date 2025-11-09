@@ -8,7 +8,8 @@
 {
   home.packages = with pkgs; [
     ghc
-    haskell-language-server
+    # haskell.compiler.ghc912
+    haskellPackages.haskell-language-server
 
     haskellPackages.lhs2tex
     haskellPackages.cabal-install
