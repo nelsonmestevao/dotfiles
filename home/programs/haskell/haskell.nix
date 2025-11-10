@@ -31,11 +31,13 @@
     libGLU.dev
     mesa
     mesa_glu
+    xorg.libX11
   ];
 
   programs.zsh.envExtra = lib.mkIf config.dotfiles.programs.zsh.enable ''
     export PATH="$HOME/.local/bin:$PATH";
     [ -f ~/.ghcup/env ] && source ~/.ghcup/env
+    export LD_LIBRARY_PATH="${pkgs.freeglut}/lib:${pkgs.libGL}/lib:$LD_LIBRARY_PATH"
   '';
 
   home.file.".ghci" = mkSymlink "ghci";
