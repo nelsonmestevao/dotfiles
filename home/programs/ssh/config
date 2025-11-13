@@ -1,13 +1,14 @@
 AddKeysToAgent  yes
 Compression yes
 
+# Host *
+#     IdentityAgent "~/.bitwarden-ssh-agent.sock"
+
 Host aur.archlinux.org
-  IdentityFile ~/.ssh/id_ed25519
   User aur
 
 Host github.com
     HostName github.com
-    IdentityFile ~/.ssh/id_ed25519
 
 Host dpworx.prod
     HostName dpworx.de
