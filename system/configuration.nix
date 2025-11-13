@@ -117,6 +117,7 @@
       # containers
       docker
       docker-compose
+      docker-buildx
       # AppImage
       fuse
       appimage-run
