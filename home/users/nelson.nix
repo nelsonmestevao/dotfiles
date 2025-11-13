@@ -23,8 +23,9 @@
   dotfiles.programs.python.enable = true;
   dotfiles.programs.ruby.enable = true;
 
-  # Programs and Tools
+  # Applications and Tools
   dotfiles.programs.bat.enable = true;
+  dotfiles.programs.bitwarden.enable = true;
   dotfiles.programs.direnv.enable = true;
   dotfiles.programs.espanso.enable = false;
   dotfiles.programs.fzf.enable = true;

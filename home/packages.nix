@@ -51,7 +51,6 @@ in
       age
       ast-grep
       bc
-      bitwarden-cli
       bruno
       eva
       httpie
@@ -89,7 +88,6 @@ in
       lazysql
 
       # desktop apps
-      bitwarden-desktop
       calibre
       digikam
       gimp
