@@ -1,9 +1,6 @@
 {
   config,
-  lib,
-  pkgs,
   username,
-  zen-browser,
   ...
 }:
 {

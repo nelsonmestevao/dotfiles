@@ -14,7 +14,5 @@ in
 {
   options.dotfiles.programs.${name}.enable = lib.mkEnableOption "Enable ${name} configuration.";
 
-  config = lib.mkIf config.dotfiles.programs.${name}.enable (body
-  (args // { inherit mkSymlink; })
-  );
+  config = lib.mkIf config.dotfiles.programs.${name}.enable (body (args // { inherit mkSymlink; }));
 }

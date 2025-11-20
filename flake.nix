@@ -29,6 +29,10 @@
       lib = nixpkgs.lib;
 
       mkHomeModule = import ./home/lib/mkHomeModule.nix { inherit lib; };
+
+      homeModules = map (name: mkHomeModule name (import ./home/programs/${name}/${name}.nix)) (
+        lib.attrNames (builtins.readDir ./home/programs)
+      );
     in
     {
       formatter.${system} = pkgs.nixfmt-tree;
@@ -52,9 +56,7 @@
           ./home
           ./home/lib
         ]
-        ++ map (name: mkHomeModule name (import ./home/programs/${name}/${name}.nix)) (
-          lib.attrNames (builtins.readDir ./home/programs)
-        );
+        ++ homeModules;
       };
     };
 }
