@@ -162,9 +162,6 @@
     # virtualbox
     libvirt
 
-    chromedriver
-    google-chrome
-
     brave
     discord
     kdePackages.kdenlive
