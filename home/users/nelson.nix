@@ -17,6 +17,7 @@
   # Programming Languages
   dotfiles.programs.elixir.enable = true;
   dotfiles.programs.erlang.enable = true;
+  dotfiles.programs.flutter.enable = true;
   dotfiles.programs.golang.enable = true;
   dotfiles.programs.haskell.enable = true;
   dotfiles.programs.nodejs.enable = true;
