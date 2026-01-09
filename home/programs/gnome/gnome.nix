@@ -65,7 +65,7 @@ in
   #   Comment=Keyboard launcher
   # '';
 
-  dotfiles.programs.ulauncher.enable = false;
+  dotfiles.programs.ulauncher.enable = true;
 
   services.copyq.enable = true;
 
