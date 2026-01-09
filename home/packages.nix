@@ -32,7 +32,7 @@ in
       mpv
       nushell
       ouch
-      poppler_utils # pdftotext, pdftohtml, etc
+      poppler-utils # pdftotext, pdftohtml, etc
       ripgrep
       tldr
       unzip

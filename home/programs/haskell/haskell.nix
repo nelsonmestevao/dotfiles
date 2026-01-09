@@ -11,9 +11,9 @@
     # haskell.compiler.ghc912
     haskellPackages.haskell-language-server
 
-    haskellPackages.lhs2tex
+    # haskellPackages.lhs2tex
     haskellPackages.cabal-install
-    haskellPackages.hindent
+    # haskellPackages.hindent
     haskellPackages.hlint
 
     # haskellPackages.HUnit

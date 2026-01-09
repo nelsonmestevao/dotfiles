@@ -30,7 +30,6 @@ in
     [
       wmctrl
       gnome-tweaks
-      ulauncher
       # albert
       # walker
       wl-clipboard
@@ -66,7 +65,7 @@ in
   #   Comment=Keyboard launcher
   # '';
 
-  dotfiles.programs.ulauncher.enable = true;
+  dotfiles.programs.ulauncher.enable = false;
 
   services.copyq.enable = true;
 
