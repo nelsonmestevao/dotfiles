@@ -14,10 +14,10 @@
     SHELL = "${pkgs.zsh}/bin/zsh";
   };
 
-  # programs.zsh.enable = true;
-  # programs.zsh.initContent = builtins.readFile ./zshrc;
+  programs.zsh.enable = true;
+  programs.zsh.initContent = builtins.readFile ./zshrc;
 
-  home.file.".zshrc" = mkSymlink "zshrc";
+  # home.file.".zshrc" = mkSymlink "zshrc";
 
   home.activation.cloneOhMyZsh = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     if [ ! -d "$HOME/.oh-my-zsh" ]; then
