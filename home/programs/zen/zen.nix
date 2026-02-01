@@ -8,6 +8,6 @@
 {
   home.packages = with pkgs; [
     # about:config zen.view.experimental-no-window-controls
-    zen-browser.packages.${pkgs.system}.default
+    zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 }
