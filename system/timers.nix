@@ -60,10 +60,6 @@ lib.mkMerge [
       --compression max --password-file ~/.config/restic/restic.pw --exclude-file ~/.dotfiles/home/programs/restic/exclude.txt -v \
       ~/Archive ~/Books ~/Code ~/Documents ~/Downloads ~/Pictures ~/Videos
 
-    ${pkgs.restic}/bin/restic -r rclone:dropbox:Backups/restic/framework.repo backup \
-      --compression max --password-file ~/.config/restic/restic.pw --exclude-file ~/.dotfiles/home/programs/restic/exclude.txt -v \
-      ~/Archive ~/Books ~/Code ~/Documents ~/Downloads ~/Pictures ~/Videos
-
     ${pkgs.restic}/bin/restic -r rclone:mdrive:Backups/restic/framework.repo backup \
       --compression max --password-file ~/.config/restic/restic.pw --exclude-file ~/.dotfiles/home/programs/restic/exclude.txt -v \
       ~/Archive ~/Books ~/Code ~/Documents ~/Downloads ~/Pictures ~/Videos
