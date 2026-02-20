@@ -9,6 +9,6 @@
   home.packages = with pkgs; [
     bws
     bitwarden-cli
-    bitwarden-desktop
+    # bitwarden-desktop
   ];
 }
