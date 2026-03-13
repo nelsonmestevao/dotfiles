@@ -94,6 +94,11 @@
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
+  services.printing.drivers = [
+    pkgs.brlaser
+  ];
+  services.avahi.enable = true;
+  services.avahi.nssmdns4 = true;
 
   # Enable sound with pipewire.
   services.pulseaudio.enable = false;
@@ -112,6 +117,7 @@
     extraGroups = [
       "docker"
       "libvirtd"
+      "lpadmin"
       "networkmanager"
       # "vboxusers"
       "wheel"
@@ -182,6 +188,9 @@
 
     # security
     fprintd
+
+    # printing
+    cups-brother-hll3230cdw
 
     # networking
     networkmanager-openconnect
