@@ -39,6 +39,7 @@
   dotfiles.programs.mise.enable = true;
   dotfiles.programs.mysql.enable = false;
   dotfiles.programs.nvim.enable = true;
+  dotfiles.programs.obsidian.enable = true;
   dotfiles.programs.rclone.enable = true;
   dotfiles.programs.restic.enable = false;
   dotfiles.programs.sqlite.enable = true;
