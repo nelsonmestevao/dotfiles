@@ -109,3 +109,5 @@ alias firefox=firefox-developer-edition
 alias hollywood='docker run --rm -it bcbcarl/hollywood'
 alias ip='ip -c=auto'
 
+alias tp5="/home/nelson/Code/UMinho/aulas-pi/2526/tp5"
+alias tp6="/home/nelson/Code/UMinho/aulas-pi/2526/tp6"
