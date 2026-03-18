@@ -28,8 +28,11 @@
     }:
     let
       lib = nixpkgs.lib;
+      mkHomeModules = import ./lib/mkHomeModules.nix { inherit lib; };
+      mkNixosConfig = import ./lib/mkNixosConfig.nix { inherit nixpkgs; };
+      mkHomeConfig = import ./lib/mkHomeConfig.nix { inherit nixpkgs home-manager mkHomeModules; };
 
-      # ── (nixos config) ──────────────────────────────────────────────────────
+      # ── Hosts ────────────────────────────────────────────────────────────
       hosts = {
         framework = {
           system = "x86_64-linux";
@@ -40,51 +43,23 @@
             };
           };
         };
+        thinkpad = {
+          system = "x86_64-linux";
+          users = {
+            nelson = {
+              name = "Nelson Estevão";
+            };
+          };
+        };
       };
 
-      # ── (home-manager config) ───────────────────────────────────────────────
+      # ── Users (home-manager) ─────────────────────────────────────────────
       users = {
         nelson = {
           overlays = [ claude-code.overlays.default ];
           extraSpecialArgs = { inherit zen-browser; };
         };
       };
-
-      # ── Helpers ────────────────────────────────────────────────────────
-      mkHomeModules =
-        let
-          mkHomeModule = import ./home/lib/mkHomeModule.nix { inherit lib; };
-        in
-        map (name: mkHomeModule name (import ./home/programs/${name}/${name}.nix)) (
-          lib.attrNames (builtins.readDir ./home/programs)
-        );
-
-      mkNixosConfig =
-        hostname: cfg:
-        nixpkgs.lib.nixosSystem {
-          inherit (cfg) system;
-          specialArgs = {
-            inherit hostname;
-            inherit (cfg) users;
-          };
-          modules = cfg.modules;
-        };
-
-      mkHomeConfig =
-        system: username: userCfg:
-        home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgs.legacyPackages.${system};
-          extraSpecialArgs = {
-            inherit username;
-          }
-          // (userCfg.extraSpecialArgs or { });
-          modules = [
-            { nixpkgs.overlays = userCfg.overlays or [ ]; }
-            ./home
-            ./home/lib
-          ]
-          ++ mkHomeModules;
-        };
 
       allSystems = lib.unique (lib.mapAttrsToList (_: h: h.system) hosts);
     in
