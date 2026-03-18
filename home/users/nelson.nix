@@ -28,6 +28,8 @@
   dotfiles.programs.bat.enable = true;
   dotfiles.programs.bitwarden.enable = true;
   dotfiles.programs.chrome.enable = true;
+  dotfiles.programs.claude.enable = true;
+  dotfiles.programs.codex.enable = true;
   dotfiles.programs.direnv.enable = true;
   dotfiles.programs.espanso.enable = false;
   dotfiles.programs.fzf.enable = true;
