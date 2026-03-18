@@ -73,7 +73,7 @@
         lib.mapAttrs' (
           username: _:
           lib.nameValuePair "${username}@${hostname}" (
-            mkHomeConfig hostCfg.system username (users.${username})
+            mkHomeConfig hostCfg.system hostname username (users.${username})
           )
         ) hostCfg.users
       ) hosts;

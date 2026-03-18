@@ -2,8 +2,13 @@
   config,
   lib,
   pkgs,
+  hostname,
   ...
 }:
+let
+  enableFor = hosts: lib.elem hostname hosts;
+  disableFor = hosts: !lib.elem hostname hosts;
+in
 {
   # Shell
   dotfiles.programs.zsh.enable = true;
@@ -12,7 +17,7 @@
   dotfiles.programs.hyprland.enable = false;
 
   # Desktop Environments
-  dotfiles.programs.gnome.enable = true;
+  dotfiles.programs.gnome.enable = enableFor [ "framework" ];
 
   # Programming Languages
   dotfiles.programs.elixir.enable = true;
@@ -41,7 +46,7 @@
   dotfiles.programs.mise.enable = true;
   dotfiles.programs.mysql.enable = false;
   dotfiles.programs.nvim.enable = true;
-  dotfiles.programs.obsidian.enable = true;
+  dotfiles.programs.obsidian.enable = disableFor [ "thinkpad" ];
   dotfiles.programs.rclone.enable = true;
   dotfiles.programs.restic.enable = false;
   dotfiles.programs.sqlite.enable = true;

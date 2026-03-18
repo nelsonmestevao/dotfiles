@@ -6,5 +6,5 @@ nixpkgs.lib.nixosSystem {
     inherit hostname;
     inherit (cfg) users;
   };
-  modules = cfg.modules;
+  modules = cfg.modules or [ ];
 }

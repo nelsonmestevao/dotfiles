@@ -3,11 +3,11 @@
   home-manager,
   mkHomeModules,
 }:
-system: username: cfg:
+system: hostname: username: cfg:
 home-manager.lib.homeManagerConfiguration {
   pkgs = nixpkgs.legacyPackages.${system};
   extraSpecialArgs = {
-    inherit username;
+    inherit username hostname;
   }
   // (cfg.extraSpecialArgs or { });
   modules = [
