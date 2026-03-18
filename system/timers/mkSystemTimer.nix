@@ -1,6 +1,5 @@
 { pkgs, username }:
-name: onCalendar: scriptCmd:
-{
+name: onCalendar: scriptCmd: {
   systemd.timers."${name}" = {
     wantedBy = [ "timers.target" ];
     timerConfig = {

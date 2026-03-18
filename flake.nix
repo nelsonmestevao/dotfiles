@@ -35,7 +35,9 @@
           system = "x86_64-linux";
           modules = [ ./system/configuration.nix ];
           users = {
-            nelson = { name = "Nelson Estevão"; };
+            nelson = {
+              name = "Nelson Estevão";
+            };
           };
         };
       };
@@ -72,14 +74,16 @@
         system: username: userCfg:
         home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgs.legacyPackages.${system};
-          extraSpecialArgs = { inherit username; } // (userCfg.extraSpecialArgs or { });
-          modules =
-            [
-              { nixpkgs.overlays = userCfg.overlays or [ ]; }
-              ./home
-              ./home/lib
-            ]
-            ++ mkHomeModules;
+          extraSpecialArgs = {
+            inherit username;
+          }
+          // (userCfg.extraSpecialArgs or { });
+          modules = [
+            { nixpkgs.overlays = userCfg.overlays or [ ]; }
+            ./home
+            ./home/lib
+          ]
+          ++ mkHomeModules;
         };
 
       allSystems = lib.unique (lib.mapAttrsToList (_: h: h.system) hosts);

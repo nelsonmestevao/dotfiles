@@ -4,7 +4,10 @@
   ...
 }:
 let
-  mkSystemTimer = import ./mkSystemTimer.nix { inherit pkgs; username = "nelson"; };
+  mkSystemTimer = import ./mkSystemTimer.nix {
+    inherit pkgs;
+    username = "nelson";
+  };
 in
 lib.mkMerge [
   (mkSystemTimer "sync-books" "Mon..Fri 18:00" ''

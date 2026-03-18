@@ -10,11 +10,10 @@
   ...
 }:
 {
-  imports =
-    [
-      ./hosts/${hostname}/hardware.nix
-    ]
-    ++ (map (username: ./timers/${username}.nix) (lib.attrNames users));
+  imports = [
+    ./hosts/${hostname}/hardware.nix
+  ]
+  ++ (map (username: ./timers/${username}.nix) (lib.attrNames users));
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
