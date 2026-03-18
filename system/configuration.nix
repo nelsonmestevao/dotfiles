@@ -6,16 +6,15 @@
   lib,
   pkgs,
   hostname,
-  username,
-  name,
-  zen-browser,
+  users,
   ...
 }:
 {
-  imports = [
-    ./hosts/${hostname}/hardware.nix
-    ./timers.nix
-  ];
+  imports =
+    [
+      ./hosts/${hostname}/hardware.nix
+    ]
+    ++ (map (username: ./timers/${username}.nix) (lib.attrNames users));
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -110,10 +109,10 @@
     pulse.enable = true;
   };
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.${username} = {
+  # Define user accounts. Don’t forget to set a password with ‘passwd’.
+  users.users = lib.mapAttrs (username: userCfg: {
     isNormalUser = true;
-    description = name;
+    description = userCfg.name;
     extraGroups = [
       "docker"
       "libvirtd"
@@ -134,7 +133,7 @@
       appimage-run
     ];
     shell = pkgs.zsh;
-  };
+  }) users;
 
   nix.settings.experimental-features = [
     "nix-command"

@@ -29,17 +29,18 @@
     let
       lib = nixpkgs.lib;
 
-      # ── Host definitions (system lives here, not on users) ────────────
+      # ── (nixos config) ──────────────────────────────────────────────────────
       hosts = {
         framework = {
           system = "x86_64-linux";
-          username = "nelson";
-          name = "Nelson Estevão";
           modules = [ ./system/configuration.nix ];
+          users = {
+            nelson = { name = "Nelson Estevão"; };
+          };
         };
       };
 
-      # ── User definitions (host-independent config only) ───────────────
+      # ── (home-manager config) ───────────────────────────────────────────────
       users = {
         nelson = {
           overlays = [ claude-code.overlays.default ];
@@ -62,19 +63,16 @@
           inherit (cfg) system;
           specialArgs = {
             inherit hostname;
-            inherit (cfg) username name;
+            inherit (cfg) users;
           };
           modules = cfg.modules;
         };
 
       mkHomeConfig =
-        hostname: hostCfg:
-        let
-          userCfg = users.${hostCfg.username};
-        in
+        system: username: userCfg:
         home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgs.legacyPackages.${hostCfg.system};
-          extraSpecialArgs = { inherit (hostCfg) username; } // (userCfg.extraSpecialArgs or { });
+          pkgs = nixpkgs.legacyPackages.${system};
+          extraSpecialArgs = { inherit username; } // (userCfg.extraSpecialArgs or { });
           modules =
             [
               { nixpkgs.overlays = userCfg.overlays or [ ]; }
@@ -91,9 +89,14 @@
 
       nixosConfigurations = lib.mapAttrs mkNixosConfig hosts;
 
-      homeConfigurations = lib.mapAttrs' (
+      homeConfigurations = lib.concatMapAttrs (
         hostname: hostCfg:
-        lib.nameValuePair "${hostCfg.username}@${hostname}" (mkHomeConfig hostname hostCfg)
+        lib.mapAttrs' (
+          username: _:
+          lib.nameValuePair "${username}@${hostname}" (
+            mkHomeConfig hostCfg.system username (users.${username})
+          )
+        ) hostCfg.users
       ) hosts;
     };
 }
