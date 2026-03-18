@@ -12,6 +12,11 @@
       url = "github:youwen5/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    claude-code = {
+      url = "github:sadjow/claude-code-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs =
     {
@@ -19,6 +24,7 @@
       nixpkgs,
       home-manager,
       zen-browser,
+      claude-code,
     }:
     let
       system = "x86_64-linux";
@@ -53,6 +59,9 @@
         inherit pkgs;
         extraSpecialArgs = { inherit username zen-browser; };
         modules = [
+          {
+            nixpkgs.overlays = [ claude-code.overlays.default ];
+          }
           ./home
           ./home/lib
         ]
