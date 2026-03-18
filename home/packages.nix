@@ -27,7 +27,7 @@ in
       grex
       gvfs
       imagemagick
-      jq
+
       lftp
       mpv
       nushell
@@ -51,9 +51,9 @@ in
       age
       ast-grep
       bc
-      bruno
+
       eva
-      httpie
+
       k6
       llvmPackages_20.clang-tools
       presenterm
@@ -61,20 +61,16 @@ in
       shfmt
       silicon
       stripe-cli
-      typst
-      watchman
 
       # containers & cloud
       cloudflared
-      podman
-      podman-compose
 
       # ISO tools
       impression
 
       # performance & benchmarking
       btop
-      hyperfine
+
       scc
       speedtest-cli
       tokei
@@ -87,14 +83,6 @@ in
       lazydocker
       lazysql
 
-      # desktop apps
-      calibre
-      digikam
-      gimp
-      inkscape
-      libreoffice
-      pinta
-      zeal
 
       # fonts
       font-awesome
