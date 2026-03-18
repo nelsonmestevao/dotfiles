@@ -30,6 +30,7 @@ def rebuild_system():
 
 def rebuild_home():
   # home-manager switch --flake '.'
+  # home-manager switch --flake .#nelson@framework
   nh home switch .
 
 def main(args):
