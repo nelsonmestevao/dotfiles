@@ -2,6 +2,7 @@
   description = "Nelson's Dotfiles";
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     home-manager = {
       url = "github:nix-community/home-manager/release-25.11";
@@ -22,6 +23,7 @@
     {
       self,
       nixpkgs,
+      nixpkgs-unstable,
       home-manager,
       zen-browser,
       claude-code,
@@ -59,6 +61,12 @@
           overlays = [
             claude-code.overlays.default
             (final: prev: { zen-browser = zen-browser.packages.${prev.stdenv.hostPlatform.system}.default; })
+            (final: prev: {
+              unstable = import nixpkgs-unstable {
+                system = prev.stdenv.hostPlatform.system;
+                config.allowUnfree = true;
+              };
+            })
           ];
           extraSpecialArgs = { };
         };

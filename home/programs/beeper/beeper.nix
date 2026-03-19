@@ -7,6 +7,6 @@
 }:
 {
   home.packages = with pkgs; [
-    beeper
+    pkgs.unstable.beeper
   ];
 }

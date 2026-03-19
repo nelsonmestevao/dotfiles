@@ -10,7 +10,7 @@ let
   gnomeExtensions = with pkgs.gnomeExtensions; [
     auto-move-windows
     blur-my-shell
-    caffeine
+    pkgs.unstable.gnomeExtensions.caffeine
     color-picker
     pop-shell
     space-bar
