@@ -32,6 +32,7 @@ in
   # Applications and Tools
   dotfiles.programs.bat.enable = true;
   dotfiles.programs.calibre.enable = enableFor [ "framework" ];
+  dotfiles.programs.beeper.enable = enableFor [ "framework" ];
   dotfiles.programs.bitwarden.enable = enableFor [ "framework" ];
   dotfiles.programs.bruno.enable = true;
   dotfiles.programs.chrome.enable = true;
