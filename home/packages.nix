@@ -95,7 +95,6 @@ in
       cpufetch
       fastfetch
       figlet
-      neofetch
       nix-search-tv
       onefetch
       terminaltexteffects

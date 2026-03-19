@@ -1,0 +1,33 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -I nixpkgs=channel:nixos-25.11
+#! nix-shell -p nh gum python313 python313Packages.xonsh python313Packages.docopt
+#! nix-shell -i xonsh
+"""
+Rebuilds the system and home configuration.
+
+Usage:
+  {program}
+  {program} (-h | --help)
+  {program} (-v | --version)
+
+Options:
+  -h --help         Show this screen.
+  -v --version      Show version.
+"""
+import os
+
+from docopt import docopt
+
+os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+def check_all_systems():
+  nix flake check --all-systems
+
+def main(args):
+    check_all_systems()
+
+if __name__ == '__main__':
+    arguments = docopt(__doc__.format(program=__file__), version=f'{os.path.basename(__file__)} script version 1.0')
+    main(arguments)
+
+# vim: ft=xonsh

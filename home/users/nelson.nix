@@ -32,7 +32,7 @@ in
   # Applications and Tools
   dotfiles.programs.bat.enable = true;
   dotfiles.programs.calibre.enable = enableFor [ "framework" ];
-  dotfiles.programs.bitwarden.enable = true;
+  dotfiles.programs.bitwarden.enable = enableFor [ "framework" ];
   dotfiles.programs.bruno.enable = true;
   dotfiles.programs.chrome.enable = true;
   dotfiles.programs.claude.enable = true;
@@ -42,21 +42,21 @@ in
   dotfiles.programs.espanso.enable = false;
   dotfiles.programs.fzf.enable = true;
   dotfiles.programs.ghostty.enable = true;
-  dotfiles.programs.gimp.enable = true;
+  dotfiles.programs.gimp.enable = enableFor [ "framework" ];
   dotfiles.programs.git.enable = true;
   dotfiles.programs.httpie.enable = true;
   dotfiles.programs.hyperfine.enable = true;
-  dotfiles.programs.inkscape.enable = true;
-  dotfiles.programs.jetbrains.enable = true;
+  dotfiles.programs.inkscape.enable = enableFor [ "framework" ];
+  dotfiles.programs.jetbrains.enable = enableFor [ "framework" ];
   dotfiles.programs.jj.enable = true;
   dotfiles.programs.jq.enable = true;
   dotfiles.programs.latex.enable = true;
-  dotfiles.programs.libreoffice.enable = true;
+  dotfiles.programs.libreoffice.enable = enableFor [ "framework" ];
   dotfiles.programs.mise.enable = true;
   dotfiles.programs.mysql.enable = false;
   dotfiles.programs.nvim.enable = true;
-  dotfiles.programs.obsidian.enable = disableFor [ "thinkpad" ];
-  dotfiles.programs.pinta.enable = disableFor [ "thinkpad" ];
+  dotfiles.programs.obsidian.enable = enableFor [ "thinkpad" ];
+  dotfiles.programs.pinta.enable = enableFor [ "thinkpad" ];
   dotfiles.programs.podman.enable = true;
   dotfiles.programs.rclone.enable = true;
   dotfiles.programs.restic.enable = false;
