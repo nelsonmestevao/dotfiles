@@ -39,24 +39,18 @@
         framework = {
           system = "x86_64-linux";
           modules = [ ./system/configuration.nix ];
-          users = {
-            nelson = {
-              name = "Nelson Estevão";
-            };
-          };
+          users = [ "nelson" ];
         };
         thinkpad = {
           system = "x86_64-linux";
-          users = {
-            nelson = {
-            };
-          };
+          users = [ "nelson" ];
         };
       };
 
       # ── Users (home-manager) ─────────────────────────────────────────────
       users = {
         nelson = {
+          name = "Nelson Estevão";
           overlays = [
             claude-code.overlays.default
             (final: prev: { zen-browser = zen-browser.packages.${prev.stdenv.hostPlatform.system}.default; })
@@ -75,12 +69,14 @@
 
       homeConfigs = lib.concatMapAttrs (
         hostname: hostCfg:
-        lib.mapAttrs' (
-          username: _:
-          lib.nameValuePair "${username}@${hostname}" (
-            mkHomeConfig hostCfg.system hostname username (users.${username})
-          )
-        ) hostCfg.users
+        lib.listToAttrs (
+          map (
+            username:
+            lib.nameValuePair "${username}@${hostname}" (
+              mkHomeConfig hostCfg.system hostname username (users.${username})
+            )
+          ) hostCfg.users
+        )
       ) hosts;
     in
     {
@@ -93,7 +89,11 @@
         )
       );
 
-      nixosConfigurations = lib.mapAttrs mkNixosConfig (lib.filterAttrs (_: cfg: cfg ? modules) hosts);
+      nixosConfigurations = lib.mapAttrs mkNixosConfig (
+        lib.mapAttrs (_: cfg: cfg // { users = lib.genAttrs cfg.users (u: users.${u}); }) (
+          lib.filterAttrs (_: cfg: cfg ? modules) hosts
+        )
+      );
 
       homeConfigurations = homeConfigs;
     };
