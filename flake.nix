@@ -56,8 +56,11 @@
       # ── Users (home-manager) ─────────────────────────────────────────────
       users = {
         nelson = {
-          overlays = [ claude-code.overlays.default ];
-          extraSpecialArgs = { inherit zen-browser; };
+          overlays = [
+            claude-code.overlays.default
+            (final: prev: { zen-browser = zen-browser.packages.${prev.stdenv.hostPlatform.system}.default; })
+          ];
+          extraSpecialArgs = { };
         };
       };
 
