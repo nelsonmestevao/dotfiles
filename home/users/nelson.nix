@@ -34,8 +34,8 @@ in
   dotfiles.programs.calibre.enable = enableFor [ "framework" ];
   dotfiles.programs.beeper.enable = enableFor [ "framework" ];
   dotfiles.programs.bitwarden.enable = enableFor [ "framework" ];
-  dotfiles.programs.bruno.enable = true;
-  dotfiles.programs.chrome.enable = true;
+  dotfiles.programs.bruno.enable = disableFor [ "thinkpad" ];
+  dotfiles.programs.chrome.enable = disableFor [ "thinkpad" ];
   dotfiles.programs.claude.enable = true;
   dotfiles.programs.codex.enable = true;
   dotfiles.programs.digikam.enable = disableFor [ "thinkpad" ];
@@ -56,8 +56,8 @@ in
   dotfiles.programs.mise.enable = true;
   dotfiles.programs.mysql.enable = false;
   dotfiles.programs.nvim.enable = true;
-  dotfiles.programs.obsidian.enable = enableFor [ "thinkpad" ];
-  dotfiles.programs.pinta.enable = enableFor [ "thinkpad" ];
+  dotfiles.programs.obsidian.enable = enableFor [ "framework" ];
+  dotfiles.programs.pinta.enable = enableFor [ "framework" ];
   dotfiles.programs.podman.enable = true;
   dotfiles.programs.rclone.enable = true;
   dotfiles.programs.restic.enable = false;
@@ -68,7 +68,7 @@ in
   dotfiles.programs.watchman.enable = true;
   dotfiles.programs.wezterm.enable = disableFor [ "thinkpad" ];
   dotfiles.programs.wine.enable = true;
-  dotfiles.programs.zeal.enable = true;
+  dotfiles.programs.zeal.enable = disableFor [ "thinkpad" ];
   dotfiles.programs.zed.enable = disableFor [ "thinkpad" ];
   dotfiles.programs.zen.enable = disableFor [ "thinkpad" ];
   dotfiles.programs.zoxide.enable = true;
