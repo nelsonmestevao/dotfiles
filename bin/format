@@ -1,1 +1,1 @@
-nix fmt $(find . -type f -name "*.nix")
+nix fmt .

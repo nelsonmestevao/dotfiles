@@ -49,7 +49,6 @@
           system = "x86_64-linux";
           users = {
             nelson = {
-              name = "Nelson Estevão";
             };
           };
         };
@@ -73,13 +72,8 @@
       };
 
       allSystems = lib.unique (lib.mapAttrsToList (_: h: h.system) hosts);
-    in
-    {
-      formatter = lib.genAttrs allSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-tree);
 
-      nixosConfigurations = lib.mapAttrs mkNixosConfig (lib.filterAttrs (_: cfg: cfg ? modules) hosts);
-
-      homeConfigurations = lib.concatMapAttrs (
+      homeConfigs = lib.concatMapAttrs (
         hostname: hostCfg:
         lib.mapAttrs' (
           username: _:
@@ -88,5 +82,19 @@
           )
         ) hostCfg.users
       ) hosts;
+    in
+    {
+      formatter = lib.genAttrs allSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-tree);
+
+      checks = lib.genAttrs allSystems (
+        system:
+        lib.mapAttrs (_: cfg: cfg.activationPackage) (
+          lib.filterAttrs (_: cfg: cfg.pkgs.stdenv.hostPlatform.system == system) homeConfigs
+        )
+      );
+
+      nixosConfigurations = lib.mapAttrs mkNixosConfig (lib.filterAttrs (_: cfg: cfg ? modules) hosts);
+
+      homeConfigurations = homeConfigs;
     };
 }
