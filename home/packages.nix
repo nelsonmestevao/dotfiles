@@ -83,7 +83,6 @@ in
       lazydocker
       lazysql
 
-
       # fonts
       font-awesome
       nerd-fonts.hack

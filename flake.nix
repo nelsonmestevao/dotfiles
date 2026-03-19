@@ -66,7 +66,7 @@
     {
       formatter = lib.genAttrs allSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-tree);
 
-      nixosConfigurations = lib.mapAttrs mkNixosConfig hosts;
+      nixosConfigurations = lib.mapAttrs mkNixosConfig (lib.filterAttrs (_: cfg: cfg ? modules) hosts);
 
       homeConfigurations = lib.concatMapAttrs (
         hostname: hostCfg:
