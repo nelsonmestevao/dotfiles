@@ -10,14 +10,22 @@ let
   disableFor = hosts: !lib.elem hostname hosts;
 in
 {
-  # Shell
-  dotfiles.programs.zsh.enable = true;
-
-  # WM
+  # Desktop Environment
+  dotfiles.programs.gnome.enable = enableFor [ "framework" ];
   dotfiles.programs.hyprland.enable = false;
 
-  # Desktop Environments
-  dotfiles.programs.gnome.enable = enableFor [ "framework" ];
+  # Shells
+  dotfiles.programs.zsh.enable = true;
+
+  # Terminals
+  dotfiles.programs.ghostty.enable = true;
+  dotfiles.programs.wezterm.enable = disableFor [ "thinkpad" ];
+
+  # Editors & IDEs
+  dotfiles.programs.jetbrains.enable = enableFor [ "framework" ];
+  dotfiles.programs.nvim.enable = true;
+  dotfiles.programs.vscode.enable = disableFor [ "thinkpad" ];
+  dotfiles.programs.zed.enable = disableFor [ "thinkpad" ];
 
   # Programming Languages
   dotfiles.programs.elixir.enable = true;
@@ -29,49 +37,47 @@ in
   dotfiles.programs.python.enable = true;
   dotfiles.programs.ruby.enable = true;
 
-  # Applications and Tools
+  # Dev Tools
   dotfiles.programs.bat.enable = true;
-  dotfiles.programs.calibre.enable = enableFor [ "framework" ];
-  dotfiles.programs.beeper.enable = enableFor [ "framework" ];
-  dotfiles.programs.bitwarden.enable = enableFor [ "framework" ];
   dotfiles.programs.bruno.enable = disableFor [ "thinkpad" ];
-  dotfiles.programs.chrome.enable = disableFor [ "thinkpad" ];
   dotfiles.programs.claude.enable = true;
   dotfiles.programs.codex.enable = true;
-  dotfiles.programs.digikam.enable = disableFor [ "thinkpad" ];
   dotfiles.programs.direnv.enable = true;
-  dotfiles.programs.espanso.enable = false;
   dotfiles.programs.fzf.enable = true;
-  dotfiles.programs.ghostty.enable = true;
-  dotfiles.programs.gimp.enable = enableFor [ "framework" ];
   dotfiles.programs.git.enable = true;
   dotfiles.programs.httpie.enable = true;
   dotfiles.programs.hyperfine.enable = true;
-  dotfiles.programs.inkscape.enable = enableFor [ "framework" ];
-  dotfiles.programs.jetbrains.enable = enableFor [ "framework" ];
   dotfiles.programs.jj.enable = true;
   dotfiles.programs.jq.enable = true;
-  dotfiles.programs.latex.enable = true;
-  dotfiles.programs.libreoffice.enable = enableFor [ "framework" ];
   dotfiles.programs.mise.enable = true;
   dotfiles.programs.mysql.enable = false;
-  dotfiles.programs.nvim.enable = true;
-  dotfiles.programs.obsidian.enable = enableFor [ "framework" ];
-  dotfiles.programs.pinta.enable = enableFor [ "framework" ];
   dotfiles.programs.podman.enable = true;
   dotfiles.programs.rclone.enable = true;
   dotfiles.programs.restic.enable = false;
   dotfiles.programs.sqlite.enable = true;
   dotfiles.programs.ssh.enable = true;
-  dotfiles.programs.typst.enable = true;
-  dotfiles.programs.vscode.enable = disableFor [ "thinkpad" ];
   dotfiles.programs.watchman.enable = true;
-  dotfiles.programs.wezterm.enable = disableFor [ "thinkpad" ];
-  dotfiles.programs.wine.enable = true;
-  dotfiles.programs.zeal.enable = disableFor [ "thinkpad" ];
-  dotfiles.programs.zed.enable = disableFor [ "thinkpad" ];
-  dotfiles.programs.zen.enable = disableFor [ "thinkpad" ];
   dotfiles.programs.zoxide.enable = true;
+
+  # Typesetting
+  dotfiles.programs.latex.enable = true;
+  dotfiles.programs.typst.enable = true;
+
+  # Desktop Applications
+  dotfiles.programs.beeper.enable = enableFor [ "framework" ];
+  dotfiles.programs.bitwarden.enable = enableFor [ "framework" ];
+  dotfiles.programs.calibre.enable = enableFor [ "framework" ];
+  dotfiles.programs.chrome.enable = disableFor [ "thinkpad" ];
+  dotfiles.programs.digikam.enable = disableFor [ "thinkpad" ];
+  dotfiles.programs.espanso.enable = false;
+  dotfiles.programs.gimp.enable = enableFor [ "framework" ];
+  dotfiles.programs.inkscape.enable = enableFor [ "framework" ];
+  dotfiles.programs.libreoffice.enable = enableFor [ "framework" ];
+  dotfiles.programs.obsidian.enable = enableFor [ "framework" ];
+  dotfiles.programs.pinta.enable = enableFor [ "framework" ];
+  dotfiles.programs.wine.enable = enableFor [ "framework" ];
+  dotfiles.programs.zeal.enable = disableFor [ "thinkpad" ];
+  dotfiles.programs.zen.enable = disableFor [ "thinkpad" ];
 
   dotfiles.packages.enable = true;
 }
