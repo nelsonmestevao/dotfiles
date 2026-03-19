@@ -180,7 +180,7 @@
     shotcut
     slack
     spotify
-    telegram-desktop
+    # telegram-desktop
     terraform
     vlc
 
