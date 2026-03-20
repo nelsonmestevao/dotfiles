@@ -90,6 +90,7 @@ in
       nix-search-tv
       onefetch
       terminaltexteffects
+      cached-nix-shell
 
       (
         let
