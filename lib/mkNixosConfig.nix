@@ -15,5 +15,6 @@ nixpkgs.lib.nixosSystem {
   };
   modules = [
     ../system
-  ] ++ systemModules;
+  ]
+  ++ systemModules;
 }
