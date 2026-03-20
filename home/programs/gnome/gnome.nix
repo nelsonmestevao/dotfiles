@@ -10,6 +10,7 @@ let
   gnomeExtensions = with pkgs.gnomeExtensions; [
     auto-move-windows
     blur-my-shell
+    # I want v59 at least to be able to use CLI tools
     pkgs.unstable.gnomeExtensions.caffeine
     color-picker
     pop-shell
