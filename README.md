@@ -18,7 +18,7 @@ complete setup — from configuration files for the tools I use (managed through
 symlinks) to the declarative configuration of my entire system using the Nix
 package manager, language, and operating system.
 
-If you're just getting started, feel free to use my setup (_I don’t mind_ — see
+If you're just getting started, feel free to use my setup (_I don't mind_ — see
 the [LICENSE][license]). But for your own good, **take the time to read through
 it**. You won't get the most out of it otherwise.
 
@@ -39,26 +39,36 @@ it**. You won't get the most out of it otherwise.
 
 ## 🧩 Overview
 
-This configuration is as modular as I can make it. It’s split into two main
+This configuration is as modular as I can make it. It's split into two main
 directories:
 
-- `home/`: portable configuration that works across any Linux distribution. Many
-modules even work on macOS, except for platform-specific ones like GNOME or
+- `home/` — portable configuration that works across any Linux distribution.
+Many modules even work on macOS, except for platform-specific ones like GNOME or
 Hyprland.
 
-- `system/`: NixOS-specific configuration, containing only what’s truly
+- `system/` — NixOS-specific configuration, containing only what's truly
 necessary for the system layer (at least I try to).
 
-Every folder in `home/programs/*` is a module that brings the option
-`dotfiles.programs.<name>.enable` and can be activated or deactivated but commenting
-or setting it to `false`. Complex setups can easily be built by composing and
-reusing these modular pieces.
+### How modules work
+
+Every folder in `home/programs/` is a self-contained module. A helper called
+`mkHomeModule` wraps each one, providing a `dotfiles.programs.<name>.enable`
+option and a `mkSymlink` function for linking config files back to this repo.
+
+Modules are toggled per-user in `home/users/<username>.nix`. Two helpers make
+it easy to control what runs where:
+
+```nix
+dotfiles.programs.nvim.enable = true;                            # everywhere
+dotfiles.programs.jetbrains.enable = enableFor [ "framework" ];  # only on framework
+dotfiles.programs.vscode.enable = disableFor [ "thinkpad" ];     # everywhere except thinkpad
+```
 
 ## 🚀 Installing
 
 > [!WARNING]
-> Helper scripts are available in the bin/ directory.
-> **Read them before running anything** — as always, never execute code you don’t
+> Helper scripts are available in the `bin/` directory.
+> **Read them before running anything** — as always, never execute code you don't
 understand or trust.
 
 Start by cloning my `dotfiles` into `~/.dotfiles`. You should do the same with
@@ -74,10 +84,20 @@ The only requirement would be to have NixOS or Nix package manager installed.
 Then you are ready to build this configuration for your system.
 
 ```shell
-bin/rebuild (home | os)
+bin/rebuild          # rebuild both OS and home config
+bin/rebuild os       # rebuild only the NixOS system configuration
+bin/rebuild home     # rebuild only the home-manager configuration
 ```
 
-More documentation will be provided on exactly how to customize things.
+### Adapting for your own system
+
+1. **Add your host** in `flake.nix` under the `hosts` attribute set.
+2. **Add your user** in `flake.nix` under `users` and create a file at
+   `home/users/<username>.nix` — use `nelson.nix` as a reference.
+3. **If using NixOS**, add your hardware config under
+   `system/hosts/<hostname>/hardware.nix`.
+4. **Pick your programs** by setting `dotfiles.programs.<name>.enable = true` in
+   your user file.
 
 ## 📄 License
 
@@ -86,4 +106,3 @@ This repository is licensed under the [WTFNMFPL](LICENSE.txt).
 <div align="center">
   <sub>Use your tools well or use better tools.</sub>
 </div>
-
