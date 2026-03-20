@@ -1,7 +1,7 @@
 {
   nixpkgs,
   home-manager,
-  mkHomeModules,
+  homeModules,
 }:
 system: hostname: username: cfg:
 home-manager.lib.homeManagerConfiguration {
@@ -15,5 +15,5 @@ home-manager.lib.homeManagerConfiguration {
     ../home
     ../home/lib
   ]
-  ++ mkHomeModules;
+  ++ homeModules;
 }

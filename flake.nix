@@ -30,19 +30,21 @@
     }:
     let
       lib = nixpkgs.lib;
-      mkHomeModules = import ./lib/mkHomeModules.nix { inherit lib; };
-      mkNixosConfig = import ./lib/mkNixosConfig.nix { inherit nixpkgs; };
-      mkHomeConfig = import ./lib/mkHomeConfig.nix { inherit nixpkgs home-manager mkHomeModules; };
+      homeModules = import ./lib/mkHomeModules.nix { inherit lib; };
+      systemModules = import ./lib/mkSystemModules.nix { inherit lib; };
+      mkNixosConfig = import ./lib/mkNixosConfig.nix { inherit nixpkgs systemModules; };
+      mkHomeConfig = import ./lib/mkHomeConfig.nix { inherit nixpkgs home-manager homeModules; };
 
       # ── Hosts ────────────────────────────────────────────────────────────
       hosts = {
         framework = {
           system = "x86_64-linux";
-          modules = [ ./system/configuration.nix ];
+          nixos = true;
           users = [ "nelson" ];
         };
         thinkpad = {
           system = "x86_64-linux";
+          nixos = false;
           users = [ "nelson" ];
         };
       };
@@ -91,7 +93,7 @@
 
       nixosConfigurations = lib.mapAttrs mkNixosConfig (
         lib.mapAttrs (_: cfg: cfg // { users = lib.genAttrs cfg.users (u: users.${u}); }) (
-          lib.filterAttrs (_: cfg: cfg ? modules) hosts
+          lib.filterAttrs (_: cfg: cfg.nixos) hosts
         )
       );
 

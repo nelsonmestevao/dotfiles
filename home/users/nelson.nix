@@ -56,6 +56,7 @@ in
   dotfiles.programs.restic.enable = false;
   dotfiles.programs.sqlite.enable = true;
   dotfiles.programs.ssh.enable = true;
+  dotfiles.programs.terraform.enable = true;
   dotfiles.programs.watchman.enable = true;
   dotfiles.programs.zoxide.enable = true;
 

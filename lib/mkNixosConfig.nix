@@ -1,4 +1,4 @@
-{ nixpkgs }:
+{ nixpkgs, systemModules }:
 hostname: cfg:
 nixpkgs.lib.nixosSystem {
   inherit (cfg) system;
@@ -6,5 +6,7 @@ nixpkgs.lib.nixosSystem {
     inherit hostname;
     inherit (cfg) users;
   };
-  modules = cfg.modules or [ ];
+  modules = [
+    ../system
+  ] ++ systemModules;
 }
