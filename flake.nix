@@ -30,10 +30,8 @@
     }:
     let
       lib = nixpkgs.lib;
-      homeModules = import ./lib/mkHomeModules.nix { inherit lib; };
-      systemModules = import ./lib/mkSystemModules.nix { inherit lib; };
-      mkNixosConfig = import ./lib/mkNixosConfig.nix { inherit nixpkgs systemModules; };
-      mkHomeConfig = import ./lib/mkHomeConfig.nix { inherit nixpkgs home-manager homeModules; };
+      mkNixosConfig = import ./lib/mkNixosConfig.nix { inherit nixpkgs; };
+      mkHomeConfig = import ./lib/mkHomeConfig.nix { inherit nixpkgs home-manager; };
 
       # ── Hosts ────────────────────────────────────────────────────────────
       hosts = {

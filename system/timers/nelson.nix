@@ -4,7 +4,7 @@
   ...
 }:
 let
-  mkSystemTimer = import ./mkSystemTimer.nix {
+  mkSystemTimer = import ../lib/mkSystemTimer.nix {
     inherit pkgs;
     username = "nelson";
   };
