@@ -7,7 +7,7 @@
 }:
 {
   home.packages = with pkgs; [
-    vscode
+    pkgs.unstable.vscode
   ];
 
   xdg.configFile."Code/User/settings.json" = mkSymlink "settings.json";
