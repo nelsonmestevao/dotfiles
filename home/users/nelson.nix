@@ -22,6 +22,7 @@ in
   dotfiles.programs.wezterm.enable = disableFor [ "thinkpad" ];
 
   # Editors & IDEs
+  dotfiles.programs.fonts.enable = true;
   dotfiles.programs.jetbrains.enable = enableFor [ "framework" ];
   dotfiles.programs.nvim.enable = true;
   dotfiles.programs.vscode.enable = disableFor [ "thinkpad" ];

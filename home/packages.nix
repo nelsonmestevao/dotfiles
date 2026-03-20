@@ -83,13 +83,6 @@ in
       lazydocker
       lazysql
 
-      # fonts
-      font-awesome
-      nerd-fonts.hack
-      nerd-fonts.noto
-      nerd-fonts.jetbrains-mono
-      noto-fonts-color-emoji
-
       # misc
       cpufetch
       fastfetch
