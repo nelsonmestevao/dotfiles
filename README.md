@@ -1,4 +1,5 @@
 [releases]: https://github.com/nelsonmestevao/dotfiles/releases/latest
+[ci]: https://github.com/nelsonmestevao/dotfiles/actions/workflows/ci.yml
 [license]: #-license
 
 <h1 align="center">
@@ -10,6 +11,7 @@
 </h1>
 
 [![Latest Release](https://img.shields.io/github/release-pre/nelsonmestevao/dotfiles.svg?style=flat-square)][releases]
+[![GitHub Actions CI](https://img.shields.io/github/actions/workflow/status/nelsonmestevao/dotfiles/ci.yml?style=flat-square)][ci]
 [![License](https://img.shields.io/github/license/nelsonmestevao/dotfiles?logo=WTFNMFPL&style=flat-square)][license]
 ![Repo size](https://img.shields.io/github/repo-size/nelsonmestevao/dotfiles.svg?style=flat-square)
 
