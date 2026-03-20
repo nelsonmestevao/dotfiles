@@ -40,28 +40,62 @@ it**. You won't get the most out of it otherwise.
 ## 🧩 Overview
 
 This configuration is as modular as I can make it. It's split into two main
-directories:
+layers:
 
-- `home/` — portable configuration that works across any Linux distribution.
-Many modules even work on macOS, except for platform-specific ones like GNOME or
-Hyprland.
+- **`home/`** — portable Home Manager configuration that works across any Linux
+distribution. Many modules even work on macOS, except for platform-specific ones
+like GNOME or Hyprland.
 
-- `system/` — NixOS-specific configuration, containing only what's truly
+- **`system/`** — NixOS-specific configuration, containing only what's truly
 necessary for the system layer (at least I try to).
 
 ### How modules work
 
-Every folder in `home/programs/` is a self-contained module. A helper called
-`mkHomeModule` wraps each one, providing a `dotfiles.programs.<name>.enable`
-option and a `mkSymlink` function for linking config files back to this repo.
+Each program lives in its own folder under `home/programs/` as a self-contained
+module. A helper called `mkHomeModule` wraps each one, providing a
+`dotfiles.programs.<name>.enable` option and a `mkSymlink` function for
+linking config files back to this repo.
 
-Modules are toggled per-user in `home/users/<username>.nix`. Two helpers make
-it easy to control what runs where:
+> [!NOTE]
+> `mkSymlink` creates **true Linux symlinks** pointing directly from your home
+> directory into this repo, so you can edit config files in place and see
+> changes immediately — no rebuild needed. This is how I like it.
+>
+> By default, Nix/Home Manager copies files into the read-only Nix store,
+> requiring a rebuild for every change. This provides more guarantees like
+> immutability. If you prefer that approach, replace `mkSymlink` calls with the
+> standard `source` attribute:
+> ```nix
+> # Instead of:
+> xdg.configFile."ghostty/config" = mkSymlink "config";
+>
+> # Use the standard Nix way:
+> xdg.configFile."ghostty/config".source = ./config;
+> ```
+
+Similarly, NixOS system concerns live under `system/modules/` — each one
+provides a `dotfiles.modules.<name>.enable` option for things like audio, boot,
+networking, Docker, etc.
+
+#### Where things are wired together
+
+- **`home/users/<username>.nix`** — toggles which programs a user gets.
+- **`system/hosts/<hostname>.nix`** — toggles which system modules a host gets.
+
+Two helpers make it easy to control what runs where per host:
 
 ```nix
+# home/users/nelson.nix
 dotfiles.programs.nvim.enable = true;                            # everywhere
 dotfiles.programs.jetbrains.enable = enableFor [ "framework" ];  # only on framework
 dotfiles.programs.vscode.enable = disableFor [ "thinkpad" ];     # everywhere except thinkpad
+```
+
+```nix
+# system/hosts/framework.nix
+dotfiles.modules.audio.enable = true;
+dotfiles.modules.docker.enable = true;
+dotfiles.modules.tailscale.enable = true;
 ```
 
 ## 🚀 Installing
