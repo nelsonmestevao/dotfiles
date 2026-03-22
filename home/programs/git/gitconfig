@@ -13,11 +13,11 @@
 [tag]
   gpgsign = true
 [include]
-    path = ~/.dotfiles/home/programs/git/personal.config
+    path = ~/.dotfiles/home/programs/git/personal.ini
 [includeIf "gitdir:~/Code/UMinho/"]
-    path = ~/.dotfiles/home/programs/git/uminho.config
+    path = ~/.dotfiles/home/programs/git/uminho.ini
 [includeIf "gitdir:~/Code/Marmela/"]
-    path = ~/.dotfiles/home/programs/git/marmela.config
+    path = ~/.dotfiles/home/programs/git/marmela.ini
 [core]
   autocrlf = input
   editor = nvim

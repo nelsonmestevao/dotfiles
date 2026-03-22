@@ -12,6 +12,8 @@
   home.username = username;
   home.homeDirectory = "/home/${username}";
 
+  dotfiles.directory = "${config.home.homeDirectory}/.dotfiles";
+
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 

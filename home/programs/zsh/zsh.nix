@@ -16,8 +16,13 @@
 
   programs.zsh.enable = true;
   programs.zsh.initContent = builtins.readFile ./zshrc;
+  programs.zsh.envExtra = ''
+    export DOTFILES="${config.dotfiles.directory}"
+  '';
 
-  # home.file.".zshrc" = mkSymlink "zshrc";
+  home.sessionVariables = {
+    DOTFILES = config.dotfiles.directory;
+  };
 
   home.activation.cloneOhMyZsh = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     if [ ! -d "$HOME/.oh-my-zsh" ]; then

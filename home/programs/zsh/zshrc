@@ -5,7 +5,7 @@
 #    _ / /\__ \ | | | | | (__
 #   (_)___|___/_| |_|_|  \___|
 
-export DOTFILES="$HOME/.dotfiles"
+export DOTFILES="${DOTFILES:-$HOME/.dotfiles}"
 export SPELLS="$HOME/.spells"
 
 export HISTSIZE=100000

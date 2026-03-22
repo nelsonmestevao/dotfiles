@@ -1,8 +1,14 @@
 { config, lib, ... }:
 
 {
+  options.dotfiles.directory = lib.mkOption {
+    type = lib.types.str;
+    default = "${config.home.homeDirectory}/.dotfiles";
+    description = "Path to the dotfiles repository.";
+  };
+
   # Create true symlinks to files in the dotfiles repository.
-  lib.dotfiles = {
+  config.lib.dotfiles = {
     mkSymlinkFrom =
       dotfilesPath: relativePath:
       let
