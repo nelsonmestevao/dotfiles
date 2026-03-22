@@ -22,6 +22,10 @@
   nixpkgs.config.allowUnfree = true;
 
   # ── Users ───────────────────────────────────────────────────────────────
+  programs.zsh.enable = true;
+
+  programs.nix-ld.enable = true;
+
   users.users = lib.mapAttrs (username: userCfg: {
     isNormalUser = true;
     description = userCfg.name;
@@ -33,20 +37,11 @@
       "wheel"
     ];
     packages = with pkgs; [
-      dconf2nix
-      fuse
-      appimage-run
     ];
     shell = pkgs.zsh;
   }) users;
 
-  # ── Programs & Services ────────────────────────────────────────────────
-  programs.zsh.enable = true;
-  programs.firefox.enable = true;
-  programs.nix-ld.enable = true;
-
-  services.atd.enable = true;
-
+  # ── Extra Packages ────────────────────────────────────────────────────
   environment.systemPackages = with pkgs; [
   ];
 

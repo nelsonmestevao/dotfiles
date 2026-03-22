@@ -86,11 +86,19 @@ in
       # misc
       cpufetch
       fastfetch
-      figlet
-      nix-search-tv
       onefetch
-      terminaltexteffects
+
+      figlet
+
+      nix-search-tv
+
+      dconf2nix
       cached-nix-shell
+
+      fuse
+      appimage-run
+
+      terminaltexteffects
 
       (
         let

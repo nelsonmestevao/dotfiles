@@ -5,12 +5,14 @@
   ...
 }:
 {
+  dotfiles.modules.atd.enable = true;
   dotfiles.modules.audio.enable = true;
   dotfiles.modules.boot.enable = true;
   dotfiles.modules.brave.enable = true;
   dotfiles.modules.discord.enable = true;
   dotfiles.modules.docker.enable = true;
   dotfiles.modules.fingerprint.enable = true;
+  dotfiles.modules.firefox.enable = true;
   dotfiles.modules.flatpak.enable = true;
   dotfiles.modules.gnome.enable = true;
   dotfiles.modules.kdenlive.enable = true;

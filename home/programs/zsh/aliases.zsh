@@ -104,8 +104,6 @@ alias pkgsearch="nix-search-tv print | fzf --preview 'nix-search-tv preview {}' 
 
 alias todo='git grep -l TODO | xargs -n1 git blame -f -n -w | grep "$(git config user.name)" | grep TODO | sed "s/.\{9\}//" | sed "s/(.*)[[:space:]]*//"'
 
-alias firefox=firefox-developer-edition
-
 alias hollywood='docker run --rm -it bcbcarl/hollywood'
 alias ip='ip -c=auto'
 

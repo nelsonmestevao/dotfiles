@@ -18,8 +18,6 @@
     path = ~/.dotfiles/home/programs/git/uminho.config
 [includeIf "gitdir:~/Code/Marmela/"]
     path = ~/.dotfiles/home/programs/git/marmela.config
-[web]
-  browser = firefox-developer-edition
 [core]
   autocrlf = input
   editor = nvim
