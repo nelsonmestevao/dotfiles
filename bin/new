@@ -1,0 +1,181 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -I nixpkgs=channel:nixos-25.11
+#! nix-shell -p gum python313 python313Packages.xonsh python313Packages.docopt
+#! nix-shell -i xonsh
+"""
+Scaffolds a new home-manager program or NixOS system module.
+
+Usage:
+  {program} program <name>
+  {program} module <name>
+  {program} (-h | --help)
+  {program} (-v | --version)
+
+Commands:
+  program <name>      Create a new home-manager program.
+  module <name>       Create a new NixOS system module.
+
+Options:
+  -h --help           Show this screen.
+  -v --version        Show version.
+"""
+import os
+import sys
+
+from docopt import docopt
+
+os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+$RED="\033[1;31m"
+$YELLOW="\033[1;33m"
+$GREEN="\033[1;32m"
+$BLUE="\033[1;34m"
+$RESET="\033[0m"
+
+RED="\033[1;31m"
+YELLOW="\033[1;33m"
+GREEN="\033[1;32m"
+BLUE="\033[1;34m"
+RESET="\033[0m"
+
+PROGRAM_TEMPLATE = """\
+{
+  config,
+  lib,
+  pkgs,
+  mkSymlink,
+  ...
+}:
+{
+  # ── Packages ──────────────────────────────────────────────────────────
+  home.packages = with pkgs; [
+    __NAME__
+  ];
+
+  # ── Environment Variables ─────────────────────────────────────────────
+  # home.sessionVariables = {
+  #   EXAMPLE_VAR = "value";
+  #   EDITOR = "${pkgs.__NAME__}/bin/__NAME__";
+  # };
+
+  # ── Shell Integration (zsh) ──────────────────────────────────────────
+  # programs.zsh.envExtra = lib.mkIf config.dotfiles.programs.zsh.enable ''
+  #   # source extra shell config, completions, etc.
+  #   # eval $(${pkgs.__NAME__}/bin/__NAME__ init zsh)
+  # '';
+
+  # ── Symlinked Config Files ───────────────────────────────────────────
+  # home.file.".config/__NAME__" = mkSymlink "config";
+  # xdg.configFile."__NAME__/config" = mkSymlink "config";
+  # xdg.configFile."__NAME__/config.toml" = mkSymlink "config.toml";
+
+  # ── Fetch from GitHub ────────────────────────────────────────────────
+  # home.file.".__NAME__/plugins/example-plugin" = {
+  #   source = pkgs.fetchFromGitHub {
+  #     owner = "owner";
+  #     repo = "repo";
+  #     rev = "v1.0.0";
+  #     sha256 = "";
+  #   };
+  # };
+
+  # ── GNOME / dconf Integration ────────────────────────────────────────
+  # dconf.settings = lib.mkIf config.dotfiles.programs.gnome.enable {
+  #   "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
+  #     name = "__NAME_CAP__";
+  #     command = "__NAME__";
+  #     binding = "<Super>F1";
+  #   };
+  # };
+}
+"""
+
+MODULE_TEMPLATE = """\
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+{
+  # ── Packages ──────────────────────────────────────────────────────────
+  environment.systemPackages = with pkgs; [
+    __NAME__
+  ];
+
+  # ── Services ──────────────────────────────────────────────────────────
+  # services.__NAME__.enable = true;
+  # services.__NAME__.settings = { };
+
+  # ── Programs ──────────────────────────────────────────────────────────
+  # programs.__NAME__.enable = true;
+
+  # ── Environment Variables ─────────────────────────────────────────────
+  # environment.sessionVariables = {
+  #   EXAMPLE_VAR = "value";
+  # };
+
+  # ── Fonts ─────────────────────────────────────────────────────────────
+  # fonts.packages = with pkgs; [ ];
+}
+"""
+
+
+def render_template(template, name):
+    return template.replace("__NAME_CAP__", name.capitalize()).replace("__NAME__", name)
+
+
+def create_program(name):
+    dir_path = f"home/programs/{name}"
+    file_path = f"{dir_path}/{name}.nix"
+
+    if os.path.exists(file_path):
+        print(f"{RED}✗{RESET} Program '{name}' already exists at {file_path}")
+        sys.exit(1)
+
+    os.makedirs(dir_path, exist_ok=True)
+
+    content = render_template(PROGRAM_TEMPLATE, name)
+
+    with open(file_path, 'w') as f:
+        f.write(content)
+
+    print(f"{GREEN}✓{RESET} Created program at {file_path}")
+    print(f"  Enable it in home/users/nelson.nix:")
+    print(f"    dotfiles.programs.{name}.enable = true;")
+
+
+def create_module(name):
+    dir_path = f"system/modules/{name}"
+    file_path = f"{dir_path}/{name}.nix"
+
+    if os.path.exists(file_path):
+        print(f"{RED}✗{RESET} Module '{name}' already exists at {file_path}")
+        sys.exit(1)
+
+    os.makedirs(dir_path, exist_ok=True)
+
+    content = render_template(MODULE_TEMPLATE, name)
+
+    with open(file_path, 'w') as f:
+        f.write(content)
+
+    print(f"{GREEN}✓{RESET} Created module at {file_path}")
+    print(f"  Enable it in system/hosts/<hostname>.nix:")
+    print(f"    dotfiles.modules.{name}.enable = true;")
+
+
+def main(args):
+    name = args['<name>']
+
+    if args['program']:
+        create_program(name)
+    elif args['module']:
+        create_module(name)
+
+
+if __name__ == '__main__':
+    arguments = docopt(__doc__.format(program=__file__), version=f'{os.path.basename(__file__)} script version 1.0')
+    main(arguments)
+
+# vim: ft=xonsh
