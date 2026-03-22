@@ -48,13 +48,6 @@
   services.atd.enable = true;
 
   environment.systemPackages = with pkgs; [
-    brave
-    discord
-    kdePackages.kdenlive
-    shotcut
-    slack
-    spotify
-    vlc
   ];
 
   # ──────────────────────────────────────────────────────────────────────

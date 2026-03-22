@@ -1,0 +1,12 @@
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+{
+  # ── Packages ──────────────────────────────────────────────────────────
+  environment.systemPackages = with pkgs; [
+    kdePackages.kdenlive
+  ];
+}
