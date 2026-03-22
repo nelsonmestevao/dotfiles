@@ -51,6 +51,13 @@
       users = {
         nelson = {
           name = "Nelson Estevão";
+          extraGroups = [
+            "docker"
+            "libvirtd"
+            "lpadmin"
+            "networkmanager"
+            "wheel"
+          ];
           overlays = [
             claude-code.overlays.default
             (final: prev: { zen-browser = zen-browser.packages.${prev.stdenv.hostPlatform.system}.default; })

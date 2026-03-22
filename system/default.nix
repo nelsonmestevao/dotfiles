@@ -29,15 +29,7 @@
   users.users = lib.mapAttrs (username: userCfg: {
     isNormalUser = true;
     description = userCfg.name;
-    extraGroups = [
-      "docker"
-      "libvirtd"
-      "lpadmin"
-      "networkmanager"
-      "wheel"
-    ];
-    packages = with pkgs; [
-    ];
+    extraGroups = userCfg.extraGroups or [ ];
     shell = pkgs.zsh;
   }) users;
 
