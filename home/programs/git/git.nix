@@ -26,5 +26,14 @@
     eval $(${pkgs.gitleaks}/bin/gitleaks completion zsh)
   '';
 
-  home.file.".gitconfig" = mkSymlink "gitconfig";
+  xdg.configFile = {
+    "git/config" = mkSymlink "gitconfig";
+    "git/allowed_signers" = mkSymlink "allowed_signers";
+    "git/commit-template" = mkSymlink "git-commit-msg-template";
+    "git/ignore" = mkSymlink "gitignore";
+    "git/attributes" = mkSymlink "gitattributes";
+    "git/profiles/personal.ini" = mkSymlink "personal.ini";
+    "git/profiles/uminho.ini" = mkSymlink "uminho.ini";
+    "git/profiles/marmela.ini" = mkSymlink "marmela.ini";
+  };
 }
