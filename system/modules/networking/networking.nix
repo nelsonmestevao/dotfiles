@@ -19,6 +19,12 @@
     networkmanager-vpnc
   ];
 
+  networking.firewall.enable = true;
+
+  # Allow access to localsend
+  networking.firewall.allowedTCPPorts = [ 53317 ];
+  networking.firewall.allowedUDPPorts = [ 53317 ];
+
   environment.systemPackages = with pkgs; [
     networkmanager-openconnect
     networkmanager-openvpn

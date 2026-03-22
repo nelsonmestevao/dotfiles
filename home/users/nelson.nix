@@ -75,6 +75,7 @@ in
   dotfiles.programs.gimp.enable = enableFor [ "framework" ];
   dotfiles.programs.inkscape.enable = enableFor [ "framework" ];
   dotfiles.programs.libreoffice.enable = enableFor [ "framework" ];
+  dotfiles.programs.localsend.enable = disableFor [ "thinkpad" ];
   dotfiles.programs.obsidian.enable = enableFor [ "framework" ];
   dotfiles.programs.pinta.enable = enableFor [ "framework" ];
   dotfiles.programs.wine.enable = enableFor [ "framework" ];
