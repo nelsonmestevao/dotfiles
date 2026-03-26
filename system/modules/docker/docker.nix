@@ -7,9 +7,15 @@
 {
   virtualisation.docker.enable = true;
 
+  virtualisation.docker.daemon.settings = {
+    features = {
+      buildkit = true;
+    };
+  };
+
   environment.systemPackages = with pkgs; [
     docker
-    docker-compose
     docker-buildx
+    docker-compose
   ];
 }
