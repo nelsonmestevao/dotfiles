@@ -77,7 +77,6 @@ in
 
       # editors & IDEs
       sc-im
-      anytype
 
       # TUIs
       lazydocker
