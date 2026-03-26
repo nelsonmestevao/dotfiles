@@ -18,15 +18,15 @@ in
   dotfiles.programs.zsh.enable = true;
 
   # Terminals
-  dotfiles.programs.ghostty.enable = true;
-  dotfiles.programs.wezterm.enable = disableFor [ "thinkpad" ];
+  dotfiles.programs.ghostty.enable = enableFor [ "framework" ];
+  dotfiles.programs.wezterm.enable = false;
 
   # Editors & IDEs
-  dotfiles.programs.fonts.enable = true;
+  dotfiles.programs.fonts.enable = enableFor [ "framework" ];
   dotfiles.programs.jetbrains.enable = enableFor [ "framework" ];
   dotfiles.programs.nvim.enable = true;
-  dotfiles.programs.vscode.enable = disableFor [ "thinkpad" ];
-  dotfiles.programs.zed.enable = disableFor [ "thinkpad" ];
+  dotfiles.programs.vscode.enable = enableFor [ "framework" ];
+  dotfiles.programs.zed.enable = enableFor [ "framework" ];
 
   # Programming Languages
   dotfiles.programs.elixir.enable = true;
@@ -40,7 +40,7 @@ in
 
   # Dev Tools
   dotfiles.programs.bat.enable = true;
-  dotfiles.programs.bruno.enable = disableFor [ "thinkpad" ];
+  dotfiles.programs.bruno.enable = enableFor [ "framework" ];
   dotfiles.programs.claude.enable = true;
   dotfiles.programs.codex.enable = true;
   dotfiles.programs.direnv.enable = true;
@@ -52,7 +52,7 @@ in
   dotfiles.programs.jq.enable = true;
   dotfiles.programs.mise.enable = true;
   dotfiles.programs.mysql.enable = false;
-  dotfiles.programs.podman.enable = true;
+  dotfiles.programs.podman.enable = disableFor [ "thinkpad" ];
   dotfiles.programs.rclone.enable = true;
   dotfiles.programs.restic.enable = false;
   dotfiles.programs.sqlite.enable = true;
@@ -62,25 +62,25 @@ in
   dotfiles.programs.zoxide.enable = true;
 
   # Typesetting
-  dotfiles.programs.latex.enable = true;
+  dotfiles.programs.latex.enable = enableFor [ "framework" ];
   dotfiles.programs.typst.enable = true;
 
   # Desktop Applications
   dotfiles.programs.beeper.enable = enableFor [ "framework" ];
   dotfiles.programs.bitwarden.enable = enableFor [ "framework" ];
   dotfiles.programs.calibre.enable = enableFor [ "framework" ];
-  dotfiles.programs.chrome.enable = disableFor [ "thinkpad" ];
-  dotfiles.programs.digikam.enable = disableFor [ "thinkpad" ];
+  dotfiles.programs.chrome.enable = enableFor [ "framework" ];
+  dotfiles.programs.digikam.enable = enableFor [ "framework" ];
   dotfiles.programs.espanso.enable = false;
   dotfiles.programs.gimp.enable = enableFor [ "framework" ];
   dotfiles.programs.inkscape.enable = enableFor [ "framework" ];
   dotfiles.programs.libreoffice.enable = enableFor [ "framework" ];
-  dotfiles.programs.localsend.enable = disableFor [ "thinkpad" ];
+  dotfiles.programs.localsend.enable = enableFor [ "framework" ];
   dotfiles.programs.obsidian.enable = enableFor [ "framework" ];
   dotfiles.programs.pinta.enable = enableFor [ "framework" ];
   dotfiles.programs.wine.enable = enableFor [ "framework" ];
-  dotfiles.programs.zeal.enable = disableFor [ "thinkpad" ];
-  dotfiles.programs.zen.enable = disableFor [ "thinkpad" ];
+  dotfiles.programs.zeal.enable = enableFor [ "framework" ];
+  dotfiles.programs.zen.enable = enableFor [ "framework" ];
 
   dotfiles.packages.enable = true;
 }
