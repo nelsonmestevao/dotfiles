@@ -24,19 +24,25 @@ Host ha
     User root
 
 Host plutus
-    HostName plutus.local
+    HostName plu.tus
 
 Host plutus.estevao.org
     ProxyCommand cloudflared access ssh --hostname %h
 
+Host temis
+    HostName te.mis
+
 Host hades
-    HostName hades.local
+    HostName ha.des
 
 Host hades.estevao.org
     ProxyCommand cloudflared access ssh --hostname %h
 
 Host hades.marmela.org
     ProxyCommand cloudflared access ssh --hostname %h
+
+Host proxmox
+    HostName prox.mox
 
 Host pichu
     HostName pichu.marmela.org
