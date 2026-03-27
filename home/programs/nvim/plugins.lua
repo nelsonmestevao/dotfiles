@@ -332,7 +332,7 @@ local plugins = {
         workspaces = {
           {
             name = "personal",
-            path = "~/Code/Personal/notes",
+            path = "~/Notes",
           },
         },
       })
