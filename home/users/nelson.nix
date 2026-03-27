@@ -43,6 +43,7 @@ in
   dotfiles.programs.bruno.enable = enableFor [ "framework" ];
   dotfiles.programs.claude.enable = true;
   dotfiles.programs.codex.enable = true;
+  dotfiles.programs.copilot.enable = true;
   dotfiles.programs.direnv.enable = true;
   dotfiles.programs.fzf.enable = true;
   dotfiles.programs.git.enable = true;
