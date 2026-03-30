@@ -14,6 +14,7 @@ let
     pkgs.unstable.gnomeExtensions.caffeine
     color-picker
     pop-shell
+    pkgs.unstable.gnomeExtensions.smart-home
     space-bar
     top-bar-organizer
     vitals
