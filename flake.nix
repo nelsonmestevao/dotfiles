@@ -45,6 +45,11 @@
           nixos = false;
           users = [ "nelson" ];
         };
+        temis = {
+          system = "x86_64-linux";
+          nixos = true;
+          users = [ "nelson" ];
+        };
       };
 
       # ── Users (home-manager) ─────────────────────────────────────────────

@@ -1,4 +1,4 @@
-#!/usr/bin/env nix-shell
+#!/usr/bin/env -S NIX_CONFIG="experimental-features = nix-command flakes" nix-shell
 #! nix-shell -I nixpkgs=channel:nixos-25.05
 #! nix-shell -p nh gum python313 python313Packages.xonsh python313Packages.docopt
 #! nix-shell -i xonsh

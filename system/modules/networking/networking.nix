@@ -3,31 +3,37 @@
   lib,
   pkgs,
   hostname,
+  onHost,
   ...
 }:
-{
-  networking.hostName = hostname;
+lib.mkMerge [
+  {
+    networking.hostName = hostname;
 
-  networking.extraHosts = ''
-    127.0.0.1 livecomp.test
-  '';
+    networking.extraHosts = "";
 
-  networking.networkmanager.enable = true;
-  networking.networkmanager.plugins = with pkgs; [
-    networkmanager-openconnect
-    networkmanager-openvpn
-    networkmanager-vpnc
-  ];
+    networking.networkmanager.enable = true;
+  }
+  (onHost "framework" {
+    networking.firewall.enable = true;
 
-  networking.firewall.enable = true;
+    # Allow access to localsend
+    networking.firewall.allowedTCPPorts = [ 53317 ];
+    networking.firewall.allowedUDPPorts = [ 53317 ];
 
-  # Allow access to localsend
-  networking.firewall.allowedTCPPorts = [ 53317 ];
-  networking.firewall.allowedUDPPorts = [ 53317 ];
+    networking.networkmanager.plugins = with pkgs; [
+      networkmanager-openconnect
+      networkmanager-openvpn
+      networkmanager-vpnc
+    ];
 
-  environment.systemPackages = with pkgs; [
-    networkmanager-openconnect
-    networkmanager-openvpn
-    networkmanager-vpnc
-  ];
-}
+    environment.systemPackages = with pkgs; [
+      networkmanager-openconnect
+      networkmanager-openvpn
+      networkmanager-vpnc
+    ];
+  })
+  (onHost "temis" {
+    networking.firewall.enable = false;
+  })
+]

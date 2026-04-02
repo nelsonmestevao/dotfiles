@@ -12,6 +12,14 @@ nixpkgs.lib.nixosSystem {
   specialArgs = {
     inherit hostname;
     inherit (cfg) users;
+    onHost = import ../system/lib/onHost.nix {
+      inherit (nixpkgs) lib;
+      inherit hostname;
+    };
+    onHosts = import ../system/lib/onHosts.nix {
+      inherit (nixpkgs) lib;
+      inherit hostname;
+    };
   };
   modules = [
     ../system
