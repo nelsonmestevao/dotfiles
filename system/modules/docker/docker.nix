@@ -17,5 +17,6 @@
     docker
     docker-buildx
     docker-compose
+    cup-docker
   ];
 }
