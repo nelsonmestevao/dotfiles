@@ -47,6 +47,7 @@ in
   dotfiles.programs.direnv.enable = true;
   dotfiles.programs.fzf.enable = true;
   dotfiles.programs.git.enable = true;
+  dotfiles.programs.glow.enable = true;
   dotfiles.programs.httpie.enable = true;
   dotfiles.programs.hyperfine.enable = true;
   dotfiles.programs.jj.enable = true;
@@ -59,7 +60,7 @@ in
   dotfiles.programs.restic.enable = false;
   dotfiles.programs.sqlite.enable = true;
   dotfiles.programs.ssh.enable = true;
-  dotfiles.programs.terraform.enable = true;
+  dotfiles.programs.terraform.enable = enableFor [ "framework" ];
   dotfiles.programs.watchman.enable = true;
   dotfiles.programs.zoxide.enable = true;
 
