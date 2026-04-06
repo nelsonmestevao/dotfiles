@@ -13,13 +13,15 @@ let
     # I want v59 at least to be able to use CLI tools
     pkgs.unstable.gnomeExtensions.caffeine
     color-picker
+    draw-on-gnome
     pop-shell
     pkgs.unstable.gnomeExtensions.smart-home
     space-bar
     top-bar-organizer
     vitals
-    wake-on-lan
-    wiggle
+    pkgs.unstable.gnomeExtensions.wake-on-lan
+    # TODO: https://github.com/mechtifs/wiggle/pull/27
+    # pkgs.unstable.gnomeExtensions.wiggle
     # freon
     # system-monitor
     user-themes-x
