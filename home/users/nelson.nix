@@ -81,6 +81,7 @@ in
   dotfiles.programs.localsend.enable = enableFor [ "framework" ];
   dotfiles.programs.obsidian.enable = enableFor [ "framework" ];
   dotfiles.programs.pinta.enable = enableFor [ "framework" ];
+  dotfiles.programs.vivaldi.enable = enableFor [ "framework" ];
   dotfiles.programs.wine.enable = enableFor [ "framework" ];
   dotfiles.programs.zeal.enable = enableFor [ "framework" ];
   dotfiles.programs.zen.enable = enableFor [ "framework" ];
