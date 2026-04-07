@@ -54,6 +54,7 @@ in
   dotfiles.programs.jq.enable = true;
   dotfiles.programs.mise.enable = true;
   dotfiles.programs.mysql.enable = false;
+  dotfiles.programs.ngrok.enable = true;
   dotfiles.programs.opencode.enable = true;
   dotfiles.programs.podman.enable = disableFor [ "thinkpad" ];
   dotfiles.programs.rclone.enable = true;
