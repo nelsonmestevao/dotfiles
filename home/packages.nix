@@ -70,6 +70,7 @@ in
 
       # performance & benchmarking
       btop
+      ctop
 
       scc
       speedtest-cli
