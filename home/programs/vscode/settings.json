@@ -250,7 +250,8 @@
     "erb"
   ],
   "[elixir]": {
-    "editor.defaultFormatter": "ExpertLSP.expert"
+    "editor.defaultFormatter": "ExpertLSP.expert",
+    "editor.formatOnSave": false
   },
   "cSpell.userWords": [
     "Livecomp",
