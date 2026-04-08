@@ -250,7 +250,7 @@
     "erb"
   ],
   "[elixir]": {
-    "editor.defaultFormatter": "JakeBecker.elixir-ls"
+    "editor.defaultFormatter": "ExpertLSP.expert"
   },
   "cSpell.userWords": [
     "Livecomp",
