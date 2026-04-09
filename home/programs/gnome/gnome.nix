@@ -7,6 +7,30 @@
 }:
 with lib.hm.gvariant;
 let
+  localsendgs = pkgs.stdenv.mkDerivation {
+    pname = "gnome-shell-extension-localsendgs";
+    version = "unstable-2026-04-09";
+
+    src = pkgs.fetchFromGitHub {
+      owner = "nelsonmestevao";
+      repo = "gnome-shell-extension-localsendgs";
+      rev = "44a8ef7c9d5cf560eddd758d248c98214fc5d018";
+      hash = "sha256-h/LVI2WF3OltVujiOpkIdxyzNdo7vBAc9JBn4D9gSVQ=";
+    };
+
+    nativeBuildInputs = [ pkgs.glib ];
+
+    installPhase = ''
+      runHook preInstall
+      mkdir -p $out/share/gnome-shell/extensions
+      cp -r "localsendgs@snensmens.github.com" $out/share/gnome-shell/extensions/
+      glib-compile-schemas $out/share/gnome-shell/extensions/localsendgs@snensmens.github.com/schemas/
+      runHook postInstall
+    '';
+
+    passthru.extensionUuid = "localsendgs@snensmens.github.com";
+  };
+
   gnomeExtensions = with pkgs.gnomeExtensions; [
     auto-move-windows
     blur-my-shell
@@ -25,6 +49,7 @@ let
     # freon
     # system-monitor
     user-themes-x
+    localsendgs
   ];
 in
 {

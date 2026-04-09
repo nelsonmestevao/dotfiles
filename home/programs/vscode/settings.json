@@ -266,4 +266,5 @@
   "gitlens.ai.vscode.model": "copilot:gpt-4.1",
   "nix.formatterPath": "alejandra",
   "haskell.serverExecutablePath": "haskell-language-server-wrapper",
+  "security.promptForLocalFileProtocolHandling": false,
 }
