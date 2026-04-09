@@ -253,6 +253,9 @@
     "editor.defaultFormatter": "ExpertLSP.expert",
     "editor.formatOnSave": false
   },
+  "[phoenix-heex]": {
+    "editor.formatOnSave": false
+  },
   "cSpell.userWords": [
     "Livecomp",
     "Logflare",
