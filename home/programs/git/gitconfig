@@ -58,6 +58,24 @@
   algorithm = histogram
   renames = copies
   mnemonicPrefix = true
+[diff "pdf"]
+  textconv = sh -c 'pdftotext -layout -enc UTF-8 "$0" -'
+  cachetextconv = true
+[diff "odf"]
+  textconv = odt2txt
+  cachetextconv = true
+[diff "word"]
+  textconv = pandoc --to plain
+  cachetextconv = true
+[diff "xls"]
+  textconv = sh -c 'unoconv --stdout --format csv "$0"'
+  cachetextconv = true
+[diff "ppt"]
+  textconv = sh -c 'unoconv --stdout --format txt "$0"'
+  cachetextconv = true
+[diff "exif"]
+  textconv = exiftool
+  cachetextconv = true
 [merge]
   log = true
   # tool = nvimdiff

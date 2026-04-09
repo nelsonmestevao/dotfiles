@@ -45,6 +45,7 @@ in
   dotfiles.programs.codex.enable = true;
   dotfiles.programs.copilot.enable = true;
   dotfiles.programs.direnv.enable = true;
+  dotfiles.programs.exiftool.enable = true;
   dotfiles.programs.fzf.enable = true;
   dotfiles.programs.git.enable = true;
   dotfiles.programs.glow.enable = true;
@@ -56,12 +57,14 @@ in
   dotfiles.programs.mysql.enable = false;
   dotfiles.programs.ngrok.enable = true;
   dotfiles.programs.opencode.enable = true;
+  dotfiles.programs.pandoc.enable = true;
   dotfiles.programs.podman.enable = disableFor [ "thinkpad" ];
   dotfiles.programs.rclone.enable = true;
   dotfiles.programs.restic.enable = false;
   dotfiles.programs.sqlite.enable = true;
   dotfiles.programs.ssh.enable = true;
   dotfiles.programs.terraform.enable = enableFor [ "framework" ];
+  dotfiles.programs.unoconv.enable = true;
   dotfiles.programs.watchman.enable = true;
   dotfiles.programs.zoxide.enable = true;
 

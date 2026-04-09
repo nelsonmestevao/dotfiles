@@ -1,8 +1,8 @@
+*.pdf   diff=pdf
+
 *.ods   diff=odf
 *.odt   diff=odf
 *.odp   diff=odf
-
-*.pdf   diff=diffpdf
 
 *.docx  diff=word
 *.doc   diff=word
@@ -13,6 +13,18 @@
 *.pptx  diff=ppt
 *.ppt   diff=ppt
 
+*.png  diff=exif
+*.jpg  diff=exif
+*.jpeg diff=exif
+*.gif  diff=exif
+*.webp diff=exif
+*.tiff diff=exif
+*.bmp  diff=exif
+
 bun.lock merge=binary
 mix.lock merge=binary
 package-lock.json merge=binary
+yarn.lock merge=binary
+Cargo.lock merge=binary
+poetry.lock merge=binary
+flake.lock merge=binary
