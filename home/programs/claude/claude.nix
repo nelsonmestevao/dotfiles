@@ -12,5 +12,6 @@
   ];
 
   # ── Symlinked Config Files ───────────────────────────────────────────
+  home.file.".claude/settings.json" = mkSymlink "settings.json";
   home.file.".claude/skills" = mkSymlink "skills";
 }
