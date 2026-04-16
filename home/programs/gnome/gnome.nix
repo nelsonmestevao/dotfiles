@@ -8,6 +8,7 @@
 with lib.hm.gvariant;
 let
   glocalsend = pkgs.callPackage ./extensions/glocalsend.nix { };
+  rudra = pkgs.callPackage ./extensions/rudra.nix { };
 
   gnomeExtensions = with pkgs.gnomeExtensions; [
     auto-move-windows
@@ -28,6 +29,7 @@ let
     # system-monitor
     user-themes-x
     glocalsend
+    rudra
     # auto-accent-colour
     accent-directories
   ];
@@ -64,19 +66,9 @@ in
 
   xdg.configFile."pop-shell/config.json" = mkSymlink "extensions/pop-shell/config.json";
 
-  # xdg.configFile."autostart/albert.desktop".text = ''
-  #   [Desktop Entry]
-  #   Type=Application
-  #   Exec=${pkgs.albert}/bin/albert
-  #   Hidden=false
-  #   X-GNOME-Autostart-enabled=true
-  #   Name=Albert
-  #   Comment=Keyboard launcher
-  # '';
+  dotfiles.programs.ulauncher.enable = false;
 
-  dotfiles.programs.ulauncher.enable = true;
-
-  services.copyq.enable = true;
+  services.copyq.enable = false;
 
   dconf.settings = {
     "org/gnome/shell" = {
@@ -276,6 +268,10 @@ in
     };
 
     # Extension settings
+
+    "org/gnome/shell/extensions/rudra" = {
+      toggle-launcher = [ "<Alt>space" ];
+    };
 
     "org/gnome/shell/extensions/pop-shell" = {
       activate-launcher = [ ];

@@ -1,0 +1,18 @@
+Map Ctrl+N / Ctrl+P to Down / Up in the launcher input so results
+can be navigated with Emacs-style keys.
+
+--- a/src/ui/LauncherInput.js
++++ b/src/ui/LauncherInput.js
+@@ -146,6 +146,12 @@
+
+     ctx._entry.clutter_text.connect('key-press-event', (actor, event) => {
+         let keySymbol = event.get_key_symbol();
++        let keyState = event.get_state();
++
++        if ((keyState & Clutter.ModifierType.CONTROL_MASK) !== 0) {
++            if (keySymbol === Clutter.KEY_n || keySymbol === Clutter.KEY_N) keySymbol = Clutter.KEY_Down;
++            else if (keySymbol === Clutter.KEY_p || keySymbol === Clutter.KEY_P) keySymbol = Clutter.KEY_Up;
++        }
+
+         if (ctx._resultsView && ctx._resultsView.isSnippetFormVisible) {
+             if (keySymbol === Clutter.KEY_Escape) {
