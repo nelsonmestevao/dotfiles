@@ -7,28 +7,72 @@
 }:
 with lib.hm.gvariant;
 let
-  localsendgs = pkgs.stdenv.mkDerivation {
-    pname = "gnome-shell-extension-localsendgs";
-    version = "unstable-2026-04-09";
+  glocalsendSrc = pkgs.fetchFromGitHub {
+    owner = "donnybeelo";
+    repo = "gnome-extensions-glocalsend";
+    rev = "7b5a24ea633bcca8e58985fd9f1ca537df396168";
+    hash = "sha256-13v83/WO0MzjXTJ9QRfYiq1YtHiarXEJQC8XB2FNg4g=";
+  };
 
-    src = pkgs.fetchFromGitHub {
-      owner = "nelsonmestevao";
-      repo = "gnome-shell-extension-localsendgs";
-      rev = "44a8ef7c9d5cf560eddd758d248c98214fc5d018";
-      hash = "sha256-h/LVI2WF3OltVujiOpkIdxyzNdo7vBAc9JBn4D9gSVQ=";
-    };
+  glocalsendDeps = pkgs.stdenv.mkDerivation {
+    pname = "gnome-shell-extension-glocalsend-deps";
+    version = "unstable-2026-04-16";
 
-    nativeBuildInputs = [ pkgs.glib ];
+    src = glocalsendSrc;
+
+    nativeBuildInputs = [
+      pkgs.bun
+      pkgs.cacert
+    ];
+
+    dontBuild = true;
 
     installPhase = ''
       runHook preInstall
-      mkdir -p $out/share/gnome-shell/extensions
-      cp -r "localsendgs@snensmens.github.com" $out/share/gnome-shell/extensions/
-      glib-compile-schemas $out/share/gnome-shell/extensions/localsendgs@snensmens.github.com/schemas/
+      export HOME=$TMPDIR
+      bun install --frozen-lockfile --ignore-scripts
+      cp -r node_modules $out
       runHook postInstall
     '';
 
-    passthru.extensionUuid = "localsendgs@snensmens.github.com";
+    outputHashMode = "recursive";
+    outputHashAlgo = "sha256";
+    outputHash = "sha256-ezY3xLLo02BEwf8p6rLGsYfslr3o4IEkaE1SD3vV0Qo=";
+  };
+
+  glocalsend = pkgs.stdenv.mkDerivation {
+    pname = "gnome-shell-extension-glocalsend";
+    version = "unstable-2026-04-16";
+
+    src = glocalsendSrc;
+
+    nativeBuildInputs = [
+      pkgs.bun
+      pkgs.glib
+    ];
+
+    buildPhase = ''
+      runHook preBuild
+      export HOME=$TMPDIR
+      cp -r ${glocalsendDeps} node_modules
+      chmod -R +w node_modules
+      bun run node_modules/typescript/bin/tsc
+      glib-compile-schemas schemas
+      runHook postBuild
+    '';
+
+    installPhase = ''
+      runHook preInstall
+      ext=$out/share/gnome-shell/extensions/glocalsend@donnybeelo.github.com
+      mkdir -p $ext/schemas
+      cp dist/*.js $ext/
+      cp metadata.json icon-symbolic.svg $ext/
+      cp schemas/org.gnome.shell.extensions.glocalsend.gschema.xml $ext/schemas/
+      cp schemas/gschemas.compiled $ext/schemas/
+      runHook postInstall
+    '';
+
+    passthru.extensionUuid = "glocalsend@donnybeelo.github.com";
   };
 
   gnomeExtensions = with pkgs.gnomeExtensions; [
@@ -49,7 +93,7 @@ let
     # freon
     # system-monitor
     user-themes-x
-    localsendgs
+    glocalsend
   ];
 in
 {
