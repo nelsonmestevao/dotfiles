@@ -21,7 +21,7 @@ in
     draw-on-gnome.enable = true;
     glocalsend.enable = enableFor [ "framework" ];
     pop-shell.enable = true;
-    rudra.enable = true;
+    rudra.enable = false;
     smart-home.enable = true;
     space-bar.enable = true;
     top-bar-organizer.enable = true;
@@ -36,6 +36,9 @@ in
 
   # Shells
   dotfiles.programs.zsh.enable = true;
+
+  # Desktop Launchers & App Switchers
+  dotfiles.programs.vicinae.enable = true;
 
   # Terminals
   dotfiles.programs.ghostty.enable = enableFor [ "framework" ];

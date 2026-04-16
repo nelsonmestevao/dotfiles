@@ -18,6 +18,11 @@
       url = "github:sadjow/claude-code-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    vicinae = {
+      url = "github:vicinaehq/vicinae";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
   };
   outputs =
     {
@@ -27,11 +32,12 @@
       home-manager,
       zen-browser,
       claude-code,
+      vicinae,
     }:
     let
       lib = nixpkgs.lib;
       mkNixosConfig = import ./lib/mkNixosConfig.nix { inherit nixpkgs; };
-      mkHomeConfig = import ./lib/mkHomeConfig.nix { inherit nixpkgs home-manager; };
+      mkHomeConfig = import ./lib/mkHomeConfig.nix { inherit nixpkgs home-manager vicinae; };
 
       # ── Hosts ────────────────────────────────────────────────────────────
       hosts = {

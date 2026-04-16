@@ -1,6 +1,7 @@
 {
   nixpkgs,
   home-manager,
+  vicinae,
 }:
 system: hostname: username: cfg:
 let
@@ -26,6 +27,7 @@ home-manager.lib.homeManagerConfiguration {
     { nixpkgs.overlays = cfg.overlays or [ ]; }
     ../home
     ../home/lib
+    vicinae.homeManagerModules.default
   ]
   ++ homeModules
   ++ gnomeExtensionModules;
