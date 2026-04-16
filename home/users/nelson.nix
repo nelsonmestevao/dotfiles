@@ -13,21 +13,22 @@ in
   # Desktop Environment
   dotfiles.programs.gnome.enable = enableFor [ "framework" ];
   dotfiles.programs.gnome.extensions = {
-    accent-directories.enable = enableFor [ "framework" ];
-    auto-move-windows.enable = enableFor [ "framework" ];
-    blur-my-shell.enable = enableFor [ "framework" ];
-    caffeine.enable = enableFor [ "framework" ];
-    color-picker.enable = enableFor [ "framework" ];
-    draw-on-gnome.enable = enableFor [ "framework" ];
-    glocalsend.enable = enableFor [ "framework" ];
-    pop-shell.enable = enableFor [ "framework" ];
-    rudra.enable = enableFor [ "framework" ];
-    smart-home.enable = enableFor [ "framework" ];
-    space-bar.enable = enableFor [ "framework" ];
-    top-bar-organizer.enable = enableFor [ "framework" ];
-    user-themes-x.enable = enableFor [ "framework" ];
-    vitals.enable = enableFor [ "framework" ];
-    wake-on-lan.enable = enableFor [ "framework" ];
+    accent-directories.enable = true;
+    auto-move-windows.enable = true;
+    blur-my-shell.enable = true;
+    caffeine.enable = true;
+    color-picker.enable = true;
+    draw-on-gnome.enable = true;
+    glocalsend.enable = true;
+    pop-shell.enable = true;
+    rudra.enable = true;
+    smart-home.enable = true;
+    space-bar.enable = true;
+    top-bar-organizer.enable = true;
+    user-themes-x.enable = true;
+    vitals.enable = true;
+    wake-on-lan.enable = true;
+    wiggle.enable = false;
   };
 
   dotfiles.programs.hyprland.enable = false;

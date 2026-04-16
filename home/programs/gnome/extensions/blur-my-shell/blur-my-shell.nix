@@ -1,5 +1,4 @@
-_:
-{
+_: {
   dconf.settings = {
     "org/gnome/shell/extensions/blur-my-shell" = {
       settings-version = 2;

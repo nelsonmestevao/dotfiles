@@ -3,17 +3,19 @@
 #! nix-shell -p gum python313 python313Packages.xonsh python313Packages.docopt
 #! nix-shell -i xonsh
 """
-Scaffolds a new home-manager program or NixOS system module.
+Scaffolds a new home-manager program, NixOS system module, or GNOME extension.
 
 Usage:
   {program} program <name>
   {program} module <name>
+  {program} extension <name>
   {program} (-h | --help)
   {program} (-v | --version)
 
 Commands:
   program <name>      Create a new home-manager program.
   module <name>       Create a new NixOS system module.
+  extension <name>    Create a new GNOME Shell extension module.
 
 Options:
   -h --help           Show this screen.
@@ -90,6 +92,25 @@ PROGRAM_TEMPLATE = """\
 }
 """
 
+EXTENSION_TEMPLATE = """\
+{ pkgs, lib, mkSymlink, ... }:
+{
+  # ── Package Override ─────────────────────────────────────────────────
+  # Defaults to `pkgs.gnomeExtensions.__NAME__`. Override for custom
+  # builds or when you need the unstable channel's version.
+  # package = pkgs.unstable.gnomeExtensions.__NAME__;
+  # package = pkgs.callPackage ./package.nix { };
+
+  # ── dconf Settings ───────────────────────────────────────────────────
+  # dconf.settings."org/gnome/shell/extensions/__NAME__" = {
+  #   some-key = [ "<Super>x" ];
+  # };
+
+  # ── Symlinked Config Files ───────────────────────────────────────────
+  # xdg.configFile."__NAME__/config.json" = mkSymlink "config.json";
+}
+"""
+
 MODULE_TEMPLATE = """\
 {
   config,
@@ -145,6 +166,26 @@ def create_program(name):
     print(f"    dotfiles.programs.{name}.enable = true;")
 
 
+def create_extension(name):
+    dir_path = f"home/programs/gnome/extensions/{name}"
+    file_path = f"{dir_path}/{name}.nix"
+
+    if os.path.exists(file_path):
+        print(f"{RED}✗{RESET} Extension '{name}' already exists at {file_path}")
+        sys.exit(1)
+
+    os.makedirs(dir_path, exist_ok=True)
+
+    content = render_template(EXTENSION_TEMPLATE, name)
+
+    with open(file_path, 'w') as f:
+        f.write(content)
+
+    print(f"{GREEN}✓{RESET} Created GNOME extension at {file_path}")
+    print(f"  Enable it in home/users/nelson.nix:")
+    print(f"    dotfiles.programs.gnome.extensions.{name}.enable = true;")
+
+
 def create_module(name):
     dir_path = f"system/modules/{name}"
     file_path = f"{dir_path}/{name}.nix"
@@ -172,6 +213,8 @@ def main(args):
         create_program(name)
     elif args['module']:
         create_module(name)
+    elif args['extension']:
+        create_extension(name)
 
 
 if __name__ == '__main__':

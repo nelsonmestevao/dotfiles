@@ -1,5 +1,4 @@
-_:
-{
+_: {
   dconf.settings = {
     "org/gnome/shell/extensions/space-bar/behavior" = {
       always-show-numbers = false;

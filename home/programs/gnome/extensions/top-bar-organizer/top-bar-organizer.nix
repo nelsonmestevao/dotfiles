@@ -1,5 +1,4 @@
-_:
-{
+_: {
   dconf.settings."org/gnome/shell/extensions/top-bar-organizer" = {
     left-box-order = [
       "activities"
