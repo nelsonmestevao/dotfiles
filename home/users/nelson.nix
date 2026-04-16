@@ -19,7 +19,7 @@ in
     caffeine.enable = true;
     color-picker.enable = true;
     draw-on-gnome.enable = true;
-    glocalsend.enable = true;
+    glocalsend.enable = enableFor [ "framework" ];
     pop-shell.enable = true;
     rudra.enable = true;
     smart-home.enable = true;
@@ -28,6 +28,7 @@ in
     user-themes-x.enable = true;
     vitals.enable = true;
     wake-on-lan.enable = true;
+    wallpaper-slideshow.enable = enableFor [ "framework" ];
     wiggle.enable = false;
   };
 
