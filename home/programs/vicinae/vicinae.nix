@@ -6,6 +6,13 @@
   ...
 }:
 {
+  # ── Packages ──────────────────────────────────────────────────────────
+  home.packages = with pkgs; [
+    playerctl
+    pulseaudio
+  ];
+
+  # ── Services ──────────────────────────────────────────────────────────
   services.vicinae = {
     enable = true;
     systemd = {

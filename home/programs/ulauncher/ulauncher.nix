@@ -10,6 +10,8 @@
     ulauncher
   ];
 
+  services.copyq.enable = false;
+
   xdg.configFile."autostart/ulauncher.desktop".text = ''
     [Desktop Entry]
     Type=Application

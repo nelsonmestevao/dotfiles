@@ -24,8 +24,6 @@ with lib.hm.gvariant;
 
   dotfiles.programs.ulauncher.enable = false;
 
-  services.copyq.enable = true;
-
   dconf.settings = {
     "org/gnome/shell" = {
       disable-user-extensions = false;
@@ -56,6 +54,7 @@ with lib.hm.gvariant;
 
     "org/gnome/mutter" = {
       dynamic-workspaces = false;
+      center-new-windows = true;
     };
 
     "org/gnome/desktop/interface" = {
