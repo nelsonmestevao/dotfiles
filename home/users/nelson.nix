@@ -12,6 +12,24 @@ in
 {
   # Desktop Environment
   dotfiles.programs.gnome.enable = enableFor [ "framework" ];
+  dotfiles.programs.gnome.extensions = {
+    accent-directories.enable = enableFor [ "framework" ];
+    auto-move-windows.enable = enableFor [ "framework" ];
+    blur-my-shell.enable = enableFor [ "framework" ];
+    caffeine.enable = enableFor [ "framework" ];
+    color-picker.enable = enableFor [ "framework" ];
+    draw-on-gnome.enable = enableFor [ "framework" ];
+    glocalsend.enable = enableFor [ "framework" ];
+    pop-shell.enable = enableFor [ "framework" ];
+    rudra.enable = enableFor [ "framework" ];
+    smart-home.enable = enableFor [ "framework" ];
+    space-bar.enable = enableFor [ "framework" ];
+    top-bar-organizer.enable = enableFor [ "framework" ];
+    user-themes-x.enable = enableFor [ "framework" ];
+    vitals.enable = enableFor [ "framework" ];
+    wake-on-lan.enable = enableFor [ "framework" ];
+  };
+
   dotfiles.programs.hyprland.enable = false;
 
   # Shells

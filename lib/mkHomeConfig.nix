@@ -9,6 +9,12 @@ let
   homeModules = map (name: mkHomeModule name (import ../home/programs/${name}/${name}.nix)) (
     lib.attrNames (builtins.readDir ../home/programs)
   );
+
+  mkGnomeExtensionModule = import ../home/lib/mkGnomeExtensionModule.nix { inherit lib; };
+  gnomeExtensionsDir = ../home/programs/gnome/extensions;
+  gnomeExtensionModules = map (
+    name: mkGnomeExtensionModule name (import "${gnomeExtensionsDir}/${name}/${name}.nix")
+  ) (lib.attrNames (builtins.readDir gnomeExtensionsDir));
 in
 home-manager.lib.homeManagerConfiguration {
   pkgs = nixpkgs.legacyPackages.${system};
@@ -21,5 +27,6 @@ home-manager.lib.homeManagerConfiguration {
     ../home
     ../home/lib
   ]
-  ++ homeModules;
+  ++ homeModules
+  ++ gnomeExtensionModules;
 }

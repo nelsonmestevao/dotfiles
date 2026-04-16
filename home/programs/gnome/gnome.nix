@@ -2,78 +2,34 @@
   config,
   lib,
   pkgs,
-  mkSymlink,
   ...
 }:
 with lib.hm.gvariant;
-let
-  glocalsend = pkgs.callPackage ./extensions/glocalsend.nix { };
-  rudra = pkgs.callPackage ./extensions/rudra.nix { };
-
-  gnomeExtensions = with pkgs.gnomeExtensions; [
-    auto-move-windows
-    blur-my-shell
-    # I want v59 at least to be able to use CLI tools
-    pkgs.unstable.gnomeExtensions.caffeine
-    color-picker
-    draw-on-gnome
-    pop-shell
-    pkgs.unstable.gnomeExtensions.smart-home
-    space-bar
-    top-bar-organizer
-    vitals
-    pkgs.unstable.gnomeExtensions.wake-on-lan
-    # TODO: https://github.com/mechtifs/wiggle/pull/27
-    # pkgs.unstable.gnomeExtensions.wiggle
-    # freon
-    # system-monitor
-    user-themes-x
-    glocalsend
-    rudra
-    # auto-accent-colour
-    accent-directories
-  ];
-in
 {
-
-  home.packages =
-    with pkgs;
-    [
-      wmctrl
-      gnome-tweaks
-      # albert
-      # walker
-      wl-clipboard
-      adwaita-icon-theme
-    ]
-    ++ gnomeExtensions;
+  home.packages = with pkgs; [
+    wmctrl
+    gnome-tweaks
+    wl-clipboard
+    adwaita-icon-theme
+  ];
 
   # dconf write /org/gnome/desktop/input-sources/xkb-options "['caps:ctrl_modifier']"
-  # dconf write '/org/gnome/shell/extensions/pop-shell/toggle-floating' "['<Meta><Shift>Space']"
   # gsettings get org.gnome.desktop.interface color-scheme
   # gsettings set org.gnome.desktop.background picture-uri-dark file:///home/nelson/Pictures/desktop.jpg
   # gsettings set org.gnome.desktop.background picture-uri file:///home/nelson/Pictures/login.jpg
 
   home.sessionVariables = {
-    GSETTINGS_SCHEMA_DIR = (
-      builtins.concatStringsSep ":" (
-        map (
-          extension: "${extension}/share/gnome-shell/extensions/${extension.extensionUuid}/schemas"
-        ) gnomeExtensions
-      )
-    );
+    GSETTINGS_SCHEMA_DIR = builtins.concatStringsSep ":" config.dotfiles.programs.gnome.extensionSchemaDirs;
   };
-
-  xdg.configFile."pop-shell/config.json" = mkSymlink "extensions/pop-shell/config.json";
 
   dotfiles.programs.ulauncher.enable = false;
 
-  services.copyq.enable = false;
+  services.copyq.enable = true;
 
   dconf.settings = {
     "org/gnome/shell" = {
       disable-user-extensions = false;
-      enabled-extensions = map (extension: extension.extensionUuid) gnomeExtensions;
+      enabled-extensions = config.dotfiles.programs.gnome.enabledExtensions;
       favorite-apps = [ ];
     };
 
@@ -87,6 +43,10 @@ in
       control-center = [ "<Super>i" ];
       home = [ "<Super>e" ];
       screensaver = [ "<Super>Escape" ];
+      custom-keybindings = [
+        "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
+        "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/"
+      ];
     };
 
     "org/gnome/settings-daemon/plugins/power" = {
@@ -227,19 +187,6 @@ in
       picture-uri-dark = "file:///home/nelson/Pictures/Wallpapers/desktop.jpg";
     };
 
-    "org/gnome/settings-daemon/plugins/media-keys" = {
-      custom-keybindings = [
-        "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
-        "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/"
-      ];
-    };
-
-    # "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
-    #   name = "Albert Launcher";
-    #   command = "albert --platformtheme gnome toggle";
-    #   binding = "<Alt>Space";
-    # };
-
     "org/gnome/desktop/input-sources" = {
       sources = [
         (mkTuple [
@@ -265,94 +212,6 @@ in
       tap-to-click = true;
       two-finger-scrolling-enabled = true;
       disable-while-typing = true;
-    };
-
-    # Extension settings
-
-    "org/gnome/shell/extensions/rudra" = {
-      toggle-launcher = [ "<Alt>space" ];
-    };
-
-    "org/gnome/shell/extensions/pop-shell" = {
-      activate-launcher = [ ];
-      fullscreen-launcher = false;
-      show-title = true;
-      smart-gaps = false;
-      snap-to-grid = false;
-      stacking-with-mouse = false;
-
-      gap-inner = mkUint32 3;
-      gap-outer = mkUint32 3;
-
-      tile-by-default = true;
-
-      tile-enter = [ "<Super><Shift>Return" ];
-
-      tile-move-left = [ ];
-      tile-move-right = [ ];
-      tile-move-up = [ ];
-      tile-move-down = [ ];
-
-      tile-move-left-global = [ "<Super><Shift>h" ];
-      tile-move-right-global = [ "<Super><Shift>l" ];
-      tile-move-up-global = [ "<Super><Shift>k" ];
-      tile-move-down-global = [ "<Super><Shift>j" ];
-
-      stack = [ ];
-      toggle-floating = [ "<Meta><Shift>Space" ];
-    };
-
-    "org/gnome/shell/extensions/space-bar/behavior" = {
-      always-show-numbers = false;
-      position = "left";
-      scroll-wheel = "workspaces-bar";
-      show-empty-workspaces = true;
-      toggle-overview = false;
-    };
-
-    "org/gnome/shell/extensions/space-bar/shortcuts" = {
-      enable-activate-workspace-shortcuts = true;
-      enable-move-to-workspace-shortcuts = true;
-    };
-
-    "org/gnome/shell/extensions/top-bar-organizer" = {
-      left-box-order = [
-        "activities"
-        "Space Bar"
-      ];
-      center-box-order = [ "dateMenu" ];
-      right-box-order = [
-        "freonMenu"
-        "screenSharing"
-        "system-monitor@gnome-shell-extensions.gcampax.github.com"
-        "dwellClick"
-        "vitalsMenu"
-        "a11y"
-        "color-picker@tuberry"
-        "screenRecording"
-        "wol@mnorlin.se"
-        "keyboard"
-        "pop-shell"
-        "quickSettings"
-      ];
-    };
-
-    "org/gnome/shell/extensions/blur-my-shell" = {
-      settings-version = 2;
-    };
-
-    "org/gnome/shell/extensions/blur-my-shell/applications" = {
-      blur = true;
-      sigma = 20;
-      whitelist = [ "com.mitchellh.ghostty" ];
-    };
-
-    "org/gnome/shell/extensions/system-monitor" = {
-      show-cpu = true;
-      show-memory = true;
-      show-swap = true;
-      show-download = true;
-      show-upload = true;
     };
   };
 }
