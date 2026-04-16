@@ -1,20 +1,5 @@
+_:
 {
-  config,
-  lib,
-  pkgs,
-  ...
-}:
-let
-  space-bar = pkgs.gnomeExtensions.space-bar;
-in
-{
-  home.packages = [ space-bar ];
-
-  dotfiles.programs.gnome.enabledExtensions = [ space-bar.extensionUuid ];
-  dotfiles.programs.gnome.extensionSchemaDirs = [
-    "${space-bar}/share/gnome-shell/extensions/${space-bar.extensionUuid}/schemas"
-  ];
-
   dconf.settings = {
     "org/gnome/shell/extensions/space-bar/behavior" = {
       always-show-numbers = false;

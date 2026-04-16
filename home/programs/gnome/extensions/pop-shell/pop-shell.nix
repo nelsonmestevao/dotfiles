@@ -1,22 +1,6 @@
-{
-  config,
-  lib,
-  pkgs,
-  mkSymlink,
-  ...
-}:
+{ lib, mkSymlink, ... }:
 with lib.hm.gvariant;
-let
-  pop-shell = pkgs.gnomeExtensions.pop-shell;
-in
 {
-  home.packages = [ pop-shell ];
-
-  dotfiles.programs.gnome.enabledExtensions = [ pop-shell.extensionUuid ];
-  dotfiles.programs.gnome.extensionSchemaDirs = [
-    "${pop-shell}/share/gnome-shell/extensions/${pop-shell.extensionUuid}/schemas"
-  ];
-
   xdg.configFile."pop-shell/config.json" = mkSymlink "config.json";
 
   dconf.settings."org/gnome/shell/extensions/pop-shell" = {

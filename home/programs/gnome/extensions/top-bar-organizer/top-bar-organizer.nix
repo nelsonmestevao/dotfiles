@@ -1,20 +1,5 @@
+_:
 {
-  config,
-  lib,
-  pkgs,
-  ...
-}:
-let
-  top-bar-organizer = pkgs.gnomeExtensions.top-bar-organizer;
-in
-{
-  home.packages = [ top-bar-organizer ];
-
-  dotfiles.programs.gnome.enabledExtensions = [ top-bar-organizer.extensionUuid ];
-  dotfiles.programs.gnome.extensionSchemaDirs = [
-    "${top-bar-organizer}/share/gnome-shell/extensions/${top-bar-organizer.extensionUuid}/schemas"
-  ];
-
   dconf.settings."org/gnome/shell/extensions/top-bar-organizer" = {
     left-box-order = [
       "activities"

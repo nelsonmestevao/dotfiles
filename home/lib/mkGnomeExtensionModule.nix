@@ -12,6 +12,11 @@ let
     config.lib.dotfiles.mkSymlinkFrom
       "${config.dotfiles.directory}/home/programs/gnome/extensions/${name}"
       relativePath;
+
+  bodyResult = body (args // { inherit mkSymlink; });
+  package = bodyResult.package or pkgs.gnomeExtensions.${name};
+  uuid = package.extensionUuid;
+  userConfig = removeAttrs bodyResult [ "package" ];
 in
 {
   options.dotfiles.programs.gnome.extensions.${name}.enable =
@@ -20,5 +25,14 @@ in
   config = lib.mkIf (
     config.dotfiles.programs.gnome.enable
     && config.dotfiles.programs.gnome.extensions.${name}.enable
-  ) (body (args // { inherit mkSymlink; }));
+  ) (lib.mkMerge [
+    {
+      home.packages = [ package ];
+      dotfiles.programs.gnome.enabledExtensions = [ uuid ];
+      dotfiles.programs.gnome.extensionSchemaDirs = [
+        "${package}/share/gnome-shell/extensions/${uuid}/schemas"
+      ];
+    }
+    userConfig
+  ]);
 }
