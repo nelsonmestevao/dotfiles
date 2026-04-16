@@ -28,6 +28,8 @@ let
     # system-monitor
     user-themes-x
     glocalsend
+    # auto-accent-colour
+    accent-directories
   ];
 in
 {
