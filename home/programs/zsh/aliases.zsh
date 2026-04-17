@@ -113,3 +113,5 @@ alias tp6="/home/nelson/Code/UMinho/aulas-pi/2526/tp6"
 alias mega="restic -r rclone:mega:Backups/restic/framework.repo"
 alias mdrive="restic -r rclone:mdrive:Backups/restic/framework.repo"
 alias tpshare="restic -r rclone:tpshare:G/backups/framework.repo"
+
+alias wt='dir=$(git worktree-select) && [ -n "$dir" ] && cd "$dir"'
