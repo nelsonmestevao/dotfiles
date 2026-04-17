@@ -83,7 +83,7 @@ in
   dotfiles.programs.pandoc.enable = true;
   dotfiles.programs.podman.enable = disableFor [ "thinkpad" ];
   dotfiles.programs.rclone.enable = true;
-  dotfiles.programs.restic.enable = false;
+  dotfiles.programs.restic.enable = true;
   dotfiles.programs.sqlite.enable = true;
   dotfiles.programs.ssh.enable = true;
   dotfiles.programs.terraform.enable = enableFor [ "framework" ];
