@@ -67,6 +67,7 @@ in
   dotfiles.programs.claude.enable = true;
   dotfiles.programs.codex.enable = true;
   dotfiles.programs.copilot.enable = true;
+  dotfiles.programs.devcontainer.enable = true;
   dotfiles.programs.direnv.enable = true;
   dotfiles.programs.exiftool.enable = true;
   dotfiles.programs.fzf.enable = true;
