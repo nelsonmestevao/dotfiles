@@ -1,1 +1,182 @@
-nix flake update
+#!/usr/bin/env nix-shell
+#! nix-shell -I nixpkgs=channel:nixos-25.11
+#! nix-shell -p gum python313 python313Packages.xonsh python313Packages.docopt
+#! nix-shell -i xonsh
+"""
+Updates the flake inputs.
+
+Usage:
+  {program} [--save]
+  {program} (-h | --help)
+  {program} (-v | --version)
+
+Options:
+  -h --help         Show this screen.
+  -v --version      Show version.
+  --save            Commit the lockfile changes describing the updated inputs.
+"""
+import os
+import re
+import sys
+
+from docopt import docopt
+
+os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+# These are easy to use in bash commands.
+$BLACK=$(tput setaf 0).strip()
+$RED=$(tput setaf 1).strip()
+$GREEN=$(tput setaf 2).strip()
+$YELLOW=$(tput setaf 3).strip()
+$BLUE=$(tput setaf 4).strip()
+$MAGENTA=$(tput setaf 5).strip()
+$CYAN=$(tput setaf 6).strip()
+$WHITE=$(tput setaf 7).strip()
+$PINK=$(tput setaf 13).strip()
+$RESET=$(tput sgr0).strip()
+
+# These are easy to use in python commands.
+BLACK=$(tput setaf 0).strip()
+RED=$(tput setaf 1).strip()
+GREEN=$(tput setaf 2).strip()
+YELLOW=$(tput setaf 3).strip()
+BLUE=$(tput setaf 4).strip()
+MAGENTA=$(tput setaf 5).strip()
+CYAN=$(tput setaf 6).strip()
+WHITE=$(tput setaf 7).strip()
+PINK=$(tput setaf 13).strip()
+RESET=$(tput sgr0).strip()
+
+UPDATED_RE = re.compile(r"^• Updated input '([^']+)':$")
+FLAKE_LINE_RE = re.compile(r"'([^']+)'\s*\(([^)]+)\)")
+GITHUB_RE = re.compile(r"^github:([^/]+)/([^/?]+)/([0-9a-f]+)")
+GITLAB_RE = re.compile(r"^gitlab:([^/]+)/([^/?]+)/([0-9a-f]+)")
+SOURCEHUT_RE = re.compile(r"^sourcehut:([^/]+)/([^/?]+)/([0-9a-f]+)")
+
+def update_inputs():
+    # nix flake update prints the input diff to stderr; redirect to stdout
+    # so we can both display and capture it.
+    output = $(nix flake update e>o)
+    print(output, end='')
+    return output
+
+def parse_updated_inputs(output):
+    blocks = []
+    lines = output.splitlines()
+    i = 0
+    while i < len(lines):
+        match = UPDATED_RE.match(lines[i])
+        if match and i + 2 < len(lines):
+            blocks.append({
+                'name': match.group(1),
+                'old': lines[i + 1].strip(),
+                'new': lines[i + 2].strip(),
+            })
+            i += 3
+        else:
+            i += 1
+    return blocks
+
+def parse_flake_line(line):
+    match = FLAKE_LINE_RE.search(line)
+    if not match:
+        return None
+    return {'ref': match.group(1), 'date': match.group(2)}
+
+def repo_info(ref):
+    if match := GITHUB_RE.match(ref):
+        owner, repo, rev = match.groups()
+        return {
+            'rev': rev,
+            'repo_url': f'https://github.com/{owner}/{repo}',
+            'compare_url': lambda old, new: f'https://github.com/{owner}/{repo}/compare/{old}...{new}',
+        }
+    if match := GITLAB_RE.match(ref):
+        owner, repo, rev = match.groups()
+        return {
+            'rev': rev,
+            'repo_url': f'https://gitlab.com/{owner}/{repo}',
+            'compare_url': lambda old, new: f'https://gitlab.com/{owner}/{repo}/-/compare/{old}...{new}',
+        }
+    if match := SOURCEHUT_RE.match(ref):
+        owner, repo, rev = match.groups()
+        return {
+            'rev': rev,
+            'repo_url': f'https://git.sr.ht/{owner}/{repo}',
+            'compare_url': None,
+        }
+    return None
+
+def format_title(names):
+    suffix = 'input' if len(names) == 1 else 'inputs'
+    if len(names) == 1:
+        listing = names[0]
+    elif len(names) == 2:
+        listing = f'{names[0]} and {names[1]}'
+    else:
+        listing = f"{', '.join(names[:-1])} and {names[-1]}"
+    return f'chore: upgrade {listing} {suffix}'
+
+def format_block(block):
+    old_parsed = parse_flake_line(block['old'])
+    new_parsed = parse_flake_line(block['new'])
+    lines = [f"### {block['name']}", '']
+
+    if not (old_parsed and new_parsed):
+        lines.append(f"  {block['old']}")
+        lines.append(f"  → {block['new']}")
+        return '\n'.join(lines)
+
+    old_info = repo_info(old_parsed['ref'])
+    new_info = repo_info(new_parsed['ref'])
+
+    if new_info:
+        old_rev_short = old_info['rev'][:7] if old_info else '???????'
+        new_rev_short = new_info['rev'][:7]
+        lines.append(f"- **Source:** {new_info['repo_url']}")
+        lines.append(
+            f"- **Update:** `{old_rev_short}` ({old_parsed['date']}) "
+            f"→ `{new_rev_short}` ({new_parsed['date']})"
+        )
+        if old_info and new_info['compare_url']:
+            lines.append(
+                f"- **Compare:** {new_info['compare_url'](old_info['rev'], new_info['rev'])}"
+            )
+    else:
+        lines.append(f"- `{old_parsed['ref']}` ({old_parsed['date']})")
+        lines.append(f"- → `{new_parsed['ref']}` ({new_parsed['date']})")
+
+    return '\n'.join(lines)
+
+def format_body(blocks):
+    return '\n\n'.join(format_block(block) for block in blocks) + '\n'
+
+def save_commit(output):
+    blocks = parse_updated_inputs(output)
+    if not blocks:
+        print(f'{YELLOW}✗ No inputs were updated; nothing to commit.{RESET}')
+        return
+
+    status = $(git status --porcelain flake.lock).strip()
+    if not status:
+        print(f'{YELLOW}✗ flake.lock is unchanged; nothing to commit.{RESET}')
+        return
+
+    title = format_title([b['name'] for b in blocks])
+    body = format_body(blocks)
+
+    git add flake.lock
+    git commit -m @(title) -m @(body)
+    print(f'{GREEN}✓ Committed: {title}{RESET}')
+
+def main(args):
+    output = update_inputs()
+    match args:
+        case {'--save': True}:
+            save_commit(output)
+
+if __name__ == '__main__':
+    arguments = docopt(__doc__.format(program=__file__), version=f'{os.path.basename(__file__)} script version 1.0')
+    main(arguments)
+
+# vim: ft=xonsh
