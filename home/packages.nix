@@ -154,6 +154,34 @@ in
         fi
         ${pkgs.nvd}/bin/nvd diff "$older" "$newer"
       '')
+
+      (pkgs.writeShellScriptBin "nixos-diff" ''
+        dir="/nix/var/nix/profiles"
+        picks=$(
+          for f in "$dir"/system-*-link; do
+            name=''${f##*/}
+            gen=''${name#system-}
+            gen=''${gen%-link}
+            printf '%s  gen %s\t%s\n' \
+              "$(date -d "@$(stat -c '%Y' "$f")" '+%Y-%m-%d %H:%M')" \
+              "$gen" "$f"
+          done | sort -r \
+            | ${pkgs.fzf}/bin/fzf --multi --delimiter=$'\t' --with-nth=1 \
+                --header 'TAB to mark exactly 2, then Enter' \
+            | awk -F'\t' '{print $2}'
+        )
+        if [ "$(echo "$picks" | grep -c .)" -ne 2 ]; then
+          echo "pick exactly 2 generations"; exit 1
+        fi
+        a=$(echo "$picks" | head -1)
+        b=$(echo "$picks" | tail -1)
+        if [ "$(stat -c '%Y' "$a")" -lt "$(stat -c '%Y' "$b")" ]; then
+          older="$a"; newer="$b"
+        else
+          older="$b"; newer="$a"
+        fi
+        ${pkgs.nvd}/bin/nvd diff "$older" "$newer"
+      '')
     ];
   };
 }
