@@ -53,50 +53,26 @@ GITHUB_RE = re.compile(r"^github:([^/]+)/([^/?]+)/([0-9a-f]+)")
 GITLAB_RE = re.compile(r"^gitlab:([^/]+)/([^/?]+)/([0-9a-f]+)")
 SOURCEHUT_RE = re.compile(r"^sourcehut:([^/]+)/([^/?]+)/([0-9a-f]+)")
 
-def update_inputs():
-    # nix flake update prints the input diff to stderr; redirect to stdout
-    # so we can both display and capture it.
-    output = $(nix flake update e>o)
-    print(output, end='')
-    return output
-
-def parse_updated_inputs(output):
-    blocks = []
-    lines = output.splitlines()
-    i = 0
-    while i < len(lines):
-        match = UPDATED_RE.match(lines[i])
-        if match and i + 2 < len(lines):
-            blocks.append({
-                'name': match.group(1),
-                'old': lines[i + 1].strip(),
-                'new': lines[i + 2].strip(),
-            })
-            i += 3
-        else:
-            i += 1
-    return blocks
-
 def parse_flake_line(line):
     match = FLAKE_LINE_RE.search(line)
     if not match:
         return None
     return {'ref': match.group(1), 'date': match.group(2)}
 
-def repo_info(ref):
+def parse_ref(ref):
     if match := GITHUB_RE.match(ref):
         owner, repo, rev = match.groups()
         return {
             'rev': rev,
             'repo_url': f'https://github.com/{owner}/{repo}',
-            'compare_url': lambda old, new: f'https://github.com/{owner}/{repo}/compare/{old}...{new}',
+            'compare_url': f'https://github.com/{owner}/{repo}/compare/{{old}}...{{new}}',
         }
     if match := GITLAB_RE.match(ref):
         owner, repo, rev = match.groups()
         return {
             'rev': rev,
             'repo_url': f'https://gitlab.com/{owner}/{repo}',
-            'compare_url': lambda old, new: f'https://gitlab.com/{owner}/{repo}/-/compare/{old}...{new}',
+            'compare_url': f'https://gitlab.com/{owner}/{repo}/-/compare/{{old}}...{{new}}',
         }
     if match := SOURCEHUT_RE.match(ref):
         owner, repo, rev = match.groups()
@@ -107,7 +83,51 @@ def repo_info(ref):
         }
     return None
 
-def format_title(names):
+def build_update(name, old_line, new_line):
+    update = {'name': name, 'old_raw': old_line, 'new_raw': new_line}
+    old_parsed = parse_flake_line(old_line)
+    new_parsed = parse_flake_line(new_line)
+    if not (old_parsed and new_parsed):
+        return update
+
+    update['old_date'] = old_parsed['date']
+    update['new_date'] = new_parsed['date']
+    update['old_ref'] = old_parsed['ref']
+    update['new_ref'] = new_parsed['ref']
+
+    old_info = parse_ref(old_parsed['ref'])
+    new_info = parse_ref(new_parsed['ref'])
+    if new_info:
+        update['repo_url'] = new_info['repo_url']
+        update['new_rev'] = new_info['rev']
+        update['new_rev_short'] = new_info['rev'][:7]
+    if old_info:
+        update['old_rev'] = old_info['rev']
+        update['old_rev_short'] = old_info['rev'][:7]
+    if old_info and new_info and new_info['compare_url']:
+        update['compare_url'] = new_info['compare_url'].format(
+            old=old_info['rev'], new=new_info['rev']
+        )
+    return update
+
+def update_inputs():
+    # gum spin draws the spinner on the TTY while gum's captured stdout
+    # carries the wrapped command's combined output (stderr→stdout via bash).
+    output = $(gum spin --spinner=dot --title='Updating flake inputs...' --show-output -- bash -c 'nix flake update 2>&1')
+    updates = []
+    lines = output.splitlines()
+    i = 0
+    while i < len(lines):
+        match = UPDATED_RE.match(lines[i])
+        if match and i + 2 < len(lines):
+            updates.append(build_update(match.group(1), lines[i + 1].strip(), lines[i + 2].strip()))
+            i += 3
+        else:
+            i += 1
+    return updates
+
+def format_title(updates):
+    names = [u['name'] for u in updates]
     suffix = 'input' if len(names) == 1 else 'inputs'
     if len(names) == 1:
         listing = names[0]
@@ -117,43 +137,57 @@ def format_title(names):
         listing = f"{', '.join(names[:-1])} and {names[-1]}"
     return f'chore: upgrade {listing} {suffix}'
 
-def format_block(block):
-    old_parsed = parse_flake_line(block['old'])
-    new_parsed = parse_flake_line(block['new'])
-    lines = [f"### {block['name']}", '']
-
-    if not (old_parsed and new_parsed):
-        lines.append(f"  {block['old']}")
-        lines.append(f"  → {block['new']}")
-        return '\n'.join(lines)
-
-    old_info = repo_info(old_parsed['ref'])
-    new_info = repo_info(new_parsed['ref'])
-
-    if new_info:
-        old_rev_short = old_info['rev'][:7] if old_info else '???????'
-        new_rev_short = new_info['rev'][:7]
-        lines.append(f"- **Source:** {new_info['repo_url']}")
-        lines.append(
-            f"- **Update:** `{old_rev_short}` ({old_parsed['date']}) "
-            f"→ `{new_rev_short}` ({new_parsed['date']})"
-        )
-        if old_info and new_info['compare_url']:
+def format_body(updates):
+    sections = []
+    for u in updates:
+        lines = [f"### {u['name']}", '']
+        if 'repo_url' in u:
+            lines.append(f"- **Source:** {u['repo_url']}")
             lines.append(
-                f"- **Compare:** {new_info['compare_url'](old_info['rev'], new_info['rev'])}"
+                f"- **Update:** `{u.get('old_rev_short', '???????')}` ({u['old_date']}) "
+                f"→ `{u['new_rev_short']}` ({u['new_date']})"
             )
-    else:
-        lines.append(f"- `{old_parsed['ref']}` ({old_parsed['date']})")
-        lines.append(f"- → `{new_parsed['ref']}` ({new_parsed['date']})")
+            if 'compare_url' in u:
+                lines.append(f"- **Compare:** {u['compare_url']}")
+        elif 'old_ref' in u:
+            lines.append(f"- `{u['old_ref']}` ({u['old_date']})")
+            lines.append(f"- → `{u['new_ref']}` ({u['new_date']})")
+        else:
+            lines.append(f"  {u['old_raw']}")
+            lines.append(f"  → {u['new_raw']}")
+        sections.append('\n'.join(lines))
+    return '\n\n'.join(sections) + '\n'
 
-    return '\n'.join(lines)
+def print_summary(updates):
+    if not updates:
+        print(f'{YELLOW}• No inputs changed.{RESET}')
+        return
 
-def format_body(blocks):
-    return '\n\n'.join(format_block(block) for block in blocks) + '\n'
+    count = len(updates)
+    word = 'input' if count == 1 else 'inputs'
+    print(f'\n{GREEN}✓{RESET} {count} {word} updated\n')
 
-def save_commit(output):
-    blocks = parse_updated_inputs(output)
-    if not blocks:
+    for u in updates:
+        print(f'  {CYAN}{u["name"]}{RESET}')
+        if 'new_rev_short' in u:
+            old_short = u.get('old_rev_short', '???????')
+            print(
+                f'    {RED}{old_short}{RESET} {BLACK}({u["old_date"]}){RESET} '
+                f'{GREEN}→{RESET} {GREEN}{u["new_rev_short"]}{RESET} '
+                f'{BLACK}({u["new_date"]}){RESET}'
+            )
+            if 'compare_url' in u:
+                print(f'    {BLUE}{u["compare_url"]}{RESET}')
+        elif 'old_ref' in u:
+            print(f'    {u["old_ref"]} {BLACK}({u["old_date"]}){RESET}')
+            print(f'    {GREEN}→{RESET} {u["new_ref"]} {BLACK}({u["new_date"]}){RESET}')
+        else:
+            print(f'    {u["old_raw"]}')
+            print(f'    {GREEN}→{RESET} {u["new_raw"]}')
+        print()
+
+def save_commit(updates):
+    if not updates:
         print(f'{YELLOW}✗ No inputs were updated; nothing to commit.{RESET}')
         return
 
@@ -162,18 +196,19 @@ def save_commit(output):
         print(f'{YELLOW}✗ flake.lock is unchanged; nothing to commit.{RESET}')
         return
 
-    title = format_title([b['name'] for b in blocks])
-    body = format_body(blocks)
+    title = format_title(updates)
+    body = format_body(updates)
 
     git add flake.lock
     git commit -m @(title) -m @(body)
-    print(f'{GREEN}✓ Committed: {title}{RESET}')
+    print(f'{GREEN}✓ Committed:{RESET} {title}')
 
 def main(args):
-    output = update_inputs()
+    updates = update_inputs()
+    print_summary(updates)
     match args:
         case {'--save': True}:
-            save_commit(output)
+            save_commit(updates)
 
 if __name__ == '__main__':
     arguments = docopt(__doc__.format(program=__file__), version=f'{os.path.basename(__file__)} script version 1.0')
