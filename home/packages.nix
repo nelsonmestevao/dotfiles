@@ -126,6 +126,34 @@ in
       (pkgs.writeShellScriptBin "wake-hades" ''
         ${pkgs.wakeonlan}/bin/wakeonlan 2c:f0:5d:59:3c:0d
       '')
+
+      (pkgs.writeShellScriptBin "hm-diff" ''
+        dir="$HOME/.local/state/nix/profiles"
+        picks=$(
+          for f in "$dir"/home-manager-*-link; do
+            name=''${f##*/}
+            gen=''${name#home-manager-}
+            gen=''${gen%-link}
+            printf '%s  gen %s\t%s\n' \
+              "$(date -d "@$(stat -c '%Y' "$f")" '+%Y-%m-%d %H:%M')" \
+              "$gen" "$f"
+          done | sort -r \
+            | ${pkgs.fzf}/bin/fzf --multi --delimiter=$'\t' --with-nth=1 \
+                --header 'TAB to mark exactly 2, then Enter' \
+            | awk -F'\t' '{print $2}'
+        )
+        if [ "$(echo "$picks" | grep -c .)" -ne 2 ]; then
+          echo "pick exactly 2 generations"; exit 1
+        fi
+        a=$(echo "$picks" | head -1)
+        b=$(echo "$picks" | tail -1)
+        if [ "$(stat -c '%Y' "$a")" -lt "$(stat -c '%Y' "$b")" ]; then
+          older="$a"; newer="$b"
+        else
+          older="$b"; newer="$a"
+        fi
+        ${pkgs.nvd}/bin/nvd diff "$older" "$newer"
+      '')
     ];
   };
 }
