@@ -90,6 +90,7 @@ in
   dotfiles.programs.terraform.enable = enableFor [ "framework" ];
   dotfiles.programs.unoconv.enable = true;
   dotfiles.programs.watchman.enable = true;
+  dotfiles.programs.zellij.enable = true;
   dotfiles.programs.zoxide.enable = true;
 
   # Typesetting
