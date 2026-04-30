@@ -23,6 +23,8 @@
 
   nix.settings.auto-optimise-store = true;
 
+  boot.tmp.cleanOnBoot = true;
+
   nix.gc = {
     automatic = true;
     dates = "monthly";

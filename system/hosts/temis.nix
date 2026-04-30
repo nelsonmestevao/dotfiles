@@ -8,7 +8,6 @@
 {
   # dotfiles.modules.atd.enable = true;
   # dotfiles.modules.audio.enable = true;
-  # dotfiles.modules.boot.enable = true;
   # dotfiles.modules.brave.enable = true;
   # dotfiles.modules.discord.enable = true;
   # dotfiles.modules.fingerprint.enable = true;
@@ -26,11 +25,7 @@
   # dotfiles.modules.virtualisation.enable = true;
   # dotfiles.modules.vlc.enable = true;
 
-  # Bootloader.
-  boot.loader.grub.enable = true;
-  boot.loader.grub.device = "/dev/sda";
-  boot.loader.grub.useOSProber = true;
-
+  dotfiles.modules.boot.enable = true;
   dotfiles.modules.networking.enable = true;
   dotfiles.modules.docker.enable = true;
   dotfiles.modules.locale.enable = true;
