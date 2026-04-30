@@ -21,6 +21,14 @@
     "flakes"
   ];
 
+  nix.settings.auto-optimise-store = true;
+
+  nix.gc = {
+    automatic = true;
+    dates = "monthly";
+    options = "--delete-older-than 31d";
+  };
+
   nixpkgs.config.allowUnfree = true;
 
   # ── Users ───────────────────────────────────────────────────────────────
