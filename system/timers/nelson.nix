@@ -1,15 +1,16 @@
+username:
 {
   pkgs,
   lib,
+  onHosts,
   ...
 }:
 let
   mkSystemTimer = import ../lib/mkSystemTimer.nix {
-    inherit pkgs;
-    username = "nelson";
+    inherit pkgs username;
   };
 in
-lib.mkMerge [
+onHosts [ "framework" ] (lib.mkMerge [
   (mkSystemTimer "sync-books" "Mon..Fri 18:00" ''
     ${pkgs.rclone}/bin/rclone sync ~/Books gdrive:Backups/Calibre -v
     # --log-file=$HOME/.logs/rclone/backup-books.log
@@ -36,4 +37,4 @@ lib.mkMerge [
     ${pkgs.git}/bin/git commit --no-verify --no-gpg-sign --message "$(${pkgs.curl}/bin/curl -s https://whatthecommit.com/index.txt)"
     GIT_SSH_COMMAND="${pkgs.openssh}/bin/ssh -i $HOME/.ssh/id_ed25519" ${pkgs.git}/bin/git push
   '')
-]
+])

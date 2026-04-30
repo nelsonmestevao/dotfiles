@@ -11,9 +11,7 @@
     ./hosts/${hostname}/hardware.nix
     ./hosts/${hostname}.nix
   ]
-  ++ (lib.optionals (builtins.elem hostname [ "framework" ]) (
-    map (username: ./timers/${username}.nix) (lib.attrNames users)
-  ));
+  ++ map (username: import ./timers/${username}.nix username) (lib.attrNames users);
 
   # ── Nix ─────────────────────────────────────────────────────────────────
   nix.settings.experimental-features = [
