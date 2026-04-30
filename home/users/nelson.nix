@@ -109,6 +109,7 @@ in
   dotfiles.programs.libreoffice.enable = enableFor [ "framework" ];
   dotfiles.programs.localsend.enable = enableFor [ "framework" ];
   dotfiles.programs.obsidian.enable = enableFor [ "framework" ];
+  dotfiles.programs.pdfmixtool.enable =  enableFor [ "framework" ];
   dotfiles.programs.pinta.enable = enableFor [ "framework" ];
   dotfiles.programs.typora.enable = enableFor [ "framework" ];
   dotfiles.programs.vivaldi.enable = enableFor [ "framework" ];
