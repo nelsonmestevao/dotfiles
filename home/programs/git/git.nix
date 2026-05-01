@@ -24,6 +24,8 @@
 
     # export PATH="$HOME/.git-fuzzy/bin:$PATH";
     eval $(${pkgs.gitleaks}/bin/gitleaks completion zsh)
+
+    alias lg='lazygit'
   '';
 
   xdg.configFile = {
