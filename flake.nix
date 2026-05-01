@@ -23,6 +23,11 @@
       url = "github:vicinaehq/vicinae";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
+
+    zed = {
+      url = "github:zed-industries/zed";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs =
     {
@@ -33,6 +38,7 @@
       zen-browser,
       claude-code,
       vicinae,
+      zed,
     }:
     let
       lib = nixpkgs.lib;
@@ -72,6 +78,7 @@
           overlays = [
             claude-code.overlays.default
             (final: prev: { zen-browser = zen-browser.packages.${prev.stdenv.hostPlatform.system}.default; })
+            (final: prev: { zed-editor = zed.packages.${prev.stdenv.hostPlatform.system}.default; })
             (final: prev: {
               unstable = import nixpkgs-unstable {
                 system = prev.stdenv.hostPlatform.system;
