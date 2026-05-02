@@ -18,6 +18,9 @@
     systemd = {
       enable = true;
       autoStart = true;
+      environment = {
+        USE_LAYER_SHELL = 1;
+      };
     };
     settings = {
       theme = {
@@ -41,18 +44,8 @@
         "applications:slack"
         "applications:spotify"
         "applications:zen"
-        "clipboard:history"
+        "@vicinae/clipboard:history"
       ];
-      providers = {
-        "@gebeto/store.raycast.translate" = {
-          preferences = {
-            "autoInput" = true;
-            "defaultAction" = "copy";
-            "lang1" = "pt-PT";
-            "lang2" = "en";
-          };
-        };
-      };
     };
   };
 
