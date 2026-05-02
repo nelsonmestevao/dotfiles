@@ -1,5 +1,31 @@
 {
-  "buffer_font_family": "Adwaita Mono",
+  "session": {
+    "trust_all_worktrees": true
+  },
+  "base_keymap": "VSCode",
+  "minimap": {
+    "show": "never"
+  },
+  "cursor_shape": "block",
+  "cursor_blink": true,
+  "autosave": "on_focus_change",
+  "buffer_font_fallbacks": [
+    "JetBrainsMono NF",
+    "JetBrainsMono Nerd Font Mono",
+    "JetBrainsMono NFM"
+  ],
+  "show_whitespaces": "trailing",
+  "show_edit_predictions": true,
+  "wrap_guides": [
+    120
+  ],
+  "preferred_line_length": 120,
+  "agent_servers": {
+    "claude-acp": {
+      "type": "registry"
+    }
+  },
+  "buffer_font_family": "JetBrainsMono Nerd Font",
   "vim_mode": true,
   "project_panel": {
     "default_width": 240,
@@ -17,11 +43,22 @@
     "calt": false,
   },
   "terminal": {
-    "font_family": "JetBrainsMono Nerd Font,JetBrainsMono NF,JetBrainsMono Nerd Font Mono,JetBrainsMono NFM",
-    "font_size": 18,
+    "font_fallbacks": [
+      "JetBrainsMono NF",
+      "JetBrainsMono Nerd Font Mono",
+      "JetBrainsMono NFM"
+    ],
+    "font_family": "JetBrainsMono Nerd Font",
+    "font_size": 16.0,
   },
   "languages": {
-    "C": { "format_on_save": "on" },
+    "C": { "show_whitespaces": "trailing",
+           "show_edit_predictions": true,
+           "wrap_guides": [
+              120
+           ],
+           "preferred_line_length": 120,
+           "format_on_save": "on" },
   },
   "theme": {
     "mode": "system",
