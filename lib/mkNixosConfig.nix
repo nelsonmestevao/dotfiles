@@ -1,4 +1,4 @@
-{ nixpkgs }:
+{ nixpkgs, vicinae }:
 hostname: cfg:
 let
   lib = nixpkgs.lib;
@@ -23,6 +23,7 @@ nixpkgs.lib.nixosSystem {
   };
   modules = [
     ../system
+    vicinae.nixosModules.default
   ]
   ++ systemModules;
 }

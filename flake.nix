@@ -42,7 +42,7 @@
     }:
     let
       lib = nixpkgs.lib;
-      mkNixosConfig = import ./lib/mkNixosConfig.nix { inherit nixpkgs; };
+      mkNixosConfig = import ./lib/mkNixosConfig.nix { inherit nixpkgs vicinae; };
       mkHomeConfig = import ./lib/mkHomeConfig.nix { inherit nixpkgs home-manager vicinae; };
 
       # ── Hosts ────────────────────────────────────────────────────────────
