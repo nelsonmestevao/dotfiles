@@ -36,7 +36,6 @@ in
       ripgrep
       tldr
       unzip
-      vdhcoapp
       wget
       yazi
 
