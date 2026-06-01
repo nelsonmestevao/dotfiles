@@ -23,7 +23,7 @@
     # gifsicle
     # jpegoptim
     # libwebp
-    nodePackages.svgo
+    svgo
     # optipng
     # pngquant
 
