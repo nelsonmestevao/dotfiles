@@ -6,7 +6,7 @@
 Rebuilds the system and home configuration.
 
 Usage:
-  {program} [os | home]
+  {program} [os | home] [--boot]
   {program} (-h | --help)
   {program} (-v | --version)
 
@@ -17,6 +17,9 @@ Commands:
 Options:
   -h --help         Show this screen.
   -v --version      Show version.
+  --boot            Activate the system on next boot instead of switching live.
+                    Use for major release upgrades to avoid hanging on service
+                    restarts (e.g. GDM, NetworkManager). Ignored for home.
 """
 import os
 
@@ -24,16 +27,18 @@ from docopt import docopt
 
 os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-def rebuild_system():
+def rebuild_system(action='switch'):
   #nixos-rebuild switch --use-remote-sudo --flake '.'
-  nh os switch .
+  nh os @(action) .
 
-def rebuild_home():
+def rebuild_home(action='switch'):
   # home-manager switch --flake '.'
   # home-manager switch --flake .#nelson@framework
   nh home switch .
 
 def main(args):
+    action = 'boot' if args['--boot'] else 'switch'
+
     tasks = {
         'os': rebuild_system,
         'home': rebuild_home,
@@ -43,7 +48,7 @@ def main(args):
 
     for task, func in tasks.items():
         if args[task] or run_all:
-            func()
+            func(action)
 
 if __name__ == '__main__':
     arguments = docopt(__doc__.format(program=__file__), version=f'{os.path.basename(__file__)} script version 1.0')
