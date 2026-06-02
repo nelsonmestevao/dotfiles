@@ -1,11 +1,11 @@
 {
   description = "Nelson's Dotfiles";
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     home-manager = {
-      url = "github:nix-community/home-manager/release-25.11";
+      url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -77,6 +77,23 @@
           overlays = [
             claude-code.overlays.default
             (final: prev: { zen-browser = zen-browser.packages.${prev.stdenv.hostPlatform.system}.default; })
+            # TODO: Remove this once GNOME 50 is released
+            # GNOME 50 patch while waiting for PR #506387 to be merged
+            # https://github.com/NixOS/nixpkgs/pull/506387
+            (final: prev: {
+              gnomeExtensions = prev.gnomeExtensions // {
+                pop-shell = prev.gnomeExtensions.pop-shell.overrideAttrs (_: {
+                  version = "1.2.0-unstable-2026-03-31";
+
+                  src = prev.fetchFromGitHub {
+                    owner = "pop-os";
+                    repo = "shell";
+                    rev = "7898b65c20735057faf0797f8ed056704ca55f0d";
+                    hash = "sha256-MmHoOxymo0QSRbRcSbFiv82+QWAwIwXwg/wyGQGVYiI=";
+                  };
+                });
+              };
+            })
             (final: prev: { zed-editor = zed.packages.${prev.stdenv.hostPlatform.system}.default; })
             (final: prev: {
               unstable = import nixpkgs-unstable {
