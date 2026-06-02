@@ -25,7 +25,6 @@ in
     smart-home.enable = true;
     space-bar.enable = true;
     top-bar-organizer.enable = true;
-    user-themes-x.enable = true;
     vitals.enable = true;
     wake-on-lan.enable = true;
     wallpaper-slideshow.enable = enableFor [ "framework" ];
