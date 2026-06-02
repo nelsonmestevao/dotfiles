@@ -1,11 +1,11 @@
 {
   description = "Nelson's Dotfiles";
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     home-manager = {
-      url = "github:nix-community/home-manager/release-26.05";
+      url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -25,8 +25,7 @@
     };
 
     zed = {
-      url = "github:zed-industries/zed/v1.0.0";
-      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:zed-industries/zed/v1.4.4";
     };
   };
   outputs =
