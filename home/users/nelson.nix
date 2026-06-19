@@ -110,6 +110,7 @@ in
   dotfiles.programs.obsidian.enable = enableFor [ "framework" ];
   dotfiles.programs.pdfmixtool.enable =  enableFor [ "framework" ];
   dotfiles.programs.pinta.enable = enableFor [ "framework" ];
+  dotfiles.programs.thunderbird.enable = enableFor [ "framework" ];
   dotfiles.programs.typora.enable = enableFor [ "framework" ];
   dotfiles.programs.vivaldi.enable = enableFor [ "framework" ];
   dotfiles.programs.wine.enable = enableFor [ "framework" ];
