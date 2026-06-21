@@ -8,11 +8,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1781833989,
-        "narHash": "sha256-zLuv4n6C5ceFaLwYKV2uh8zK7Z6fFXx7FD398pi2GVU=",
+        "lastModified": 1781990783,
+        "narHash": "sha256-yfxxFMOkTbGnzCaim7h+H92Cb9DgeyVTtWtVrtDqs80=",
         "owner": "sadjow",
         "repo": "claude-code-nix",
-        "rev": "a94e5e841e4992e8e173aba973cb9c41ec575bb8",
+        "rev": "a020d210d15807efebdf18aa1ff84f893956b714",
         "type": "github"
       },
       "original": {
@@ -226,11 +226,11 @@
         "systems": "systems_2"
       },
       "locked": {
-        "lastModified": 1781978495,
-        "narHash": "sha256-A9gBb6ND6lACAdNsXTKQ8x/brHYwuchF5yIprjZke6k=",
+        "lastModified": 1782001200,
+        "narHash": "sha256-hg74XjtIqSSanUj7/7b6Z/gQM2s7BLerEoElmi6EWcE=",
         "owner": "vicinaehq",
         "repo": "vicinae",
-        "rev": "bcdb8622f047948f75ded7bc72fc1438eb9ef400",
+        "rev": "16514127be0f8bd6694354ece4b938f41c11d0a4",
         "type": "github"
       },
       "original": {
