@@ -76,6 +76,7 @@ in
   dotfiles.programs.hyperfine.enable = true;
   dotfiles.programs.jj.enable = true;
   dotfiles.programs.jq.enable = true;
+  dotfiles.programs.kamal.enable = true;
   dotfiles.programs.mise.enable = true;
   dotfiles.programs.mysql.enable = false;
   dotfiles.programs.ngrok.enable = true;
