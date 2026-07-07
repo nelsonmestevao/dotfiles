@@ -31,7 +31,7 @@
     libGLU.dev
     mesa
     mesa_glu
-    xorg.libX11
+    libx11
   ];
 
   programs.zsh.envExtra = lib.mkIf config.dotfiles.programs.zsh.enable ''

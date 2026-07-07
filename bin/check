@@ -1,5 +1,5 @@
 #!/usr/bin/env nix-shell
-#! nix-shell -I nixpkgs=channel:nixos-25.11
+#! nix-shell -I nixpkgs=channel:nixos-26.05
 #! nix-shell -p nh gum python313 python313Packages.xonsh python313Packages.docopt
 #! nix-shell -i xonsh
 """
