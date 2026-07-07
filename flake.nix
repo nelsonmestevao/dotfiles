@@ -19,6 +19,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    herdr = {
+      url = "github:ogulcancelik/herdr";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     vicinae = {
       url = "github:vicinaehq/vicinae";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
@@ -36,6 +41,7 @@
       home-manager,
       zen-browser,
       claude-code,
+      herdr,
       vicinae,
       zed,
     }:
@@ -76,6 +82,7 @@
           ];
           overlays = [
             claude-code.overlays.default
+            herdr.overlays.default
             (final: prev: { zen-browser = zen-browser.packages.${prev.stdenv.hostPlatform.system}.default; })
             # TODO: Remove this once GNOME 50 is released
             # GNOME 50 patch while waiting for PR #506387 to be merged

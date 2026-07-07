@@ -10,7 +10,7 @@ in
 nixpkgs.lib.nixosSystem {
   inherit (cfg) system;
   specialArgs = {
-    inherit hostname;
+    inherit hostname vicinae;
     inherit (cfg) users;
     onHost = import ../system/lib/onHost.nix {
       inherit (nixpkgs) lib;
@@ -23,7 +23,6 @@ nixpkgs.lib.nixosSystem {
   };
   modules = [
     ../system
-    vicinae.nixosModules.default
   ]
   ++ systemModules;
 }

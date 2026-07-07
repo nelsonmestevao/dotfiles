@@ -20,6 +20,7 @@
   # ── Desktop & Audio ──────────────────────────────────────────────────
   dotfiles.modules.audio.enable = true;
   dotfiles.modules.gnome.enable = true;
+  dotfiles.modules.vicinae.enable = true;
 
   # ── Browsers ─────────────────────────────────────────────────────────
   dotfiles.modules.brave.enable = true;

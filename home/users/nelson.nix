@@ -37,7 +37,7 @@ in
   dotfiles.programs.zsh.enable = true;
 
   # Desktop Launchers & App Switchers
-  dotfiles.programs.vicinae.enable = true;
+  dotfiles.programs.vicinae.enable = enableFor [ "framework" ];
 
   # Terminals
   dotfiles.programs.ghostty.enable = enableFor [ "framework" ];
@@ -72,6 +72,7 @@ in
   dotfiles.programs.fzf.enable = true;
   dotfiles.programs.git.enable = true;
   dotfiles.programs.glow.enable = true;
+  dotfiles.programs.herdr.enable = true;
   dotfiles.programs.httpie.enable = true;
   dotfiles.programs.hyperfine.enable = true;
   dotfiles.programs.jj.enable = true;
