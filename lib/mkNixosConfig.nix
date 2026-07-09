@@ -3,8 +3,8 @@ hostname: cfg:
 let
   lib = nixpkgs.lib;
   mkSystemModule = import ../system/lib/mkSystemModule.nix { inherit lib; };
-  systemModules = map (name: mkSystemModule name (import ../system/modules/${name}/${name}.nix)) (
-    lib.attrNames (builtins.readDir ../system/modules)
+  systemModules = map (name: mkSystemModule name (import ../system/modules/nixos/${name}/${name}.nix)) (
+    lib.attrNames (builtins.readDir ../system/modules/nixos)
   );
 in
 nixpkgs.lib.nixosSystem {
@@ -22,7 +22,7 @@ nixpkgs.lib.nixosSystem {
     };
   };
   modules = [
-    ../system
+    ../system/nixos.nix
   ]
   ++ systemModules;
 }
