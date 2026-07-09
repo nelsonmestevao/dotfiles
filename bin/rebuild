@@ -1,4 +1,4 @@
-#!/usr/bin/env -S NIX_CONFIG="experimental-features = nix-command flakes" nix-shell
+#!/usr/bin/env nix-shell
 #! nix-shell -I nixpkgs=channel:nixos-26.05
 #! nix-shell -p nh gum python313 python313Packages.xonsh python313Packages.docopt
 #! nix-shell -i xonsh
@@ -26,6 +26,9 @@ import os
 from docopt import docopt
 
 os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+# Enable flake features for the `nh`/`nix` calls below.
+$NIX_CONFIG = 'experimental-features = nix-command flakes'
 
 def rebuild_system(action='switch'):
   #nixos-rebuild switch --use-remote-sudo --flake '.'
