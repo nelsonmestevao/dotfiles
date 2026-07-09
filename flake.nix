@@ -62,24 +62,19 @@
         framework = {
           system = "x86_64-linux";
           nixos = true;
-          darwin = false;
           users = [ "nelson" ];
         };
         thinkpad = {
           system = "x86_64-linux";
-          nixos = false;
-          darwin = false;
           users = [ "nelson" ];
         };
         temis = {
           system = "x86_64-linux";
           nixos = true;
-          darwin = false;
           users = [ "nelson" ];
         };
         "Remote-Nelson-Estevao" = {
           system = "aarch64-darwin";
-          nixos = false;
           darwin = true;
           users = [ "nelson.estevao" ];
         };
@@ -173,13 +168,13 @@
 
       nixosConfigurations = lib.mapAttrs mkNixosConfig (
         lib.mapAttrs (_: cfg: cfg // { users = lib.genAttrs cfg.users (u: users.${u}); }) (
-          lib.filterAttrs (_: cfg: cfg.nixos) hosts
+          lib.filterAttrs (_: cfg: cfg.nixos or false) hosts
         )
       );
 
       darwinConfigurations = lib.mapAttrs mkDarwinConfig (
         lib.mapAttrs (_: cfg: cfg // { users = lib.genAttrs cfg.users (u: users.${u}); }) (
-          lib.filterAttrs (_: cfg: cfg.darwin) hosts
+          lib.filterAttrs (_: cfg: cfg.darwin or false) hosts
         )
       );
 
