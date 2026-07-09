@@ -66,6 +66,7 @@ in
   dotfiles.programs.btop.enable = true;
   dotfiles.programs.claude.enable = true;
   dotfiles.programs.codex.enable = true;
+  dotfiles.programs.colima.enable = enableFor [ "Remote-Nelson-Estevao" ];
   dotfiles.programs.copilot.enable = true;
   dotfiles.programs.cpufetch.enable = true;
   dotfiles.programs.ctop.enable = true;

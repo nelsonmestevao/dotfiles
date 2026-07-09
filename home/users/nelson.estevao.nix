@@ -25,8 +25,10 @@ in
   #dotfiles.programs.erlang.enable = true;
 
   # Dev Tools
+
   dotfiles.programs.bat.enable = true;
   dotfiles.programs.btop.enable = true;
+  dotfiles.programs.colima.enable = true;
   dotfiles.programs.cpufetch.enable = true;
   dotfiles.programs.ctop.enable = true;
   dotfiles.programs.curl.enable = true;
