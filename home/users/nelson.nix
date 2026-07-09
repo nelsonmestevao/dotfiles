@@ -63,12 +63,20 @@ in
   # Dev Tools
   dotfiles.programs.bat.enable = true;
   dotfiles.programs.bruno.enable = enableFor [ "framework" ];
+  dotfiles.programs.btop.enable = true;
   dotfiles.programs.claude.enable = true;
   dotfiles.programs.codex.enable = true;
   dotfiles.programs.copilot.enable = true;
+  dotfiles.programs.cpufetch.enable = true;
+  dotfiles.programs.ctop.enable = true;
+  dotfiles.programs.curl.enable = true;
+  dotfiles.programs.cursor.enable = enableFor [ "framework" ];
   dotfiles.programs.devcontainer.enable = true;
   dotfiles.programs.direnv.enable = true;
   dotfiles.programs.exiftool.enable = true;
+  dotfiles.programs.fastfetch.enable = true;
+  dotfiles.programs.fd.enable = true;
+  dotfiles.programs.figlet.enable = true;
   dotfiles.programs.fzf.enable = true;
   dotfiles.programs.git.enable = true;
   dotfiles.programs.glow.enable = true;
@@ -81,16 +89,23 @@ in
   dotfiles.programs.mise.enable = true;
   dotfiles.programs.mysql.enable = false;
   dotfiles.programs.ngrok.enable = true;
+  dotfiles.programs.onefetch.enable = true;
   dotfiles.programs.opencode.enable = true;
   dotfiles.programs.pandoc.enable = true;
   dotfiles.programs.podman.enable = disableFor [ "thinkpad" ];
   dotfiles.programs.rclone.enable = true;
   dotfiles.programs.restic.enable = true;
+  dotfiles.programs.ripgrep.enable = true;
+  dotfiles.programs.shellcheck.enable = true;
+  dotfiles.programs.shfmt.enable = true;
+  dotfiles.programs.speedtest.enable = true;
   dotfiles.programs.sqlite.enable = true;
   dotfiles.programs.ssh.enable = true;
   dotfiles.programs.terraform.enable = enableFor [ "framework" ];
   dotfiles.programs.unoconv.enable = true;
+  dotfiles.programs.unzip.enable = true;
   dotfiles.programs.watchman.enable = true;
+  dotfiles.programs.wget.enable = true;
   dotfiles.programs.zellij.enable = true;
   dotfiles.programs.zoxide.enable = true;
 

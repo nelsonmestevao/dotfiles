@@ -26,8 +26,15 @@ in
 
   # Dev Tools
   dotfiles.programs.bat.enable = true;
+  dotfiles.programs.btop.enable = true;
+  dotfiles.programs.cpufetch.enable = true;
+  dotfiles.programs.ctop.enable = true;
+  dotfiles.programs.curl.enable = true;
   dotfiles.programs.cursor.enable = true;
   dotfiles.programs.direnv.enable = true;
+  dotfiles.programs.fastfetch.enable = true;
+  dotfiles.programs.fd.enable = true;
+  dotfiles.programs.figlet.enable = true;
   dotfiles.programs.fzf.enable = true;
   dotfiles.programs.git.enable = true;
   dotfiles.programs.herdr.enable = true;
@@ -36,6 +43,13 @@ in
   dotfiles.programs.jj.enable = true;
   dotfiles.programs.jq.enable = true;
   dotfiles.programs.mise.enable = true;
+  dotfiles.programs.onefetch.enable = true;
+  dotfiles.programs.ripgrep.enable = true;
+  dotfiles.programs.shellcheck.enable = true;
+  dotfiles.programs.shfmt.enable = true;
+  dotfiles.programs.speedtest.enable = true;
+  dotfiles.programs.unzip.enable = true;
+  dotfiles.programs.wget.enable = true;
   dotfiles.programs.zoxide.enable = true;
 
   #dotfiles.packages.enable = true;

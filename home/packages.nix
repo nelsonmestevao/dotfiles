@@ -15,11 +15,9 @@ in
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [
       # core utils
-      curl
       dig
       dust
       eza
-      fd
       ffmpeg-full
       fop
       gnupg
@@ -33,10 +31,7 @@ in
       nushell
       ouch
       poppler-utils # pdftotext, pdftohtml, etc
-      ripgrep
       tldr
-      unzip
-      wget
       yazi
 
       # build tools
@@ -56,8 +51,6 @@ in
       k6
       llvmPackages_20.clang-tools
       presenterm
-      shellcheck
-      shfmt
       silicon
       stripe-cli
 
@@ -68,11 +61,7 @@ in
       impression
 
       # performance & benchmarking
-      btop
-      ctop
-
       scc
-      speedtest-cli
       tokei
 
       # editors & IDEs
@@ -83,12 +72,6 @@ in
       lazysql
 
       # misc
-      cpufetch
-      fastfetch
-      onefetch
-
-      figlet
-
       nix-search-tv
 
       dconf2nix
