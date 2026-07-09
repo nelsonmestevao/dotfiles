@@ -24,10 +24,12 @@ function gclcd() {
   cd "$(basename "$_" .git)"
 }
 
-function open() {
-  xdg-open $@ &
-  disown
-}
+if [[ "$OSTYPE" == linux* ]]; then
+  function open() {
+    xdg-open $@ &
+    disown
+  }
+fi
 
 function timestamp() {
   date --utc '+%Y%m%d%H%M%S'
