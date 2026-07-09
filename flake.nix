@@ -9,6 +9,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nix-darwin = {
+      url = "github:nix-darwin/nix-darwin/nix-darwin-26.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     zen-browser = {
       url = "github:youwen5/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -39,6 +44,7 @@
       nixpkgs,
       nixpkgs-unstable,
       home-manager,
+      nix-darwin,
       zen-browser,
       claude-code,
       herdr,
@@ -48,6 +54,7 @@
     let
       lib = nixpkgs.lib;
       mkNixosConfig = import ./lib/mkNixosConfig.nix { inherit nixpkgs vicinae; };
+      mkDarwinConfig = import ./lib/mkDarwinConfig.nix { inherit nixpkgs nix-darwin; };
       mkHomeConfig = import ./lib/mkHomeConfig.nix { inherit nixpkgs home-manager vicinae; };
 
       # ── Hosts ────────────────────────────────────────────────────────────
@@ -163,6 +170,12 @@
       nixosConfigurations = lib.mapAttrs mkNixosConfig (
         lib.mapAttrs (_: cfg: cfg // { users = lib.genAttrs cfg.users (u: users.${u}); }) (
           lib.filterAttrs (_: cfg: cfg.nixos) hosts
+        )
+      );
+
+      darwinConfigurations = lib.mapAttrs mkDarwinConfig (
+        lib.mapAttrs (_: cfg: cfg // { users = lib.genAttrs cfg.users (u: users.${u}); }) (
+          lib.filterAttrs (_: cfg: lib.hasSuffix "-darwin" cfg.system) hosts
         )
       );
 
