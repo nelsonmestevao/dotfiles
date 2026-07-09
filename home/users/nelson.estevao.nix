@@ -14,7 +14,10 @@ in
   dotfiles.programs.zsh.enable = true;
 
   # Terminals
-  dotfiles.programs.ghostty.enable = enableFor [ "framework" ];
+  dotfiles.programs.ghostty.enable = enableFor [
+    "framework"
+    "Remote-Nelson-Estevao"
+  ];
   dotfiles.programs.wezterm.enable = false;
 
   # Editors & IDEs
@@ -25,7 +28,6 @@ in
   #dotfiles.programs.erlang.enable = true;
 
   # Dev Tools
-
   dotfiles.programs.bat.enable = true;
   dotfiles.programs.btop.enable = true;
   dotfiles.programs.colima.enable = true;
@@ -34,6 +36,7 @@ in
   dotfiles.programs.curl.enable = true;
   dotfiles.programs.cursor.enable = true;
   dotfiles.programs.direnv.enable = true;
+  dotfiles.programs.docker.enable = true;
   dotfiles.programs.fastfetch.enable = true;
   dotfiles.programs.fd.enable = true;
   dotfiles.programs.figlet.enable = true;

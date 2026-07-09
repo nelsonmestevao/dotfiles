@@ -6,9 +6,13 @@
   ...
 }:
 {
-  home.packages = with pkgs; [
-    ghostty
-  ];
+  # ghostty flake is not packaged for Darwin
+  home.packages = lib.optionals pkgs.stdenv.hostPlatform.isLinux (
+    with pkgs;
+    [
+      ghostty
+    ]
+  );
 
   xdg.configFile."ghostty/config" = mkSymlink "config";
   xdg.configFile."ghostty/themes/Day" = mkSymlink "themes/Day";

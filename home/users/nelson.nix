@@ -74,6 +74,7 @@ in
   dotfiles.programs.cursor.enable = enableFor [ "framework" ];
   dotfiles.programs.devcontainer.enable = true;
   dotfiles.programs.direnv.enable = true;
+  dotfiles.programs.docker.enable = true;
   dotfiles.programs.exiftool.enable = true;
   dotfiles.programs.fastfetch.enable = true;
   dotfiles.programs.fd.enable = true;

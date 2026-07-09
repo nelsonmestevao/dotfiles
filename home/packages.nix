@@ -68,7 +68,6 @@ in
       sc-im
 
       # TUIs
-      lazydocker
       lazysql
 
       # misc

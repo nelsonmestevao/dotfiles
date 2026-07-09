@@ -12,11 +12,4 @@
       buildkit = true;
     };
   };
-
-  environment.systemPackages = with pkgs; [
-    docker
-    docker-buildx
-    docker-compose
-    cup-docker
-  ];
 }
