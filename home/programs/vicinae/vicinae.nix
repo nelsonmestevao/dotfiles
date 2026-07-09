@@ -50,7 +50,7 @@
   };
 
   # ── GNOME / dconf Integration ────────────────────────────────────────
-  dotfiles.programs.gnome.extensions.vicinae.enable = true;
+  dotfiles.programs.gnome.extensions.vicinae.enable = config.dotfiles.programs.gnome.enable;
 
   dconf.settings = lib.mkIf config.dotfiles.programs.gnome.enable {
     "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
