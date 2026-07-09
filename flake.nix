@@ -62,21 +62,25 @@
         framework = {
           system = "x86_64-linux";
           nixos = true;
+          darwin = false;
           users = [ "nelson" ];
         };
         thinkpad = {
           system = "x86_64-linux";
           nixos = false;
+          darwin = false;
           users = [ "nelson" ];
         };
         temis = {
           system = "x86_64-linux";
           nixos = true;
+          darwin = false;
           users = [ "nelson" ];
         };
         "Remote-Nelson-Estevao" = {
           system = "aarch64-darwin";
           nixos = false;
+          darwin = true;
           users = [ "nelson.estevao" ];
         };
       };
@@ -175,7 +179,7 @@
 
       darwinConfigurations = lib.mapAttrs mkDarwinConfig (
         lib.mapAttrs (_: cfg: cfg // { users = lib.genAttrs cfg.users (u: users.${u}); }) (
-          lib.filterAttrs (_: cfg: lib.hasSuffix "-darwin" cfg.system) hosts
+          lib.filterAttrs (_: cfg: cfg.darwin) hosts
         )
       );
 
