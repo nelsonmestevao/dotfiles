@@ -67,10 +67,33 @@
           nixos = true;
           users = [ "nelson" ];
         };
+        "Remote-Nelson-Estevao" = {
+          system = "aarch64-darwin";
+          nixos = false;
+          users = [ "nelson.estevao" ];
+        };
       };
 
       # ── Users (home-manager) ─────────────────────────────────────────────
       users = {
+        "nelson.estevao" = {
+          name = "Nelson Estevão";
+          extraGroups = [
+            "docker"
+          ];
+          overlays = [
+            claude-code.overlays.default
+            herdr.overlays.default
+            (final: prev: { zen-browser = zen-browser.packages.${prev.stdenv.hostPlatform.system}.default; })
+            (final: prev: {
+              unstable = import nixpkgs-unstable {
+                system = prev.stdenv.hostPlatform.system;
+                config.allowUnfree = true;
+              };
+            })
+          ];
+          extraSpecialArgs = { };
+        };
         nelson = {
           name = "Nelson Estevão";
           extraGroups = [

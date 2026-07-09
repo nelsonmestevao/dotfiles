@@ -6,6 +6,8 @@
 system: hostname: username: cfg:
 let
   lib = nixpkgs.lib;
+  pkgs = nixpkgs.legacyPackages.${system};
+  isLinux = pkgs.stdenv.hostPlatform.isLinux;
   mkHomeModule = import ../home/lib/mkHomeModule.nix { inherit lib; };
   homeModules = map (name: mkHomeModule name (import ../home/programs/${name}/${name}.nix)) (
     lib.attrNames (builtins.readDir ../home/programs)
@@ -18,7 +20,7 @@ let
   ) (lib.attrNames (builtins.readDir gnomeExtensionsDir));
 in
 home-manager.lib.homeManagerConfiguration {
-  pkgs = nixpkgs.legacyPackages.${system};
+  inherit pkgs;
   extraSpecialArgs = {
     inherit username hostname;
   }
@@ -27,8 +29,9 @@ home-manager.lib.homeManagerConfiguration {
     { nixpkgs.overlays = cfg.overlays or [ ]; }
     ../home
     ../home/lib
-    vicinae.homeManagerModules.default
   ]
+  # GNOME extensions and Vicinae are Linux/Wayland-only; skip them on Darwin.
+  ++ lib.optionals isLinux [ vicinae.homeManagerModules.default ]
   ++ homeModules
-  ++ gnomeExtensionModules;
+  ++ lib.optionals isLinux gnomeExtensionModules;
 }

@@ -12,7 +12,8 @@
   ];
 
   home.username = username;
-  home.homeDirectory = "/home/${username}";
+  home.homeDirectory =
+    if pkgs.stdenv.hostPlatform.isDarwin then "/Users/${username}" else "/home/${username}";
 
   dotfiles.directory = "${config.home.homeDirectory}/.dotfiles";
 
