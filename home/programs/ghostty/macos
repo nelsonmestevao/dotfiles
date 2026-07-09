@@ -1,0 +1,10 @@
+keybind = global:cmd+grave_accent=toggle_quick_terminal
+
+keybind = cmd+l=goto_split:right
+keybind = cmd+h=goto_split:left
+keybind = cmd+k=goto_split:top
+keybind = cmd+j=goto_split:bottom
+
+keybind = cmd+shift+h=new_split:down
+keybind = cmd+shift+v=new_split:right
+

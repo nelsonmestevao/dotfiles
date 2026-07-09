@@ -6,6 +6,7 @@ shell-integration = zsh
 
 window-theme = system
 window-decoration = true
+
 gtk-titlebar = false
 #gtk-adwaita = true
 gtk-wide-tabs = true
@@ -16,13 +17,6 @@ cursor-style = block
 cursor-color = #ffffff
 
 background-opacity = 0.5
+background-blur = true
 
-keybind = alt+l=goto_split:right
-keybind = alt+h=goto_split:left
-keybind = alt+k=goto_split:top
-keybind = alt+j=goto_split:bottom
-
-keybind = alt+shift+h=new_split:down
-keybind = alt+shift+v=new_split:right
-
-keybind = performable:ctrl+c=copy_to_clipboard
+config-file = ?keybindings

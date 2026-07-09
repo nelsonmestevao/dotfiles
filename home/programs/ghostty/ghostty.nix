@@ -15,6 +15,8 @@
   );
 
   xdg.configFile."ghostty/config" = mkSymlink "config";
+  xdg.configFile."ghostty/keybindings" = if pkgs.stdenv.hostPlatform.isDarwin then mkSymlink "macos" else mkSymlink "linux";
+
   xdg.configFile."ghostty/themes/Day" = mkSymlink "themes/Day";
   xdg.configFile."ghostty/themes/Night" = mkSymlink "themes/Night";
 
