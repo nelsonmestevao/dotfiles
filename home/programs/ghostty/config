@@ -7,6 +7,8 @@ shell-integration = zsh
 window-theme = system
 window-decoration = true
 
+macos-icon = xray
+
 gtk-titlebar = false
 #gtk-adwaita = true
 gtk-wide-tabs = true
