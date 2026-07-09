@@ -11,7 +11,7 @@ Usage:
   {program} (-v | --version)
 
 Commands:
-  os                Rebuild only the NixOS system configuration.
+  os                Rebuild only the system configuration (NixOS or nix-darwin).
   home              Rebuild only the home-manager configuration.
 
 Options:
@@ -22,6 +22,7 @@ Options:
                     restarts (e.g. GDM, NetworkManager). Ignored for home.
 """
 import os
+import sys
 
 from docopt import docopt
 
@@ -31,8 +32,11 @@ os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 $NIX_CONFIG = 'experimental-features = nix-command flakes'
 
 def rebuild_system(action='switch'):
-  #nixos-rebuild switch --use-remote-sudo --flake '.'
-  nh os @(action) .
+  if sys.platform == 'darwin':
+    nh darwin switch .
+  else:
+    #nixos-rebuild switch --use-remote-sudo --flake '.'
+    nh os @(action) .
 
 def rebuild_home(action='switch'):
   # home-manager switch --flake '.'
