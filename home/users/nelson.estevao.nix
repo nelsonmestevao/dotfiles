@@ -37,6 +37,7 @@ in
   dotfiles.programs.cursor.enable = true;
   dotfiles.programs.direnv.enable = true;
   dotfiles.programs.docker.enable = true;
+  dotfiles.programs.eza.enable = true;
   dotfiles.programs.fastfetch.enable = true;
   dotfiles.programs.fd.enable = true;
   dotfiles.programs.figlet.enable = true;

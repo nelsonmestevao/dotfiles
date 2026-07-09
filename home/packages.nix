@@ -17,7 +17,6 @@ in
       # core utils
       dig
       dust
-      eza
       ffmpeg-full
       fop
       gnupg
