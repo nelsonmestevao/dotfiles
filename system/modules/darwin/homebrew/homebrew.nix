@@ -32,10 +32,12 @@
 
     # CLI formulae. Prefer nixpkgs via home.packages; list here only what nix
     # lacks or what must come from Homebrew.
-    brews = [ ];
+    brews = [
+    ];
 
     # GUI apps / casks.
     casks = [
+      "1password-cli"
       "raycast"
       "ghostty"
     ];
