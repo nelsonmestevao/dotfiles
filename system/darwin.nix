@@ -33,6 +33,13 @@
   # zsh *configuration* still lives in home-manager.
   programs.zsh.enable = true;
 
+  # Don't emit a bare `compinit` into /etc/zshrc. It runs before ~/.zshrc and,
+  # once Homebrew's group-writable share/zsh/site-functions lands on fpath (via
+  # `brew shellenv`), compaudit flags it as insecure and compinit interactively
+  # prompts on every shell start. oh-my-zsh already runs `compinit -i`, which
+  # silently skips insecure dirs, so the global call is redundant here.
+  programs.zsh.enableGlobalCompInit = false;
+
   # ──────────────────────────────────────────────────────────────────────
   # Set to the nix-darwin version you first installed on this machine. A lower
   # value than the current release is fine; a higher one errors.

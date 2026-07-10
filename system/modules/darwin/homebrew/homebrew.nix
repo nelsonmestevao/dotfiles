@@ -13,6 +13,12 @@
   homebrew = {
     enable = true;
 
+    # Homebrew's post-install step, which nix-darwin otherwise skips: emit
+    # `eval "$(<prefix>/bin/brew shellenv zsh)"` into /etc/zshrc so `brew` and
+    # its installed binaries land on the interactive shell's PATH (also sets
+    # HOMEBREW_*, MANPATH, and completions).
+    enableZshIntegration = true;
+
     # This Mac is managed by Workbrew, which forces every `brew` call through
     # its wrapper at /opt/workbrew/bin/brew (HOMEBREW_FORCE_BREW_WRAPPER).
     # Point nix-darwin at that prefix so it invokes the wrapper instead of the
