@@ -22,6 +22,10 @@ in
 
   # Editors & IDEs
   dotfiles.programs.nvim.enable = true;
+  dotfiles.programs.vscode.enable = enableFor [
+    "framework"
+    "Remote-Nelson-Estevao"
+  ];
 
   # Programming Languages
   #dotfiles.programs.elixir.enable = true;
