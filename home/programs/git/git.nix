@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  hostname,
   mkSymlink,
   ...
 }:
@@ -29,13 +30,18 @@
   '';
 
   xdg.configFile = {
-    "git/config" = mkSymlink "gitconfig";
+    "git/config" = mkSymlink "hosts/${hostname}.ini";
+    "git/common.ini" = mkSymlink "common.ini";
     "git/allowed_signers" = mkSymlink "allowed_signers";
-    "git/commit-template" = mkSymlink "git-commit-msg-template";
-    "git/ignore" = mkSymlink "gitignore";
-    "git/attributes" = mkSymlink "gitattributes";
-    "git/profiles/personal.ini" = mkSymlink "personal.ini";
-    "git/profiles/uminho.ini" = mkSymlink "uminho.ini";
-    "git/profiles/marmela.ini" = mkSymlink "marmela.ini";
-  };
+    "git/commit-template" = mkSymlink "commit-template";
+    "git/ignore" = mkSymlink "ignore";
+    "git/attributes" = mkSymlink "attributes";
+  }
+  // lib.listToAttrs (
+    map (p: lib.nameValuePair "git/profiles/${p}.ini" (mkSymlink "profiles/${p}.ini")) [
+      "personal"
+      "uminho"
+      "marmela"
+    ]
+  );
 }

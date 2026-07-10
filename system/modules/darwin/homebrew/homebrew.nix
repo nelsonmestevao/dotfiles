@@ -35,7 +35,10 @@
     brews = [ ];
 
     # GUI apps / casks.
-    casks = [ "raycast" "ghostty" ];
+    casks = [
+      "raycast"
+      "ghostty"
+    ];
 
     # Mac App Store apps (requires the `mas` CLI). Format: "App Name" = <id>;
     masApps = { };

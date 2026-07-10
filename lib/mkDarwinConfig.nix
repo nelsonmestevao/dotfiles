@@ -6,9 +6,9 @@ hostname: cfg:
 let
   lib = nixpkgs.lib;
   mkSystemModule = import ../system/lib/mkSystemModule.nix { inherit lib; };
-  systemModules = map (name: mkSystemModule name (import ../system/modules/darwin/${name}/${name}.nix)) (
-    lib.attrNames (builtins.readDir ../system/modules/darwin)
-  );
+  systemModules = map (
+    name: mkSystemModule name (import ../system/modules/darwin/${name}/${name}.nix)
+  ) (lib.attrNames (builtins.readDir ../system/modules/darwin));
 in
 nix-darwin.lib.darwinSystem {
   specialArgs = {
