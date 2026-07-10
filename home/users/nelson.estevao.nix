@@ -49,6 +49,7 @@ in
   dotfiles.programs.figlet.enable = true;
   dotfiles.programs.fzf.enable = true;
   dotfiles.programs.git.enable = true;
+  dotfiles.programs.glab.enable = true;
   dotfiles.programs.herdr.enable = true;
   dotfiles.programs.httpie.enable = true;
   dotfiles.programs.hyperfine.enable = true;
