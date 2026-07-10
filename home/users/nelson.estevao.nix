@@ -28,8 +28,8 @@ in
   ];
 
   # Programming Languages
-  #dotfiles.programs.elixir.enable = true;
-  #dotfiles.programs.erlang.enable = true;
+  dotfiles.programs.elixir.enable = true;
+  dotfiles.programs.erlang.enable = true;
 
   # Dev Tools
   dotfiles.programs.bat.enable = true;

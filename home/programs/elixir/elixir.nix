@@ -5,17 +5,28 @@
   mkSymlink,
   ...
 }:
+let
+  # weasyprint's font-rendering pixel tests render slightly differently on
+  # darwin; the nixpkgs derivation already deselects several flaky ones but
+  # misses test_unicode_range on this snapshot, so the build fails on macOS.
+  # Deselect it there too, leaving the Linux build (and its binary cache) alone.
+  weasyprint =
+    if pkgs.stdenv.isDarwin then
+      pkgs.python313Packages.weasyprint.overridePythonAttrs (old: {
+        disabledTests = (old.disabledTests or [ ]) ++ [ "test_unicode_range" ];
+      })
+    else
+      pkgs.python313Packages.weasyprint;
+in
 {
   home.packages = with pkgs; [
     # elixir_1_18
     # erlang_27
 
-    ## system utils
-    inotify-tools
-
     ## pdf documents
     # k2pdfopt
-    wkhtmltopdf
+    pdftk
+    weasyprint
 
     ## image processing and optimization
     file
@@ -39,6 +50,13 @@
 
       ${pkgs.elixir}/bin/elixir "$TMP"
     '')
+  ]
+  ++ lib.optionals pkgs.stdenv.isLinux [
+    ## system utils (linux only)
+    pkgs.inotify-tools
+
+    ## pdf documents (linux only)
+    wkhtmltopdf
   ];
 
   home.sessionVariables = {
