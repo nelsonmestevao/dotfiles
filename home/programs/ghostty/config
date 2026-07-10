@@ -6,9 +6,12 @@ shell-integration = zsh
 
 window-theme = system
 window-decoration = true
+window-colorspace = display-p3
 
 macos-icon = xray
 macos-titlebar-style = tabs
+macos-titlebar-proxy-icon = hidden
+macos-non-native-fullscreen = true
 
 gtk-titlebar = false
 #gtk-adwaita = true
