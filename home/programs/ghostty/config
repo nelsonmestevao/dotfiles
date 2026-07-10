@@ -8,6 +8,7 @@ window-theme = system
 window-decoration = true
 
 macos-icon = xray
+macos-titlebar-style = tabs
 
 gtk-titlebar = false
 #gtk-adwaita = true
