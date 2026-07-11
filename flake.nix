@@ -128,6 +128,19 @@
                     hash = "sha256-MmHoOxymo0QSRbRcSbFiv82+QWAwIwXwg/wyGQGVYiI=";
                   };
                 });
+
+                # GNOME 49/50 support while waiting for upstream PR #33 to be merged
+                # https://github.com/mechtifs/wiggle/pull/33
+                wiggle = prev.gnomeExtensions.wiggle.overrideAttrs (_: {
+                  version = "5-unstable-2026-05-05";
+
+                  src = prev.fetchFromGitHub {
+                    owner = "nicolas-farrie";
+                    repo = "wiggle";
+                    rev = "894f1f7b99b53937e41b292ac6cc2dc1c56657e9";
+                    hash = "sha256-AjXqZg4plvSKjJ4yPgIVUGfPL08vih9teHO/nB9bayY=";
+                  };
+                });
               };
             })
             (final: prev: { zed-editor = zed.packages.${prev.stdenv.hostPlatform.system}.default; })

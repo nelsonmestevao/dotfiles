@@ -28,7 +28,7 @@ in
     vitals.enable = true;
     wake-on-lan.enable = true;
     wallpaper-slideshow.enable = enableFor [ "framework" ];
-    wiggle.enable = false;
+    wiggle.enable = true;
   };
 
   dotfiles.programs.hyprland.enable = false;
