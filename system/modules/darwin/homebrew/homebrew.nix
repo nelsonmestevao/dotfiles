@@ -44,8 +44,9 @@
     # GUI apps / casks.
     casks = [
       "1password-cli"
-      "raycast"
       "ghostty"
+      "openlogi"
+      "raycast"
     ];
 
     # Mac App Store apps (requires the `mas` CLI). Format: "App Name" = <id>;
