@@ -660,20 +660,23 @@ local plugins = {
         cmd = { HOME .. "/.local/share/nvim/mason/bin/sql-language-server", "up", "--method", "stdio" },
       })
 
-      vim.lsp.config("lexical", {
-        cmd = { HOME .. "/.local/share/nvim/mason/bin/lexical", "--stdio" },
+      -- Expert: the official Elixir language server (successor to lexical /
+      -- next-ls / elixir-ls). The `expert` binary is provided by nix
+      -- (beamPackages.expert) so it lives on PATH. filetypes/root_dir are
+      -- spelled out here so this works even before nvim-lspconfig ships the
+      -- expert base config.
+      vim.lsp.config("expert", {
+        cmd = { "expert", "--stdio" },
+        filetypes = { "elixir", "eelixir", "heex", "surface" },
+        root_dir = function(bufnr, on_dir)
+          -- Elixir workspaces may have multiple mix.exs files (umbrella apps).
+          -- Search upward for up to two and treat the higher one as the root.
+          local fname = vim.api.nvim_buf_get_name(bufnr)
+          local matches = vim.fs.find({ "mix.exs" }, { upward = true, limit = 2, path = fname })
+          local child_or_root_path, maybe_umbrella_path = unpack(matches)
+          on_dir(vim.fs.dirname(maybe_umbrella_path or child_or_root_path))
+        end,
       })
-      -- vim.lsp.config("nextls", {
-      --   cmd = { HOME .. "/.local/share/nvim/mason/bin/nextls", "--stdio" },
-      --   init_options = {
-      --     extensions = {
-      --       credo = { enable = true },
-      --     },
-      --     experimental = {
-      --       completions = { enable = true },
-      --     },
-      --   },
-      -- })
 
       vim.lsp.config("hls", {
         cmd = { HOME .. "/.local/share/nvim/mason/bin/haskell-language-server-wrapper", "--lsp" },
@@ -689,7 +692,7 @@ local plugins = {
         },
       })
 
-      vim.lsp.enable({ "lua_ls", "bashls", "sqlls", "lexical", "hls", "tailwindcss" })
+      vim.lsp.enable({ "lua_ls", "bashls", "sqlls", "expert", "hls", "tailwindcss" })
 
       vim.keymap.set("n", "K", vim.lsp.buf.hover)
       -- Open the documentation in a vertical split
