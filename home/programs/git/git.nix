@@ -42,6 +42,7 @@
       "personal"
       "uminho"
       "marmela"
+      "remote"
     ]
   );
 }
