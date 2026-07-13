@@ -166,7 +166,11 @@ local plugins = {
   -- },
   {
     "nvim-telescope/telescope.nvim",
-    tag = "0.1.8",
+    -- v0.2.x uses Neovim's built-in `vim.treesitter` API for preview
+    -- highlighting (the old 0.1.8 called the removed `nvim-treesitter.parsers`
+    -- master API, which crashes under treesitter's `main` branch). Requires
+    -- Neovim 0.11+.
+    tag = "v0.2.2",
     dependencies = { "nvim-lua/plenary.nvim" },
     config = function()
       local builtin = require("telescope.builtin")
@@ -202,36 +206,80 @@ local plugins = {
     end,
   },
   {
+    -- The `main` branch is a full rewrite: the old `nvim-treesitter.configs`
+    -- module (with `ensure_installed`/`highlight`/`indent`) is gone. Parsers are
+    -- installed explicitly and features are enabled per-buffer with the built-in
+    -- `vim.treesitter` APIs. See https://github.com/nvim-treesitter/nvim-treesitter.
     "nvim-treesitter/nvim-treesitter",
+    branch = "main",
+    -- Lazy-load when a file is opened. `BufReadPre`/`BufNewFile` fire *before*
+    -- `FileType`, so the highlight autocmd registered in `config` is in place
+    -- before the opened buffer's `FileType` fires and reliably catches it.
+    event = { "BufReadPre", "BufNewFile" },
     build = ":TSUpdate",
     config = function()
-      local configs = require("nvim-treesitter.configs")
+      local ts = require("nvim-treesitter")
 
-      configs.setup({
-        auto_install = true,
-        ensure_installed = {
-          "bash",
-          "c",
-          "haskell",
-          "lua",
-          "python",
-          "ruby",
-          "go",
-          "rust",
-          "zig",
-          "vim",
-          "vimdoc",
-          "sql",
-          "elixir",
-          "heex",
-          "javascript",
-          "typescript",
-          "html",
-          "css",
-        },
-        sync_install = false,
-        highlight = { enable = true },
-        indent = { enable = true },
+      -- Parsers we always want available. Anything else is installed on demand
+      -- the first time a matching buffer is opened (see the autocmd below).
+      ts.install({
+        "bash",
+        "c",
+        "css",
+        "diff",
+        "elixir",
+        "gitcommit", -- COMMIT_EDITMSG
+        "go",
+        "haskell",
+        "heex",
+        "html",
+        "javascript",
+        "lua",
+        "markdown",        -- render-markdown.nvim
+        "markdown_inline", -- render-markdown.nvim
+        "nix",
+        "python",
+        "ruby",
+        "rust",
+        "sql",
+        "typescript",
+        "tsx", -- .tsx files (filetype typescriptreact) use the `tsx` parser
+        "vim",
+        "vimdoc",
+        "zig",
+      })
+
+      -- Open files unfolded; folds are computed from the syntax tree (below).
+      vim.o.foldlevelstart = 99
+
+      -- Wire up highlighting, indentation and folding for every buffer whose
+      -- language has a parser. Missing-but-available parsers are installed in
+      -- the background (this replaces the old `auto_install = true`), so their
+      -- highlighting turns on the next time such a file is opened.
+      vim.api.nvim_create_autocmd("FileType", {
+        group = vim.api.nvim_create_augroup("nvim_treesitter", { clear = true }),
+        desc = "Enable treesitter highlighting, indentation and folding",
+        callback = function(ev)
+          local lang = vim.treesitter.language.get_lang(vim.bo[ev.buf].filetype)
+          if not lang then return end
+
+          -- `language.add` loads the parser and reports whether it is available
+          -- (without throwing). If it isn't, install it when upstream has one
+          -- and bail out; highlighting turns on next time the file is opened.
+          local ok, loaded = pcall(vim.treesitter.language.add, lang)
+          if not (ok and loaded) then
+            if vim.list_contains(ts.get_available(), lang)
+              and not vim.list_contains(ts.get_installed(), lang) then
+              ts.install(lang)
+            end
+            return
+          end
+
+          vim.treesitter.start(ev.buf, lang)
+          vim.bo[ev.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+          vim.wo[0][0].foldmethod = "expr"
+          vim.wo[0][0].foldexpr = "v:lua.vim.treesitter.foldexpr()"
+        end,
       })
     end,
   },
@@ -569,14 +617,8 @@ local plugins = {
   },
   {
     "RRethy/nvim-treesitter-endwise",
+    -- No config needed: endwise auto-attaches via built-in Neovim treesitter APIs.
     dependencies = { "nvim-treesitter/nvim-treesitter" }, -- if you install parsers with `nvim-treesitter`
-    config = function()
-      require("nvim-treesitter.configs").setup({
-        endwise = {
-          enable = true,
-        },
-      })
-    end,
   },
   {
     "Wansmer/treesj",
@@ -637,6 +679,12 @@ local plugins = {
     config = function()
       require("mason-lspconfig").setup({
         ensure_installed = { "lua_ls" },
+        -- Don't auto-`vim.lsp.enable` every mason-installed server: that would
+        -- start stale servers (e.g. `lexical`, `elixir-ls` from before the
+        -- switch to `expert`), whose burrito-packed mason binaries fail on
+        -- NixOS. The explicit `vim.lsp.enable({...})` list below is the source
+        -- of truth for which servers run.
+        automatic_enable = false,
       })
     end,
   },
@@ -692,7 +740,10 @@ local plugins = {
         },
       })
 
-      vim.lsp.enable({ "lua_ls", "bashls", "sqlls", "expert", "hls", "tailwindcss" })
+      -- ts_ls (typescript-language-server) handles .ts/.tsx (and .js/.jsx). Its
+      -- shipped config finds `typescript-language-server` on PATH, installed via
+      -- nix in nvim.nix.
+      vim.lsp.enable({ "lua_ls", "bashls", "sqlls", "expert", "hls", "tailwindcss", "ts_ls" })
 
       vim.keymap.set("n", "K", vim.lsp.buf.hover)
       -- Open the documentation in a vertical split
