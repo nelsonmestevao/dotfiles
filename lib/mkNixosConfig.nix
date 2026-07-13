@@ -23,6 +23,14 @@ nixpkgs.lib.nixosSystem {
   };
   modules = [
     ../system/nixos.nix
+    vicinae.nixosModules.default
+    (
+      { config, ... }:
+      {
+        # Gate upstream's input-server (default: true) on our per-host flag.
+        programs.vicinae.input-server.enable = config.dotfiles.modules.vicinae.enable;
+      }
+    )
   ]
   ++ systemModules;
 }
