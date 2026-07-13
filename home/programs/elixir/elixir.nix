@@ -19,45 +19,47 @@ let
       pkgs.python313Packages.weasyprint;
 in
 {
-  home.packages = with pkgs; [
-    # elixir_1_18
-    # erlang_27
+  home.packages =
+    with pkgs;
+    [
+      # elixir_1_18
+      # erlang_27
 
-    ## pdf documents
-    # k2pdfopt
-    pdftk
-    weasyprint
+      ## pdf documents
+      # k2pdfopt
+      pdftk
+      weasyprint
 
-    ## image processing and optimization
-    file
-    image_optim
-    # gifsicle
-    # jpegoptim
-    # libwebp
-    svgo
-    # optipng
-    # pngquant
+      ## image processing and optimization
+      file
+      image_optim
+      # gifsicle
+      # jpegoptim
+      # libwebp
+      svgo
+      # optipng
+      # pngquant
 
-    (pkgs.writeShellScriptBin "runex" ''
-      FILE="$1"
-      TMP="$(${pkgs.coreutils}/bin/mktemp --suffix=.exs)"
+      (pkgs.writeShellScriptBin "runex" ''
+        FILE="$1"
+        TMP="$(${pkgs.coreutils}/bin/mktemp --suffix=.exs)"
 
-      ${pkgs.gawk}/bin/awk '
-      /^```elixir/ { inblock = 1; next }
-      inblock && /^```/ { inblock = 0; next }
-      inblock { print }
-      ' "$FILE" > "$TMP"
+        ${pkgs.gawk}/bin/awk '
+        /^```elixir/ { inblock = 1; next }
+        inblock && /^```/ { inblock = 0; next }
+        inblock { print }
+        ' "$FILE" > "$TMP"
 
-      ${pkgs.elixir}/bin/elixir "$TMP"
-    '')
-  ]
-  ++ lib.optionals pkgs.stdenv.isLinux [
-    ## system utils (linux only)
-    pkgs.inotify-tools
+        ${pkgs.elixir}/bin/elixir "$TMP"
+      '')
+    ]
+    ++ lib.optionals pkgs.stdenv.isLinux [
+      ## system utils (linux only)
+      pkgs.inotify-tools
 
-    ## pdf documents (linux only)
-    wkhtmltopdf
-  ];
+      ## pdf documents (linux only)
+      wkhtmltopdf
+    ];
 
   home.sessionVariables = {
     PLUG_EDITOR = "vscode://file/__FILE__:__LINE__";
