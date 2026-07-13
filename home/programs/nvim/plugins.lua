@@ -643,22 +643,27 @@ local plugins = {
   {
     "neovim/nvim-lspconfig",
     config = function()
-      local lspconfig = require("lspconfig")
-      local capabilities = require("cmp_nvim_lsp").default_capabilities()
-      lspconfig.lua_ls.setup({})
-      lspconfig.bashls.setup({
+      -- nvim 0.11+ API: configure servers with vim.lsp.config and turn them
+      -- on with vim.lsp.enable. nvim-lspconfig ships the base configs under
+      -- its lsp/ runtime dir; the calls below only layer on our overrides.
+
+      -- Advertise nvim-cmp completion capabilities to every server.
+      vim.lsp.config("*", {
+        capabilities = require("cmp_nvim_lsp").default_capabilities(),
+      })
+
+      vim.lsp.config("bashls", {
         cmd = { HOME .. "/.local/share/nvim/mason/bin/bash-language-server", "start" },
       })
 
-      lspconfig.sqlls.setup({
+      vim.lsp.config("sqlls", {
         cmd = { HOME .. "/.local/share/nvim/mason/bin/sql-language-server", "up", "--method", "stdio" },
       })
 
-      lspconfig.lexical.setup({
+      vim.lsp.config("lexical", {
         cmd = { HOME .. "/.local/share/nvim/mason/bin/lexical", "--stdio" },
-        capabilities = capabilities,
       })
-      -- require("lspconfig").nextls.setup({
+      -- vim.lsp.config("nextls", {
       --   cmd = { HOME .. "/.local/share/nvim/mason/bin/nextls", "--stdio" },
       --   init_options = {
       --     extensions = {
@@ -670,12 +675,11 @@ local plugins = {
       --   },
       -- })
 
-      lspconfig.hls.setup({
+      vim.lsp.config("hls", {
         cmd = { HOME .. "/.local/share/nvim/mason/bin/haskell-language-server-wrapper", "--lsp" },
       })
 
-
-      lspconfig.tailwindcss.setup({
+      vim.lsp.config("tailwindcss", {
         init_options = {
           userLanguages = {
             elixir = "html-eex",
@@ -685,24 +689,28 @@ local plugins = {
         },
       })
 
+      vim.lsp.enable({ "lua_ls", "bashls", "sqlls", "lexical", "hls", "tailwindcss" })
+
       vim.keymap.set("n", "K", vim.lsp.buf.hover)
       -- Open the documentation in a vertical split
       vim.keymap.set("n", "<leader>K", function()
-        local params = vim.lsp.util.make_position_params()
-        vim.lsp.buf_request(0, 'textDocument/hover', params, function(err, result, ctx, config)
+        local clients = vim.lsp.get_clients({ bufnr = 0, method = "textDocument/hover" })
+        if #clients == 0 then return end
+
+        local params = vim.lsp.util.make_position_params(0, clients[1].offset_encoding)
+        vim.lsp.buf_request(0, "textDocument/hover", params, function(err, result)
           if err or not result or not result.contents then return end
 
           local lines = vim.lsp.util.convert_input_to_markdown_lines(result.contents)
-          lines = vim.lsp.util.trim_empty_lines(lines)
           if vim.tbl_isempty(lines) then return end
 
           vim.cmd("vnew")
           local buf = vim.api.nvim_get_current_buf()
-          vim.api.nvim_buf_set_option(buf, "buftype", "nofile")
-          vim.api.nvim_buf_set_option(buf, "bufhidden", "wipe")
-          vim.api.nvim_buf_set_option(buf, "swapfile", false)
+          vim.bo[buf].buftype = "nofile"
+          vim.bo[buf].bufhidden = "wipe"
+          vim.bo[buf].swapfile = false
           vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
-          vim.bo.filetype = 'markdown'
+          vim.bo[buf].filetype = "markdown"
         end)
       end, { noremap = true, silent = true })
       vim.keymap.set("n", "gd", vim.lsp.buf.definition)
