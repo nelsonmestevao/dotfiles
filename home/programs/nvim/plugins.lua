@@ -26,16 +26,28 @@ vim.opt.rtp:prepend(lazypath)
 
 -- Utilities
 
--- Function to get the current GNOME theme mode
-local function get_gnome_theme_mode()
-  local command = "gsettings get org.gnome.desktop.interface color-scheme"
-  local ok, result = pcall(vim.fn.system, command)
+-- Function to get the current OS theme mode ("dark" or "light")
+local function get_os_theme_mode()
+  local is_mac = vim.fn.has("mac") == 1
 
+  -- On macOS, `defaults read -g AppleInterfaceStyle` prints "Dark" in dark
+  -- mode and errors (empty output) in light mode. On GNOME, gsettings reports
+  -- the color-scheme preference directly.
+  local command = is_mac
+    and "defaults read -g AppleInterfaceStyle 2>/dev/null"
+    or "gsettings get org.gnome.desktop.interface color-scheme"
+
+  local ok, result = pcall(vim.fn.system, command)
   if not ok then
-    return nil, "Failed to execute command to get GNOME theme."
+    return nil, "Failed to execute command to get OS theme."
   end
 
   result = string.lower(result:gsub("%s+", ""))
+
+  if is_mac then
+    -- Empty output (light mode) or the absence of "dark" means light.
+    return result == "dark" and "dark" or "light"
+  end
 
   if result == "'prefer-dark'" then
     return "dark"
@@ -64,18 +76,11 @@ local plugins = {
         },
       })
 
-      local current_os_theme = vim.fn.system("gsettings get org.gnome.desktop.interface color-scheme")
-      if string.match(current_os_theme, "dark") or string.match(current_os_theme, "Dark") then
-        vim.cmd.colorscheme("github_dark")
-      else
-        vim.cmd.colorscheme("github_light")
-      end
-
-      local mode, err = get_gnome_theme_mode()
+      local mode, err = get_os_theme_mode()
       if mode then
         vim.cmd.colorscheme(mode == "dark" and "github_dark" or "github_light")
       else
-        print("Error detecting theme: " .. err)
+        vim.notify("Error detecting theme: " .. err, vim.log.levels.WARN)
         vim.cmd.colorscheme("github_dark")
       end
 
