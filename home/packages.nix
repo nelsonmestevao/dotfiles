@@ -24,6 +24,7 @@ in
       grex
       gvfs
       imagemagick
+      libsecret
 
       lftp
       mpv
