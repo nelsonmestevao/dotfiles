@@ -1,0 +1,418 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -I nixpkgs=channel:nixos-26.05
+#! nix-shell -p gum python313 python313Packages.xonsh python313Packages.docopt
+#! nix-shell -i xonsh
+"""
+Scaffolds a new host or user and registers it in flake.nix.
+
+Usage:
+  {program} host <hostname>
+  {program} user <username>
+  {program} (-h | --help)
+  {program} (-v | --version)
+
+Commands:
+  host <hostname>     Create a new host (NixOS, Darwin, or home-only).
+  user <username>     Create a new home-manager user.
+
+Options:
+  -h --help           Show this screen.
+  -v --version        Show version.
+"""
+import glob
+import os
+import re
+import shutil
+import sys
+
+from docopt import docopt
+
+os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+# Enable flake features for the `nix fmt` call below.
+$NIX_CONFIG = 'experimental-features = nix-command flakes'
+
+$RED="\033[1;31m"
+$YELLOW="\033[1;33m"
+$GREEN="\033[1;32m"
+$BLUE="\033[1;34m"
+$RESET="\033[0m"
+
+RED="\033[1;31m"
+YELLOW="\033[1;33m"
+GREEN="\033[1;32m"
+BLUE="\033[1;34m"
+RESET="\033[0m"
+
+# ── Templates ────────────────────────────────────────────────────────────
+
+HOST_NIXOS_TEMPLATE = """\
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+{
+  # ── System ───────────────────────────────────────────────────────────
+  dotfiles.modules.boot.enable = true;
+  dotfiles.modules.locale.enable = true;
+
+  # ── Networking ───────────────────────────────────────────────────────
+  dotfiles.modules.networking.enable = true;
+
+  # Enable more modules as needed (see system/modules/nixos/):
+  # dotfiles.modules.audio.enable = true;
+  # dotfiles.modules.docker.enable = true;
+  # dotfiles.modules.gnome.enable = true;
+  # dotfiles.modules.printing.enable = true;
+  # dotfiles.modules.tailscale.enable = true;
+}
+"""
+
+HOST_DARWIN_TEMPLATE = """\
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+{
+  # ── Packages & Homebrew ──────────────────────────────────────────────
+  dotfiles.modules.homebrew.enable = true;
+}
+"""
+
+HARDWARE_STUB_TEMPLATE = """\
+# TODO: Replace with the real hardware config. On the target NixOS machine run:
+#   nixos-generate-config --show-hardware-config > system/hosts/__NAME__/hardware.nix
+{
+  config,
+  lib,
+  pkgs,
+  modulesPath,
+  ...
+}:
+{
+  imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
+
+  # boot.initrd.availableKernelModules = [ ];
+  # boot.kernelModules = [ ];
+  # fileSystems."/" = { device = "/dev/disk/by-uuid/..."; fsType = "ext4"; };
+  # fileSystems."/boot" = { device = "/dev/disk/by-uuid/..."; fsType = "vfat"; };
+  # swapDevices = [ ];
+}
+"""
+
+USER_TEMPLATE = """\
+{
+  config,
+  lib,
+  pkgs,
+  hostname,
+  ...
+}:
+let
+  enableFor = hosts: lib.elem hostname hosts;
+  disableFor = hosts: !lib.elem hostname hosts;
+in
+{
+  # Shells
+  dotfiles.programs.zsh.enable = true;
+
+  # Editors & IDEs
+  dotfiles.programs.nvim.enable = true;
+
+  # Dev Tools
+  dotfiles.programs.git.enable = true;
+
+  # Enable more programs as needed (see home/programs/):
+  # dotfiles.programs.docker.enable = true;
+  # dotfiles.programs.vscode.enable = enableFor [ "framework" ];
+
+  dotfiles.packages.enable = true;
+}
+"""
+
+TIMER_TEMPLATE = """\
+username:
+{
+  pkgs,
+  lib,
+  onHosts,
+  ...
+}:
+let
+  mkSystemTimer = import ../lib/mkSystemTimer.nix {
+    inherit pkgs username;
+  };
+in
+# No timers yet. Add per-host timers, e.g.:
+# onHosts [ "framework" ] (lib.mkMerge [
+#   (mkSystemTimer "backup" "daily" ''echo hello'')
+# ])
+onHosts [ ] (lib.mkMerge [ ])
+"""
+
+# flake.nix `users = { ... }` entry. __KEY__/__NAME__/__GROUPS__ are substituted.
+USER_BLOCK_TEMPLATE = """\
+        __KEY__ = {
+          name = "__NAME__";
+          extraGroups = [
+__GROUPS__
+          ];
+          overlays = [
+            claude-code.overlays.default
+            herdr.overlays.default
+            (final: prev: { zen-browser = zen-browser.packages.${prev.stdenv.hostPlatform.system}.default; })
+            (final: prev: {
+              unstable = import nixpkgs-unstable {
+                system = prev.stdenv.hostPlatform.system;
+                config.allowUnfree = true;
+              };
+            })
+          ];
+          extraSpecialArgs = { };
+        };"""
+
+
+# ── Helpers ──────────────────────────────────────────────────────────────
+
+def render_template(template, name):
+    return template.replace("__NAME_CAP__", name.capitalize()).replace("__NAME__", name)
+
+
+def require(value, message):
+    if not value:
+        print(f"{RED}✗{RESET} {message}")
+        sys.exit(1)
+    return value
+
+
+def quote_key(name):
+    """Quote a Nix attribute key unless it is a plain identifier."""
+    if re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', name):
+        return name
+    return '"' + name + '"'
+
+
+def flake_section_text(section):
+    """Return the `<section> = { ... }` block text from flake.nix (brace-balanced)."""
+    with open("flake.nix") as f:
+        content = f.read()
+    m = re.search(r'(?m)^\s*' + section + r' = \{', content)
+    if not m:
+        return ""
+    start = m.end() - 1  # the opening brace
+    depth = 0
+    for j in range(start, len(content)):
+        if content[j] == '{':
+            depth += 1
+        elif content[j] == '}':
+            depth -= 1
+            if depth == 0:
+                return content[start:j + 1]
+    return content[start:]
+
+
+def flake_has_key(section, name):
+    text = flake_section_text(section)
+    pattern = r'(?m)^\s*(' + re.escape(name) + r'|"' + re.escape(name) + r'") ='
+    return re.search(pattern, text) is not None
+
+
+def insert_into_flake(section, block):
+    """Insert a rendered block as the first entry of the `<section> = { ... }` attrset."""
+    with open("flake.nix") as f:
+        lines = f.readlines()
+    pattern = re.compile(r'^\s*' + section + r' = \{\s*$')
+    out = []
+    inserted = False
+    for line in lines:
+        out.append(line)
+        if not inserted and pattern.match(line):
+            out.append(block + "\n")
+            inserted = True
+    if not inserted:
+        print(f"{RED}✗{RESET} Could not find `{section} = {{` in flake.nix")
+        sys.exit(1)
+    with open("flake.nix", "w") as f:
+        f.writelines(out)
+
+
+def existing_users():
+    return sorted(os.path.basename(p)[:-len(".nix")] for p in glob.glob("home/users/*.nix"))
+
+
+def ensure_timer(username):
+    """Create system/timers/<username>.nix if missing (required for NixOS hosts)."""
+    path = f"system/timers/{username}.nix"
+    if os.path.exists(path):
+        return None
+    with open(path, "w") as f:
+        f.write(TIMER_TEMPLATE)
+    print(f"{GREEN}✓{RESET} Created {path}")
+    return path
+
+
+def finalize(created):
+    """Track new files, format, and re-stage so the flake sees them."""
+    created = [p for p in created if p]
+    # Flakes only see git-tracked files; add before any eval/format.
+    git add @(created)
+    print(f"{BLUE}→{RESET} Formatting...")
+    nix fmt .
+    git add @(created)
+
+
+# ── Commands ───────────────────────────────────────────────────────────────
+
+def setup_host(hostname):
+    if os.path.exists(f"system/hosts/{hostname}.nix") or os.path.isdir(f"system/hosts/{hostname}") or flake_has_key("hosts", hostname):
+        print(f"{RED}✗{RESET} Host '{hostname}' already exists")
+        sys.exit(1)
+
+    users = existing_users()
+    if not users:
+        print(f"{RED}✗{RESET} No users found in home/users/. Run `bin/setup user <name>` first.")
+        sys.exit(1)
+
+    host_type = $(gum choose --header "Host type:" nixos darwin home).strip()
+    host_type = require(host_type, "No host type selected.")
+
+    default_arch = "aarch64-darwin" if host_type == "darwin" else "x86_64-linux"
+    arch = $(gum choose --header "System architecture:" --selected @(default_arch) x86_64-linux aarch64-linux aarch64-darwin x86_64-darwin).strip()
+    arch = require(arch, "No architecture selected.")
+
+    selected = $(gum choose --no-limit --header "Users for this host:" @(users))
+    selected = [u for u in selected.strip().split("\n") if u]
+    require(selected, "No users selected.")
+
+    created = []
+
+    # ── Hardware (NixOS only) ──────────────────────────────────────────
+    if host_type == "nixos":
+        os.makedirs(f"system/hosts/{hostname}", exist_ok=True)
+        hw_path = f"system/hosts/{hostname}/hardware.nix"
+        if shutil.which("nixos-generate-config"):
+            print(f"{BLUE}→{RESET} Detecting hardware with nixos-generate-config...")
+            hw = $(nixos-generate-config --show-hardware-config)
+        else:
+            hw = ""
+        if hw.strip():
+            with open(hw_path, "w") as f:
+                f.write(hw)
+            print(f"{GREEN}✓{RESET} Generated {hw_path}")
+        else:
+            with open(hw_path, "w") as f:
+                f.write(render_template(HARDWARE_STUB_TEMPLATE, hostname))
+            print(f"{YELLOW}✗ Could not detect hardware; wrote a stub to {hw_path} — replace it on the target machine{RESET}")
+        created.append(hw_path)
+
+    # ── Host module file ───────────────────────────────────────────────
+    if host_type == "nixos":
+        host_path = f"system/hosts/{hostname}.nix"
+        with open(host_path, "w") as f:
+            f.write(render_template(HOST_NIXOS_TEMPLATE, hostname))
+        print(f"{GREEN}✓{RESET} Created {host_path}")
+        created.append(host_path)
+    elif host_type == "darwin":
+        host_path = f"system/hosts/{hostname}.nix"
+        with open(host_path, "w") as f:
+            f.write(render_template(HOST_DARWIN_TEMPLATE, hostname))
+        print(f"{GREEN}✓{RESET} Created {host_path}")
+        created.append(host_path)
+
+    # ── Per-user timers (NixOS imports one per user) ───────────────────
+    if host_type == "nixos":
+        for u in selected:
+            created.append(ensure_timer(u))
+
+    # ── Register in flake.nix ──────────────────────────────────────────
+    block_lines = [
+        "        " + quote_key(hostname) + " = {",
+        '          system = "' + arch + '";',
+    ]
+    if host_type == "nixos":
+        block_lines.append("          nixos = true;")
+    elif host_type == "darwin":
+        block_lines.append("          darwin = true;")
+    users_str = " ".join('"' + u + '"' for u in selected)
+    block_lines.append("          users = [ " + users_str + " ];")
+    block_lines.append("        };")
+    insert_into_flake("hosts", "\n".join(block_lines))
+    print(f"{GREEN}✓{RESET} Registered host in flake.nix")
+    created.append("flake.nix")
+
+    finalize(created)
+
+    print()
+    print(f"{GREEN}✓{RESET} Host '{hostname}' created.")
+    print(f"  Next steps:")
+    if host_type == "nixos":
+        print(f"    {GREEN}→{RESET} Rebuild the system:  bin/rebuild os")
+        print(f"    {GREEN}→{RESET} Config: nixosConfigurations.{hostname}")
+    elif host_type == "darwin":
+        print(f"    {GREEN}→{RESET} Rebuild the system:  bin/rebuild os")
+        print(f"    {GREEN}→{RESET} Config: darwinConfigurations.{hostname}")
+    else:
+        print(f"    {GREEN}→{RESET} Rebuild home:  bin/rebuild home")
+    for u in selected:
+        print(f"    {GREEN}→{RESET} Home config: homeConfigurations.\"{u}@{hostname}\"")
+
+
+def setup_user(username):
+    if os.path.exists(f"home/users/{username}.nix") or flake_has_key("users", username):
+        print(f"{RED}✗{RESET} User '{username}' already exists")
+        sys.exit(1)
+
+    name = $(gum input --header "Full name:" --placeholder "Nelson Estevão").strip()
+    if not name:
+        name = username
+
+    groups_raw = $(gum input --header "Extra groups (space-separated):" --value "docker wheel networkmanager").strip()
+    groups = groups_raw.split()
+
+    created = []
+
+    # ── Home-manager user file ─────────────────────────────────────────
+    user_path = f"home/users/{username}.nix"
+    with open(user_path, "w") as f:
+        f.write(render_template(USER_TEMPLATE, username))
+    print(f"{GREEN}✓{RESET} Created {user_path}")
+    created.append(user_path)
+
+    # ── Timer file (required if placed on a NixOS host) ────────────────
+    created.append(ensure_timer(username))
+
+    # ── Register in flake.nix ──────────────────────────────────────────
+    group_lines = "\n".join('            "' + g + '"' for g in groups)
+    block = (USER_BLOCK_TEMPLATE
+             .replace("__KEY__", quote_key(username))
+             .replace("__NAME__", name)
+             .replace("__GROUPS__", group_lines))
+    insert_into_flake("users", block)
+    print(f"{GREEN}✓{RESET} Registered user in flake.nix")
+    created.append("flake.nix")
+
+    finalize(created)
+
+    print()
+    print(f"{GREEN}✓{RESET} User '{username}' created.")
+    print(f"  Next steps:")
+    print(f"    {GREEN}→{RESET} Add '{username}' to a host's `users` list in flake.nix,")
+    print(f"      or run `bin/setup host <hostname>` and select them.")
+
+
+def main(args):
+    if args['host']:
+        setup_host(args['<hostname>'])
+    elif args['user']:
+        setup_user(args['<username>'])
+
+
+if __name__ == '__main__':
+    arguments = docopt(__doc__.format(program=__file__), version=f'{os.path.basename(__file__)} script version 1.0')
+    main(arguments)
+
+# vim: ft=xonsh
