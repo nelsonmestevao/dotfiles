@@ -47,6 +47,7 @@ in
   dotfiles.programs.fonts.enable = enableFor [ "framework" ];
   dotfiles.programs.jetbrains.enable = enableFor [ "framework" ];
   dotfiles.programs.nvim.enable = true;
+  dotfiles.programs.tableplus.enable = enableFor [ "framework" ];
   dotfiles.programs.vscode.enable = enableFor [ "framework" ];
   dotfiles.programs.zed.enable = enableFor [ "framework" ];
 
