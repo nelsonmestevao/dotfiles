@@ -15,10 +15,12 @@
   home.file = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
     "Library/Application Support/Code/User/settings.json" = mkSymlink "settings.json";
     "Library/Application Support/Code/User/keybindings.json" = mkSymlink "keybindings.json";
+    "Library/Application Support/Code/User/tasks.json" = mkSymlink "tasks.json";
   };
 
   xdg.configFile = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
     "Code/User/settings.json" = mkSymlink "settings.json";
     "Code/User/keybindings.json" = mkSymlink "keybindings.json";
+    "Code/User/tasks.json" = mkSymlink "tasks.json";
   };
 }
