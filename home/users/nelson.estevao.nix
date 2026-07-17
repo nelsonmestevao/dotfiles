@@ -13,6 +13,9 @@ in
   # Shells
   dotfiles.programs.zsh.enable = true;
 
+  # Window Managers
+  dotfiles.programs.aerospace.enable = true;
+
   # Terminals
   dotfiles.programs.ghostty.enable = enableFor [
     "framework"
