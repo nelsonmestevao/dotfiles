@@ -40,6 +40,13 @@
   # silently skips insecure dirs, so the global call is redundant here.
   programs.zsh.enableGlobalCompInit = false;
 
+  # ── macOS defaults ────────────────────────────────────────────────────
+  # Auto-hide the Dock; it slides back in when the pointer reaches the
+  # bottom screen edge. Frees vertical space for AeroSpace-tiled windows.
+  system.defaults.dock.autohide = true;
+  system.defaults.dock.autohide-delay = 0.0;
+  # system.defaults.dock.autohide-time-modifier = 0.0;
+
   # ──────────────────────────────────────────────────────────────────────
   # Set to the nix-darwin version you first installed on this machine. A lower
   # value than the current release is fine; a higher one errors.
