@@ -13,6 +13,7 @@
     difftastic
     gh
     git
+    git-lfs
     git-who
     gitleaks
     lazygit
