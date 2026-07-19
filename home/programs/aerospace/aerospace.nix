@@ -23,6 +23,5 @@
   # '';
 
   # ── Symlinked Config Files ───────────────────────────────────────────
-  # home.file.".config/aerospace" = mkSymlink "config";
   xdg.configFile."aerospace/aerospace.toml" = mkSymlink "aerospace.toml";
 }
