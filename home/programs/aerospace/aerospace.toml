@@ -71,12 +71,12 @@ key-mapping.preset = 'qwerty'
 #                 Monitor pattern is the same as for 'workspace-to-monitor-force-assignment'.
 #                 See:
 #                 https://nikitabobko.github.io/AeroSpace/guide#assign-workspaces-to-monitors
-gaps.inner.horizontal = 8
-gaps.inner.vertical = 8
-gaps.outer.left = 8
-gaps.outer.bottom = 8
-gaps.outer.top = 8
-gaps.outer.right = 8
+gaps.inner.horizontal = 10
+gaps.inner.vertical = 10
+gaps.outer.left = 10
+gaps.outer.bottom = 10
+gaps.outer.top = 10
+gaps.outer.right = 10
 
 # Assign fixed workspaces to monitors (i3-style).
 # Right-hand value is the monitor's left-to-right position index in
