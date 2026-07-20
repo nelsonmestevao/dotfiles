@@ -34,11 +34,12 @@
       cleanup = "uninstall";
     };
 
-    taps = [ ];
+    taps = [ "remoteoss/kasa" ];
 
     # CLI formulae. Prefer nixpkgs via home.packages; list here only what nix
     # lacks or what must come from Homebrew.
     brews = [
+      "git-kasa"
     ];
 
     # GUI apps / casks.
