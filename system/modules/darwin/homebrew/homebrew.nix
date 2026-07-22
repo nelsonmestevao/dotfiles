@@ -54,4 +54,14 @@
     # Mac App Store apps (requires the `mas` CLI). Format: "App Name" = <id>;
     masApps = { };
   };
+
+  # brew shellenv above prepends Workbrew-owned /opt/homebrew/share/zsh/
+  # site-functions to fpath. compaudit only trusts dirs owned by root or the
+  # current user, so every bare compinit after that (e.g. home-manager's in
+  # ~/.zshrc) prompts "insecure directories" on each shell start. Strip the
+  # dirs right after shellenv: compinit would refuse to load completions from
+  # them anyway, and everything else from shellenv (PATH, HOMEBREW_*) stays.
+  programs.zsh.interactiveShellInit = lib.mkAfter ''
+    fpath=(''${fpath:#/opt/homebrew/share/zsh*})
+  '';
 }
