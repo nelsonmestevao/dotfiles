@@ -24,6 +24,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    codex-cli-nix = {
+      url = "github:sadjow/codex-cli-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     herdr = {
       url = "github:ogulcancelik/herdr";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -47,6 +52,7 @@
       nix-darwin,
       zen-browser,
       claude-code,
+      codex-cli-nix,
       herdr,
       vicinae,
       zed,
@@ -89,6 +95,7 @@
           ];
           overlays = [
             claude-code.overlays.default
+            codex-cli-nix.overlays.default
             herdr.overlays.default
             (final: prev: { zen-browser = zen-browser.packages.${prev.stdenv.hostPlatform.system}.default; })
             (final: prev: {
@@ -111,6 +118,7 @@
           ];
           overlays = [
             claude-code.overlays.default
+            codex-cli-nix.overlays.default
             herdr.overlays.default
             (final: prev: { zen-browser = zen-browser.packages.${prev.stdenv.hostPlatform.system}.default; })
             # TODO: Remove this once GNOME 50 is released
