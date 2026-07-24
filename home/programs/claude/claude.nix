@@ -10,6 +10,8 @@
   # ── Packages ──────────────────────────────────────────────────────────
   home.packages = with pkgs; [
     claude-code
+    # Voice mode requires SoX for audio recording
+    sox
   ];
 
   # ── Symlinked Config Files ───────────────────────────────────────────
