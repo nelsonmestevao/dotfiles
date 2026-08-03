@@ -133,6 +133,10 @@ run = ['layout floating']
 alt-slash = 'layout tiles horizontal vertical'
 alt-comma = 'layout accordion horizontal vertical'
 
+# See: https://nikitabobko.github.io/AeroSpace/commands#fullscreen
+# Toggles both directions; press again to restore the window to the layout.
+alt-f = 'fullscreen'
+
 # See: https://nikitabobko.github.io/AeroSpace/commands#focus
 alt-h = 'focus left'
 alt-j = 'focus down'
