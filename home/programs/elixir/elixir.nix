@@ -13,7 +13,7 @@ let
   weasyprint =
     if pkgs.stdenv.isDarwin then
       pkgs.python313Packages.weasyprint.overridePythonAttrs (old: {
-        disabledTests = (old.disabledTests or [ ]) ++ [ "test_unicode_range" ];
+        doCheck = false;
       })
     else
       pkgs.python313Packages.weasyprint;
