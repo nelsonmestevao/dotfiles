@@ -20,13 +20,11 @@ in
         # core utils
         dig
         dust
-        ffmpeg-full
         fop
         gnupg
         gping
         grex
         gvfs
-        imagemagick
         libsecret
 
         lftp

@@ -80,6 +80,7 @@ in
   dotfiles.programs.eza.enable = true;
   dotfiles.programs.fastfetch.enable = true;
   dotfiles.programs.fd.enable = true;
+  dotfiles.programs.ffmpeg.enable = true;
   dotfiles.programs.figlet.enable = true;
   dotfiles.programs.fzf.enable = true;
   dotfiles.programs.git.enable = true;
@@ -88,6 +89,7 @@ in
   dotfiles.programs.herdr.enable = true;
   dotfiles.programs.httpie.enable = true;
   dotfiles.programs.hyperfine.enable = true;
+  dotfiles.programs.imagemagick.enable = true;
   dotfiles.programs.jj.enable = true;
   dotfiles.programs.jq.enable = true;
   dotfiles.programs.kamal.enable = true;
