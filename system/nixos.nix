@@ -11,7 +11,15 @@
     ./hosts/${hostname}/hardware.nix
     ./hosts/${hostname}.nix
   ]
-  ++ map (username: import ./timers/${username}.nix username) (lib.attrNames users);
+  # Per-user timers are optional — a user with no ./timers/<username>.nix
+  # simply gets none, instead of failing to evaluate.
+  ++ lib.concatMap (
+    username:
+    let
+      file = ./timers/${username}.nix;
+    in
+    lib.optional (builtins.pathExists file) (import file username)
+  ) (lib.attrNames users);
 
   # ── Nix ─────────────────────────────────────────────────────────────────
   nix.settings.experimental-features = [
