@@ -7,16 +7,18 @@ system: hostname: username: cfg:
 let
   lib = nixpkgs.lib;
   pkgs = nixpkgs.legacyPackages.${system};
+  listDirectories = import ./listDirectories.nix { inherit lib; };
+
   mkHomeModule = import ../home/lib/mkHomeModule.nix { inherit lib; };
   homeModules = map (name: mkHomeModule name (import ../home/programs/${name}/${name}.nix)) (
-    lib.attrNames (builtins.readDir ../home/programs)
+    listDirectories ../home/programs
   );
 
   mkGnomeExtensionModule = import ../home/lib/mkGnomeExtensionModule.nix { inherit lib; };
   gnomeExtensionsDir = ../home/programs/gnome/extensions;
   gnomeExtensionModules = map (
     name: mkGnomeExtensionModule name (import "${gnomeExtensionsDir}/${name}/${name}.nix")
-  ) (lib.attrNames (builtins.readDir gnomeExtensionsDir));
+  ) (listDirectories gnomeExtensionsDir);
 in
 home-manager.lib.homeManagerConfiguration {
   inherit pkgs;
