@@ -1,8 +1,11 @@
 # ── Hosts ──────────────────────────────────────────────────────────────────
+#
+# `platform` selects the system builder ("nixos" or "darwin"); omit it for
+# hosts that only get a home-manager configuration.
 {
   framework = {
     system = "x86_64-linux";
-    nixos = true;
+    platform = "nixos";
     users = [ "nelson" ];
   };
   thinkpad = {
@@ -11,12 +14,12 @@
   };
   temis = {
     system = "x86_64-linux";
-    nixos = true;
+    platform = "nixos";
     users = [ "nelson" ];
   };
   "Remote-Nelson-Estevao" = {
     system = "aarch64-darwin";
-    darwin = true;
+    platform = "darwin";
     users = [ "nelson.estevao" ];
   };
 }

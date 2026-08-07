@@ -39,9 +39,7 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
-    zed = {
-      url = "github:zed-industries/zed/v1.4.4";
-    };
+    zed.url = "github:zed-industries/zed/v1.4.4";
   };
   outputs =
     {
@@ -59,10 +57,8 @@
     }:
     let
       lib = nixpkgs.lib;
-      mkNixosConfig = import ./lib/mkNixosConfig.nix { inherit nixpkgs vicinae; };
-      mkDarwinConfig = import ./lib/mkDarwinConfig.nix { inherit nixpkgs nix-darwin; };
-      mkHomeConfig = import ./lib/mkHomeConfig.nix { inherit nixpkgs home-manager vicinae; };
 
+      # ── Configuration ────────────────────────────────────────────────────
       hosts = import ./config/hosts.nix;
       users = import ./config/users.nix {
         inherit
@@ -75,19 +71,22 @@
           ;
       };
 
-      allSystems = lib.unique (lib.mapAttrsToList (_: h: h.system) hosts);
-
-      homeConfigs = lib.concatMapAttrs (
-        hostname: hostCfg:
-        lib.listToAttrs (
-          map (
-            username:
-            lib.nameValuePair "${username}@${hostname}" (
-              mkHomeConfig hostCfg.system hostname username (users.${username})
-            )
-          ) hostCfg.users
-        )
-      ) hosts;
+      # ── Assembly ─────────────────────────────────────────────────────────
+      inherit
+        (import ./lib {
+          inherit
+            nixpkgs
+            home-manager
+            nix-darwin
+            vicinae
+            hosts
+            users
+            ;
+        })
+        allSystems
+        systemConfigsFor
+        homeConfigs
+        ;
     in
     {
       formatter = lib.genAttrs allSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-tree);
@@ -99,18 +98,8 @@
         )
       );
 
-      nixosConfigurations = lib.mapAttrs mkNixosConfig (
-        lib.mapAttrs (_: cfg: cfg // { users = lib.genAttrs cfg.users (u: users.${u}); }) (
-          lib.filterAttrs (_: cfg: cfg.nixos or false) hosts
-        )
-      );
-
-      darwinConfigurations = lib.mapAttrs mkDarwinConfig (
-        lib.mapAttrs (_: cfg: cfg // { users = lib.genAttrs cfg.users (u: users.${u}); }) (
-          lib.filterAttrs (_: cfg: cfg.darwin or false) hosts
-        )
-      );
-
+      nixosConfigurations = systemConfigsFor "nixos";
+      darwinConfigurations = systemConfigsFor "darwin";
       homeConfigurations = homeConfigs;
     };
 }
