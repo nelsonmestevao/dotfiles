@@ -4,8 +4,11 @@
 --style=plain
 
 # Specify desired highlighting theme (e.g. "TwoDark"). Run `bat --list-themes`
-# for a list of all available themes
-#--theme="ansi"
+# for a list of all available themes. `auto` asks the terminal for its
+# background colour, so it follows ghostty's dark/light switch on its own.
+--theme=auto
+--theme-dark="Monokai Extended"
+--theme-light="GitHub"
 
 # Enable this to use italic text on the terminal. This is not supported on all
 # terminal emulators (like tmux, by default):
