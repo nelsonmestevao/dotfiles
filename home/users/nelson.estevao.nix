@@ -1,14 +1,7 @@
 {
-  config,
-  lib,
-  pkgs,
-  hostname,
+  enableFor,
   ...
 }:
-let
-  enableFor = hosts: lib.elem hostname hosts;
-  disableFor = hosts: !lib.elem hostname hosts;
-in
 {
   # Shells
   dotfiles.programs.zsh.enable = true;

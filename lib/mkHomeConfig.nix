@@ -24,6 +24,8 @@ home-manager.lib.homeManagerConfiguration {
   inherit pkgs;
   extraSpecialArgs = {
     inherit username hostname;
+    enableFor = import ../home/lib/enableFor.nix { inherit lib hostname; };
+    disableFor = import ../home/lib/disableFor.nix { inherit lib hostname; };
   }
   // (cfg.extraSpecialArgs or { });
   modules = [

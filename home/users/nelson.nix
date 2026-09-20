@@ -1,14 +1,8 @@
 {
-  config,
-  lib,
-  pkgs,
-  hostname,
+  enableFor,
+  disableFor,
   ...
 }:
-let
-  enableFor = hosts: lib.elem hostname hosts;
-  disableFor = hosts: !lib.elem hostname hosts;
-in
 {
   # Desktop Environment
   dotfiles.programs.gnome.enable = enableFor [ "framework" ];
