@@ -1,6 +1,6 @@
 #!/usr/bin/env nix-shell
 #! nix-shell -I nixpkgs=channel:nixos-26.05
-#! nix-shell -p gum python313 python313Packages.xonsh python313Packages.docopt
+#! nix-shell -p gum python3 python3Packages.xonsh python3Packages.docopt
 #! nix-shell -i xonsh
 """
 Scaffolds a new host or user and registers it in flake.nix.
