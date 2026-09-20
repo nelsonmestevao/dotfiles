@@ -1,5 +1,4 @@
 {
-  config,
   username,
   pkgs,
   ...
@@ -14,8 +13,6 @@
   home.username = username;
   home.homeDirectory =
     if pkgs.stdenv.hostPlatform.isDarwin then "/Users/${username}" else "/home/${username}";
-
-  dotfiles.directory = "${config.home.homeDirectory}/.dotfiles";
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;

@@ -9,12 +9,12 @@ let
   pkgs = nixpkgs.legacyPackages.${system};
   listDirectories = import ./listDirectories.nix { inherit lib; };
 
-  mkHomeModule = import ../home/lib/mkHomeModule.nix { inherit lib; };
+  mkHomeModule = import ../home/lib/mkHomeModule.nix;
   homeModules = map (name: mkHomeModule name (import ../home/programs/${name}/${name}.nix)) (
     listDirectories ../home/programs
   );
 
-  mkGnomeExtensionModule = import ../home/lib/mkGnomeExtensionModule.nix { inherit lib; };
+  mkGnomeExtensionModule = import ../home/lib/mkGnomeExtensionModule.nix;
   gnomeExtensionsDir = ../home/programs/gnome/extensions;
   gnomeExtensionModules = map (
     name: mkGnomeExtensionModule name (import "${gnomeExtensionsDir}/${name}/${name}.nix")

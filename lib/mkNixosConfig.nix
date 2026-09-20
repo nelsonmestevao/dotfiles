@@ -3,7 +3,7 @@ hostname: cfg:
 let
   lib = nixpkgs.lib;
   listDirectories = import ./listDirectories.nix { inherit lib; };
-  mkSystemModule = import ../system/lib/mkSystemModule.nix { inherit lib; };
+  mkSystemModule = import ../system/lib/mkSystemModule.nix;
   systemModules = map (
     name: mkSystemModule name (import ../system/modules/nixos/${name}/${name}.nix)
   ) (listDirectories ../system/modules/nixos);
@@ -13,15 +13,8 @@ nixpkgs.lib.nixosSystem {
   specialArgs = {
     inherit hostname vicinae;
     inherit (cfg) users;
-    onHost = import ../system/lib/onHost.nix {
-      inherit (nixpkgs) lib;
-      inherit hostname;
-    };
-    onHosts = import ../system/lib/onHosts.nix {
-      inherit (nixpkgs) lib;
-      inherit hostname;
-    };
-  };
+  }
+  // import ../system/lib/hostPredicates.nix { inherit lib hostname; };
   modules = [
     ../system/nixos.nix
     vicinae.nixosModules.default

@@ -3,7 +3,7 @@
 #! nix-shell -p nh gum python3 python3Packages.xonsh python3Packages.docopt
 #! nix-shell -i xonsh
 """
-Rebuilds the system and home configuration.
+Checks that the flake evaluates and every configuration builds.
 
 Usage:
   {program}
