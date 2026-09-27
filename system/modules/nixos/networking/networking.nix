@@ -27,13 +27,11 @@ lib.mkMerge [
     networking.networkmanager.plugins = with pkgs; [
       networkmanager-openconnect
       networkmanager-openvpn
-      networkmanager-vpnc
     ];
 
     environment.systemPackages = with pkgs; [
       networkmanager-openconnect
       networkmanager-openvpn
-      networkmanager-vpnc
     ];
   })
   (onHost "temis" {
