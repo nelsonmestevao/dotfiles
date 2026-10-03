@@ -13,8 +13,8 @@ If you're writing a CLI script for automation of some task, unless a different l
 - **Project scripts** (e.g. `bin/` in repos): use `nix-shell` directly:
   ```
   #!/usr/bin/env nix-shell
-  #! nix-shell -I nixpkgs=channel:nixos-25.11
-  #! nix-shell -p gum python313 python313Packages.xonsh python313Packages.docopt
+  #! nix-shell -I nixpkgs=channel:nixos-26.05
+  #! nix-shell -p gum python3 python3Packages.xonsh python3Packages.docopt
   #! nix-shell -i xonsh
   ```
 - **Spell scripts** (personal, not shared): use the `spl` script to scaffold. Run `spl --help` first to see available options, then use it to create the initial script. Only start writing code after the template is generated. Always follow any conventions defined by the template.
