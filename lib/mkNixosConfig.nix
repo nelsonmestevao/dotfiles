@@ -23,6 +23,7 @@ nixpkgs.lib.nixosSystem {
       {
         # Gate upstream's input-server (default: true) on our per-host flag.
         programs.vicinae.input-server.enable = config.dotfiles.modules.vicinae.enable;
+        programs.vicinae.input-server.package = import ./vicinaePackage.nix vicinae cfg.system;
       }
     )
   ]

@@ -41,6 +41,7 @@ home-manager.lib.homeManagerConfiguration {
     # any `mkIf false` reference to them (the module system checks definition
     # paths against declarations regardless of the condition).
     vicinae.homeManagerModules.default
+    { programs.vicinae.package = import ./vicinaePackage.nix vicinae system; }
   ]
   ++ homeModules
   ++ gnomeExtensionModules;
