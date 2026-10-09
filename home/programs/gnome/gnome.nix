@@ -48,12 +48,12 @@ with lib.hm.gvariant;
     };
 
     "org/gnome/settings-daemon/plugins/power" = {
-      worspaces-only-on-primary = true;
       power-button-action = "interactive";
     };
 
     "org/gnome/mutter" = {
       dynamic-workspaces = false;
+      workspaces-only-on-primary = true;
       center-new-windows = true;
     };
 
