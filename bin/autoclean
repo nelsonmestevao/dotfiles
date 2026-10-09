@@ -1,1 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# System profiles (NixOS/nix-darwin generations) are owned by root, while
+# standalone home-manager generations live in the user profile.
 sudo nix-collect-garbage -d --delete-older-than 7d
+nix-collect-garbage -d --delete-older-than 7d

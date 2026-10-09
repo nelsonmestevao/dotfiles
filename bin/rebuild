@@ -19,7 +19,8 @@ Options:
   -v --version      Show version.
   --boot            Activate the system on next boot instead of switching live.
                     Use for major release upgrades to avoid hanging on service
-                    restarts (e.g. GDM, NetworkManager). Ignored for home.
+                    restarts (e.g. GDM, NetworkManager). NixOS only; ignored
+                    for nix-darwin and home.
 """
 import os
 import sys
