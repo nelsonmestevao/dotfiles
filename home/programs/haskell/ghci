@@ -1,3 +1,4 @@
-:set prompt "\ESC[35m%s \ESC[1;35mλ\ESC[2;35m: \ESC[0m"
+:set prompt "\SOH\ESC[38;5;219m\STX%s \SOH\ESC[0;1;35m\STX\955 \SOH\ESC[0m\STX"
+:set prompt-cont "\SOH\ESC[2;35m\STX  \8942 \SOH\ESC[0m\STX"
 :set +s
 :set +t
