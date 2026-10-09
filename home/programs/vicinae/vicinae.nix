@@ -44,7 +44,7 @@
         "applications:slack"
         "applications:spotify"
         "applications:zen"
-        "@vicinae/clipboard:history"
+        "clipboard:history"
       ];
     };
   };
