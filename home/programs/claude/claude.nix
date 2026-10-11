@@ -15,8 +15,14 @@
   ];
 
   # ── Symlinked Config Files ───────────────────────────────────────────
-  # nelson.estevao (Darwin) uses a settings file with `apiKeyHelper` set;
-  # every other user shares the base settings.json.
-  home.file.".claude/settings.json" = mkSymlink "settings.json";
   home.file.".claude/skills" = mkSymlink "skills";
+
+  # Claude Code saves settings.json atomically, writing a tmp file next to the
+  # symlink target after resolving only one level. A home.file symlink resolves
+  # into the read-only home-manager-files store dir, so link straight to the repo.
+  home.activation.claudeSettings = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+    run mkdir -p $HOME/.claude
+    run ln -sfn ${config.dotfiles.directory}/home/programs/claude/settings.json \
+      $HOME/.claude/settings.json
+  '';
 }
