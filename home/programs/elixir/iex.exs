@@ -72,9 +72,9 @@ import :_utils
 
 if function_exported?(Mix, :__info__, 1) and Mix.State in :ets.all() and Mix.env() == :dev do
   # if statement guards you from running it in prod, which could result in loss of logs.
+  # Since Elixir 1.15 the :console backend only exists with the :logger_backends dependency;
+  # the deprecated Logger.configure_backend/2 fallback silently ignores :device, so skip it.
   if Code.ensure_loaded?(LoggerBackends) do
     LoggerBackends.configure(:console, device: Process.group_leader())
-  else
-    Logger.configure_backend(:console, device: Process.group_leader())
   end
 end
