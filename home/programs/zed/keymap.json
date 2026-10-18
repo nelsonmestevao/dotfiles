@@ -10,12 +10,33 @@
     "context": "Workspace",
     "bindings": {
       // "shift shift": "file_finder::Toggle"
+      // Same as ghostty's alt+hjkl goto_split.
+      "alt-h": "workspace::ActivatePaneLeft",
+      "alt-j": "workspace::ActivatePaneDown",
+      "alt-k": "workspace::ActivatePaneUp",
+      "alt-l": "workspace::ActivatePaneRight",
+      "ctrl-j": "terminal_panel::Toggle"
+    }
+  },
+  {
+    // Vim mode binds ctrl-j to vim::Down, which wins over Workspace bindings.
+    "context": "VimControl && !menu",
+    "bindings": {
+      "ctrl-j": "terminal_panel::Toggle"
     }
   },
   {
     "context": "Editor",
     "bindings": {
       // "j k": ["workspace::SendKeystrokes", "escape"]
+    }
+  },
+  {
+    "context": "Pane",
+    "bindings": {
+      // Same as ghostty's alt+shift+v / alt+shift+h splits.
+      "alt-shift-v": "pane::SplitVertical",
+      "alt-shift-h": "pane::SplitHorizontal"
     }
   }
 ]
