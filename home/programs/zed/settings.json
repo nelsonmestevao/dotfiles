@@ -1,4 +1,10 @@
 {
+  "cli_default_open_behavior": "new_window",
+  "icon_theme": {
+    "mode": "system",
+    "light": "Zed (Default)",
+    "dark": "Zed (Default)"
+  },
   "session": {
     "trust_all_worktrees": true
   },
@@ -62,7 +68,7 @@
   },
   "theme": {
     "mode": "system",
-    "light": "One Light",
-    "dark": "One Dark",
+    "light": "GitHub Light",
+    "dark": "GitHub Dark",
   },
 }
