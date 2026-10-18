@@ -49,7 +49,7 @@
       "JetBrainsMono NFM"
     ],
     "font_family": "JetBrainsMono Nerd Font",
-    "font_size": 16.0,
+    "font_size": 16,
   },
   "languages": {
     "C": { "show_whitespaces": "trailing",

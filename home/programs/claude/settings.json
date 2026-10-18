@@ -11,10 +11,11 @@
     "code-simplifier@claude-plugins-official": true
   },
   "effortLevel": "xhigh",
-  "theme": "dark",
   "modelSettings": {
     "claude-opus-5-5": {
       "effortLevel": "xhigh"
     }
-  }
+  },
+  "theme": "dark",
+  "model": "opus"
 }
