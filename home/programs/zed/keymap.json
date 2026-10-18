@@ -27,6 +27,16 @@
     }
   },
   {
+    // Same as VS Code's <leader>t mix tasks (see tasks.json).
+    "context": "VimControl && !menu",
+    "bindings": {
+      "space t a": ["task::Spawn", { "task_name": "mix: Run tests" }],
+      "space t f": ["task::Spawn", { "task_name": "mix: Run tests in current file" }],
+      "space t r": ["task::Spawn", { "task_name": "mix: Run test at cursor" }],
+      "space t l": "task::Rerun"
+    }
+  },
+  {
     "context": "ProjectPanel && not_editing",
     "bindings": {
       "a": "project_panel::NewFile",

@@ -1,0 +1,24 @@
+// Zed tasks
+//
+// Same tasks as the VS Code ones (home/programs/vscode/tasks.json). For the
+// available variables and options, see https://zed.dev/docs/tasks.
+//
+// Autosave only runs on focus change, so each task saves first; otherwise a
+// task spawned from the editor would test the unsaved file.
+[
+  {
+    "label": "mix: Run tests",
+    "command": "mix test",
+    "save": "all"
+  },
+  {
+    "label": "mix: Run tests in current file",
+    "command": "mix test \"$ZED_RELATIVE_FILE\"",
+    "save": "current"
+  },
+  {
+    "label": "mix: Run test at cursor",
+    "command": "mix test \"$ZED_RELATIVE_FILE:$ZED_ROW\"",
+    "save": "current"
+  }
+]
