@@ -1,10 +1,5 @@
 {
   "cli_default_open_behavior": "new_window",
-  "icon_theme": {
-    "mode": "system",
-    "light": "Zed (Default)",
-    "dark": "Zed (Default)"
-  },
   "session": {
     "trust_all_worktrees": true
   },
@@ -12,16 +7,8 @@
   "minimap": {
     "show": "never"
   },
-  "cursor_shape": "block",
-  "cursor_blink": true,
   "autosave": "on_focus_change",
-  "buffer_font_fallbacks": [
-    "JetBrainsMono NF",
-    "JetBrainsMono Nerd Font Mono",
-    "JetBrainsMono NFM"
-  ],
   "show_whitespaces": "trailing",
-  "show_edit_predictions": true,
   "wrap_guides": [
     120
   ],
@@ -41,34 +28,46 @@
     "folder_icons": true,
     "git_status": true,
     "auto_reveal_entries": true,
-    "auto_fold_dirs": true,
+    "auto_fold_dirs": true
   },
   "ui_font_size": 14,
   "buffer_font_size": 18,
   "buffer_font_features": {
-    "calt": false,
+    "calt": false
   },
   "terminal": {
-    "font_fallbacks": [
-      "JetBrainsMono NF",
-      "JetBrainsMono Nerd Font Mono",
-      "JetBrainsMono NFM"
-    ],
-    "font_family": "JetBrainsMono Nerd Font",
-    "font_size": 16,
+    "font_size": 16
   },
   "languages": {
-    "C": { "show_whitespaces": "trailing",
-           "show_edit_predictions": true,
-           "wrap_guides": [
-              120
-           ],
-           "preferred_line_length": 120,
-           "format_on_save": "on" },
+    "C": {
+      "format_on_save": "on"
+    }
   },
   "theme": {
     "mode": "system",
     "light": "GitHub Light",
-    "dark": "GitHub Dark",
+    "dark": "GitHub Dark"
   },
+  "auto_install_extensions": {
+    "csv": true,
+    "docker-compose": true,
+    "dockerfile": true,
+    "elixir": true,
+    "git-firefly": true,
+    "github-theme": true,
+    "graphql": true,
+    "haskell": true,
+    "html": true,
+    "java": true,
+    "latex": true,
+    "lua": true,
+    "make": true,
+    "nix": true,
+    "ruby": true,
+    "sql": true,
+    "terraform": true,
+    "toml": true,
+    "typst": true,
+    "zig": true
+  }
 }
