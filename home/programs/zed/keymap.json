@@ -37,6 +37,30 @@
     }
   },
   {
+    // Same as VS Code's and toggleterm's ctrl-c ctrl-c: run the current line,
+    // or the selection, in the terminal and come back to the editor. Zed has no
+    // action for this, so it goes through the clipboard: yank, focus the
+    // terminal (ctrl-j), paste, enter, then back up to the editor (alt-k).
+    "context": "vim_mode == normal && !menu",
+    "bindings": {
+      "ctrl-c ctrl-c": ["workspace::SendKeystrokes", "y y ctrl-j ctrl-shift-v enter alt-k"]
+    }
+  },
+  {
+    "context": "vim_mode == visual && !menu",
+    "bindings": {
+      "ctrl-c ctrl-c": ["workspace::SendKeystrokes", "y ctrl-j ctrl-shift-v enter alt-k"]
+    }
+  },
+  {
+    // Already the default on Linux; makes the ctrl-c ctrl-c keystrokes above
+    // paste on macOS too.
+    "context": "Terminal",
+    "bindings": {
+      "ctrl-shift-v": "terminal::Paste"
+    }
+  },
+  {
     "context": "ProjectPanel && not_editing",
     "bindings": {
       "a": "project_panel::NewFile",
