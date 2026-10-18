@@ -15,7 +15,8 @@
       "alt-j": "workspace::ActivatePaneDown",
       "alt-k": "workspace::ActivatePaneUp",
       "alt-l": "workspace::ActivatePaneRight",
-      "ctrl-j": "terminal_panel::Toggle"
+      "ctrl-j": "terminal_panel::Toggle",
+      "alt-shift-b": "project_panel::Toggle"
     }
   },
   {
