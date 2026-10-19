@@ -22,6 +22,10 @@
     "framework"
     "Remote-Nelson-Estevao"
   ];
+    dotfiles.programs.zed.enable = enableFor [
+    "framework"
+    "Remote-Nelson-Estevao"
+  ];
 
   # Programming Languages
   dotfiles.programs.elixir.enable = true;
