@@ -107,6 +107,7 @@
   dotfiles.programs.unzip.enable = true;
   dotfiles.programs.watchman.enable = true;
   dotfiles.programs.wget.enable = true;
+  dotfiles.programs.yq.enable = true;
   dotfiles.programs.zellij.enable = true;
   dotfiles.programs.zoxide.enable = true;
 
