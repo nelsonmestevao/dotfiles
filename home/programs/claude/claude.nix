@@ -15,7 +15,7 @@
   ];
 
   # ── Symlinked Config Files ───────────────────────────────────────────
-  home.file.".claude/skills" = mkSymlink "skills";
+  home.file.".claude/skills" = lib.mkIf (username == "nelson") (mkSymlink "skills");
 
   # Claude Code saves settings.json atomically, writing a tmp file next to the
   # symlink target after resolving only one level. A home.file symlink resolves
