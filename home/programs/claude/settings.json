@@ -6,9 +6,14 @@
   "permissions": {
     "defaultMode": "plan"
   },
+  "model": "opus",
   "enabledPlugins": {
     "frontend-design@claude-plugins-official": true,
-    "code-simplifier@claude-plugins-official": true
+    "code-simplifier@claude-plugins-official": true,
+    "superpowers@anthropic-plugin-directory": true,
+    "code-review-anthropics@anthropic-plugin-directory": true,
+    "playwright@anthropic-plugin-directory": true,
+    "pr-review-toolkit@anthropic-plugin-directory": true
   },
   "effortLevel": "xhigh",
   "modelSettings": {
@@ -16,6 +21,10 @@
       "effortLevel": "xhigh"
     }
   },
+  "voice": {
+    "enabled": true,
+    "mode": "hold"
+  },
   "theme": "dark",
-  "model": "opus"
+  "voiceEnabled": true
 }
