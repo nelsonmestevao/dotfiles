@@ -12,16 +12,20 @@
 
   home.sessionVariables = {
     SHELL = "${pkgs.zsh}/bin/zsh";
+    DOTFILES = config.dotfiles.directory;
   };
 
   programs.zsh.enable = true;
   programs.zsh.initContent = builtins.readFile ./zshrc;
   programs.zsh.envExtra = ''
     export DOTFILES="${config.dotfiles.directory}"
+
+    [[ -r "$HOME/.zshenv.local" ]] && source "$HOME/.zshenv.local"
   '';
 
-  home.sessionVariables = {
-    DOTFILES = config.dotfiles.directory;
+  home.file."./.zshenv" = {
+    target = ".zshenv";
+    force = true;
   };
 
   home.activation.cloneOhMyZsh = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
