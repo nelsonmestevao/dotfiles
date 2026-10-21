@@ -14,7 +14,7 @@
     gh
     git
     git-lfs
-    git-sim
+    (callPackage ./git-sim/package.nix { })
     git-who
     gitleaks
     glab
