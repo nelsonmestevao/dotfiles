@@ -15,7 +15,9 @@
     };
 
     zen-browser = {
-      url = "github:youwen5/zen-browser-flake";
+      # TODO: back to github:youwen5/zen-browser-flake once
+      # https://github.com/youwen5/zen-browser-flake/pull/23 is merged
+      url = "github:Brainlesslukas/zen-browser-flake/6ca1a282fa32f47cd9fd15ad8592e09558600da8";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
