@@ -14,8 +14,10 @@
     gh
     git
     git-lfs
+    git-sim
     git-who
     gitleaks
+    glab
     lazygit
   ];
 
