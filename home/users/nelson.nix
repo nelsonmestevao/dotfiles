@@ -54,6 +54,7 @@
   dotfiles.programs.nodejs.enable = true;
   dotfiles.programs.python.enable = true;
   dotfiles.programs.ruby.enable = true;
+  dotfiles.programs.rust.enable = true;
 
   # Dev Tools
   dotfiles.programs.bat.enable = true;
