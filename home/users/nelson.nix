@@ -95,6 +95,7 @@
   dotfiles.programs.opencode.enable = true;
   dotfiles.programs.pandoc.enable = true;
   dotfiles.programs.podman.enable = disableFor [ "thinkpad" ];
+  dotfiles.programs.projectionist.enable = true;
   dotfiles.programs.rclone.enable = true;
   dotfiles.programs.restic.enable = true;
   dotfiles.programs.ripgrep.enable = true;
