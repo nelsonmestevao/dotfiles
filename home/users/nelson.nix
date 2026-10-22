@@ -94,6 +94,7 @@
   dotfiles.programs.onefetch.enable = true;
   dotfiles.programs.opencode.enable = true;
   dotfiles.programs.pandoc.enable = true;
+  dotfiles.programs.pane.enable = enableFor [ "framework" ];
   dotfiles.programs.podman.enable = disableFor [ "thinkpad" ];
   dotfiles.programs.projectionist.enable = true;
   dotfiles.programs.rclone.enable = true;
