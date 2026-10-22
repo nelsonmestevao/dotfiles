@@ -15,7 +15,9 @@
   );
 
   # ── Symlinked Config Files ───────────────────────────────────────────
-  # home.file.".config/cmux" = mkSymlink "config";
-  # xdg.configFile."cmux/config" = mkSymlink "config";
-  # xdg.configFile."cmux/config.toml" = mkSymlink "config.toml";
+  # Terminal settings come from ghostty's config; cmux.json holds cmux-owned
+  # settings such as keyboard shortcuts.
+  xdg.configFile = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
+    "cmux/cmux.json" = mkSymlink "cmux.json";
+  };
 }

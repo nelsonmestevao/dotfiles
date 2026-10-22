@@ -1,0 +1,21 @@
+{
+  "$schema": "https://raw.githubusercontent.com/manaflow-ai/cmux/main/web/data/cmux.schema.json",
+  "schemaVersion": 1,
+
+  "shortcuts": {
+    "bindings": {
+      // Same as ghostty: cmd+1..9 selects tabs, ctrl+1..9 selects workspaces.
+      "selectSurfaceByNumber": "cmd+1",
+      "selectWorkspaceByNumber": "ctrl+1",
+
+      // Same as ghostty's cmd+hjkl goto_split.
+      "focusLeft": "cmd+h",
+      "focusDown": "cmd+j",
+      "focusUp": "cmd+k",
+      "focusRight": "cmd+l",
+
+      "splitRight": "cmd+opt+v",
+      "splitDown": "cmd+opt+h"
+    }
+  }
+}
