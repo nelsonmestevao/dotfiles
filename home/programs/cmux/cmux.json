@@ -15,7 +15,14 @@
       "focusRight": "cmd+l",
 
       "splitRight": "cmd+opt+v",
-      "splitDown": "cmd+opt+h"
+      "splitDown": "cmd+opt+h",
+
+      "toggleSidebar": "opt+b",
+      "toggleFileExplorer": "opt+shift+b"
     }
+  },
+
+  "fileEditor": {
+    "syntaxHighlighting": true
   }
 }
