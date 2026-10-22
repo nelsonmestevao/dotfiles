@@ -58,6 +58,7 @@
   dotfiles.programs.jq.enable = true;
   dotfiles.programs.mise.enable = true;
   dotfiles.programs.onefetch.enable = true;
+  dotfiles.programs.projectionist.enable = true;
   dotfiles.programs.ripgrep.enable = true;
   dotfiles.programs.shellcheck.enable = true;
   dotfiles.programs.shfmt.enable = true;
