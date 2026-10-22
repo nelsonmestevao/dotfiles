@@ -10,6 +10,7 @@
   dotfiles.programs.aerospace.enable = true;
 
   # Terminals
+  dotfiles.programs.cmux.enable = enableFor [ "Remote-Nelson-Estevao" ];
   dotfiles.programs.ghostty.enable = enableFor [
     "framework"
     "Remote-Nelson-Estevao"
