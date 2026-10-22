@@ -20,6 +20,19 @@
     }
   },
   {
+    // macOS only: same as ghostty's and cmux's cmd+hjkl. `!(os == linux)` matches
+    // at the focused element, so these win over defaults on the same keys
+    // (zed::Hide, editor::SelectLine, terminal::Clear, cmd-k chords), while
+    // `os == macos` only matches at the Workspace and loses to them.
+    "context": "!(os == linux)",
+    "bindings": {
+      "cmd-h": "workspace::ActivatePaneLeft",
+      "cmd-j": "workspace::ActivatePaneDown",
+      "cmd-k": "workspace::ActivatePaneUp",
+      "cmd-l": "workspace::ActivatePaneRight"
+    }
+  },
+  {
     // Vim mode binds ctrl-j to vim::Down, which wins over Workspace bindings.
     "context": "VimControl && !menu",
     "bindings": {
