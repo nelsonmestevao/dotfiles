@@ -20,5 +20,23 @@
     "label": "mix: Run test at cursor",
     "command": "mix test \"$ZED_RELATIVE_FILE:$ZED_ROW\"",
     "save": "current"
+  },
+  {
+    // Like vim-projectionist's :A, a missing alternate is created from its
+    // template, if it has one. `zed -a` opens it in this window, since
+    // cli_default_open_behavior is new_window.
+    "label": "projectionist: Open alternate file",
+    "command": "alt=$(projectionist alternate \"$ZED_FILE\") && { [ -e \"$alt\" ] || projectionist create \"$alt\" > /dev/null; zed -a \"$alt\"; }",
+    "reveal": "never",
+    "hide": "on_success"
+  },
+  {
+    // Cycles through the existing related files (alternates included). Related
+    // files don't always point back at each other, so the list of the file it
+    // started from is kept in $TMPDIR and walked until it gets back there.
+    "label": "projectionist: Open next related file",
+    "command": "s=\"${TMPDIR:-/tmp}/projectionist-related\"; grep -Fxq \"$ZED_FILE\" \"$s\" 2>/dev/null && [ \"$(head -n 1 \"$s\")\" != \"$ZED_FILE\" ] || { printf '%s\\n' \"$ZED_FILE\"; projectionist related \"$ZED_FILE\" --fzf; } > \"$s\"; f=$(awk -v f=\"$ZED_FILE\" '$0 == f { i = NR } { a[NR] = $0 } END { if (NR > 1) print a[i % NR + 1] }' \"$s\") && [ -n \"$f\" ] && zed -a \"$f\"",
+    "reveal": "never",
+    "hide": "on_success"
   }
 ]

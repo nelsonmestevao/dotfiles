@@ -37,6 +37,15 @@
     }
   },
   {
+    // projectionist tasks (see tasks.json). alt-a is the same as VS Code's
+    // alt+a; alt-shift-a takes over Zed's editor::ToggleBlockComments.
+    "context": "Editor && mode == full",
+    "bindings": {
+      "alt-a": ["task::Spawn", { "task_name": "projectionist: Open alternate file" }],
+      "alt-shift-a": ["task::Spawn", { "task_name": "projectionist: Open next related file" }]
+    }
+  },
+  {
     // Same as VS Code's and toggleterm's ctrl-c ctrl-c: run the current line,
     // or the selection, in the terminal and come back to the editor. Zed has no
     // action for this, so it goes through the clipboard: yank, focus the
