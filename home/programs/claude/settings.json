@@ -6,7 +6,7 @@
   "permissions": {
     "defaultMode": "plan"
   },
-  "model": "opus",
+  "model": "opus[1m]",
   "enabledPlugins": {
     "frontend-design@claude-plugins-official": true,
     "code-simplifier@claude-plugins-official": true,
@@ -25,6 +25,6 @@
     "enabled": true,
     "mode": "hold"
   },
-  "theme": "dark",
+  "theme": "auto",
   "voiceEnabled": true
 }
