@@ -29,7 +29,9 @@
       "cmd-h": "workspace::ActivatePaneLeft",
       "cmd-j": "workspace::ActivatePaneDown",
       "cmd-k": "workspace::ActivatePaneUp",
-      "cmd-l": "workspace::ActivatePaneRight"
+      "cmd-l": "workspace::ActivatePaneRight",
+      // Find and replace (pane::DeploySearch, search::ToggleReplace).
+      "cmd-shift-h": null
     }
   },
   {
