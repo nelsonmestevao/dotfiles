@@ -22,7 +22,7 @@ adw-toolbar-style = flat
 cursor-style = block
 cursor-color = #ffffff
 
-background-opacity = 0.5
+background-opacity = 0.6
 background-blur = 100
 
 config-file = ?keybindings
