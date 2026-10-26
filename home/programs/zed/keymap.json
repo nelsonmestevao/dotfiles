@@ -19,12 +19,20 @@
     }
   },
   {
-    "context": "Workspace && !(os == linux)",
+    // `!(os == linux)` matches at the focused element, so these win over the
+    // defaults on the same keys (zed::Hide, editor::SelectLine,
+    // terminal::Clear, cmd-k chords), the same as ghostty's cmd+hjkl.
+    "context": "!(os == linux)",
     "bindings": {
       "cmd-h": "workspace::ActivatePaneLeft",
       "cmd-j": "workspace::ActivatePaneDown",
       "cmd-k": "workspace::ActivatePaneUp",
-      "cmd-l": "workspace::ActivatePaneRight",
+      "cmd-l": "workspace::ActivatePaneRight"
+    }
+  },
+  {
+    "context": "Workspace && !(os == linux)",
+    "bindings": {
       "ctrl-j": "terminal_panel::Toggle",
       "cmd-shift-b": "project_panel::Toggle",
       "cmd-shift-h": null
@@ -57,33 +65,28 @@
     }
   },
   {
+    // Same as VS Code's and toggleterm's ctrl-c ctrl-c: run the line, or the
+    // selection, in the terminal and go back to the editor. It goes through
+    // the clipboard: yank, focus the terminal (ctrl-j), paste, enter, then
+    // back (ctrl-shift-j).
     "context": "vim_mode == normal && !menu",
     "bindings": {
-      "ctrl-c ctrl-c": ["workspace::SendKeystrokes", "y y ctrl-j ctrl-shift-v enter alt-k"]
+      "ctrl-c ctrl-c": ["workspace::SendKeystrokes", "y y ctrl-j ctrl-shift-v enter ctrl-shift-j"]
     }
   },
   {
     "context": "vim_mode == visual && !menu",
     "bindings": {
-      "ctrl-c ctrl-c": ["workspace::SendKeystrokes", "y ctrl-j ctrl-shift-v enter alt-k"]
-    }
-  },
-  {
-    "context": "vim_mode == normal && !menu",
-    "bindings": {
-      "ctrl-c ctrl-c": ["workspace::SendKeystrokes", "y y ctrl-j ctrl-shift-v enter cmd-k"]
-    }
-  },
-  {
-    "context": "vim_mode == visual && !menu",
-    "bindings": {
-      "ctrl-c ctrl-c": ["workspace::SendKeystrokes", "y ctrl-j ctrl-shift-v enter cmd-k"]
+      "ctrl-c ctrl-c": ["workspace::SendKeystrokes", "y ctrl-j ctrl-shift-v enter ctrl-shift-j"]
     }
   },
   {
     "context": "Terminal",
     "bindings": {
-      "ctrl-shift-v": "terminal::Paste"
+      "ctrl-shift-v": "terminal::Paste",
+      // Back to the editor pane it came from, and the terminal stays open
+      // (ctrl-j would close it).
+      "ctrl-shift-j": "terminal_panel::ToggleFocus"
     }
   },
   {
