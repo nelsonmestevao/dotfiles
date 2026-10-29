@@ -6,14 +6,15 @@
   "permissions": {
     "defaultMode": "auto"
   },
-  "model": "opus[1m]",
+  "model": "opus",
   "enabledPlugins": {
     "frontend-design@claude-plugins-official": true,
     "code-simplifier@claude-plugins-official": true,
     "superpowers@anthropic-plugin-directory": true,
     "code-review-anthropics@anthropic-plugin-directory": true,
     "playwright@anthropic-plugin-directory": true,
-    "pr-review-toolkit@anthropic-plugin-directory": true
+    "pr-review-toolkit@anthropic-plugin-directory": true,
+    "typescript-lsp@claude-plugins-official": true
   },
   "effortLevel": "xhigh",
   "modelSettings": {
