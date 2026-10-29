@@ -47,6 +47,13 @@
   system.defaults.dock.autohide-delay = 0.0;
   # system.defaults.dock.autohide-time-modifier = 0.0;
 
+  # Show the full path in Finder, like the GNOME Files location bar. The path
+  # bar sits at the bottom of each window; double-click a folder in it to go
+  # there. Use ⇧⌘G (Go to Folder) to type a path.
+  system.defaults.finder.ShowPathbar = true;
+  system.defaults.finder.ShowStatusBar = true;
+  system.defaults.finder._FXShowPosixPathInTitle = true;
+
   # ──────────────────────────────────────────────────────────────────────
   # Set to the nix-darwin version you first installed on this machine. A lower
   # value than the current release is fine; a higher one errors.
