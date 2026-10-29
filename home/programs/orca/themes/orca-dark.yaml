@@ -1,26 +1,26 @@
-# Orca's default terminal theme (Ghostty Default Style Dark) on the app's
-# own dark background instead of #282c34.
+# The Ghostty "Night" palette (home/programs/ghostty/themes/Night) on
+# Orca's own dark background, so the terminal blends into the app.
 name: Orca Dark
 background: "#0a0a0a"
-foreground: "#ffffff"
+foreground: "#e5e5e5"
 cursor: "#ffffff"
 details: darker
 terminal_colors:
   normal:
-    black: "#1d1f21"
-    red: "#cc6666"
-    green: "#b5bd68"
-    yellow: "#f0c674"
-    blue: "#81a2be"
-    magenta: "#b294bb"
-    cyan: "#8abeb7"
-    white: "#c5c8c6"
+    black: "#101010"
+    red: "#b7141f"
+    green: "#457b24"
+    yellow: "#f6981e"
+    blue: "#134eb2"
+    magenta: "#560088"
+    cyan: "#0e717c"
+    white: "#efefef"
   bright:
-    black: "#666666"
-    red: "#d54e53"
-    green: "#b9ca4a"
-    yellow: "#e7c547"
-    blue: "#7aa6da"
-    magenta: "#c397d8"
-    cyan: "#70c0b1"
-    white: "#eaeaea"
+    black: "#424242"
+    red: "#e83b3f"
+    green: "#7aba3a"
+    yellow: "#ffea2e"
+    blue: "#54a4f3"
+    magenta: "#aa4dbc"
+    cyan: "#26bbd1"
+    white: "#d9d9d9"
