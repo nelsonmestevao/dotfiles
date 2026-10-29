@@ -36,6 +36,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    orca = {
+      url = "github:stslex/orca-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     vicinae = {
       url = "github:vicinaehq/vicinae";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
@@ -54,6 +59,7 @@
       claude-code,
       codex-cli-nix,
       herdr,
+      orca,
       vicinae,
       zed,
     }:
@@ -68,6 +74,7 @@
           claude-code
           codex-cli-nix
           herdr
+          orca
           zen-browser
           zed
           ;

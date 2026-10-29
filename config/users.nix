@@ -4,6 +4,7 @@
   claude-code,
   codex-cli-nix,
   herdr,
+  orca,
   zen-browser,
   zed,
 }:
@@ -40,6 +41,7 @@
       claude-code.overlays.default
       codex-cli-nix.overlays.default
       herdr.overlays.default
+      orca.overlays.default
       (final: prev: { zen-browser = zen-browser.packages.${prev.stdenv.hostPlatform.system}.default; })
       # TODO: Remove this once GNOME 50 is released
       # GNOME 50 patch while waiting for PR #506387 to be merged
