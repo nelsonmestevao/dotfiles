@@ -99,7 +99,7 @@
   dotfiles.programs.opencode.enable = true;
   dotfiles.programs.orca.enable = enableFor [ "framework" ];
   dotfiles.programs.pandoc.enable = true;
-  dotfiles.programs.podman.enable = disableFor [ "thinkpad" ];
+  dotfiles.programs.podman.enable = false;
   dotfiles.programs.projectionist.enable = true;
   dotfiles.programs.rclone.enable = true;
   dotfiles.programs.restic.enable = true;
