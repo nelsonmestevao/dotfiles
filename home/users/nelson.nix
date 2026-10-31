@@ -81,7 +81,11 @@
   dotfiles.programs.git.enable = true;
   dotfiles.programs.glab.enable = true;
   dotfiles.programs.glow.enable = true;
-  dotfiles.programs.herdr.enable = true;
+  dotfiles.programs.herdr-app.enable = enableFor [ "framework" ];
+  dotfiles.programs.herdr-core.enable = enableFor [
+    "framework"
+    "temis"
+  ];
   dotfiles.programs.httpie.enable = true;
   dotfiles.programs.hyperfine.enable = true;
   dotfiles.programs.imagemagick.enable = true;

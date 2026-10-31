@@ -3,7 +3,7 @@
   nixpkgs-unstable,
   claude-code,
   codex-cli-nix,
-  herdr,
+  herdr-app-nix,
   orca,
   zen-browser,
   zed,
@@ -17,7 +17,6 @@
     overlays = [
       claude-code.overlays.default
       codex-cli-nix.overlays.default
-      herdr.overlays.default
       (final: prev: { zen-browser = zen-browser.packages.${prev.stdenv.hostPlatform.system}.default; })
       (final: prev: {
         unstable = import nixpkgs-unstable {
@@ -40,7 +39,7 @@
     overlays = [
       claude-code.overlays.default
       codex-cli-nix.overlays.default
-      herdr.overlays.default
+      herdr-app-nix.overlays.default
       orca.overlays.default
       (final: prev: { zen-browser = zen-browser.packages.${prev.stdenv.hostPlatform.system}.default; })
       # TODO: Remove this once GNOME 50 is released

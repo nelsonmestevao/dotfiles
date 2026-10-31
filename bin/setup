@@ -163,7 +163,7 @@ __GROUPS__
           ];
           overlays = [
             claude-code.overlays.default
-            herdr.overlays.default
+            herdr-app-nix.overlays.default
             (final: prev: { zen-browser = zen-browser.packages.${prev.stdenv.hostPlatform.system}.default; })
             (final: prev: {
               unstable = import nixpkgs-unstable {

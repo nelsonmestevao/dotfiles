@@ -111,24 +111,23 @@
         "type": "github"
       }
     },
-    "herdr": {
+    "herdr-app-nix": {
       "inputs": {
         "nixpkgs": [
           "nixpkgs"
-        ],
-        "rust-overlay": "rust-overlay"
+        ]
       },
       "locked": {
-        "lastModified": 1793278609,
-        "narHash": "sha256-0B58jR/v1vxbK7cwoq++SnOCsED0sHDkgqVMvsrjezE=",
-        "owner": "ogulcancelik",
-        "repo": "herdr",
-        "rev": "ee5bfb5041bb3e4a49d591c72308aae3c81ecdde",
+        "lastModified": 1793437643,
+        "narHash": "sha256-0WtWyRhqMnBgCGeDNHdoZgO18+UnWV3vYUuWnJWQs3k=",
+        "owner": "TamagoMasgend",
+        "repo": "herdr-app-nix",
+        "rev": "12881aed0e45be34dbd75dc397b9d31cc6335c16",
         "type": "github"
       },
       "original": {
-        "owner": "ogulcancelik",
-        "repo": "herdr",
+        "owner": "TamagoMasgend",
+        "repo": "herdr-app-nix",
         "type": "github"
       }
     },
@@ -300,7 +299,7 @@
       "inputs": {
         "claude-code": "claude-code",
         "codex-cli-nix": "codex-cli-nix",
-        "herdr": "herdr",
+        "herdr-app-nix": "herdr-app-nix",
         "home-manager": "home-manager",
         "nix-darwin": "nix-darwin",
         "nixpkgs": "nixpkgs",
@@ -312,27 +311,6 @@
       }
     },
     "rust-overlay": {
-      "inputs": {
-        "nixpkgs": [
-          "herdr",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1783577481,
-        "narHash": "sha256-EWMxOWrJ031f8f/lrcEmhTRs4npw1/5N3Hcjin846c8=",
-        "owner": "oxalica",
-        "repo": "rust-overlay",
-        "rev": "4cdea398dc491b082dccdce0fad1ed0b75fa3394",
-        "type": "github"
-      },
-      "original": {
-        "owner": "oxalica",
-        "repo": "rust-overlay",
-        "type": "github"
-      }
-    },
-    "rust-overlay_2": {
       "inputs": {
         "nixpkgs": [
           "zed",
@@ -463,7 +441,7 @@
         "crane": "crane",
         "flake-parts": "flake-parts",
         "nixpkgs": "nixpkgs_2",
-        "rust-overlay": "rust-overlay_2"
+        "rust-overlay": "rust-overlay"
       },
       "locked": {
         "lastModified": 1779991100,

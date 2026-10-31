@@ -31,8 +31,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    herdr = {
-      url = "github:ogulcancelik/herdr";
+    herdr-app-nix = {
+      url = "github:TamagoMasgend/herdr-app-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -58,7 +58,7 @@
       zen-browser,
       claude-code,
       codex-cli-nix,
-      herdr,
+      herdr-app-nix,
       orca,
       vicinae,
       zed,
@@ -73,7 +73,7 @@
           nixpkgs-unstable
           claude-code
           codex-cli-nix
-          herdr
+          herdr-app-nix
           orca
           zen-browser
           zed

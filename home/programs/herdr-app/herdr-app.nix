@@ -7,6 +7,6 @@
 }:
 {
   home.packages = with pkgs; [
-    herdr
+    herdr-app
   ];
 }
