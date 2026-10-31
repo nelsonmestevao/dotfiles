@@ -12,6 +12,7 @@
 
   # ── Networking ───────────────────────────────────────────────────────
   dotfiles.modules.networking.enable = true;
+  dotfiles.modules.tailscale.enable = true;
   services.openssh.enable = true;
 
   # ── Packages & Virtualisation ────────────────────────────────────────
