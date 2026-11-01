@@ -19,7 +19,10 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-source $SPELLS/spells.init
+# Spells are optional (https://github.com/nelsonmestevao/spells).
+if [[ -r "$SPELLS/spells.init" ]]; then
+  source "$SPELLS/spells.init"
+fi
 
 for init_file in $(find $DOTFILES -type f -name "*.init" | sort); do
   source $init_file
