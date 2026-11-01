@@ -4,6 +4,9 @@
   pkgs,
   ...
 }:
+let
+  printerHost = "BRWACF23CED0E9B.local";
+in
 {
   services.printing.enable = true;
 
@@ -22,7 +25,7 @@
     {
       name = "Brother_HL_L3240CDW";
       description = "Brother HL-L3240CDW (driverless IPP)";
-      deviceUri = "ipp://BRWACF23CED0E9B.local:631/ipp/print";
+      deviceUri = "ipp://${printerHost}:631/ipp/print";
       model = "everywhere";
       ppdOptions = {
         PageSize = "A4";
@@ -31,4 +34,12 @@
     }
   ];
   hardware.printers.ensureDefaultPrinter = "Brother_HL_L3240CDW";
+
+  # `model = "everywhere"` asks the printer for its capabilities, so lpadmin
+  # fails whenever the printer is off or on another network, and that failed
+  # every switch. Skip the unit (not fail it) until the printer's name resolves.
+  systemd.services.ensure-printers = {
+    after = [ "avahi-daemon.service" ];
+    serviceConfig.ExecCondition = "${pkgs.getent}/bin/getent hosts ${printerHost}";
+  };
 }
