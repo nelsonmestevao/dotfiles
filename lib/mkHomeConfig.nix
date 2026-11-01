@@ -3,7 +3,7 @@
   home-manager,
   vicinae,
   overlays,
-  knownRoles,
+  knownNames,
 }:
 system: hostname: roles: username: cfg:
 let
@@ -21,14 +21,23 @@ let
   gnomeExtensionModules = map (
     name: mkGnomeExtensionModule name (import "${gnomeExtensionsDir}/${name}/${name}.nix")
   ) (listDirectories gnomeExtensionsDir);
+
+  # What enableFor/disableFor need to know about this host.
+  hostInfo = {
+    inherit
+      lib
+      hostname
+      roles
+      knownNames
+      ;
+  };
 in
 home-manager.lib.homeManagerConfiguration {
   inherit pkgs;
   extraSpecialArgs = {
     inherit username hostname;
-    enableFor = import ../home/lib/enableFor.nix { inherit lib hostname; };
-    disableFor = import ../home/lib/disableFor.nix { inherit lib hostname; };
-    enableForRoles = import ../home/lib/enableForRoles.nix { inherit lib roles knownRoles; };
+    enableFor = import ../home/lib/enableFor.nix hostInfo;
+    disableFor = import ../home/lib/disableFor.nix hostInfo;
   }
   // (cfg.extraSpecialArgs or { });
   modules = [

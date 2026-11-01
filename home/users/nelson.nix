@@ -1,12 +1,11 @@
 {
   enableFor,
   disableFor,
-  enableForRoles,
   ...
 }:
 {
   # Desktop Environment
-  dotfiles.programs.gnome.enable = enableForRoles [ "desktop" ];
+  dotfiles.programs.gnome.enable = enableFor [ "desktop" ];
   dotfiles.programs.gnome.extensions = {
     accent-directories.enable = true;
     auto-move-windows.enable = true;
@@ -32,19 +31,19 @@
   dotfiles.programs.zsh.enable = true;
 
   # Desktop Launchers & App Switchers
-  dotfiles.programs.vicinae.enable = enableForRoles [ "desktop" ];
+  dotfiles.programs.vicinae.enable = enableFor [ "desktop" ];
 
   # Terminals
-  dotfiles.programs.ghostty.enable = enableForRoles [ "desktop" ];
+  dotfiles.programs.ghostty.enable = enableFor [ "desktop" ];
   dotfiles.programs.wezterm.enable = false;
 
   # Editors & IDEs
-  dotfiles.programs.fonts.enable = enableForRoles [ "desktop" ];
-  dotfiles.programs.jetbrains.enable = enableForRoles [ "desktop" ];
+  dotfiles.programs.fonts.enable = enableFor [ "desktop" ];
+  dotfiles.programs.jetbrains.enable = enableFor [ "desktop" ];
   dotfiles.programs.nvim.enable = true;
-  dotfiles.programs.tableplus.enable = enableForRoles [ "desktop" ];
-  dotfiles.programs.vscode.enable = enableForRoles [ "desktop" ];
-  dotfiles.programs.zed.enable = enableForRoles [ "desktop" ];
+  dotfiles.programs.tableplus.enable = enableFor [ "desktop" ];
+  dotfiles.programs.vscode.enable = enableFor [ "desktop" ];
+  dotfiles.programs.zed.enable = enableFor [ "desktop" ];
 
   # Programming Languages
   dotfiles.programs.elixir.enable = true;
@@ -59,7 +58,7 @@
 
   # Dev Tools
   dotfiles.programs.bat.enable = true;
-  dotfiles.programs.bruno.enable = enableForRoles [ "desktop" ];
+  dotfiles.programs.bruno.enable = enableFor [ "desktop" ];
   dotfiles.programs.btop.enable = true;
   dotfiles.programs.claude.enable = true;
   dotfiles.programs.codex.enable = true;
@@ -82,8 +81,8 @@
   dotfiles.programs.git.enable = true;
   dotfiles.programs.glab.enable = true;
   dotfiles.programs.glow.enable = true;
-  dotfiles.programs.herdr-app.enable = enableForRoles [ "desktop" ];
-  dotfiles.programs.herdr-core.enable = enableForRoles [ "desktop" "server" ];
+  dotfiles.programs.herdr-app.enable = enableFor [ "desktop" ];
+  dotfiles.programs.herdr-core.enable = enableFor [ "desktop" "server" ];
   dotfiles.programs.httpie.enable = true;
   dotfiles.programs.hyperfine.enable = true;
   dotfiles.programs.imagemagick.enable = true;
@@ -95,7 +94,7 @@
   dotfiles.programs.ngrok.enable = true;
   dotfiles.programs.onefetch.enable = true;
   dotfiles.programs.opencode.enable = true;
-  dotfiles.programs.orca.enable = enableForRoles [ "desktop" ];
+  dotfiles.programs.orca.enable = enableFor [ "desktop" ];
   dotfiles.programs.pandoc.enable = true;
   dotfiles.programs.podman.enable = false;
   dotfiles.programs.projectionist.enable = true;
@@ -121,25 +120,25 @@
   dotfiles.programs.typst.enable = true;
 
   # Desktop Applications
-  dotfiles.programs.beeper.enable = enableForRoles [ "desktop" ];
-  dotfiles.programs.bitwarden.enable = enableForRoles [ "desktop" ];
-  dotfiles.programs.calibre.enable = enableForRoles [ "desktop" ];
-  dotfiles.programs.chrome.enable = enableForRoles [ "desktop" ];
-  dotfiles.programs.digikam.enable = enableForRoles [ "desktop" ];
+  dotfiles.programs.beeper.enable = enableFor [ "desktop" ];
+  dotfiles.programs.bitwarden.enable = enableFor [ "desktop" ];
+  dotfiles.programs.calibre.enable = enableFor [ "desktop" ];
+  dotfiles.programs.chrome.enable = enableFor [ "desktop" ];
+  dotfiles.programs.digikam.enable = enableFor [ "desktop" ];
   dotfiles.programs.espanso.enable = false;
-  dotfiles.programs.gimp.enable = enableForRoles [ "desktop" ];
-  dotfiles.programs.inkscape.enable = enableForRoles [ "desktop" ];
-  dotfiles.programs.libreoffice.enable = enableForRoles [ "desktop" ];
-  dotfiles.programs.localsend.enable = enableForRoles [ "desktop" ];
-  dotfiles.programs.obsidian.enable = enableForRoles [ "desktop" ];
-  dotfiles.programs.pdfmixtool.enable = enableForRoles [ "desktop" ];
-  dotfiles.programs.pinta.enable = enableForRoles [ "desktop" ];
-  dotfiles.programs.thunderbird.enable = enableForRoles [ "desktop" ];
-  dotfiles.programs.typora.enable = enableForRoles [ "desktop" ];
-  dotfiles.programs.vivaldi.enable = enableForRoles [ "desktop" ];
-  dotfiles.programs.wine.enable = enableForRoles [ "desktop" ];
+  dotfiles.programs.gimp.enable = enableFor [ "desktop" ];
+  dotfiles.programs.inkscape.enable = enableFor [ "desktop" ];
+  dotfiles.programs.libreoffice.enable = enableFor [ "desktop" ];
+  dotfiles.programs.localsend.enable = enableFor [ "desktop" ];
+  dotfiles.programs.obsidian.enable = enableFor [ "desktop" ];
+  dotfiles.programs.pdfmixtool.enable = enableFor [ "desktop" ];
+  dotfiles.programs.pinta.enable = enableFor [ "desktop" ];
+  dotfiles.programs.thunderbird.enable = enableFor [ "desktop" ];
+  dotfiles.programs.typora.enable = enableFor [ "desktop" ];
+  dotfiles.programs.vivaldi.enable = enableFor [ "desktop" ];
+  dotfiles.programs.wine.enable = enableFor [ "desktop" ];
   dotfiles.programs.zeal.enable = false;
-  dotfiles.programs.zen.enable = enableForRoles [ "desktop" ];
+  dotfiles.programs.zen.enable = enableFor [ "desktop" ];
 
   dotfiles.packages.enable = true;
 }

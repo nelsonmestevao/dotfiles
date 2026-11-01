@@ -1,6 +1,5 @@
 {
   enableFor,
-  enableForRoles,
   ...
 }:
 {
@@ -12,13 +11,13 @@
 
   # Terminals
   dotfiles.programs.cmux.enable = enableFor [ "Remote-Nelson-Estevao" ];
-  dotfiles.programs.ghostty.enable = enableForRoles [ "desktop" ];
+  dotfiles.programs.ghostty.enable = enableFor [ "desktop" ];
   dotfiles.programs.wezterm.enable = false;
 
   # Editors & IDEs
   dotfiles.programs.nvim.enable = true;
-  dotfiles.programs.vscode.enable = enableForRoles [ "desktop" ];
-  dotfiles.programs.zed.enable = enableForRoles [ "desktop" ];
+  dotfiles.programs.vscode.enable = enableFor [ "desktop" ];
+  dotfiles.programs.zed.enable = enableFor [ "desktop" ];
 
   # Programming Languages
   dotfiles.programs.elixir.enable = true;
@@ -43,8 +42,8 @@
   dotfiles.programs.fzf.enable = true;
   dotfiles.programs.git.enable = true;
   dotfiles.programs.glab.enable = true;
-  dotfiles.programs.herdr-app.enable = enableForRoles [ "desktop" ];
-  dotfiles.programs.herdr-core.enable = enableForRoles [ "desktop" "server" ];
+  dotfiles.programs.herdr-app.enable = enableFor [ "desktop" ];
+  dotfiles.programs.herdr-core.enable = enableFor [ "desktop" "server" ];
   dotfiles.programs.httpie.enable = true;
   dotfiles.programs.hyperfine.enable = true;
   dotfiles.programs.jj.enable = true;

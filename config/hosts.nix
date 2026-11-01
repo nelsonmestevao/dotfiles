@@ -4,7 +4,8 @@
 # hosts that only get a home-manager configuration.
 #
 # `roles` say what a host is for ("desktop", "server"). User files turn
-# programs on per role with `enableForRoles [ "desktop" ]`.
+# programs on by role or host name, e.g. `enableFor [ "desktop" "temis" ]`, so
+# a role can't share a host's name.
 {
   framework = {
     system = "x86_64-linux";

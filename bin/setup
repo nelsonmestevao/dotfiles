@@ -109,16 +109,10 @@ HARDWARE_STUB_TEMPLATE = """\
 
 USER_TEMPLATE = """\
 {
-  config,
-  lib,
-  pkgs,
-  hostname,
+  enableFor,
+  disableFor,
   ...
 }:
-let
-  enableFor = hosts: lib.elem hostname hosts;
-  disableFor = hosts: !lib.elem hostname hosts;
-in
 {
   # Shells
   dotfiles.programs.zsh.enable = true;
@@ -131,7 +125,7 @@ in
 
   # Enable more programs as needed (see home/programs/):
   # dotfiles.programs.docker.enable = true;
-  # dotfiles.programs.vscode.enable = enableFor [ "framework" ];
+  # dotfiles.programs.vscode.enable = enableFor [ "desktop" ];
 
   dotfiles.packages.enable = true;
 }

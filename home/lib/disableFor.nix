@@ -1,1 +1,2 @@
-{ lib, hostname }: hosts: !lib.elem hostname hosts
+# The opposite of ./enableFor.nix, with the same checks.
+args: names: !(import ./enableFor.nix args names)

@@ -112,19 +112,23 @@ manages Homebrew (see [macOS notes](#-macos--nix-darwin)).
 - **`flake.nix`** — declares the flake inputs and passes them on. The code in
   `lib/` turns `config/` into the flake's outputs.
 
-Three helpers control what runs where:
+Two helpers control what runs where. Both take host names, roles, or a mix:
 
 ```nix
 # home/users/nelson.nix
-dotfiles.programs.nvim.enable = true;                            # everywhere
-dotfiles.programs.zed.enable = enableForRoles [ "desktop" ];     # on hosts with the desktop role
-dotfiles.programs.jetbrains.enable = enableFor [ "framework" ];  # only on framework
-dotfiles.programs.vscode.enable = disableFor [ "thinkpad" ];     # everywhere except thinkpad
+dotfiles.programs.nvim.enable = true;                                 # everywhere
+dotfiles.programs.zed.enable = enableFor [ "desktop" ];               # hosts with the desktop role
+dotfiles.programs.jetbrains.enable = enableFor [ "framework" ];       # only on framework
+dotfiles.programs.herdr-core.enable = enableFor [ "desktop" "temis" ]; # desktops and temis
+dotfiles.programs.vscode.enable = disableFor [ "server" ];            # everywhere except servers
 ```
 
 Use roles where you can. A new desktop then needs one line in
-`config/hosts.nix`, with no edits to the user files. A role that no host
-declares stops the build, so a typo can't quietly turn a program off.
+`config/hosts.nix`, with no edits to the user files. Two rules keep this safe:
+
+- A name that is neither a host nor a role stops the build, so a typo can't
+  quietly turn a program off.
+- A role can't have the same name as a host, so every name means one thing.
 
 ```nix
 # system/hosts/framework.nix

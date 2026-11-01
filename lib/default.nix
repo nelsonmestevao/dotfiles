@@ -25,14 +25,23 @@ let
       home-manager
       vicinae
       overlays
-      knownRoles
+      knownNames
       ;
   };
 
   # ── Helpers ────────────────────────────────────────────────────────────────
 
-  # Every role some host declares; `enableForRoles` rejects any other name.
-  knownRoles = lib.unique (lib.concatMap (h: h.roles or [ ]) (lib.attrValues hosts));
+  # Every host name and role that enableFor/disableFor accept. A role named
+  # like a host would make `enableFor [ "x" ]` ambiguous, so that's an error.
+  knownNames =
+    let
+      hostNames = lib.attrNames hosts;
+      roles = lib.unique (lib.concatMap (h: h.roles or [ ]) (lib.attrValues hosts));
+      clashes = lib.intersectLists hostNames roles;
+    in
+    lib.throwIf (clashes != [ ])
+      "config/hosts.nix: role ${lib.concatStringsSep ", " clashes} has the same name as a host"
+      (hostNames ++ roles);
 
   # Hosts list their users by name; system builders want the definitions.
   # [ "nelson" ] -> { nelson = <user definition>; }
