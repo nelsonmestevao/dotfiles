@@ -14,7 +14,7 @@
     caffeine.enable = true;
     color-picker.enable = true;
     draw-on-gnome.enable = true;
-    glocalsend.enable = enableForRoles [ "desktop" ];
+    glocalsend.enable = true;
     pop-shell.enable = true;
     rudra.enable = false;
     smart-home.enable = true;
@@ -22,7 +22,7 @@
     top-bar-organizer.enable = true;
     vitals.enable = true;
     wake-on-lan.enable = true;
-    wallpaper-slideshow.enable = enableForRoles [ "desktop" ];
+    wallpaper-slideshow.enable = true;
     wiggle.enable = true;
   };
 
@@ -68,7 +68,7 @@
   dotfiles.programs.cpufetch.enable = true;
   dotfiles.programs.ctop.enable = true;
   dotfiles.programs.curl.enable = true;
-  dotfiles.programs.cursor.enable = enableForRoles [ "desktop" ];
+  dotfiles.programs.cursor.enable = false;
   dotfiles.programs.devcontainer.enable = true;
   dotfiles.programs.direnv.enable = true;
   dotfiles.programs.docker.enable = true;
@@ -138,7 +138,7 @@
   dotfiles.programs.typora.enable = enableForRoles [ "desktop" ];
   dotfiles.programs.vivaldi.enable = enableForRoles [ "desktop" ];
   dotfiles.programs.wine.enable = enableForRoles [ "desktop" ];
-  dotfiles.programs.zeal.enable = enableForRoles [ "desktop" ];
+  dotfiles.programs.zeal.enable = false;
   dotfiles.programs.zen.enable = enableForRoles [ "desktop" ];
 
   dotfiles.packages.enable = true;
