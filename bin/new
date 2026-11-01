@@ -187,7 +187,7 @@ def create_extension(name):
 
 
 def create_module(name):
-    dir_path = f"system/modules/{name}"
+    dir_path = f"system/modules/nixos/{name}"
     file_path = f"{dir_path}/{name}.nix"
 
     if os.path.exists(file_path):
