@@ -2,6 +2,7 @@
   nixpkgs,
   home-manager,
   vicinae,
+  overlays,
 }:
 system: hostname: username: cfg:
 let
@@ -29,7 +30,7 @@ home-manager.lib.homeManagerConfiguration {
   }
   // (cfg.extraSpecialArgs or { });
   modules = [
-    { nixpkgs.overlays = cfg.overlays or [ ]; }
+    { nixpkgs.overlays = overlays; }
     ../home
     ../home/lib
     # Always import every module so its options are *declared* on every

@@ -49,36 +49,20 @@
     zed.url = "github:zed-industries/zed/v1.4.4";
   };
   outputs =
-    {
-      self,
+    inputs@{
       nixpkgs,
-      nixpkgs-unstable,
       home-manager,
       nix-darwin,
-      zen-browser,
-      claude-code,
-      codex-cli-nix,
-      herdr-app-nix,
-      orca,
       vicinae,
-      zed,
+      ...
     }:
     let
       lib = nixpkgs.lib;
 
       # ── Configuration ────────────────────────────────────────────────────
       hosts = import ./config/hosts.nix;
-      users = import ./config/users.nix {
-        inherit
-          nixpkgs-unstable
-          claude-code
-          codex-cli-nix
-          herdr-app-nix
-          orca
-          zen-browser
-          zed
-          ;
-      };
+      users = import ./config/users.nix;
+      overlays = import ./config/overlays.nix inputs;
 
       # ── Assembly ─────────────────────────────────────────────────────────
       inherit
@@ -90,6 +74,7 @@
             vicinae
             hosts
             users
+            overlays
             ;
         })
         allSystems

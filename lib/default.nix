@@ -6,6 +6,7 @@
   vicinae,
   hosts,
   users,
+  overlays,
 }:
 let
   lib = nixpkgs.lib;
@@ -18,7 +19,14 @@ let
     darwin = import ./mkDarwinConfig.nix { inherit nixpkgs nix-darwin; };
   };
 
-  mkHomeConfig = import ./mkHomeConfig.nix { inherit nixpkgs home-manager vicinae; };
+  mkHomeConfig = import ./mkHomeConfig.nix {
+    inherit
+      nixpkgs
+      home-manager
+      vicinae
+      overlays
+      ;
+  };
 
   # ── Helpers ────────────────────────────────────────────────────────────────
 

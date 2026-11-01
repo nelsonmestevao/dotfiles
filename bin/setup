@@ -164,17 +164,6 @@ USER_BLOCK_TEMPLATE = """\
     extraGroups = [
 __GROUPS__
     ];
-    overlays = [
-      claude-code.overlays.default
-      herdr-app-nix.overlays.default
-      (final: prev: { zen-browser = zen-browser.packages.${prev.stdenv.hostPlatform.system}.default; })
-      (final: prev: {
-        unstable = import nixpkgs-unstable {
-          system = prev.stdenv.hostPlatform.system;
-          config.allowUnfree = true;
-        };
-      })
-    ];
     extraSpecialArgs = { };
   };"""
 
@@ -210,8 +199,8 @@ def config_has_key(path, name):
 def insert_into_config(path, block):
     """Insert a rendered block as the first entry of the attrset in `path`.
 
-    The entries live in the file's last top-level `{` line: config/users.nix is
-    a function, so its first one opens the argument set.
+    The entries live in the file's last top-level `{` line, so this also works
+    for a file that is a function, whose first `{` opens the argument set.
     """
     with open(path) as f:
         lines = f.readlines()
