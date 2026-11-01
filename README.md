@@ -1,6 +1,7 @@
 [releases]: https://github.com/nelsonmestevao/dotfiles/releases/latest
 [ci]: https://github.com/nelsonmestevao/dotfiles/actions/workflows/ci.yml
 [license]: #-license
+[spells]: https://github.com/nelsonmestevao/spells
 
 <h1 align="center">
 <picture>
@@ -56,7 +57,15 @@ layer (at least I try to), with modules split by platform under
 `system/modules/nixos/` and `system/modules/darwin/`.
 
 Together these produce three kinds of builds: NixOS hosts, nix-darwin (macOS)
-hosts, and standalone Home Manager setups on any other machine.
+hosts, and standalone Home Manager setups on any other machine. These are my
+hosts today:
+
+| Host                    | Build             | System           | What runs there                           |
+| ----------------------- | ----------------- | ---------------- | ----------------------------------------- |
+| `framework`             | NixOS             | `x86_64-linux`   | GNOME desktop with my full set of apps    |
+| `temis`                 | NixOS             | `x86_64-linux`   | No desktop: SSH, Tailscale, and Docker    |
+| `thinkpad`              | Home Manager only | `x86_64-linux`   | Another Linux distro; only my home config |
+| `Remote-Nelson-Estevao` | nix-darwin        | `aarch64-darwin` | A Mac managed by [Workbrew] (MDM)         |
 
 ### How modules work
 
@@ -91,10 +100,15 @@ manages Homebrew (see [macOS notes](#-macos--nix-darwin)).
 
 #### Where things are wired together
 
-- **`flake.nix`** — declares each host with its `system` and a `nixos = true` or
-  `darwin = true` flag (omit both for a standalone Home Manager host).
+- **`config/hosts.nix`** — lists each host with its `system`, its `users`, and
+  its `platform` (`"nixos"` or `"darwin"`). Leave `platform` out for a
+  standalone Home Manager host.
+- **`config/users.nix`** — defines each user (see
+  [What goes into a user entry](#what-goes-into-a-user-entry)).
 - **`home/users/<username>.nix`** — toggles which programs a user gets.
 - **`system/hosts/<hostname>.nix`** — toggles which system modules a host gets.
+- **`flake.nix`** — declares the flake inputs and passes them on. The code in
+  `lib/` turns `config/` into the flake's outputs.
 
 Two helpers make it easy to control what runs where per host:
 
@@ -117,19 +131,68 @@ dotfiles.modules.tailscale.enable = true;
 > [!WARNING]
 > Helper scripts are available in the `bin/` directory.
 > **Read them before running anything** — as always, never execute code you don't
-understand or trust.
+> understand or trust.
 
-Start by cloning my `dotfiles` into `~/.dotfiles`. You should do the same with
-my `spells` repository. The spells are not a requirement but there's a lot of
-goodies there.
+The only requirement is to have NixOS, nix-darwin, or the Nix package manager
+installed.
+
+### 1. Clone the repos
+
+Start by cloning my `dotfiles` into `~/.dotfiles`:
 
 ```shell
 git clone https://github.com/nelsonmestevao/dotfiles ~/.dotfiles
-git clone https://github.com/nelsonmestevao/spells   ~/.spells
 ```
 
-The only requirement is to have NixOS, nix-darwin, or the Nix package manager
-installed. Then you are ready to build this configuration for your system —
+You can also clone my [`spells`][spells] into `~/.spells`. Spells are the small
+shell scripts I use every day. They're optional: zsh only loads them when
+`~/.spells/spells.init` exists. But there's a lot of goodies there.
+
+```shell
+git clone https://github.com/nelsonmestevao/spells ~/.spells
+```
+
+### 2. Add your user and host
+
+`bin/rebuild` picks the config that matches the machine's hostname and your
+username. On a new machine, add both first, or the build fails.
+
+The fast way is `bin/setup`. It asks a few questions, writes the files, and adds
+the entries to `config/`:
+
+```shell
+bin/setup user <username>  # home/users/<username>.nix + an entry in config/users.nix
+bin/setup host <hostname>  # system/hosts/ files + an entry in config/hosts.nix
+```
+
+Add the user first, since `bin/setup host` asks which users go on the host.
+
+To do it by hand:
+
+1. **Add your user** to `config/users.nix` and create
+   `home/users/<username>.nix`. Use `nelson.nix` as a reference.
+2. **Add your host** to `config/hosts.nix`. Set its `system`, its `users`, and
+   `platform = "nixos"` or `platform = "darwin"`. Leave `platform` out for a
+   standalone Home Manager host.
+3. **Add the host's system files:**
+   - **NixOS:** both `system/hosts/<hostname>.nix` and
+     `system/hosts/<hostname>/hardware.nix`. Make the hardware file on the
+     target machine with `nixos-generate-config --show-hardware-config`. Also
+     set a boot loader (for example `boot.loader.systemd-boot.enable = true;`)
+     in the host file. The `boot` module only sets one for my hosts, so the
+     build fails without it.
+   - **nix-darwin:** `system/hosts/<hostname>.nix` (see
+     `Remote-Nelson-Estevao.nix`).
+   - **Home Manager only:** nothing.
+4. **Pick your programs** by setting `dotfiles.programs.<name>.enable = true` in
+   your user file.
+
+> [!IMPORTANT]
+> Flakes only see files that git tracks. Run `git add` on new files before you
+> build. `bin/setup` does this for you.
+
+### 3. Build it
+
 `bin/rebuild` detects the platform and drives NixOS or nix-darwin accordingly.
 
 ```shell
@@ -139,18 +202,56 @@ bin/rebuild home       # rebuild only the home-manager configuration
 bin/rebuild os --boot  # activate on next boot (handy for major release upgrades)
 ```
 
-### Adapting for your own system
+On a Home Manager–only host, run `bin/rebuild home`. Plain `bin/rebuild` also
+tries to rebuild the OS, which fails there.
 
-1. **Add your host** in `flake.nix` under the `hosts` attribute set, setting its
-   `system` and the platform flag — `nixos = true`, `darwin = true`, or neither
-   for a standalone Home Manager host.
-2. **Add your user** in `flake.nix` under `users` and create a file at
-   `home/users/<username>.nix` — use `nelson.nix` as a reference.
-3. **If using NixOS**, add your hardware config under
-   `system/hosts/<hostname>/hardware.nix`. **If using nix-darwin**, add a host
-   file at `system/hosts/<hostname>.nix` (see `Remote-Nelson-Estevao.nix`).
-4. **Pick your programs** by setting `dotfiles.programs.<name>.enable = true` in
-   your user file.
+### What goes into a user entry
+
+Each user in `config/users.nix` has four fields:
+
+- **`name`** — your full name. On NixOS it becomes the account's description.
+- **`extraGroups`** — groups for the account on NixOS, like `wheel` or
+  `docker`.
+- **`overlays`** — nixpkgs overlays for Home Manager. This is how packages from
+  other flakes (Zen Browser, Claude Code, …) and `pkgs.unstable` get in. Copy
+  the list from the user closest to your platform, then drop what you don't
+  use. Some of `nelson`'s overlays are short-term GNOME patches.
+- **`extraSpecialArgs`** — extra arguments for your Home Manager modules.
+
+To use a new flake in an overlay, add it in four places:
+
+1. `inputs` in `flake.nix`.
+2. The `outputs` arguments in `flake.nix`.
+3. The `import ./config/users.nix { inherit … }` list in `flake.nix`.
+4. The argument set at the top of `config/users.nix`.
+
+## 🧰 Scripts
+
+All scripts live in `bin/`. Run any of them with `--help` for details.
+
+| Script                         | What it does                                                         |
+| ------------------------------ | -------------------------------------------------------------------- |
+| `bin/rebuild [os\|home]`       | Builds the config and switches to it.                                |
+| `bin/update`                   | Updates the flake inputs and lists what changed.                     |
+| `bin/update --save`            | Same, then commits `flake.lock` with a note for each input.          |
+| `bin/check`                    | Runs `nix flake check` for every system.                             |
+| `bin/format`                   | Formats every Nix file (`nix fmt`).                                  |
+| `bin/autoclean`                | Deletes generations older than 7 days and frees space (uses `sudo`). |
+| `bin/setup user\|host <name>`  | Adds a user or host (see [Installing](#-installing)).                |
+| `bin/new program <name>`       | Creates a Home Manager program in `home/programs/<name>/`.           |
+| `bin/new module <name>`        | Creates a NixOS module in `system/modules/nixos/<name>/`.            |
+| `bin/new extension <name>`     | Creates a GNOME extension in `home/programs/gnome/extensions/<name>/`. |
+
+To stay up to date:
+
+```shell
+bin/update --save  # update the flake inputs and commit flake.lock
+bin/rebuild        # switch to the new versions
+```
+
+To move to a new NixOS release, bump `26.05` in `flake.nix` and in the
+`nix-shell` lines at the top of each `bin/` script. Then run
+`bin/rebuild os --boot` and reboot, so services don't hang while they restart.
 
 ## 🍎 macOS / nix-darwin
 
@@ -163,11 +264,24 @@ NixOS:
 - **Homebrew is driven declaratively** through the
   `dotfiles.modules.homebrew.enable` module, which reconciles casks/formulae via
   `brew bundle` on activation. nix-darwin does **not** install Homebrew itself —
-  install it once, manually, first. On this Mac, Homebrew is managed by
-  [Workbrew] (MDM), so the module points at the `/opt/workbrew` prefix.
+  install it once, manually, first.
 - **Home Manager runs the same modules** as on Linux; Linux/Wayland-only ones
   (GNOME, Hyprland, Vicinae) stay disabled and evaluate cleanly.
 
+### Using the Homebrew module on your own Mac
+
+My Mac is managed by [Workbrew] (MDM), and the Homebrew module is set up for
+that. On a normal Mac, change these in
+`system/modules/darwin/homebrew/homebrew.nix`:
+
+- **`prefix = "/opt/workbrew";`** — delete this line. nix-darwin then uses the
+  normal Homebrew prefix (`/opt/homebrew` on Apple Silicon).
+- **The `fpath` line at the bottom** — delete it too. It hides folders that
+  Workbrew owns from zsh. Without Workbrew, it only hides Homebrew's own zsh
+  completions.
+- **`taps`, `brews`, and `casks`** — these are my apps. Swap in your own.
+
+[nix-darwin]: https://github.com/nix-darwin/nix-darwin
 [Determinate Nix]: https://docs.determinate.systems/
 [Workbrew]: https://www.workbrew.com/
 
