@@ -42,8 +42,6 @@
   dotfiles.programs.fzf.enable = true;
   dotfiles.programs.git.enable = true;
   dotfiles.programs.glab.enable = true;
-  dotfiles.programs.herdr-app.enable = enableFor [ "desktop" ];
-  dotfiles.programs.herdr-core.enable = enableFor [ "desktop" "server" ];
   dotfiles.programs.httpie.enable = true;
   dotfiles.programs.hyperfine.enable = true;
   dotfiles.programs.jj.enable = true;
