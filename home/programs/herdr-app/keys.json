@@ -50,6 +50,7 @@
     "ctrl-shift-t": "tab.new",
     "ctrl-shift-k": "mod.open:picker",
     "ctrl-shift-p": "app.palette",
+    "alt-x": "app.palette",
     "ctrl-,": "app.settings",
     "ctrl-shift-o": "pane.split:right",
     "ctrl-shift-e": "pane.split:down",
