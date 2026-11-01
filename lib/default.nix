@@ -25,10 +25,14 @@ let
       home-manager
       vicinae
       overlays
+      knownRoles
       ;
   };
 
   # ── Helpers ────────────────────────────────────────────────────────────────
+
+  # Every role some host declares; `enableForRoles` rejects any other name.
+  knownRoles = lib.unique (lib.concatMap (h: h.roles or [ ]) (lib.attrValues hosts));
 
   # Hosts list their users by name; system builders want the definitions.
   # [ "nelson" ] -> { nelson = <user definition>; }
@@ -38,7 +42,7 @@ let
   mkHomeEntry =
     hostname: hostCfg: username:
     lib.nameValuePair "${username}@${hostname}" (
-      mkHomeConfig hostCfg.system hostname username users.${username}
+      mkHomeConfig hostCfg.system hostname (hostCfg.roles or [ ]) username users.${username}
     );
 
   # Platform names are matched loosely, so `" NixOS "` still resolves.

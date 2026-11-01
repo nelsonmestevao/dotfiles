@@ -3,8 +3,9 @@
   home-manager,
   vicinae,
   overlays,
+  knownRoles,
 }:
-system: hostname: username: cfg:
+system: hostname: roles: username: cfg:
 let
   lib = nixpkgs.lib;
   pkgs = nixpkgs.legacyPackages.${system};
@@ -27,6 +28,7 @@ home-manager.lib.homeManagerConfiguration {
     inherit username hostname;
     enableFor = import ../home/lib/enableFor.nix { inherit lib hostname; };
     disableFor = import ../home/lib/disableFor.nix { inherit lib hostname; };
+    enableForRoles = import ../home/lib/enableForRoles.nix { inherit lib roles knownRoles; };
   }
   // (cfg.extraSpecialArgs or { });
   modules = [

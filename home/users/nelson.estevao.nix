@@ -1,5 +1,6 @@
 {
   enableFor,
+  enableForRoles,
   ...
 }:
 {
@@ -11,22 +12,13 @@
 
   # Terminals
   dotfiles.programs.cmux.enable = enableFor [ "Remote-Nelson-Estevao" ];
-  dotfiles.programs.ghostty.enable = enableFor [
-    "framework"
-    "Remote-Nelson-Estevao"
-  ];
+  dotfiles.programs.ghostty.enable = enableForRoles [ "desktop" ];
   dotfiles.programs.wezterm.enable = false;
 
   # Editors & IDEs
   dotfiles.programs.nvim.enable = true;
-  dotfiles.programs.vscode.enable = enableFor [
-    "framework"
-    "Remote-Nelson-Estevao"
-  ];
-  dotfiles.programs.zed.enable = enableFor [
-    "framework"
-    "Remote-Nelson-Estevao"
-  ];
+  dotfiles.programs.vscode.enable = enableForRoles [ "desktop" ];
+  dotfiles.programs.zed.enable = enableForRoles [ "desktop" ];
 
   # Programming Languages
   dotfiles.programs.elixir.enable = true;

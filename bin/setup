@@ -217,6 +217,16 @@ def existing_users():
     return sorted(os.path.basename(p)[:-len(".nix")] for p in glob.glob("home/users/*.nix"))
 
 
+def known_roles():
+    """Roles any host in config/hosts.nix declares, plus the usual two."""
+    with open(HOSTS_FILE) as f:
+        content = f.read()
+    roles = {"desktop", "server"}
+    for block in re.findall(r'roles = \[(.*?)\]', content, re.DOTALL):
+        roles.update(re.findall(r'"([^"]+)"', block))
+    return sorted(roles)
+
+
 def ensure_timer(username):
     """Create system/timers/<username>.nix if missing (required for NixOS hosts)."""
     path = f"system/timers/{username}.nix"
@@ -260,6 +270,10 @@ def setup_host(hostname):
     selected = $(gum choose --no-limit --header "Users for this host:" @(users))
     selected = [u for u in selected.strip().split("\n") if u]
     require(selected, "No users selected.")
+
+    # Optional: a host with no roles only gets what users enable everywhere.
+    roles = $(gum choose --no-limit --header "Roles for this host (none is fine):" @(known_roles()))
+    roles = [r for r in roles.strip().split("\n") if r]
 
     created = []
 
@@ -308,6 +322,8 @@ def setup_host(hostname):
     ]
     if host_type in ("nixos", "darwin"):
         block_lines.append('    platform = "' + host_type + '";')
+    if roles:
+        block_lines.append("    roles = [ " + " ".join('"' + r + '"' for r in roles) + " ];")
     users_str = " ".join('"' + u + '"' for u in selected)
     block_lines.append("    users = [ " + users_str + " ];")
     block_lines.append("  };")
