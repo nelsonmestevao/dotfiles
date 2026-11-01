@@ -60,12 +60,12 @@ Together these produce three kinds of builds: NixOS hosts, nix-darwin (macOS)
 hosts, and standalone Home Manager setups on any other machine. These are my
 hosts today:
 
-| Host                    | Build             | System           | What runs there                           |
-| ----------------------- | ----------------- | ---------------- | ----------------------------------------- |
-| `framework`             | NixOS             | `x86_64-linux`   | GNOME desktop with my full set of apps    |
-| `temis`                 | NixOS             | `x86_64-linux`   | No desktop: SSH, Tailscale, and Docker    |
-| `thinkpad`              | Home Manager only | `x86_64-linux`   | Another Linux distro; only my home config |
-| `Remote-Nelson-Estevao` | nix-darwin        | `aarch64-darwin` | A Mac managed by [Workbrew] (MDM)         |
+| Host                    | Build             | Roles     | System           | What runs there                           |
+| ----------------------- | ----------------- | --------- | ---------------- | ----------------------------------------- |
+| `framework`             | NixOS             | `desktop` | `x86_64-linux`   | GNOME desktop with my full set of apps    |
+| `temis`                 | NixOS             | `server`  | `x86_64-linux`   | No desktop: SSH, Tailscale, and Docker    |
+| `thinkpad`              | Home Manager only | —         | `x86_64-linux`   | Another Linux distro; only my home config |
+| `Remote-Nelson-Estevao` | nix-darwin        | `desktop` | `aarch64-darwin` | A Mac managed by [Workbrew] (MDM)         |
 
 ### How modules work
 
@@ -100,24 +100,31 @@ manages Homebrew (see [macOS notes](#-macos--nix-darwin)).
 
 #### Where things are wired together
 
-- **`config/hosts.nix`** — lists each host with its `system`, its `users`, and
-  its `platform` (`"nixos"` or `"darwin"`). Leave `platform` out for a
-  standalone Home Manager host.
+- **`config/hosts.nix`** — lists each host with its `system`, its `users`, its
+  `roles`, and its `platform` (`"nixos"` or `"darwin"`). Leave `platform` out
+  for a standalone Home Manager host.
 - **`config/users.nix`** — defines each user (see
   [What goes into a user entry](#what-goes-into-a-user-entry)).
+- **`config/overlays.nix`** — the nixpkgs overlays every user shares (see
+  [Using another flake](#using-another-flake)).
 - **`home/users/<username>.nix`** — toggles which programs a user gets.
 - **`system/hosts/<hostname>.nix`** — toggles which system modules a host gets.
 - **`flake.nix`** — declares the flake inputs and passes them on. The code in
   `lib/` turns `config/` into the flake's outputs.
 
-Two helpers make it easy to control what runs where per host:
+Three helpers control what runs where:
 
 ```nix
 # home/users/nelson.nix
 dotfiles.programs.nvim.enable = true;                            # everywhere
+dotfiles.programs.zed.enable = enableForRoles [ "desktop" ];     # on hosts with the desktop role
 dotfiles.programs.jetbrains.enable = enableFor [ "framework" ];  # only on framework
 dotfiles.programs.vscode.enable = disableFor [ "thinkpad" ];     # everywhere except thinkpad
 ```
+
+Use roles where you can. A new desktop then needs one line in
+`config/hosts.nix`, with no edits to the user files. A role that no host
+declares stops the build, so a typo can't quietly turn a program off.
 
 ```nix
 # system/hosts/framework.nix
@@ -165,15 +172,17 @@ bin/setup user <username>  # home/users/<username>.nix + an entry in config/user
 bin/setup host <hostname>  # system/hosts/ files + an entry in config/hosts.nix
 ```
 
-Add the user first, since `bin/setup host` asks which users go on the host.
+Add the user first, since `bin/setup host` asks which users go on the host. It
+also asks for the host's roles.
 
 To do it by hand:
 
 1. **Add your user** to `config/users.nix` and create
    `home/users/<username>.nix`. Use `nelson.nix` as a reference.
-2. **Add your host** to `config/hosts.nix`. Set its `system`, its `users`, and
-   `platform = "nixos"` or `platform = "darwin"`. Leave `platform` out for a
-   standalone Home Manager host.
+2. **Add your host** to `config/hosts.nix`. Set its `system`, its `users`, its
+   `roles` (like `[ "desktop" ]`), and `platform = "nixos"` or
+   `platform = "darwin"`. Leave `platform` out for a standalone Home Manager
+   host.
 3. **Add the host's system files:**
    - **NixOS:** both `system/hosts/<hostname>.nix` and
      `system/hosts/<hostname>/hardware.nix`. Make the hardware file on the
@@ -207,23 +216,22 @@ tries to rebuild the OS, which fails there.
 
 ### What goes into a user entry
 
-Each user in `config/users.nix` has four fields:
+Each user in `config/users.nix` has three fields:
 
 - **`name`** — your full name. On NixOS it becomes the account's description.
 - **`extraGroups`** — groups for the account on NixOS, like `wheel` or
   `docker`.
-- **`overlays`** — nixpkgs overlays for Home Manager. This is how packages from
-  other flakes (Zen Browser, Claude Code, …) and `pkgs.unstable` get in. Copy
-  the list from the user closest to your platform, then drop what you don't
-  use. Some of `nelson`'s overlays are short-term GNOME patches.
 - **`extraSpecialArgs`** — extra arguments for your Home Manager modules.
 
-To use a new flake in an overlay, add it in four places:
+### Using another flake
 
-1. `inputs` in `flake.nix`.
-2. The `outputs` arguments in `flake.nix`.
-3. The `import ./config/users.nix { inherit … }` list in `flake.nix`.
-4. The argument set at the top of `config/users.nix`.
+Packages from other flakes (Zen Browser, Claude Code, …) and `pkgs.unstable`
+come in through the overlays in `config/overlays.nix`. Every user shares them.
+Some are short-term GNOME patches. To use a new flake:
+
+1. Add it to `inputs` in `flake.nix`.
+2. Add its overlay to `config/overlays.nix`. It's in scope as
+   `inputs.<name>`.
 
 ## 🧰 Scripts
 
