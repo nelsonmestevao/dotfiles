@@ -10,22 +10,8 @@ inputs: [
   (final: prev: {
     zen-browser = inputs.zen-browser.packages.${prev.stdenv.hostPlatform.system}.default;
   })
-  # TODO: Remove this once GNOME 50 is released
-  # GNOME 50 patch while waiting for PR #506387 to be merged
-  # https://github.com/NixOS/nixpkgs/pull/506387
   (final: prev: {
     gnomeExtensions = prev.gnomeExtensions // {
-      pop-shell = prev.gnomeExtensions.pop-shell.overrideAttrs (_: {
-        version = "1.2.0-unstable-2026-03-31";
-
-        src = prev.fetchFromGitHub {
-          owner = "pop-os";
-          repo = "shell";
-          rev = "7898b65c20735057faf0797f8ed056704ca55f0d";
-          hash = "sha256-MmHoOxymo0QSRbRcSbFiv82+QWAwIwXwg/wyGQGVYiI=";
-        };
-      });
-
       # GNOME 49/50 support while waiting for upstream PR #33 to be merged
       # https://github.com/mechtifs/wiggle/pull/33
       wiggle = prev.gnomeExtensions.wiggle.overrideAttrs (_: {
@@ -40,13 +26,6 @@ inputs: [
       });
     };
   })
-  # Zed's own flake build on Linux only; macOS keeps the nixpkgs package.
-  (
-    final: prev:
-    prev.lib.optionalAttrs prev.stdenv.hostPlatform.isLinux {
-      zed-editor = inputs.zed.packages.${prev.stdenv.hostPlatform.system}.default;
-    }
-  )
   (final: prev: {
     unstable = import inputs.nixpkgs-unstable {
       system = prev.stdenv.hostPlatform.system;

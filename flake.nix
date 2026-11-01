@@ -15,9 +15,7 @@
     };
 
     zen-browser = {
-      # TODO: back to github:youwen5/zen-browser-flake once
-      # https://github.com/youwen5/zen-browser-flake/pull/23 is merged
-      url = "github:Brainlesslukas/zen-browser-flake/6ca1a282fa32f47cd9fd15ad8592e09558600da8";
+      url = "github:youwen5/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -45,8 +43,6 @@
       url = "github:vicinaehq/vicinae";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
-
-    zed.url = "github:zed-industries/zed/v1.4.4";
   };
   outputs =
     inputs@{

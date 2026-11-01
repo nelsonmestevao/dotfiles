@@ -21,7 +21,7 @@ jobs:
           - system: aarch64-darwin
             os: macos-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       # The Linux runner builds the full x86_64-linux closure from source
       # (a large Rust app among others); reclaim ~20-30GB so it doesn't run
       # out of disk and get killed mid-build.
@@ -29,7 +29,7 @@ jobs:
         if: runner.os == 'Linux'
         uses: jlumbroso/free-disk-space@main
       - uses: cachix/install-nix-action@v31
-      - uses: cachix/cachix-action@v15
+      - uses: cachix/cachix-action@v17
         with:
           name: dotfiles
       # Without --all-systems, `nix flake check` builds only the runner's

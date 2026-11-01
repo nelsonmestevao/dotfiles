@@ -13,10 +13,10 @@
     [
       (unstable.cmux.overrideAttrs (
         finalAttrs: _: {
-          version = "0.65.2";
+          version = "0.65.2.2";
           src = fetchurl {
             url = "https://github.com/manaflow-ai/cmux/releases/download/v${finalAttrs.version}/cmux-macos.dmg";
-            hash = "sha256-L0vZjfdRQGdAjYk5j48ZBZAVo7uuYy0EdFFdS3bW7jY=";
+            hash = "sha256-GOiEjhnU4I/wrvsw8YD9s+r7PzLws2E5Q1GljlBdOX8=";
           };
         }
       ))
