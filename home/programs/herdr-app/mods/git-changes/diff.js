@@ -16,9 +16,10 @@
 // context line. That code isn't used here; git.js has its own splitRows().
 import { div, svg } from "gpui-kit";
 import { v_flex, h_flex, Scrollbar, v_virtual_list } from "gpui-base";
-import { exec, readTextFile, watchFolder, theme, settings, props, shared, setShared, spaces, panes, run, openOverlay } from "herdr";
+import { exec, readTextFile, watchFolder, theme, settings, props, shared, setShared, spaces, panes, run } from "herdr";
 import * as G from "./git.js";
 import { icon } from "./menu.js";
+import { commentsOf, openComment, pickRange, copyButton, reviewButton, selectionBar } from "./common.js";
 
 const MAX = 5000;
 const clip = (line) => (line.length > 4000 ? line.slice(0, 4000) + "… (line truncated)" : line);
@@ -26,9 +27,7 @@ const ROW = 20, HEAD = 24;
 const mono = () => settings().font_family ?? "JetBrains Mono";
 
 // Local change: review comments. Click diff rows to pick them, comment, and send every comment
-// of the space to an agent. The `review` mod owns the comments (shared "review.comments") and
-// the dialogs; the files-mods file tab adds comments to the same review.
-const commentsOf = (space) => (shared("review.comments") ?? {})[space] ?? [];
+// of the space to an agent (common.js; the file tab in file.js adds to the same review).
 const LINE_KINDS = new Set(["+", "-", " "]);
 const rowKey = (r) => `${r.kind}${r.number}`;
 
@@ -184,10 +183,8 @@ export class DiffView {
     const row = layout === "split" ? this.pairs?.[i] : this.rows[i];
     const entry = row?.kind === "pair" ? row.right ?? row.left : row;
     if (!entry || !LINE_KINDS.has(entry.kind)) return;
-    const { index, files } = this.meta(), at = index.get(entry), s = this.sel;
-    if (!s || files[s.from] !== files[at]) this.sel = { from: at, to: at };
-    else if (at >= s.from && at <= s.to) this.sel = null;
-    else this.sel = { from: Math.min(s.from, at), to: Math.max(s.to, at) };
+    const { index, files } = this.meta(), at = index.get(entry);
+    this.sel = pickRange(this.sel, at, !this.sel || files[this.sel.from] === files[at]);
     cx.notify();
   }
 
@@ -221,41 +218,8 @@ export class DiffView {
     const w = String(Math.max(...lines.map((r) => r.number))).length;
     const quote = rows.filter((r) => LINE_KINDS.has(r.kind) || r.kind === "@")
       .map((r) => (r.kind === "@" ? r.text : `${r.kind === " " ? " " : r.kind} ${String(r.number).padStart(w)}  ${r.text}`));
-    openOverlay({ mod: "review", kind: "dialog", width: 620, height: 440, props: { mode: "add", space: this.space,
-      comment: { kind: "diff", root: this.root, on: this.on, path, label: this.selLabel(), keys: lines.map(rowKey), quote } } });
+    openComment(this.space, { kind: "diff", root: this.root, on: this.on, path, label: this.selLabel(), keys: lines.map(rowKey), quote });
     this.sel = null; cx.notify();
-  }
-
-  textButton(id, label, t, onClick, opts = {}) {
-    return h_flex().id(id).h(24).px(9).flex_none().items_center().rounded(6).text_size(12).cursor_pointer()
-      .bg(opts.solid ? t.solid : t.raised).border_1().border_color(opts.solid ? t.solid : t.border)
-      .text_color(opts.solid ? t.solid_foreground : t.muted).hover((s) => s.opacity(0.85))
-      .on_click((_e, cx) => onClick(cx)).child(label);
-  }
-
-  selBar(t) {
-    const s = this.sel;
-    return h_flex().h(32).flex_none().px(12).gap(8).items_center().border_b(1).border_color(t.border).text_size(12)
-      .when(Boolean(s), (e) => e
-        .child(div().font_semibold().child(this.selLabel()))
-        .child(div().flex_1().min_w(0).truncate().text_color(t.dim).child("Click another line to widen · click the pick to clear"))
-        .child(this.textButton("gc-sel-clear", "Clear", t, (cx) => { this.sel = null; cx.notify(); }))
-        .child(this.textButton("gc-sel-comment", "Comment…", t, (cx) => this.comment(cx), { solid: true })))
-      .when(!s, (e) => e.child(div().text_color(t.dim).child("Click a line to comment on it; click another to make it a range")));
-  }
-
-  // Local change: copy a file's path, relative to the repository root, from the diff tab.
-  copyButton(t) {
-    const path = this.item.path, done = this.copied === path;
-    return h_flex().id("gc-diff-copy").size(22).flex_none().items_center().justify_center().rounded(5).cursor_pointer()
-      .tooltip(done ? "Copied" : "Copy relative path").text_color(done ? t.ansi2 : t.muted)
-      .hover((s) => s.bg(t.hover).text_color(done ? t.ansi2 : t.foreground))
-      .on_click((_e, cx) => {
-        cx.write_to_clipboard(path);
-        this.copied = path; cx.notify();
-        cx.timer.after(1500, (cx) => { if (this.copied === path) { this.copied = null; cx.notify(); } });
-      })
-      .child(svg(icon(done ? "check" : "copy")).size(13));
   }
 
   header(t, layout) {
@@ -266,12 +230,11 @@ export class DiffView {
       .child(h_flex().h(38).px(12).gap(8).items_center()
         .child(svg(icon(this.item.area === "commit" ? "commit" : this.item.area === "stash" ? "stash" : "file")).size(14).flex_none().text_color(t.muted))
         .child(div().min_w(0).truncate().font_semibold().child(this.item.area === "commit" ? this.item.subject : itemTitle(this.item)))
-        .when(this.item.area === "file", (e) => e.child(this.copyButton(t)))
+        .when(this.item.area === "file", (e) => e.child(copyButton("gc-diff-copy", this, this.item.path, t)))
         .child(div().flex_1())
         .when(add > 0, (e) => e.child(div().text_size(11.5).text_color(t.ansi2).child(`+${add}`)))
         .when(del > 0, (e) => e.child(div().text_size(11.5).text_color(t.ansi1).child(`−${del}`)))
-        .when(commentsOf(this.space).length > 0, (e) => e.child(this.textButton("gc-review", `Review (${commentsOf(this.space).length})`, t,
-          () => openOverlay({ mod: "review", kind: "dialog", width: 720, height: 600, props: { mode: "send", space: this.space } }), { solid: true })))
+        .when(commentsOf(this.space).length > 0, (e) => e.child(reviewButton("gc-review", this.space, t)))
         .child(this.toggle(t, layout))
         .child(h_flex().id("gc-diff-close").size(24).items_center().justify_center().rounded(5).cursor_pointer().text_color(t.muted).tooltip("Close")
           .hover((s) => s.bg(t.hover).text_color(t.foreground))
@@ -342,7 +305,7 @@ export class DiffView {
       .when(layout === "split", (e) => e.child(h_flex().h(22).flex_none().items_center().border_b(1).border_color(t.border).text_size(11).text_color(t.muted)
         .child(div().flex_1().px(12).child("Before")).child(div().flex_1().px(12).border_l(1).border_color(t.border).child("After"))))
       .when(Boolean(this.error), (e) => e.child(div().px(12).py(8).text_color(t.ansi1).child(this.error)))
-      .child(this.selBar(t))
+      .child(selectionBar("gc-sel", this.sel ? this.selLabel() : null, t, (cx) => { this.sel = null; cx.notify(); }, (cx) => this.comment(cx)))
       .child(body);
   }
 }

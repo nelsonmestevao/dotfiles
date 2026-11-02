@@ -26,18 +26,21 @@ import { History } from "./history.js";
 const shownSpace = () => { const id = focused()?.space; return spaces().find((s) => s.id === id) ?? spaces().find((s) => s.active); };
 
 // The focused terminal's folder, or `props.folder` when opened as a pane on one repository.
+let lastLocation = null;
 function location() {
   const fixed = props()?.folder;
   if (fixed) return { cwd: fixed, on: props()?.on ?? null };
   const space = shownSpace(), f = focused();
   const pane = f?.pane ? panes().find((p) => p.pane === f.pane) : null;
-  // The diff tab is a mod pane with no folder: keep showing the repository it shows.
+  // A diff or file tab is a mod pane with no folder: the diff tab (its tab is on record) shows its
+  // repository; a file tab (local change: file.js) keeps the one shown before.
   if (pane?.mod === "git-changes") {
-    const shown = shownSource(space?.id);
-    if (shown) return { cwd: shown.root, on: shown.on ?? null };
+    const view = (shared("git-changes.view") ?? {})[space?.id], shown = shownSource(space?.id);
+    if (shown && view?.tab === pane.tab) return { cwd: shown.root, on: shown.on ?? null };
+    if (lastLocation) return lastLocation;
   }
   const on = f?.pane === null ? (f.terminal?.includes("/") ? f.terminal.split("/")[0] : null) : space?.machine ?? null;
-  return { cwd: pane?.cwd || f?.cwd || space?.folder, on };
+  return (lastLocation = { cwd: pane?.cwd || f?.cwd || space?.folder, on });
 }
 const key = () => JSON.stringify(location());
 const itemKey = (it) => (it ? `${it.area}:${it.ref ?? it.hash ?? it.path ?? ""}` : "");
