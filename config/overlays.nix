@@ -10,6 +10,8 @@ inputs: [
   (final: prev: {
     # Herdr rings the tab's focused pane even while a side panel mod (notes,
     # files, graph) or a dialog has the keyboard. The patch drops the ring then.
+    # Fixed upstream in 558cf56 (herdrdev/herdr-app#362), after 0.1.12: drop the
+    # patch once herdr-app-nix ships a newer version, or it stops applying.
     herdr-app = prev.herdr-app.overrideAttrs (old: {
       patches = (old.patches or [ ]) ++ [ ../home/programs/herdr-app/focus-ring-follows-keyboard.patch ];
     });
