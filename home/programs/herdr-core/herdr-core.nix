@@ -6,7 +6,11 @@
   ...
 }:
 {
-  home.packages = with pkgs; [
-    herdr-core
-  ];
+  # On macOS, Herdr.app installs herdr-core itself.
+  home.packages = lib.optionals (!pkgs.stdenv.hostPlatform.isDarwin) (
+    with pkgs;
+    [
+      herdr-core
+    ]
+  );
 }
