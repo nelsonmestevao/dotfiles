@@ -1,0 +1,29 @@
+--- a/src/window.rs
++++ b/src/window.rs
+@@ -3648,6 +3648,15 @@
+         out
+     }
+ 
++    /// Whether the keyboard is held by something other than the focused pane's
++    /// terminal: a side panel mod, a float, a dialog. The window's own handle
++    /// doesn't count, as it only holds the keyboard until a pane takes it.
++    fn keyboard_elsewhere(&self, window: &Window, cx: &App) -> bool {
++        window.focused(cx).is_some()
++            && !self.focus.is_focused(window)
++            && self.focused_pane.as_deref().and_then(|p| self.pane_focus(p)).is_some_and(|f| !f.contains_focused(window, cx))
++    }
++
+     /// The shown tab block's pane frame, if its panes are framed now: when
+     /// the tab is split, or always with `lone`.
+     fn pane_frame(&self) -> Option<&PaneFrame> {
+@@ -4478,7 +4487,9 @@
+         if mods::publish_window(self.window_json(window)) {
+             self.refresh_mods(cx);
+         }
+-        let focused = self.focused_path();
++        // The focus ring shows where typing goes, so no pane has it while the
++        // keyboard is elsewhere.
++        let focused = if self.keyboard_elsewhere(window, cx) { HashSet::new() } else { self.focused_path() };
+         let tree = self.render_node(&self.chrome, &focused, None, cx);
+         let tree = self.window_frame(tree, window, cx);
+         let overlays = self.render_overlays(window.viewport_size(), cx);

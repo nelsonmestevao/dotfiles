@@ -8,6 +8,13 @@ inputs: [
   inputs.herdr-app-nix.overlays.default
   inputs.orca.overlays.default
   (final: prev: {
+    # Herdr rings the tab's focused pane even while a side panel mod (notes,
+    # files, graph) or a dialog has the keyboard. The patch drops the ring then.
+    herdr-app = prev.herdr-app.overrideAttrs (old: {
+      patches = (old.patches or [ ]) ++ [ ../home/programs/herdr-app/focus-ring-follows-keyboard.patch ];
+    });
+  })
+  (final: prev: {
     zen-browser = inputs.zen-browser.packages.${prev.stdenv.hostPlatform.system}.default;
   })
   (final: prev: {
