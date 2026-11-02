@@ -5,6 +5,9 @@
   mkSymlink,
   ...
 }:
+let
+  isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
+in
 {
   home.packages = with pkgs; [
     herdr-app
@@ -15,7 +18,7 @@
   # by hand, `touch -h ~/.config/herdr-app/<file>` reloads it; for a mod,
   # restart the window. Herdr owns everything else in the folder.
   xdg.configFile = {
-    "herdr-app/keys.json" = mkSymlink "keys.json";
+    "herdr-app/keys.json" = mkSymlink (if isDarwin then "keys/macos.json" else "keys/linux.json");
     "herdr-app/settings.json" = mkSymlink "settings.json";
     "herdr-app/layouts/main-mods.json" = mkSymlink "layouts/main-mods.json";
   }
