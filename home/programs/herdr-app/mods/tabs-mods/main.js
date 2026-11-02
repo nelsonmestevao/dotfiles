@@ -1,6 +1,10 @@
 import { View, div, svg, image } from "gpui-kit";
 import { h_flex } from "gpui-base";
-import { spaces, panes, run, openOverlay, theme, window, shared, setShared, layout, settings, nextCommand } from "herdr";
+import { spaces, panes, focused, run, openOverlay, theme, window, shared, setShared, layout, settings, nextCommand } from "herdr";
+// The space on screen: focused().space names it. A space's `active` flag can name another one
+// (it read the local .dotfiles while a temis space was shown), so it's only the fallback.
+const shownSpace = () => { const id = focused()?.space; return spaces().find(s => s.id === id) ?? spaces().find(s => s.active); };
+
 
 function find(node, id) {
   if (node?.id === id) return node;
@@ -15,13 +19,16 @@ export default class Tabs extends View {
   init(_props, cx) {
     this.pressed = null;
     this.panels = JSON.parse(localStorage.getItem("panels") ?? "{}");
-    // alt-shift-f/c/g/n (keys.json): show that side panel. For notes, also ask tab-notes to
+    // alt-shift-f/c/g/n (keys.json): show that side panel. c and g both show git-changes, and ask
+    // it for its Changes or History tab. For notes, also ask tab-notes to
     // take the keyboard (it gives it back to the tab instead when it already has it).
     // The tab bar is always shown, so it hears the keys even before a panel mod ever started.
     cx.spawn(async cx => {
       for (;;) {
-        const panel = await nextCommand();
-        if (!["files", "changes", "graph", "notes"].includes(panel)) continue;
+        const command = await nextCommand();
+        const panel = command === "history" ? "changes" : command;
+        if (!["files", "changes", "notes"].includes(panel)) continue;
+        if (panel === "changes") setShared("git-changes.tab", { tab: command, at: Date.now() });
         run("layout.select", { stack: "panel-body", child: panel }); run("layout.show", { id: "panel" });
         if (panel === "notes") setShared("tab-notes.focus", Date.now());
         cx.notify();
@@ -59,7 +66,7 @@ export default class Tabs extends View {
 
   render() {
     const t = theme();
-    const space = spaces().find(p => p.active);
+    const space = shownSpace();
     const shown = space?.tabs ?? [];
     const stop = (_e, cx) => cx.stop_propagation();
     const button = (id, label, action) => div().id(id).size(26).flex_none().flex().items_center().justify_center().rounded(6).text_color(t.dim).hover(s => s.bg(t.hover).text_color(t.foreground))
@@ -89,7 +96,7 @@ export default class Tabs extends View {
       ? Math.max(10, (root.traffic_lights[0] + 64) / settings().zoom - (sidebar?.hidden ? 0 : sidebar?.size?.px ?? 0))
       : 10;
     const panel = find(root, "panel"), body = find(root, "panel-body");
-    const enabled = [...(shared("workspace.panels") ?? ["files", "changes"]), "graph", "notes"];
+    const enabled = [...(shared("workspace.panels") ?? ["files", "changes"]), "notes"];
     this.syncPanel(space, panel, body, enabled);
     const panelButton = (id, label, icon) => {
       const on = panel && !panel.hidden && body?.active === id;
@@ -108,7 +115,6 @@ export default class Tabs extends View {
       .child(button("tab-new", "+", () => openOverlay({ mod: "new-menu", kind: "popup", width: 250, height: 512 })))
       .when(enabled.includes("files"), el => el.child(panelButton("files", "Files", "mods/files/file.svg")))
       .when(enabled.includes("changes"), el => el.child(panelButton("changes", "Changes", "mods/changes/changes.svg")))
-      .child(panelButton("graph", "Graph", "mods/git-graph/icons/graph.svg"))
       .child(panelButton("notes", "Notes", "mods/tab-notes/notes.svg"))
       .when(window()?.buttons, el => el.child(button("minimize", "−", () => run("window.minimize")))
         .child(button("maximize", "□", () => run("window.maximize")))
