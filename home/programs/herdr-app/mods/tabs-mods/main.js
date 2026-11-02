@@ -1,6 +1,6 @@
 import { View, div, svg, image } from "gpui-kit";
 import { h_flex } from "gpui-base";
-import { spaces, panes, run, openOverlay, theme, window, shared, layout, settings } from "herdr";
+import { spaces, panes, run, openOverlay, theme, window, shared, setShared, layout, settings, nextCommand } from "herdr";
 
 function find(node, id) {
   if (node?.id === id) return node;
@@ -12,9 +12,21 @@ function find(node, id) {
 }
 
 export default class Tabs extends View {
-  init() {
+  init(_props, cx) {
     this.pressed = null;
     this.panels = JSON.parse(localStorage.getItem("panels") ?? "{}");
+    // alt-shift-f/c/g/n (keys.json): show that side panel. For notes, also ask tab-notes to
+    // take the keyboard (it gives it back to the tab instead when it already has it).
+    // The tab bar is always shown, so it hears the keys even before a panel mod ever started.
+    cx.spawn(async cx => {
+      for (;;) {
+        const panel = await nextCommand();
+        if (!["files", "changes", "graph", "notes"].includes(panel)) continue;
+        run("layout.select", { stack: "panel-body", child: panel }); run("layout.show", { id: "panel" });
+        if (panel === "notes") setShared("tab-notes.focus", Date.now());
+        cx.notify();
+      }
+    });
   }
 
   // The side panel is remembered per space: switching shows that space's choice
