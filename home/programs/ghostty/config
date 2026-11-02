@@ -3,6 +3,10 @@ font-family = "JetBrains Mono Nerd Font"
 font-size = 16
 
 shell-integration = zsh
+# ssh runs through `ghostty +ssh`: it forwards COLORTERM and sends
+# TERM=xterm-256color. No ssh-terminfo: with xterm-ghostty, servers whose
+# .bashrc only colors *-256color terminals lose the prompt colors.
+shell-integration-features = ssh-env
 
 window-theme = system
 window-decoration = true
