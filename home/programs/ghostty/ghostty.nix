@@ -6,13 +6,8 @@
   ...
 }:
 {
-  # ghostty flake is not packaged for Darwin
-  home.packages = lib.optionals pkgs.stdenv.hostPlatform.isLinux (
-    with pkgs;
-    [
-      ghostty
-    ]
-  );
+  # Linux only: macOS gets it from the Homebrew cask. Unstable for 1.4.
+  home.packages = lib.optionals pkgs.stdenv.hostPlatform.isLinux [ pkgs.unstable.ghostty ];
 
   xdg.configFile."ghostty/config" = mkSymlink "config";
   xdg.configFile."ghostty/keybindings" =
