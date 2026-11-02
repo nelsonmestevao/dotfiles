@@ -22,8 +22,6 @@ with lib.hm.gvariant;
     GSETTINGS_SCHEMA_DIR = builtins.concatStringsSep ":" config.dotfiles.programs.gnome.extensionSchemaDirs;
   };
 
-  dotfiles.programs.ulauncher.enable = false;
-
   dconf.settings = {
     "org/gnome/shell" = {
       disable-user-extensions = false;
