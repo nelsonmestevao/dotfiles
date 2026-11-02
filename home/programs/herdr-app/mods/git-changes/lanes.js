@@ -1,3 +1,7 @@
+// Copied unchanged from herdr-git-graph by Rabeeh T A (https://github.com/rabeeh-ta/herdr-git-graph),
+// mods/git-graph/lanes.js. MIT License, Copyright (c) 2026 Rabeeh T A:
+// see LICENSES/MIT-herdr-git-graph.txt.
+//
 // Lays commits out on lanes. Commits come newest first, every child before its
 // parents (git log --date-order). A lane is a column waiting for one commit and
 // keeps its column until that commit arrives, so lines bend only where
