@@ -112,7 +112,7 @@
   dotfiles.programs.watchman.enable = true;
   dotfiles.programs.wget.enable = true;
   dotfiles.programs.yq.enable = true;
-  dotfiles.programs.zellij.enable = true;
+  dotfiles.programs.zellij.enable = false;
   dotfiles.programs.zoxide.enable = true;
 
   # Typesetting
