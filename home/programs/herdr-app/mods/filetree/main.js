@@ -732,8 +732,20 @@ export default class FileTree extends View {
 
   // Double-click and Enter: config.json's "open". "preview" shows it here; "" the default
   // app; anything else is a command with {path} and {dir}, run without a shell.
+  //
+  // Local change (dotfiles): "tab" opens it in a tab of the main area, in Code Review's file
+  // view (tabbed-changes, role "file": read-only, git gutter, line comments for agents). It
+  // works on other machines too. The space comes from focused(): a space's `active` flag can
+  // name another one.
   openFile(rel, cx) {
     const how = String(this.config.open ?? "preview").trim(), abs = join(this.root, rel);
+    if (how === "tab") {
+      const space = focused()?.space ?? spaces().find((s) => s.active)?.id;
+      if (!space) { this.show(rel, cx); return; }
+      run("tab.new", { space, name: baseOf(rel), mod: "tabbed-changes",
+        props: { role: "file", file: abs, root: this.root, on: this.on ?? null, line: null } });
+      return;
+    }
     if (how === "preview" || this.on) { this.show(rel, cx); return; }
     cx.spawn(async (cx) => {
       try {
