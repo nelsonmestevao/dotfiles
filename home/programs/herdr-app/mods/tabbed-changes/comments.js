@@ -2,14 +2,14 @@
 import { View, div } from 'gpui-kit';
 import { v_flex, h_flex, TextareaState, Textarea } from 'gpui-base';
 import { spaces, agents, shared, setShared, theme, hc } from 'herdr';
-import { makeComment, forSource, forLine, sendAndRemove, isOutdated, lineLabel } from './comment-model.js';
+import { makeComment, forSource, forLine, sendAndRemove, isOutdated, lineLabel, isWaiting } from './comment-model.js';
 import { icon } from './ui.js';
 
 const KEY = 'tabbed-changes.comments.v1';
 const allNotes = () => shared(KEY) ?? [];
 export const commentsFor = source => forSource(allNotes(), source);
 export const lineComments = context => forLine(allNotes(), context);
-export const idleCommentAgents = space => agents().filter(a => a.space === space && a.status === 'idle');
+export const idleCommentAgents = space => agents().filter(a => a.space === space && isWaiting(a));
 export const removeSavedComment = id => setShared(KEY, allNotes().filter(note => note.id !== id));
 export const sendSavedComment = (note, target, space) =>
   sendAndRemove({ note, target, space, agents: agents(), send: args => hc(args), read: allNotes, write: next => setShared(KEY, next) });

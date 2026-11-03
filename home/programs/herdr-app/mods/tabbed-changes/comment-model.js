@@ -24,13 +24,18 @@ export function formatComments(notes) {
   return ['Please address these code review comments. Code and line numbers are snapshots from when each comment was saved; verify them against the current files.',
     ...notes.map(n => `\nRepository: ${n.source.root}${n.source.on ? ` (machine: ${n.source.on})` : ''}\n${n.path}:${lineLabel(n)} (${n.side}${n.base?`, base ${n.base} @ ${n.revision}`:''})\nCode snapshot: ${JSON.stringify(n.code)}\nComment: ${n.text}`)].join('\n');
 }
+// Local change (dotfiles): an agent waits for input when it's `idle` or `done`. Herdr calls it
+// `done` when it finished while nobody looked, until someone does; it's as free as an idle one.
+export const isWaiting = agent => agent.status === 'idle' || agent.status === 'done';
 export async function deliverComments({ notes, target, space, agents, send }) {
   const agent = agents.find(a => a.address === target && a.space === space);
   if (!agent) throw new Error('Choose a live agent in this space.');
-  if (agent.status !== 'idle') throw new Error('The agent must be idle before sending.');
+  if (!isWaiting(agent)) throw new Error('The agent must be idle before sending.');
   const message = formatComments(notes);
   if (message.length > 60000) throw new Error('Send fewer comments at once (maximum 60,000 characters).');
-  const result = await send(['send', '--if', 'idle', agent.address, message]);
+  // No `--if idle`: the app and herdr-core disagree on idle vs done (the app says idle once the
+  // tab was seen, the core still says done), so hc refused a waiting agent. The check above guards.
+  const result = await send(['send', agent.address, message]);
   if (result.code !== 0) throw new Error(result.stderr?.trim() || result.stdout?.trim() || 'The agent did not accept the comments.');
   return result;
 }
