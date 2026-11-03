@@ -9,7 +9,8 @@ let
   isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
 
   mods = [
-    "files-mods"
+    "file-icons"
+    "filetree"
     "git-changes"
     "profile-pictures"
     "review"

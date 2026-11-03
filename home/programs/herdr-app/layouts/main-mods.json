@@ -131,7 +131,7 @@
                       "id": "files",
                       "type": "block",
                       "content": {
-                        "mod": "files-mods"
+                        "mod": "filetree"
                       }
                     },
                     {
