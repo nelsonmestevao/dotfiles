@@ -10,6 +10,7 @@
     "alt-8": "tab.select:8",
     "alt-9": "tab.select:9",
     "alt-b": "layout.toggle:sidebar",
+    "alt-q": "tab.close",
     "alt-f": "pane.zoom",
     "alt-h": "pane.go:left",
     "alt-j": "pane.go:down",
