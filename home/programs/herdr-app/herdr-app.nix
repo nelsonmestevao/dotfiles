@@ -11,7 +11,7 @@ let
   mods = [
     "file-icons"
     "filetree"
-    "git-changes"
+    "git-graph"
     "profile-pictures"
     "review"
     "servers"

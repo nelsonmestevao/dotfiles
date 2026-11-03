@@ -293,6 +293,7 @@ export default class FileTree extends View {
     this.sizes = new Map(); this.sizing = new Set(); this.visible = [];
     this.chip = null; this.branchFlash = null; this.width = 320; this.query = ""; this.hits = null; this.searchSeq = 0;
     this.seenAt = Date.now() - 2000; this.seenPreview = shared(`${NAME}.preview`)?.n ?? 0; this.seenView = shared(`${NAME}.view`)?.n ?? 0;
+    this.focusSeen = 0; this.letGo = false;
     this.input = InputState.new({ placeholder: "Filter files" });
     this.input.on("change", (_e, cx) => this.search(this.input.value(), cx));
     this.input.on("submit", (_e, cx) => this.jump(cx));
@@ -944,6 +945,25 @@ export default class FileTree extends View {
     return v_flex().id("ft-menu").size_full().p(5).gap(0).bg(t.popover ?? t.surface).text_color(t.foreground).children(items);
   }
 
+  // Local change (dotfiles): alt-shift-f (tabs-mods) stamps shared `filetree.focus` to give the
+  // tree the keyboard, as tab-notes does. Pressed while the tree has it, the keyboard goes back:
+  // dropping the focus target for a frame makes Herdr return it to the tab's focused pane.
+  takeFocus(cx) {
+    const ask = shared(`${NAME}.focus`);
+    if (typeof ask !== "number" || ask <= this.focusSeen) return;
+    this.focusSeen = ask;
+    if (Date.now() - ask > 3000) return;
+    // Typing in the filter box: move to the tree, as Esc does.
+    if (this.typing) { this.handle.focus(); return; }
+    if (this.handle.is_focused()) {
+      this.letGo = true;
+      cx.timer.after(50, (cx) => { this.letGo = false; cx.notify(); });
+      return;
+    }
+    // The panel may only be on screen a frame or two later.
+    for (const ms of [30, 200]) cx.timer.after(ms, () => { if (!this.handle.is_focused()) this.handle.focus(); });
+  }
+
   render(cx) {
     if (this.menu) return this.renderMenu(cx);
     this.sync(cx);
@@ -955,6 +975,7 @@ export default class FileTree extends View {
       this.seenView = want.n;
       if (VIEWS.some(([v]) => v === want.view) && want.view !== this.view) { this.view = want.view; this.hits = null; this.closePreview(); this.savePrefs(); }
     }
+    this.takeFocus(cx);
     const t = theme(), look = frameLook(), R = look.radius, now = Date.now();
     const rows = this.file ? [] : this.rows();
     if (this.scrollTo !== null && this.scrollTo !== undefined) {
@@ -992,8 +1013,11 @@ export default class FileTree extends View {
       btn("ft-forget", "⊘", "Clear the list", false, () => { this.history = []; try { localStorage.setItem("history", "[]"); } catch {} }),
     ];
 
+    // Local change (dotfiles): an accent border while the tree or its filter box has the keyboard,
+    // like a focused terminal pane's and the Notes panel's.
     const root = v_flex().id(NAME).size_full().min_h(0).overflow_hidden().bg(t.background).text_color(t.foreground).text_size(13)
-      .track_focus(this.handle).on_key_down((e, cx) => this.key(e, cx))
+      .rounded(10).border_1().border_color(this.typing ? t.accent : t.border).focus((s) => s.border_color(t.accent))
+      .when(!this.letGo, (el) => el.track_focus(this.handle)).on_key_down((e, cx) => this.key(e, cx))
       .on_size_change((size, cx) => { if (Math.abs(size.width - this.width) > 4) { this.width = size.width; cx.notify(); } })
       .child(header);
 

@@ -138,7 +138,14 @@
                       "id": "changes",
                       "type": "block",
                       "content": {
-                        "mod": "git-changes"
+                        "mod": "tabbed-changes"
+                      }
+                    },
+                    {
+                      "id": "graph",
+                      "type": "block",
+                      "content": {
+                        "mod": "git-graph"
                       }
                     },
                     {
@@ -146,13 +153,6 @@
                       "type": "block",
                       "content": {
                         "mod": "tab-notes"
-                      }
-                    },
-                    {
-                      "id": "code",
-                      "type": "block",
-                      "content": {
-                        "mod": "tabbed-changes"
                       }
                     }
                   ],
