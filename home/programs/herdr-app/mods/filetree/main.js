@@ -140,12 +140,21 @@ function fileIcon(path, dir, open, dark) {
 // ── where to look ──────────────────────────────────────────────────────────────────────
 // The focused pane's folder; when the focused pane is a mod (this tree opened as a pane,
 // say), the first terminal beside it.
+//
+// Local change (dotfiles): a mod pane with no terminal beside it (a file tab opened from this
+// tree) keeps the folder shown before, in the same space, instead of falling back to the
+// space's folder. The space comes from focused(): a space's `active` flag can name another one.
+let lastLocation = null;
 function location() {
-  const space = spaces().find((s) => s.active), f = focused();
+  const f = focused(), space = spaces().find((s) => s.id === f?.space) ?? spaces().find((s) => s.active);
   let pane = f?.pane ? panes().find((p) => p.pane === f.pane) : null;
-  if (pane && !pane.terminal) pane = panes().find((p) => p.tab === pane.tab && p.terminal && p.cwd) ?? null;
+  if (pane && !pane.terminal) {
+    const beside = panes().find((p) => p.tab === pane.tab && p.terminal && p.cwd);
+    if (!beside && lastLocation && lastLocation.space === space?.id) return lastLocation;
+    pane = beside ?? null;
+  }
   const on = f?.pane === null ? (f.terminal?.includes("/") ? f.terminal.split("/")[0] : null) : space?.machine ?? null;
-  return { cwd: pane?.cwd || f?.cwd || space?.folder || null, on };
+  return (lastLocation = { cwd: pane?.cwd || f?.cwd || space?.folder || null, on, space: space?.id });
 }
 const windows = (on) => !on && window()?.platform === "windows";
 const psQuote = (s) => "'" + s.replaceAll("'", "''") + "'";
