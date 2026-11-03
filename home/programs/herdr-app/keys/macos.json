@@ -27,6 +27,7 @@
     "cmd-shift-g": "tabs-mods.history",
     "cmd-shift-m": "mod.open:servers",
     "cmd-shift-n": "tabs-mods.notes",
+    "cmd-shift-d": "tabs-mods.code",
     "ctrl-+": "app.zoom_in",
     "ctrl--": "app.zoom_out",
     "ctrl-0": "app.zoom_reset",

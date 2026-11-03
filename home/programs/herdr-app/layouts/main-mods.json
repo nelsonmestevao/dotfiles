@@ -147,6 +147,13 @@
                       "content": {
                         "mod": "tab-notes"
                       }
+                    },
+                    {
+                      "id": "code",
+                      "type": "block",
+                      "content": {
+                        "mod": "tabbed-changes"
+                      }
                     }
                   ],
                   "active": "files"

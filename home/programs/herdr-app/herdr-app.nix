@@ -16,6 +16,7 @@ let
     "review"
     "servers"
     "tab-notes"
+    "tabbed-changes"
     "tabs-mods"
   ];
 in
