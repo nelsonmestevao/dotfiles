@@ -43,15 +43,13 @@ in
         pkg-config
 
         # development tools
-        age
-        ast-grep
+        # age
         bc
 
         eva
 
         k6
         llvmPackages_20.clang-tools
-        presenterm
         silicon
         stripe-cli
 
@@ -64,9 +62,6 @@ in
         # performance & benchmarking
         scc
         tokei
-
-        # editors & IDEs
-        sc-im
 
         # TUIs
         lazysql
