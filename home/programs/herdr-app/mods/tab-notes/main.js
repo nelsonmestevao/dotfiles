@@ -5,7 +5,7 @@
 // Vim modes: normal shows the note rendered (GitHub-flavored markdown), insert shows the
 // raw text to type in. i/a/I/A/o/O enter insert and Escape leaves it; in normal mode
 // j/k, ctrl-d/u, ctrl-f/b, gg and G scroll, and S sends the note to the tab's agent.
-// The header counts the note's tasks and ticks them. alt-shift-n (handled by tabs-mods)
+// The header counts the note's tasks and ticks them. alt-shift-n (handled by better-tabs)
 // shows the panel and gives it the keyboard, or hands the keyboard back to the tab when
 // the notes already have it.
 import { View, div } from "gpui-kit";
@@ -160,7 +160,7 @@ export default class Notes extends View {
     this.handle.focus(); this.flush(cx); cx.notify();
   }
 
-  // alt-shift-n: tabs-mods shows the panel and stamps this shared key with the time.
+  // alt-shift-n: better-tabs shows the panel and stamps this shared key with the time.
   // A stamp from before this copy started (shared values persist) is old news.
   wantFocus(cx) {
     const ask = shared("tab-notes.focus");

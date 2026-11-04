@@ -9,6 +9,7 @@ let
   isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
 
   mods = [
+    "better-tabs"
     "file-icons"
     "filetree"
     "git-graph"
@@ -17,7 +18,6 @@ let
     "servers"
     "tab-notes"
     "tabbed-changes"
-    "tabs-mods"
   ];
 in
 {

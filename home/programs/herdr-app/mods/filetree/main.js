@@ -966,7 +966,7 @@ export default class FileTree extends View {
     return v_flex().id("ft-menu").size_full().p(5).gap(0).bg(t.popover ?? t.surface).text_color(t.foreground).children(items);
   }
 
-  // Local change (dotfiles): alt-shift-f (tabs-mods) stamps shared `filetree.focus` to give the
+  // Local change (dotfiles): alt-shift-f (better-tabs, hooks.js) stamps shared `filetree.focus` to give the
   // tree the keyboard, as tab-notes does. Pressed while the tree has it, the keyboard goes back:
   // dropping the focus target for a frame makes Herdr return it to the tab's focused pane.
   takeFocus(cx) {

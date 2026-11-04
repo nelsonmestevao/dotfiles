@@ -79,7 +79,95 @@
           "id": "tabs",
           "type": "block",
           "content": {
-            "mod": "tabs-mods"
+            "mod": "better-tabs",
+            "props": {
+              "rememberPanels": {
+                "container": "panel",
+                "stack": "panel-body"
+              },
+              "buttons": [
+                {
+                  "id": "files",
+                  "label": "Files",
+                  "icon": "file",
+                  "group": "panels",
+                  "action": {
+                    "type": "panel",
+                    "container": "panel",
+                    "stack": "panel-body",
+                    "target": "files"
+                  }
+                },
+                {
+                  "id": "changes",
+                  "label": "Changes",
+                  "icon": "changes",
+                  "group": "panels",
+                  "action": {
+                    "type": "panel",
+                    "container": "panel",
+                    "stack": "panel-body",
+                    "target": "changes"
+                  }
+                },
+                {
+                  "id": "graph",
+                  "label": "Graph",
+                  "icon": "mods/git-graph/icons/graph.svg",
+                  "group": "panels",
+                  "action": {
+                    "type": "panel",
+                    "container": "panel",
+                    "stack": "panel-body",
+                    "target": "graph"
+                  }
+                },
+                {
+                  "id": "notes",
+                  "label": "Notes",
+                  "icon": "mods/tab-notes/notes.svg",
+                  "group": "panels",
+                  "action": {
+                    "type": "panel",
+                    "container": "panel",
+                    "stack": "panel-body",
+                    "target": "notes"
+                  }
+                }
+              ],
+              "commands": {
+                "files": {
+                  "type": "hook",
+                  "name": "showPanel",
+                  "args": {
+                    "panel": "files",
+                    "focus": "filetree.focus"
+                  }
+                },
+                "changes": {
+                  "type": "hook",
+                  "name": "showPanel",
+                  "args": {
+                    "panel": "changes"
+                  }
+                },
+                "graph": {
+                  "type": "hook",
+                  "name": "showPanel",
+                  "args": {
+                    "panel": "graph"
+                  }
+                },
+                "notes": {
+                  "type": "hook",
+                  "name": "showPanel",
+                  "args": {
+                    "panel": "notes",
+                    "focus": "tab-notes.focus"
+                  }
+                }
+              }
+            }
           },
           "size": {
             "px": 42

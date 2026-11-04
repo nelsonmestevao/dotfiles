@@ -1,0 +1,24 @@
+Herdr Mods — Better Changes, Better Spaces, Better Tabs, and GitHub PR
+Copyright 2026 Tawsif Aqib
+
+Better Changes adapts behavior and code from Herdr Desktop's shipped Changes mod.
+Herdr Desktop is available at https://github.com/herdrdev/herdr-app and is
+licensed under the Apache License, Version 2.0.
+
+Better Spaces adapts code from Herdr Desktop's shipped spaces mod.
+Its bundled navigation and pull-request SVG icons are also adapted from
+Herdr Desktop.
+
+Better Tabs adapts Herdr Desktop's shipped tabs mod through the former Factory
+Tabs clone. Its bundled close, spinner, file, changes, and window-control SVG
+icons are adapted from Herdr Desktop as well. It adds configurable toolbar
+actions, trusted local hooks, an opt-in shared button registry, and overflow.
+
+GitHub PR extracts the pull-request integration originally developed in
+herdr-workflow by Tawsif Aqib, including its native UI, GitHub CLI Go bridge,
+agent actions, and tests. Its bundled UI SVG icons are adapted from Herdr
+Desktop's icon set.
+
+This distribution adds tree/flat file lists, staging controls, reusable diff
+tabs, inline/split views, configurable typography, right-aligned space branches,
+standalone GitHub CLI pull-request status, documentation, and tests.
