@@ -125,6 +125,10 @@ dotfiles.programs.herdr-core.enable = enableFor [ "desktop" "temis" ]; # desktop
 dotfiles.programs.vscode.enable = disableFor [ "server" ];            # everywhere except servers
 ```
 
+Each host also gets a role for its OS, `"linux"` or `"darwin"`. It comes from
+the host's `system`, so you never list it. Use `enableFor [ "linux" ]` for
+programs that only run on Linux.
+
 Use roles where you can. A new desktop then needs one line in
 `config/hosts.nix`, with no edits to the user files. Two rules keep this safe:
 

@@ -6,6 +6,9 @@
 # `roles` say what a host is for ("desktop", "server"). User files turn
 # programs on by role or host name, e.g. `enableFor [ "desktop" "temis" ]`, so
 # a role can't share a host's name.
+#
+# Each host also gets a role for its OS, "linux" or "darwin", taken from its
+# `system`. You don't need to list it.
 {
   framework = {
     system = "x86_64-linux";

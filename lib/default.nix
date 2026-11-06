@@ -31,12 +31,21 @@ let
 
   # ── Helpers ────────────────────────────────────────────────────────────────
 
+  # A host's roles: the ones it lists, plus its OS kernel ("linux" or
+  # "darwin"), read from `system`. Home-only hosts get it too. Listing the
+  # OS role by hand is harmless, since duplicates are dropped.
+  rolesOf =
+    hostCfg:
+    lib.unique (
+      (hostCfg.roles or [ ]) ++ [ (lib.systems.elaborate hostCfg.system).parsed.kernel.name ]
+    );
+
   # Every host name and role that enableFor/disableFor accept. A role named
   # like a host would make `enableFor [ "x" ]` ambiguous, so that's an error.
   knownNames =
     let
       hostNames = lib.attrNames hosts;
-      roles = lib.unique (lib.concatMap (h: h.roles or [ ]) (lib.attrValues hosts));
+      roles = lib.unique (lib.concatMap rolesOf (lib.attrValues hosts));
       clashes = lib.intersectLists hostNames roles;
     in
     lib.throwIf (clashes != [ ])
@@ -51,7 +60,7 @@ let
   mkHomeEntry =
     hostname: hostCfg: username:
     lib.nameValuePair "${username}@${hostname}" (
-      mkHomeConfig hostCfg.system hostname (hostCfg.roles or [ ]) username users.${username}
+      mkHomeConfig hostCfg.system hostname (rolesOf hostCfg) username users.${username}
     );
 
   # Platform names are matched loosely, so `" NixOS "` still resolves.
