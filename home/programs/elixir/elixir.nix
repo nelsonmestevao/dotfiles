@@ -11,7 +11,7 @@ let
   # misses test_unicode_range on this snapshot, so the build fails on macOS.
   # Deselect it there too, leaving the Linux build (and its binary cache) alone.
   weasyprint =
-    if pkgs.stdenv.isDarwin then
+    if pkgs.stdenv.hostPlatform.isDarwin then
       pkgs.python313Packages.weasyprint.overridePythonAttrs (_old: {
         doCheck = false;
       })
@@ -53,7 +53,7 @@ in
         ${pkgs.elixir}/bin/elixir "$TMP"
       '')
     ]
-    ++ lib.optionals pkgs.stdenv.isLinux [
+    ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
       ## system utils (linux only)
       pkgs.inotify-tools
 
