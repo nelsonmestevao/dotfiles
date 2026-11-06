@@ -175,13 +175,13 @@ with lib.hm.gvariant;
     };
 
     "org/gnome/desktop/screensaver" = {
-      picture-uri = "file:///home/nelson/Pictures/Wallpapers/lockscreen.jpg";
-      picture-uri-dark = "file:///home/nelson/Pictures/Wallpapers/lockscreen.jpg";
+      picture-uri = "file://${config.home.homeDirectory}/Pictures/Wallpapers/lockscreen.jpg";
+      picture-uri-dark = "file://${config.home.homeDirectory}/Pictures/Wallpapers/lockscreen.jpg";
     };
 
     "org/gnome/desktop/background" = {
-      picture-uri = "file:///home/nelson/Pictures/Wallpapers/desktop.jpg";
-      picture-uri-dark = "file:///home/nelson/Pictures/Wallpapers/desktop.jpg";
+      picture-uri = "file://${config.home.homeDirectory}/Pictures/Wallpapers/desktop.jpg";
+      picture-uri-dark = "file://${config.home.homeDirectory}/Pictures/Wallpapers/desktop.jpg";
     };
 
     "org/gnome/desktop/input-sources" = {
