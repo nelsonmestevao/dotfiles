@@ -12,7 +12,7 @@ let
   # Deselect it there too, leaving the Linux build (and its binary cache) alone.
   weasyprint =
     if pkgs.stdenv.isDarwin then
-      pkgs.python313Packages.weasyprint.overridePythonAttrs (old: {
+      pkgs.python313Packages.weasyprint.overridePythonAttrs (_old: {
         doCheck = false;
       })
     else

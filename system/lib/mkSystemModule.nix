@@ -2,6 +2,8 @@ name: body:
 {
   config,
   lib,
+  # The module system only passes args a module names, and body needs pkgs.
+  # deadnix: skip
   pkgs,
   ...
 }@args:

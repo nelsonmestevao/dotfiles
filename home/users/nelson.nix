@@ -1,6 +1,5 @@
 {
   enableFor,
-  disableFor,
   ...
 }:
 {

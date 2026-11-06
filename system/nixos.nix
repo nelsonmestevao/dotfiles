@@ -1,5 +1,4 @@
 {
-  config,
   lib,
   pkgs,
   hostname,
@@ -44,7 +43,7 @@
 
   programs.nix-ld.enable = true;
 
-  users.users = lib.mapAttrs (username: userCfg: {
+  users.users = lib.mapAttrs (_username: userCfg: {
     isNormalUser = true;
     description = userCfg.name;
     extraGroups = userCfg.extraGroups or [ ];

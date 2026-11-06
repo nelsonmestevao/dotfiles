@@ -1,8 +1,4 @@
 {
-  config,
-  lib,
-  pkgs,
-  mkSymlink,
   ...
 }:
 {

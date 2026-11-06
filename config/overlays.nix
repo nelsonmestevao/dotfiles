@@ -7,7 +7,7 @@ inputs: [
   inputs.codex-cli-nix.overlays.default
   inputs.herdr-app-nix.overlays.default
   inputs.orca.overlays.default
-  (final: prev: {
+  (_final: prev: {
     # Herdr rings the tab's focused pane even while a side panel mod (notes,
     # files, graph) or a dialog has the keyboard. The patch drops the ring then.
     # Fixed upstream in 558cf56 (herdrdev/herdr-app#362), after 0.1.12: drop the
@@ -16,10 +16,10 @@ inputs: [
       patches = (old.patches or [ ]) ++ [ ../home/programs/herdr-app/focus-ring-follows-keyboard.patch ];
     });
   })
-  (final: prev: {
+  (_final: prev: {
     zen-browser = inputs.zen-browser.packages.${prev.stdenv.hostPlatform.system}.default;
   })
-  (final: prev: {
+  (_final: prev: {
     gnomeExtensions = prev.gnomeExtensions // {
       # GNOME 49/50 support while waiting for upstream PR #33 to be merged
       # https://github.com/mechtifs/wiggle/pull/33
@@ -35,7 +35,7 @@ inputs: [
       });
     };
   })
-  (final: prev: {
+  (_final: prev: {
     unstable = import inputs.nixpkgs-unstable {
       system = prev.stdenv.hostPlatform.system;
       config.allowUnfree = true;
