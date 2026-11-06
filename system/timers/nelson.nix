@@ -1,5 +1,6 @@
 username:
 {
+  config,
   pkgs,
   lib,
   onHosts,
@@ -9,6 +10,16 @@ let
   mkSystemTimer = import ../lib/mkSystemTimer.nix {
     inherit pkgs username;
   };
+
+  home = config.users.users.${username}.home;
+
+  # The same backup goes to each repo. Every entry gets its own
+  # restic-backups-<name> service and timer, plus a restic-<name> wrapper.
+  resticRepos = {
+    mega = "rclone:mega:Backups/restic/framework.repo";
+    mdrive = "rclone:mdrive:Backups/restic/framework.repo";
+    tpshare = "rclone:tpshare:G/backups/framework.repo";
+  };
 in
 onHosts [ "framework" ] (
   lib.mkMerge [
@@ -17,19 +28,31 @@ onHosts [ "framework" ] (
       # --log-file=$HOME/.logs/rclone/backup-books.log
     '')
 
-    (mkSystemTimer "backup-system" "Mon..Fri 17:00" ''
-      ${pkgs.restic}/bin/restic -r rclone:mega:Backups/restic/framework.repo backup \
-        --compression max --password-file ~/.config/restic/restic.pw --exclude-file ~/.dotfiles/home/programs/restic/exclude.txt -v \
-        ~/Archive ~/Books ~/Code ~/Documents ~/Downloads ~/Pictures ~/Videos
-
-      ${pkgs.restic}/bin/restic -r rclone:mdrive:Backups/restic/framework.repo backup \
-        --compression max --password-file ~/.config/restic/restic.pw --exclude-file ~/.dotfiles/home/programs/restic/exclude.txt -v \
-        ~/Archive ~/Books ~/Code ~/Documents ~/Downloads ~/Pictures ~/Videos
-
-      ${pkgs.restic}/bin/restic -r rclone:tpshare:G/backups/framework.repo backup \
-        --compression max --password-file ~/.config/restic/restic.pw --exclude-file ~/.dotfiles/home/programs/restic/exclude.txt -v \
-        ~/Archive ~/Books ~/Code ~/Documents ~/Downloads ~/Pictures ~/Videos
-    '')
+    {
+      services.restic.backups = lib.mapAttrs (_name: repository: {
+        inherit repository;
+        user = username;
+        passwordFile = "${home}/.config/restic/restic.pw";
+        paths = map (dir: "${home}/${dir}") [
+          "Archive"
+          "Books"
+          "Code"
+          "Documents"
+          "Downloads"
+          "Pictures"
+          "Videos"
+        ];
+        extraBackupArgs = [
+          "--compression=max"
+          "--exclude-file=${../../home/programs/restic/exclude.txt}"
+          "--verbose"
+        ];
+        timerConfig = {
+          OnCalendar = "Mon..Fri 17:00";
+          Persistent = true;
+        };
+      }) resticRepos;
+    }
 
     (mkSystemTimer "backup-dbclient" "hourly" ''
       cd $HOME/.dbclient/query || exit 1
