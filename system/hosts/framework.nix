@@ -23,7 +23,6 @@
   dotfiles.modules.vicinae.enable = true;
 
   # ── Browsers ─────────────────────────────────────────────────────────
-  dotfiles.modules.brave.enable = true;
   dotfiles.modules.firefox.enable = true;
 
   # ── Communication ────────────────────────────────────────────────────
