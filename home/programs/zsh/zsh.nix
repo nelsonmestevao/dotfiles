@@ -3,6 +3,7 @@
   lib,
   pkgs,
   mkSymlink,
+  enableFor,
   ...
 }:
 {
@@ -13,6 +14,7 @@
   home.sessionVariables = {
     SHELL = "${pkgs.zsh}/bin/zsh";
     DOTFILES = config.dotfiles.directory;
+    PROMPT_SHOW_HOST = lib.mkIf (enableFor [ "server" ]) "1";
   };
 
   programs.zsh.enable = true;
