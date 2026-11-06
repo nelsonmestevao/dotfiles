@@ -23,16 +23,7 @@
   dotfiles.modules.firefox.enable = true;
 
   # ── Communication ────────────────────────────────────────────────────
-  dotfiles.modules.discord.enable = true;
   dotfiles.modules.keybase.enable = true;
-  dotfiles.modules.slack.enable = true;
-
-  # ── Media ────────────────────────────────────────────────────────────
-  dotfiles.modules.kdenlive.enable = true;
-  dotfiles.modules.obs.enable = true;
-  dotfiles.modules.shotcut.enable = true;
-  dotfiles.modules.spotify.enable = true;
-  dotfiles.modules.vlc.enable = true;
 
   # ── Packages & Virtualisation ────────────────────────────────────────
   dotfiles.modules.docker.enable = true;
