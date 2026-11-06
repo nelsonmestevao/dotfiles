@@ -4,22 +4,27 @@
   pkgs,
   hostname,
   mkSymlink,
+  enableFor,
   ...
 }:
 {
-  home.packages = with pkgs; [
-    delta
-    diffpdf
-    difftastic
-    gh
-    git
-    git-lfs
-    (callPackage ./git-sim/package.nix { })
-    git-who
-    gitleaks
-    glab
-    lazygit
-  ];
+  home.packages =
+    with pkgs;
+    [
+      delta
+      diffpdf
+      difftastic
+      gh
+      git
+      git-lfs
+      git-who
+      gitleaks
+      glab
+      lazygit
+    ]
+    ++ lib.optionals (enableFor [ "framework" ]) [
+      (callPackage ./git-sim/package.nix { })
+    ];
 
   programs.zsh.envExtra = lib.mkIf config.dotfiles.programs.zsh.enable ''
     #GIT_FUZZY_PATH_DIR="$HOME/.git-fuzzy"
