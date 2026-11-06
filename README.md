@@ -109,6 +109,8 @@ manages Homebrew (see [macOS notes](#-macos--nix-darwin)).
   [Using another flake](#using-another-flake)).
 - **`home/users/<username>.nix`** — toggles which programs a user gets.
 - **`system/hosts/<hostname>.nix`** — toggles which system modules a host gets.
+  It also holds settings that only that host needs, like its boot loader. The
+  modules hold only what all hosts share.
 - **`flake.nix`** — declares the flake inputs and passes them on. The code in
   `lib/` turns `config/` into the flake's outputs.
 
@@ -192,8 +194,8 @@ To do it by hand:
      `system/hosts/<hostname>/hardware.nix`. Make the hardware file on the
      target machine with `nixos-generate-config --show-hardware-config`. Also
      set a boot loader (for example `boot.loader.systemd-boot.enable = true;`)
-     in the host file. The `boot` module only sets one for my hosts, so the
-     build fails without it.
+     in the host file. The `boot` module doesn't set one, so the build fails
+     without it.
    - **nix-darwin:** `system/hosts/<hostname>.nix` (see
      `Remote-Nelson-Estevao.nix`).
    - **Home Manager only:** nothing.

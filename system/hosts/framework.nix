@@ -1,4 +1,5 @@
 {
+  pkgs,
   ...
 }:
 {
@@ -10,9 +11,28 @@
   dotfiles.modules.printing.enable = true;
   dotfiles.modules.swap.enable = true;
 
+  # ── Boot ─────────────────────────────────────────────────────────────
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.systemd-boot.configurationLimit = 10;
+  boot.loader.efi.canTouchEfiVariables = true;
+
   # ── Networking ───────────────────────────────────────────────────────
   dotfiles.modules.networking.enable = true;
   dotfiles.modules.tailscale.enable = true;
+
+  networking.firewall.enable = true;
+
+  # Allow access to localsend
+  networking.firewall.allowedTCPPorts = [
+    53317
+    53318
+  ];
+  networking.firewall.allowedUDPPorts = [ 53317 ];
+
+  networking.networkmanager.plugins = with pkgs; [
+    networkmanager-openconnect
+    networkmanager-openvpn
+  ];
 
   # ── Desktop & Audio ──────────────────────────────────────────────────
   dotfiles.modules.audio.enable = true;
