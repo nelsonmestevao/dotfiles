@@ -191,6 +191,21 @@ def existing_users():
     return sorted(os.path.basename(p)[:-len(".nix")] for p in glob.glob("home/users/*.nix"))
 
 
+def nixpkgs_release():
+    """The release flake.nix follows, like "26.05". A host installed now records it as stateVersion."""
+    with open("flake.nix") as f:
+        match = re.search(r'nixpkgs/nixos-(\d+\.\d+)', f.read())
+    return require(match and match.group(1), "Could not find the nixpkgs release in flake.nix")
+
+
+def darwin_max_state_version():
+    """nix-darwin's current system.maxStateVersion, read from the locked input. A Mac installed now records it as darwinStateVersion."""
+    source = $(nix eval --raw --impure --expr '(builtins.getFlake (toString ./.)).inputs.nix-darwin.outPath').strip()
+    with open(f"{source}/modules/system/version.nix") as f:
+        match = re.search(r'maxStateVersion = mkOption \{.*?default = (\d+);', f.read(), re.DOTALL)
+    return require(match and match.group(1), "Could not find system.maxStateVersion in nix-darwin")
+
+
 def known_roles():
     """Roles any host in config/hosts.nix declares, plus the usual two."""
     with open(HOSTS_FILE) as f:
@@ -283,6 +298,9 @@ def setup_host(hostname):
         block_lines.append("    roles = [ " + " ".join('"' + r + '"' for r in roles) + " ];")
     users_str = " ".join('"' + u + '"' for u in selected)
     block_lines.append("    users = [ " + users_str + " ];")
+    block_lines.append('    stateVersion = "' + nixpkgs_release() + '";')
+    if host_type == "darwin":
+        block_lines.append("    darwinStateVersion = " + darwin_max_state_version() + ";")
     block_lines.append("  };")
     insert_into_config(HOSTS_FILE, "\n".join(block_lines))
     print(f"{GREEN}✓{RESET} Registered host in {HOSTS_FILE}")
@@ -293,6 +311,7 @@ def setup_host(hostname):
     print()
     print(f"{GREEN}✓{RESET} Host '{hostname}' created.")
     print(f"  Next steps:")
+    print(f"    {GREEN}→{RESET} To sign commits there, add git.signingKey to its entry in {HOSTS_FILE}")
     if host_type == "nixos":
         print(f"    {GREEN}→{RESET} Rebuild the system:  bin/rebuild os")
         print(f"    {GREEN}→{RESET} Config: nixosConfigurations.{hostname}")

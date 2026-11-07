@@ -33,5 +33,5 @@
     wget
   ];
 
-  # `system.stateVersion` is set once for every NixOS host in ../nixos.nix.
+  # `system.stateVersion` comes from this host's entry in config/hosts.nix.
 }

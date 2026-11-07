@@ -60,10 +60,24 @@ let
       "config/hosts.nix: role ${lib.concatStringsSep ", " clashes} has the same name as a host"
       (hostNames ++ roles);
 
+  # Every host records the release it was first installed with: home-manager
+  # and NixOS keep that release's defaults for stateful things. A Mac also
+  # records nix-darwin's own number. Neither has a sane default, so a host
+  # without them is an error before anything is built.
+  checkHost =
+    hostname: cfg:
+    lib.throwIfNot (cfg ? stateVersion)
+      "config/hosts.nix: ${hostname} needs stateVersion, the release it was first installed with (like \"26.05\")"
+      (
+        lib.throwIfNot (normalizePlatform (cfg.platform or "") != "darwin" || cfg ? darwinStateVersion)
+          "config/hosts.nix: ${hostname} needs darwinStateVersion, the nix-darwin version it was first installed with (like 7)"
+          cfg
+      );
+
   # Hosts list their users by name; system builders want the definitions too.
   # { users = [ "nelson" ]; ... } -> { host = <the entry>; users = { nelson = <user definition>; }; }
-  withUsers = cfg: {
-    host = cfg;
+  withUsers = hostname: cfg: {
+    host = checkHost hostname cfg;
     users = lib.genAttrs cfg.users (u: users.${u});
   };
 
@@ -72,7 +86,7 @@ let
     hostname: hostCfg: username:
     lib.nameValuePair "${username}@${hostname}" (mkHomeConfig {
       inherit hostname username;
-      host = hostCfg;
+      host = checkHost hostname hostCfg;
       roles = rolesOf hostCfg;
       user = users.${username};
     });
@@ -99,7 +113,7 @@ in
       "systemConfigsFor: unknown platform \"${platform}\" (known: ${lib.concatStringsSep ", " (lib.attrNames builders)})"
       (
         lib.mapAttrs builders.${key} (
-          lib.mapAttrs (_: withUsers) (
+          lib.mapAttrs withUsers (
             lib.filterAttrs (_: cfg: normalizePlatform (cfg.platform or "") == key) hosts
           )
         )

@@ -3,6 +3,7 @@
   pkgs,
   hostname,
   users,
+  host,
   ...
 }:
 {
@@ -48,5 +49,6 @@
   ];
 
   # ──────────────────────────────────────────────────────────────────────
-  system.stateVersion = "25.11";
+  # The release this host was first installed with; see config/hosts.nix.
+  system.stateVersion = host.stateVersion;
 }

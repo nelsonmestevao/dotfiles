@@ -190,9 +190,10 @@ To do it by hand:
 1. **Add your user** to `config/users.nix` and create
    `home/users/<username>.nix`. Use `nelson.nix` as a reference.
 2. **Add your host** to `config/hosts.nix`. Set its `system`, its `users`, its
-   `roles` (like `[ "desktop" ]`), and `platform = "nixos"` or
+   `roles` (like `[ "desktop" ]`), its `stateVersion` (the release you are
+   installing, like `"26.05"`), and `platform = "nixos"` or
    `platform = "darwin"`. Leave `platform` out for a standalone Home Manager
-   host.
+   host. A Mac also needs `darwinStateVersion`.
 3. **Add the host's system files:**
    - **NixOS:** both `system/hosts/<hostname>.nix` and
      `system/hosts/<hostname>/hardware.nix`. Make the hardware file on the
@@ -233,6 +234,11 @@ Each host in `config/hosts.nix` has these fields:
   Home Manager host.
 - **`roles`** — what the host is for, like `[ "desktop" ]`. Optional.
 - **`users`** — the users from `config/users.nix` that get a home config there.
+- **`stateVersion`** — the release the host was first installed with, like
+  `"26.05"`. Home Manager and NixOS keep that release's defaults for stateful
+  things, so never bump it. A Mac also sets **`darwinStateVersion`**, the
+  nix-darwin version it was first installed with. `bin/setup host` fills both
+  in.
 - **`git.signingKey`** — the SSH key that signs commits on this host, as the
   public key or the path of its file. **`git.signingProgram`** is the program
   that signs with it, like 1Password's. Leave both out and commits aren't

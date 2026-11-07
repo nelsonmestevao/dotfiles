@@ -2,6 +2,7 @@
   lib,
   hostname,
   users,
+  host,
   ...
 }:
 {
@@ -53,7 +54,8 @@
   system.defaults.finder._FXShowPosixPathInTitle = true;
 
   # ──────────────────────────────────────────────────────────────────────
-  # Set to the nix-darwin version you first installed on this machine. A lower
-  # value than the current release is fine; a higher one errors.
-  system.stateVersion = 6;
+  # The nix-darwin version this Mac was first installed with; see
+  # config/hosts.nix. A lower value than the current release is fine; a higher
+  # one errors.
+  system.stateVersion = host.darwinStateVersion;
 }
