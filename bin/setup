@@ -356,6 +356,7 @@ def setup_user(username):
     print()
     print(f"{GREEN}✓{RESET} User '{username}' created.")
     print(f"  Next steps:")
+    print(f"    {GREEN}→{RESET} Put your git identity (email) in home/programs/git/profiles/{username}.ini")
     print(f"    {GREEN}→{RESET} Add '{username}' to a host's `users` list in {HOSTS_FILE},")
     print(f"      or run `bin/setup host <hostname>` and select them.")
 

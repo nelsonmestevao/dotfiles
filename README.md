@@ -261,10 +261,10 @@ Each user in `config/users.nix` has these fields:
   `docker`.
 - **`extraSpecialArgs`** — extra arguments for your Home Manager modules.
   Optional.
-- **`git.profile`** — the file in `home/programs/git/profiles/` with your git
-  identity. Leave it out and only the shared settings apply.
 
-Modules get the whole entry as `user`.
+Modules get the whole entry as `user`. Your git identity is not in the entry:
+it's the file `home/programs/git/profiles/<username>.ini`, included when it
+exists. Without it, git refuses to commit until you set an email.
 
 ### Using another flake
 

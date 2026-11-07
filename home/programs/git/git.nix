@@ -5,29 +5,24 @@
   mkSymlink,
   enableFor,
   host,
-  user,
+  username,
   ...
 }:
 let
-  # The host says what signs commits here; the user says which profile to
-  # include. Both come from config/, so a new host or user gets a working git
-  # config with nothing to copy. A profile may include other profiles (the
-  # personal one picks an identity by folder), so every profile is linked.
+  # The host says what signs commits here, from config/hosts.nix. The user's
+  # identity is profiles/<username>.ini, included when it exists. A profile
+  # may include other profiles (nelson's picks an identity by folder), so
+  # every profile is linked.
   signingKey = host.git.signingKey or null;
   signingProgram = host.git.signingProgram or null;
-  profile = user.git.profile or null;
+  profile = "profiles/${username}.ini";
   profiles = builtins.attrNames (builtins.readDir ./profiles);
 
-  # Git skips an include it can't find, so a typo in the profile name must
-  # fail here instead.
-  profileInclude = lib.optional (profile != null) (
-    lib.throwIfNot (builtins.pathExists (./profiles + "/${profile}.ini"))
-      "config/users.nix: git.profile \"${profile}\" has no home/programs/git/profiles/${profile}.ini"
-      "~/.config/git/profiles/${profile}.ini"
-  );
-
   settings = {
-    include.path = [ "~/.config/git/common.ini" ] ++ profileInclude;
+    include.path = [
+      "~/.config/git/common.ini"
+    ]
+    ++ lib.optional (builtins.pathExists (./. + "/${profile}")) "~/.config/git/${profile}";
   }
   // lib.optionalAttrs (signingKey != null) {
     user.signingkey = signingKey;
