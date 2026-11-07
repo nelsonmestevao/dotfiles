@@ -14,6 +14,10 @@
   boot.loader.grub.useOSProber = true;
   boot.loader.grub.configurationLimit = 10;
 
+  # ── Keyboard ─────────────────────────────────────────────────────────
+  services.xserver.xkb.layout = "us";
+  console.keyMap = "us";
+
   # ── Networking ───────────────────────────────────────────────────────
   dotfiles.modules.networking.enable = true;
   dotfiles.modules.tailscale.enable = true;

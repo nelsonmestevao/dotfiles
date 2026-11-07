@@ -16,6 +16,10 @@
   boot.loader.systemd-boot.configurationLimit = 10;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  # ── Keyboard ─────────────────────────────────────────────────────────
+  services.xserver.xkb.layout = "pt";
+  console.keyMap = "pt-latin1";
+
   # ── Networking ───────────────────────────────────────────────────────
   dotfiles.modules.networking.enable = true;
   dotfiles.modules.tailscale.enable = true;
