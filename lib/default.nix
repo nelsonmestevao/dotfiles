@@ -42,10 +42,18 @@ let
 
   # Every host name and role that enableFor/disableFor accept. A role named
   # like a host would make `enableFor [ "x" ]` ambiguous, so that's an error.
+  # "linux" and "darwin" always count, even with no host on that OS, so a
+  # user file doesn't break when you remove your last Mac or Linux host.
   knownNames =
     let
       hostNames = lib.attrNames hosts;
-      roles = lib.unique (lib.concatMap rolesOf (lib.attrValues hosts));
+      roles = lib.unique (
+        [
+          "linux"
+          "darwin"
+        ]
+        ++ lib.concatMap rolesOf (lib.attrValues hosts)
+      );
       clashes = lib.intersectLists hostNames roles;
     in
     lib.throwIf (clashes != [ ])
