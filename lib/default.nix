@@ -60,16 +60,22 @@ let
       "config/hosts.nix: role ${lib.concatStringsSep ", " clashes} has the same name as a host"
       (hostNames ++ roles);
 
-  # Hosts list their users by name; system builders want the definitions.
-  # [ "nelson" ] -> { nelson = <user definition>; }
-  withUsers = cfg: cfg // { users = lib.genAttrs cfg.users (u: users.${u}); };
+  # Hosts list their users by name; system builders want the definitions too.
+  # { users = [ "nelson" ]; ... } -> { host = <the entry>; users = { nelson = <user definition>; }; }
+  withUsers = cfg: {
+    host = cfg;
+    users = lib.genAttrs cfg.users (u: users.${u});
+  };
 
   # "username@hostname" -> home-manager configuration.
   mkHomeEntry =
     hostname: hostCfg: username:
-    lib.nameValuePair "${username}@${hostname}" (
-      mkHomeConfig hostCfg.system hostname (rolesOf hostCfg) username users.${username}
-    );
+    lib.nameValuePair "${username}@${hostname}" (mkHomeConfig {
+      inherit hostname username;
+      host = hostCfg;
+      roles = rolesOf hostCfg;
+      user = users.${username};
+    });
 
   # Platform names are matched loosely, so `" NixOS "` still resolves.
   # Applied to both sides of the comparison, never to what the user sees.

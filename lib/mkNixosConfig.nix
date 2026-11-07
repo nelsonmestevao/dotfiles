@@ -3,17 +3,19 @@
   vicinae,
   overlays,
 }:
-hostname: cfg:
+hostname:
+{ host, users }:
 let
   lib = nixpkgs.lib;
   importModules = import ./importModules.nix { inherit lib; };
   mkSystemModule = import ../system/lib/mkSystemModule.nix;
 in
 nixpkgs.lib.nixosSystem {
-  inherit (cfg) system;
+  inherit (host) system;
+  # `host` is this host's entry in config/hosts.nix; `users` holds the
+  # config/users.nix entries of the users it lists.
   specialArgs = {
-    inherit hostname;
-    inherit (cfg) users;
+    inherit hostname host users;
   };
   modules = [
     { nixpkgs.overlays = overlays; }

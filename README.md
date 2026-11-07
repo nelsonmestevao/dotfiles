@@ -78,7 +78,7 @@ linking config files back to this repo.
 > `mkSymlink` creates **true symlinks** (on Linux and macOS alike) pointing
 > directly from your home directory into this repo, so you can edit config files
 > in place and see changes immediately — no rebuild needed. This is how I like
-> it.
+> it. A path that is not in the repo fails the build, so a link can't dangle.
 >
 > By default, Nix/Home Manager copies files into the read-only Nix store,
 > requiring a rebuild for every change. This provides more guarantees like
@@ -100,9 +100,8 @@ manages Homebrew (see [macOS notes](#-macos--nix-darwin)).
 
 #### Where things are wired together
 
-- **`config/hosts.nix`** — lists each host with its `system`, its `users`, its
-  `roles`, and its `platform` (`"nixos"` or `"darwin"`). Leave `platform` out
-  for a standalone Home Manager host.
+- **`config/hosts.nix`** — lists each host (see
+  [What goes into a host entry](#what-goes-into-a-host-entry)).
 - **`config/users.nix`** — defines each user (see
   [What goes into a user entry](#what-goes-into-a-user-entry)).
 - **`config/overlays.nix`** — the nixpkgs overlays every host and user shares (see
@@ -225,14 +224,35 @@ bin/rebuild os --boot  # activate on next boot (handy for major release upgrades
 On a Home Manager–only host, run `bin/rebuild home`. Plain `bin/rebuild` also
 tries to rebuild the OS, which fails there.
 
+### What goes into a host entry
+
+Each host in `config/hosts.nix` has these fields:
+
+- **`system`** — like `x86_64-linux` or `aarch64-darwin`.
+- **`platform`** — `"nixos"` or `"darwin"`. Leave it out for a standalone
+  Home Manager host.
+- **`roles`** — what the host is for, like `[ "desktop" ]`. Optional.
+- **`users`** — the users from `config/users.nix` that get a home config there.
+- **`git.signingKey`** — the SSH key that signs commits on this host, as the
+  public key or the path of its file. **`git.signingProgram`** is the program
+  that signs with it, like 1Password's. Leave both out and commits aren't
+  signed there.
+
+Modules get the whole entry as `host`, so a module can read a host fact
+without knowing the host's name.
+
 ### What goes into a user entry
 
-Each user in `config/users.nix` has three fields:
+Each user in `config/users.nix` has these fields:
 
 - **`name`** — your full name. On NixOS it becomes the account's description.
 - **`extraGroups`** — groups for the account on NixOS, like `wheel` or
   `docker`.
 - **`extraSpecialArgs`** — extra arguments for your Home Manager modules.
+- **`git.profile`** — the file in `home/programs/git/profiles/` with your git
+  identity. Leave it out and only the shared settings apply.
+
+Modules get the whole entry as `user`.
 
 ### Using another flake
 

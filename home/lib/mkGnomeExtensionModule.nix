@@ -6,9 +6,14 @@ name: body:
   ...
 }@args:
 let
+  # As in mkHomeModule: a file that isn't in the repo fails the build.
   mkSymlink =
     relativePath:
-    config.lib.dotfiles.mkSymlinkFrom "${config.dotfiles.directory}/home/programs/gnome/extensions/${name}" relativePath;
+    lib.throwIfNot (builtins.pathExists (../programs/gnome/extensions + "/${name}/${relativePath}"))
+      "dotfiles.programs.gnome.extensions.${name}: home/programs/gnome/extensions/${name}/${relativePath} does not exist"
+      (
+        config.lib.dotfiles.mkSymlinkFrom "${config.dotfiles.directory}/home/programs/gnome/extensions/${name}" relativePath
+      );
 
   bodyResult = body (args // { inherit mkSymlink; });
   package = bodyResult.package or pkgs.gnomeExtensions.${name};

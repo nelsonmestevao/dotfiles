@@ -5,10 +5,16 @@
   overlays,
   knownNames,
 }:
-system: hostname: roles: username: cfg:
+{
+  hostname,
+  host,
+  roles,
+  username,
+  user,
+}:
 let
   lib = nixpkgs.lib;
-  pkgs = nixpkgs.legacyPackages.${system};
+  pkgs = nixpkgs.legacyPackages.${host.system};
   importModules = import ./importModules.nix { inherit lib; };
   mkHomeModule = import ../home/lib/mkHomeModule.nix;
   mkGnomeExtensionModule = import ../home/lib/mkGnomeExtensionModule.nix;
@@ -25,12 +31,20 @@ let
 in
 home-manager.lib.homeManagerConfiguration {
   inherit pkgs;
+  # `host` and `user` are the entries from config/hosts.nix and
+  # config/users.nix, so a module can read a host fact (a signing key, the
+  # state version) without knowing the host's name.
   extraSpecialArgs = {
-    inherit username hostname;
+    inherit
+      username
+      hostname
+      host
+      user
+      ;
     enableFor = import ../home/lib/enableFor.nix hostInfo;
     disableFor = import ../home/lib/disableFor.nix hostInfo;
   }
-  // (cfg.extraSpecialArgs or { });
+  // (user.extraSpecialArgs or { });
   modules = [
     { nixpkgs.overlays = overlays; }
     ../home
