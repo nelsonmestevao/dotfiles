@@ -5,6 +5,9 @@
   ...
 }:
 {
+  # Runs as a systemd user service under Wayland.
+  platforms = [ "linux" ];
+
   # ── Packages ──────────────────────────────────────────────────────────
   home.packages = with pkgs; [
     playerctl

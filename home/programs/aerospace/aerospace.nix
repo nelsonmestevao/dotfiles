@@ -1,25 +1,10 @@
 {
-  pkgs,
   mkSymlink,
   ...
 }:
 {
-  # ── Packages ──────────────────────────────────────────────────────────
-  home.packages = with pkgs; [
-  ];
+  platforms = [ "darwin" ];
 
-  # ── Environment Variables ─────────────────────────────────────────────
-  # home.sessionVariables = {
-  #   EXAMPLE_VAR = "value";
-  #   EDITOR = "${pkgs.aerospace}/bin/aerospace";
-  # };
-
-  # ── Shell Integration (zsh) ──────────────────────────────────────────
-  # programs.zsh.envExtra = lib.mkIf config.dotfiles.programs.zsh.enable ''
-  #   # source extra shell config, completions, etc.
-  #   # eval $(${pkgs.aerospace}/bin/aerospace init zsh)
-  # '';
-
-  # ── Symlinked Config Files ───────────────────────────────────────────
+  # The app itself comes from Homebrew (system/modules/darwin/homebrew).
   xdg.configFile."aerospace/aerospace.toml" = mkSymlink "aerospace.toml";
 }

@@ -4,6 +4,8 @@
   ...
 }:
 {
+  platforms = [ "linux" ];
+
   home.packages = with pkgs; [
     espanso-wayland
   ];

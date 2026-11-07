@@ -6,6 +6,8 @@
 }:
 with lib.hm.gvariant;
 {
+  platforms = [ "linux" ];
+
   home.packages = with pkgs; [
     wmctrl
     gnome-tweaks

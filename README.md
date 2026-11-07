@@ -92,6 +92,11 @@ linking config files back to this repo.
 > xdg.configFile."ghostty/config".source = ./config;
 > ```
 
+A module that only runs on one OS says so with `platforms = [ "linux" ]` or
+`[ "darwin" ]`, next to its settings. Turning it on for a host on the other OS
+stops the build with a message that names the host, instead of failing deep
+inside a package build. Most modules run everywhere and leave it out.
+
 Similarly, system-level concerns live under `system/modules/`, split by platform
 into `nixos/` and `darwin/`. Each module provides a
 `dotfiles.modules.<name>.enable` option — the NixOS side covers things like
