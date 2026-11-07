@@ -9,7 +9,7 @@
   overlays,
 }:
 let
-  lib = nixpkgs.lib;
+  inherit (nixpkgs) lib;
 
   # ── Builders ───────────────────────────────────────────────────────────────
 

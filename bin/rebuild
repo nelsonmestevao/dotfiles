@@ -1,7 +1,4 @@
-#!/usr/bin/env nix-shell
-#! nix-shell -I nixpkgs=channel:nixos-26.05
-#! nix-shell -p nh gum python3 python3Packages.xonsh python3Packages.docopt
-#! nix-shell -i xonsh
+#!/usr/bin/env -S nix --extra-experimental-features "nix-command flakes" develop --command xonsh
 """
 Rebuilds the system and home configuration.
 

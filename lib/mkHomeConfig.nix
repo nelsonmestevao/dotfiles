@@ -13,7 +13,7 @@
   user,
 }:
 let
-  lib = nixpkgs.lib;
+  inherit (nixpkgs) lib;
   pkgs = nixpkgs.legacyPackages.${host.system};
   importModules = import ./importModules.nix { inherit lib; };
   mkHomeModule = import ../home/lib/mkHomeModule.nix;

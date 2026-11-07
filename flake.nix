@@ -46,6 +46,7 @@
   };
   outputs =
     inputs@{
+      self,
       nixpkgs,
       home-manager,
       nix-darwin,
@@ -53,7 +54,7 @@
       ...
     }:
     let
-      lib = nixpkgs.lib;
+      inherit (nixpkgs) lib;
 
       # ── Configuration ────────────────────────────────────────────────────
       hosts = import ./config/hosts.nix;
@@ -95,13 +96,62 @@
         nixpkgs.legacyPackages.${system}.runCommand "eval-${name}" {
           drvPath = builtins.unsafeDiscardStringContext toplevel.drvPath;
         } ''echo "$drvPath" > "$out"'';
+
+      # deadnix, statix and nixfmt over every .nix file. It takes about a
+      # minute, so CI runs it before the builds (bin/lint runs it here).
+      lint =
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
+        pkgs.runCommand "lint"
+          {
+            nativeBuildInputs = with pkgs; [
+              deadnix
+              statix
+              nixfmt
+            ];
+          }
+          ''
+            cd ${self}
+            deadnix --fail .
+            statix check .
+            nixfmt --check $(find . -name '*.nix')
+            touch "$out"
+          '';
     in
     {
       formatter = lib.genAttrs allSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-tree);
 
+      # What the bin/ scripts and the lint check need. The scripts start in
+      # this shell on their own; `nix develop` or direnv (.envrc) opens it.
+      devShells = lib.genAttrs allSystems (
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
+        {
+          default = pkgs.mkShell {
+            packages = with pkgs; [
+              deadnix
+              statix
+              nixfmt
+              gum
+              nh
+              python3
+              python3Packages.xonsh
+              python3Packages.docopt
+            ];
+          };
+        }
+      );
+
       checks = lib.genAttrs allSystems (
         system:
-        lib.mapAttrs (_: cfg: cfg.activationPackage) (
+        {
+          lint = lint system;
+        }
+        // lib.mapAttrs (_: cfg: cfg.activationPackage) (
           lib.filterAttrs (_: cfg: cfg.pkgs.stdenv.hostPlatform.system == system) homeConfigs
         )
         // lib.mapAttrs' (

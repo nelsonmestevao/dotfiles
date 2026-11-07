@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+
+# deadnix, statix and nixfmt over every .nix file: the check CI runs first.
+nix build --no-link -L ".#checks.$(nix config show system).lint"

@@ -1,0 +1,8 @@
+# Lints turned off on purpose.
+#
+# empty_pattern: `{ ... }:` is how a module with no arguments reads in nixpkgs
+# and home-manager, and it keeps the argument list easy to extend.
+#
+# repeated_keys: every host and user file is a list of dotted paths, one
+# program per line, like `dotfiles.programs.x.enable = ...;`. That's the point.
+disabled = ["empty_pattern", "repeated_keys"]

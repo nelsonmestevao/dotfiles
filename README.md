@@ -281,7 +281,10 @@ use a new flake:
 
 ## 🧰 Scripts
 
-All scripts live in `bin/`. Run any of them with `--help` for details.
+All scripts live in `bin/`. Run any of them with `--help` for details. Run
+them from inside the repo: each one starts in the flake's dev shell, so the
+tools it needs come from `flake.lock`. With direnv, `cd` into the repo loads
+that shell for you (`direnv allow` once).
 
 | Script                         | What it does                                                         |
 | ------------------------------ | -------------------------------------------------------------------- |
@@ -289,6 +292,7 @@ All scripts live in `bin/`. Run any of them with `--help` for details.
 | `bin/update`                   | Updates the flake inputs and lists what changed.                     |
 | `bin/update --save`            | Same, then commits `flake.lock` with a note for each input.          |
 | `bin/check`                    | Runs `nix flake check` for every system.                             |
+| `bin/lint`                     | Runs deadnix, statix and nixfmt, like CI does before it builds.      |
 | `bin/format`                   | Formats every Nix file (`nix fmt`).                                  |
 | `bin/autoclean`                | Deletes generations older than 7 days and frees space (uses `sudo`). |
 | `bin/setup user\|host <name>`  | Adds a user or host (see [Installing](#-installing)).                |
@@ -303,8 +307,7 @@ bin/update --save  # update the flake inputs and commit flake.lock
 bin/rebuild        # switch to the new versions
 ```
 
-To move to a new NixOS release, bump `26.05` in `flake.nix` and in the
-`nix-shell` lines at the top of each `bin/` script. Then run
+To move to a new NixOS release, bump `26.05` in `flake.nix`. Then run
 `bin/rebuild os --boot` and reboot, so services don't hang while they restart.
 
 ## 🍎 macOS / nix-darwin

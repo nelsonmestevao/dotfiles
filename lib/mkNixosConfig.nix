@@ -6,7 +6,7 @@
 hostname:
 { host, users }:
 let
-  lib = nixpkgs.lib;
+  inherit (nixpkgs) lib;
   importModules = import ./importModules.nix { inherit lib; };
   mkSystemModule = import ../system/lib/mkSystemModule.nix;
 in

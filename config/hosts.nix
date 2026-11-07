@@ -40,7 +40,6 @@
     roles = [ "server" ];
     users = [ "nelson" ];
     stateVersion = "25.11";
-    # The key file, so no ssh-agent is needed.
     git.signingKey = "~/.ssh/id_ed25519.pub";
   };
   "Remote-Nelson-Estevao" = {

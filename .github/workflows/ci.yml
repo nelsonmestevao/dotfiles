@@ -13,8 +13,21 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # deadnix, statix and nixfmt in about a minute. The builds wait for it, so
+  # a formatting slip fails fast instead of after an hour.
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+      - uses: cachix/install-nix-action@v31
+      - run: nix build -L .#checks.x86_64-linux.lint
+
   check:
     name: check (${{ matrix.system }})
+    needs: lint
     runs-on: ${{ matrix.os }}
     permissions:
       contents: read
@@ -58,7 +71,9 @@ jobs:
           purge-primary-key: never
       # Without --all-systems, `nix flake check` builds only the runner's
       # native system (x86_64-linux on ubuntu, aarch64-darwin on macos), so
-      # each matrix job checks exactly one system in parallel.
+      # each matrix job checks exactly one system in parallel. The checks are
+      # the home configurations (built) and the system configurations
+      # (evaluated, see flake.nix).
       - run: nix flake check
       # Most of the closure downloads from cache.nixos.org in about 8 minutes.
       # These are built from source and slow: vicinae takes about an hour and

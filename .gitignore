@@ -1,0 +1,4 @@
+# direnv's cache for the dev shell
+.direnv/
+# nix build's output link
+result
