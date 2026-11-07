@@ -105,7 +105,7 @@ manages Homebrew (see [macOS notes](#-macos--nix-darwin)).
   for a standalone Home Manager host.
 - **`config/users.nix`** — defines each user (see
   [What goes into a user entry](#what-goes-into-a-user-entry)).
-- **`config/overlays.nix`** — the nixpkgs overlays every user shares (see
+- **`config/overlays.nix`** — the nixpkgs overlays every host and user shares (see
   [Using another flake](#using-another-flake)).
 - **`home/users/<username>.nix`** — toggles which programs a user gets.
 - **`system/hosts/<hostname>.nix`** — toggles which system modules a host gets.
@@ -237,12 +237,15 @@ Each user in `config/users.nix` has three fields:
 ### Using another flake
 
 Packages from other flakes (Zen Browser, Claude Code, …) and `pkgs.unstable`
-come in through the overlays in `config/overlays.nix`. Every user shares them.
-Some are short-term GNOME patches. To use a new flake:
+come in through the overlays in `config/overlays.nix`. Every NixOS, nix-darwin
+and Home Manager configuration gets them. Some are short-term GNOME patches. To
+use a new flake:
 
 1. Add it to `inputs` in `flake.nix`.
 2. Add its overlay to `config/overlays.nix`. It's in scope as
-   `inputs.<name>`.
+   `inputs.<name>`. If the overlay reuses the name of a nixpkgs package, give
+   it a new name instead, like `orca-app` there. Otherwise it replaces that
+   package on the systems too.
 
 ## 🧰 Scripts
 

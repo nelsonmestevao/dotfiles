@@ -15,8 +15,8 @@ let
 
   # Keyed by the host's `platform`, so the filter and the builder can't diverge.
   builders = {
-    nixos = import ./mkNixosConfig.nix { inherit nixpkgs vicinae; };
-    darwin = import ./mkDarwinConfig.nix { inherit nixpkgs nix-darwin; };
+    nixos = import ./mkNixosConfig.nix { inherit nixpkgs vicinae overlays; };
+    darwin = import ./mkDarwinConfig.nix { inherit nixpkgs nix-darwin overlays; };
   };
 
   mkHomeConfig = import ./mkHomeConfig.nix {

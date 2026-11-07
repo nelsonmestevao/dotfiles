@@ -1,4 +1,8 @@
-{ nixpkgs, vicinae }:
+{
+  nixpkgs,
+  vicinae,
+  overlays,
+}:
 hostname: cfg:
 let
   lib = nixpkgs.lib;
@@ -8,10 +12,11 @@ in
 nixpkgs.lib.nixosSystem {
   inherit (cfg) system;
   specialArgs = {
-    inherit hostname vicinae;
+    inherit hostname;
     inherit (cfg) users;
   };
   modules = [
+    { nixpkgs.overlays = overlays; }
     ../system/nixos.nix
     vicinae.nixosModules.default
     (
@@ -19,7 +24,6 @@ nixpkgs.lib.nixosSystem {
       {
         # Gate upstream's input-server (default: true) on our per-host flag.
         programs.vicinae.input-server.enable = config.dotfiles.modules.vicinae.enable;
-        programs.vicinae.input-server.package = import ./vicinaePackage.nix vicinae cfg.system;
       }
     )
   ]

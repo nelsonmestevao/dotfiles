@@ -1,6 +1,7 @@
 {
   nixpkgs,
   nix-darwin,
+  overlays,
 }:
 hostname: cfg:
 let
@@ -14,7 +15,10 @@ nix-darwin.lib.darwinSystem {
     inherit (cfg) users;
   };
   modules = [
-    { nixpkgs.hostPlatform = cfg.system; }
+    {
+      nixpkgs.hostPlatform = cfg.system;
+      nixpkgs.overlays = overlays;
+    }
     ../system/darwin.nix
   ]
   ++ importModules mkSystemModule ../system/modules/darwin;

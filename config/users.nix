@@ -1,6 +1,6 @@
 # ── Users (home-manager) ───────────────────────────────────────────────────
 #
-# Overlays are shared by every user; see ./overlays.nix.
+# Overlays are shared by every host and user; see ./overlays.nix.
 {
   "nelson.estevao" = {
     name = "Nelson Estevão";
