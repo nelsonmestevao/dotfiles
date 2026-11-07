@@ -77,6 +77,24 @@
         systemConfigsFor
         homeConfigs
         ;
+
+      nixosConfigs = systemConfigsFor "nixos";
+      darwinConfigs = systemConfigsFor "darwin";
+
+      # The hosts of `configs` that run on `system`, by host name.
+      hostsOn = system: lib.filterAttrs (name: _: hosts.${name}.system == system);
+
+      # A check that evaluates a system configuration without building it.
+      # Working out the top-level derivation's path evaluates every module,
+      # option and assertion, which is where configuration errors show up.
+      # Building the closure would take hours on a runner. `nix flake check`
+      # doesn't know darwinConfigurations at all, so this is the only check
+      # the Mac system config gets.
+      evalOnly =
+        system: name: toplevel:
+        nixpkgs.legacyPackages.${system}.runCommand "eval-${name}" {
+          drvPath = builtins.unsafeDiscardStringContext toplevel.drvPath;
+        } ''echo "$drvPath" > "$out"'';
     in
     {
       formatter = lib.genAttrs allSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-tree);
@@ -86,10 +104,17 @@
         lib.mapAttrs (_: cfg: cfg.activationPackage) (
           lib.filterAttrs (_: cfg: cfg.pkgs.stdenv.hostPlatform.system == system) homeConfigs
         )
+        // lib.mapAttrs' (
+          name: cfg:
+          lib.nameValuePair "nixos-${name}" (evalOnly system "nixos-${name}" cfg.config.system.build.toplevel)
+        ) (hostsOn system nixosConfigs)
+        // lib.mapAttrs' (
+          name: cfg: lib.nameValuePair "darwin-${name}" (evalOnly system "darwin-${name}" cfg.system)
+        ) (hostsOn system darwinConfigs)
       );
 
-      nixosConfigurations = systemConfigsFor "nixos";
-      darwinConfigurations = systemConfigsFor "darwin";
+      nixosConfigurations = nixosConfigs;
+      darwinConfigurations = darwinConfigs;
       homeConfigurations = homeConfigs;
     };
 }
