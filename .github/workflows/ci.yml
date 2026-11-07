@@ -6,6 +6,12 @@ on: [push, pull_request]
 #   pull_request:
 #     branches: [main]
 
+# A newer push to the same branch makes an older run useless, so cancel it
+# instead of letting both build for over an hour.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   check:
     name: check (${{ matrix.system }})
@@ -29,9 +35,6 @@ jobs:
         if: runner.os == 'Linux'
         uses: jlumbroso/free-disk-space@main
       - uses: cachix/install-nix-action@v31
-      - uses: cachix/cachix-action@v17
-        with:
-          name: dotfiles
       # Without --all-systems, `nix flake check` builds only the runner's
       # native system (x86_64-linux on ubuntu, aarch64-darwin on macos), so
       # each matrix job checks exactly one system in parallel.
