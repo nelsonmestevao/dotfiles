@@ -131,26 +131,6 @@ USER_TEMPLATE = """\
 }
 """
 
-TIMER_TEMPLATE = """\
-username:
-{
-  pkgs,
-  lib,
-  onHosts,
-  ...
-}:
-let
-  mkSystemTimer = import ../lib/mkSystemTimer.nix {
-    inherit pkgs username;
-  };
-in
-# No timers yet. Add per-host timers, e.g.:
-# onHosts [ "framework" ] (lib.mkMerge [
-#   (mkSystemTimer "backup" "daily" ''echo hello'')
-# ])
-onHosts [ ] (lib.mkMerge [ ])
-"""
-
 # config/users.nix entry. __KEY__/__NAME__/__GROUPS__ are substituted.
 USER_BLOCK_TEMPLATE = """\
   __KEY__ = {
@@ -221,20 +201,8 @@ def known_roles():
     return sorted(roles)
 
 
-def ensure_timer(username):
-    """Create system/timers/<username>.nix if missing (required for NixOS hosts)."""
-    path = f"system/timers/{username}.nix"
-    if os.path.exists(path):
-        return None
-    with open(path, "w") as f:
-        f.write(TIMER_TEMPLATE)
-    print(f"{GREEN}✓{RESET} Created {path}")
-    return path
-
-
 def finalize(created):
     """Track new files, format, and re-stage so the flake sees them."""
-    created = [p for p in created if p]
     # Flakes only see git-tracked files; add before any eval/format.
     git add @(created)
     print(f"{BLUE}→{RESET} Formatting...")
@@ -304,11 +272,6 @@ def setup_host(hostname):
         print(f"{GREEN}✓{RESET} Created {host_path}")
         created.append(host_path)
 
-    # ── Per-user timers (NixOS imports one per user) ───────────────────
-    if host_type == "nixos":
-        for u in selected:
-            created.append(ensure_timer(u))
-
     # ── Register in config/hosts.nix ───────────────────────────────────
     block_lines = [
         "  " + quote_key(hostname) + " = {",
@@ -362,9 +325,6 @@ def setup_user(username):
         f.write(render_template(USER_TEMPLATE, username))
     print(f"{GREEN}✓{RESET} Created {user_path}")
     created.append(user_path)
-
-    # ── Timer file (required if placed on a NixOS host) ────────────────
-    created.append(ensure_timer(username))
 
     # ── Register in config/users.nix ───────────────────────────────────
     group_lines = "\n".join('      "' + g + '"' for g in groups)
