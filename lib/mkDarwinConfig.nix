@@ -5,11 +5,8 @@
 hostname: cfg:
 let
   lib = nixpkgs.lib;
-  listDirectories = import ./listDirectories.nix { inherit lib; };
+  importModules = import ./importModules.nix { inherit lib; };
   mkSystemModule = import ../system/lib/mkSystemModule.nix;
-  systemModules = map (
-    name: mkSystemModule name (import ../system/modules/darwin/${name}/${name}.nix)
-  ) (listDirectories ../system/modules/darwin);
 in
 nix-darwin.lib.darwinSystem {
   specialArgs = {
@@ -21,5 +18,5 @@ nix-darwin.lib.darwinSystem {
     { nixpkgs.hostPlatform = cfg.system; }
     ../system/darwin.nix
   ]
-  ++ systemModules;
+  ++ importModules mkSystemModule ../system/modules/darwin;
 }

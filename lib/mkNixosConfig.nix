@@ -2,11 +2,8 @@
 hostname: cfg:
 let
   lib = nixpkgs.lib;
-  listDirectories = import ./listDirectories.nix { inherit lib; };
+  importModules = import ./importModules.nix { inherit lib; };
   mkSystemModule = import ../system/lib/mkSystemModule.nix;
-  systemModules = map (
-    name: mkSystemModule name (import ../system/modules/nixos/${name}/${name}.nix)
-  ) (listDirectories ../system/modules/nixos);
 in
 nixpkgs.lib.nixosSystem {
   inherit (cfg) system;
@@ -27,5 +24,5 @@ nixpkgs.lib.nixosSystem {
       }
     )
   ]
-  ++ systemModules;
+  ++ importModules mkSystemModule ../system/modules/nixos;
 }

@@ -9,18 +9,9 @@ system: hostname: roles: username: cfg:
 let
   lib = nixpkgs.lib;
   pkgs = nixpkgs.legacyPackages.${system};
-  listDirectories = import ./listDirectories.nix { inherit lib; };
-
+  importModules = import ./importModules.nix { inherit lib; };
   mkHomeModule = import ../home/lib/mkHomeModule.nix;
-  homeModules = map (name: mkHomeModule name (import ../home/programs/${name}/${name}.nix)) (
-    listDirectories ../home/programs
-  );
-
   mkGnomeExtensionModule = import ../home/lib/mkGnomeExtensionModule.nix;
-  gnomeExtensionsDir = ../home/programs/gnome/extensions;
-  gnomeExtensionModules = map (
-    name: mkGnomeExtensionModule name (import "${gnomeExtensionsDir}/${name}/${name}.nix")
-  ) (listDirectories gnomeExtensionsDir);
 
   # What enableFor/disableFor need to know about this host.
   hostInfo = {
@@ -55,6 +46,6 @@ home-manager.lib.homeManagerConfiguration {
     vicinae.homeManagerModules.default
     { programs.vicinae.package = import ./vicinaePackage.nix vicinae system; }
   ]
-  ++ homeModules
-  ++ gnomeExtensionModules;
+  ++ importModules mkHomeModule ../home/programs
+  ++ importModules mkGnomeExtensionModule ../home/programs/gnome/extensions;
 }
