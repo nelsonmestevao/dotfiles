@@ -78,6 +78,7 @@
   dotfiles.programs.figlet.enable = true;
   dotfiles.programs.fzf.enable = true;
   dotfiles.programs.git.enable = true;
+  dotfiles.programs.git-sim.enable = enableFor [ "framework" ];
   dotfiles.programs.glab.enable = true;
   dotfiles.programs.glow.enable = true;
   dotfiles.programs.herdr-app.enable = enableFor [ "desktop" ];

@@ -3,7 +3,6 @@
   lib,
   pkgs,
   mkSymlink,
-  enableFor,
   host,
   username,
   ...
@@ -31,23 +30,18 @@ let
   };
 in
 {
-  home.packages =
-    with pkgs;
-    [
-      delta
-      diffpdf
-      difftastic
-      gh
-      git
-      git-lfs
-      git-who
-      gitleaks
-      glab
-      lazygit
-    ]
-    ++ lib.optionals (enableFor [ "framework" ]) [
-      (callPackage ./git-sim/package.nix { })
-    ];
+  home.packages = with pkgs; [
+    delta
+    diffpdf
+    difftastic
+    gh
+    git
+    git-lfs
+    git-who
+    gitleaks
+    glab
+    lazygit
+  ];
 
   programs.zsh.envExtra = lib.mkIf config.dotfiles.programs.zsh.enable ''
     eval $(${pkgs.gitleaks}/bin/gitleaks completion zsh)
