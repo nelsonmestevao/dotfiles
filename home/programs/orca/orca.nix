@@ -5,8 +5,9 @@
 }:
 {
   # ── Packages ──────────────────────────────────────────────────────────
+  # `orca-app`, not `orca`, which is GNOME's screen reader (see the overlay).
   home.packages = with pkgs; [
-    orca
+    orca-app
   ];
 
   # ── Terminal Themes ──────────────────────────────────────────────────
