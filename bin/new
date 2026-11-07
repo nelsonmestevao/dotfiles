@@ -42,108 +42,56 @@ RESET="\033[0m"
 
 PROGRAM_TEMPLATE = """\
 {
-  config,
-  lib,
   pkgs,
-  mkSymlink,
   ...
 }:
 {
-  # ── Packages ──────────────────────────────────────────────────────────
+  # Only on one OS? Say so, and enabling it elsewhere is a clear error.
+  # platforms = [ "linux" ];
+
   home.packages = with pkgs; [
     __NAME__
   ];
 
-  # ── Environment Variables ─────────────────────────────────────────────
-  # home.sessionVariables = {
-  #   EXAMPLE_VAR = "value";
-  #   EDITOR = "${pkgs.__NAME__}/bin/__NAME__";
-  # };
-
-  # ── Shell Integration (zsh) ──────────────────────────────────────────
-  # programs.zsh.envExtra = lib.mkIf config.dotfiles.programs.zsh.enable ''
-  #   # source extra shell config, completions, etc.
-  #   # eval $(${pkgs.__NAME__}/bin/__NAME__ init zsh)
-  # '';
-
-  # ── Symlinked Config Files ───────────────────────────────────────────
-  # home.file.".config/__NAME__" = mkSymlink "config";
+  # Config files are links into this folder (add mkSymlink to the arguments).
+  # A file that isn't in the repo fails the build.
   # xdg.configFile."__NAME__/config" = mkSymlink "config";
-  # xdg.configFile."__NAME__/config.toml" = mkSymlink "config.toml";
 
-  # ── Fetch from GitHub ────────────────────────────────────────────────
-  # home.file.".__NAME__/plugins/example-plugin" = {
-  #   source = pkgs.fetchFromGitHub {
-  #     owner = "owner";
-  #     repo = "repo";
-  #     rev = "v1.0.0";
-  #     sha256 = "";
-  #   };
-  # };
-
-  # ── GNOME / dconf Integration ────────────────────────────────────────
-  # dconf.settings = lib.mkIf config.dotfiles.programs.gnome.enable {
-  #   "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
-  #     name = "__NAME_CAP__";
-  #     command = "__NAME__";
-  #     binding = "<Super>F1";
-  #   };
-  # };
+  # Shell aliases: programs.zsh.envExtra, see bat.nix.
+  # GNOME keybindings: dconf.settings, see ghostty.nix.
 }
 """
 
 EXTENSION_TEMPLATE = """\
-{ pkgs, lib, mkSymlink, ... }:
-{
-  # ── Package Override ─────────────────────────────────────────────────
-  # Defaults to `pkgs.gnomeExtensions.__NAME__`. Override for custom
-  # builds or when you need the unstable channel's version.
+_: {
+  # The package is pkgs.gnomeExtensions.__NAME__ unless you set one here
+  # (add pkgs to the arguments):
   # package = pkgs.unstable.gnomeExtensions.__NAME__;
   # package = pkgs.callPackage ./package.nix { };
 
-  # ── dconf Settings ───────────────────────────────────────────────────
   # dconf.settings."org/gnome/shell/extensions/__NAME__" = {
   #   some-key = [ "<Super>x" ];
   # };
-
-  # ── Symlinked Config Files ───────────────────────────────────────────
-  # xdg.configFile."__NAME__/config.json" = mkSymlink "config.json";
 }
 """
 
 MODULE_TEMPLATE = """\
 {
-  config,
-  lib,
   pkgs,
   ...
 }:
 {
-  # ── Packages ──────────────────────────────────────────────────────────
   environment.systemPackages = with pkgs; [
     __NAME__
   ];
 
-  # ── Services ──────────────────────────────────────────────────────────
   # services.__NAME__.enable = true;
-  # services.__NAME__.settings = { };
-
-  # ── Programs ──────────────────────────────────────────────────────────
-  # programs.__NAME__.enable = true;
-
-  # ── Environment Variables ─────────────────────────────────────────────
-  # environment.sessionVariables = {
-  #   EXAMPLE_VAR = "value";
-  # };
-
-  # ── Fonts ─────────────────────────────────────────────────────────────
-  # fonts.packages = with pkgs; [ ];
 }
 """
 
 
 def render_template(template, name):
-    return template.replace("__NAME_CAP__", name.capitalize()).replace("__NAME__", name)
+    return template.replace("__NAME__", name)
 
 
 def create_program(name):
@@ -162,7 +110,7 @@ def create_program(name):
         f.write(content)
 
     print(f"{GREEN}✓{RESET} Created program at {file_path}")
-    print(f"  Enable it in home/users/nelson.nix:")
+    print(f"  Enable it in home/users/<username>.nix:")
     print(f"    dotfiles.programs.{name}.enable = true;")
 
 
@@ -182,7 +130,7 @@ def create_extension(name):
         f.write(content)
 
     print(f"{GREEN}✓{RESET} Created GNOME extension at {file_path}")
-    print(f"  Enable it in home/users/nelson.nix:")
+    print(f"  Enable it in home/users/<username>.nix:")
     print(f"    dotfiles.programs.gnome.extensions.{name}.enable = true;")
 
 

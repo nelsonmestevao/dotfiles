@@ -1,15 +1,11 @@
 {
   config,
   lib,
-  pkgs,
   mkSymlink,
   ...
 }:
 {
-  home.packages = with pkgs; [
-    # nodejs_22
-  ];
-
+  # Node itself comes from mise; this is what mise installs next to it.
   home.file.".default-npm-packages" = lib.mkIf config.dotfiles.programs.mise.enable (
     mkSymlink "default-npm-packages"
   );

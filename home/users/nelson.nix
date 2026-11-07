@@ -81,7 +81,10 @@
   dotfiles.programs.glab.enable = true;
   dotfiles.programs.glow.enable = true;
   dotfiles.programs.herdr-app.enable = enableFor [ "desktop" ];
-  dotfiles.programs.herdr-core.enable = enableFor [ "desktop" "server" ];
+  dotfiles.programs.herdr-core.enable = enableFor [
+    "desktop"
+    "server"
+  ];
   dotfiles.programs.httpie.enable = true;
   dotfiles.programs.hyperfine.enable = true;
   dotfiles.programs.imagemagick.enable = true;

@@ -12,7 +12,6 @@
   home.packages = with pkgs; [
     hyprcursor
     hypridle
-    hypridle
     hyprlock
     hyprpaper
     hyprpicker

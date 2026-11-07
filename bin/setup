@@ -138,7 +138,6 @@ USER_BLOCK_TEMPLATE = """\
     extraGroups = [
 __GROUPS__
     ];
-    extraSpecialArgs = { };
   };"""
 
 

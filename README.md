@@ -260,6 +260,7 @@ Each user in `config/users.nix` has these fields:
 - **`extraGroups`** — groups for the account on NixOS, like `wheel` or
   `docker`.
 - **`extraSpecialArgs`** — extra arguments for your Home Manager modules.
+  Optional.
 - **`git.profile`** — the file in `home/programs/git/profiles/` with your git
   identity. Leave it out and only the shared settings apply.
 

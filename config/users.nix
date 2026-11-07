@@ -11,7 +11,6 @@
     extraGroups = [
       "docker"
     ];
-    extraSpecialArgs = { };
     git.profile = "remote";
   };
   nelson = {
@@ -23,7 +22,6 @@
       "networkmanager"
       "wheel"
     ];
-    extraSpecialArgs = { };
     git.profile = "personal";
   };
 }

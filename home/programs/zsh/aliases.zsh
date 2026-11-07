@@ -108,8 +108,8 @@ alias hollywood='docker run --rm -it bcbcarl/hollywood'
 alias lzd='lazydocker'
 alias ip='ip -c=auto'
 
-alias tp5="/home/nelson/Code/UMinho/aulas-pi/2526/tp5"
-alias tp6="/home/nelson/Code/UMinho/aulas-pi/2526/tp6"
+alias tp5="$HOME/Code/UMinho/aulas-pi/2526/tp5"
+alias tp6="$HOME/Code/UMinho/aulas-pi/2526/tp6"
 
 alias mega="restic -r rclone:mega:Backups/restic/framework.repo"
 alias mdrive="restic -r rclone:mdrive:Backups/restic/framework.repo"
