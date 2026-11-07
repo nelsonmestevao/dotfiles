@@ -14,6 +14,9 @@
   # ── Services ──────────────────────────────────────────────────────────
   programs.vicinae = {
     enable = true;
+    # Upstream leaves this null and picks a package itself; name ours (see
+    # config/overlays.nix) so CI can find it.
+    package = pkgs.vicinae;
     systemd = {
       enable = true;
       autoStart = true;
