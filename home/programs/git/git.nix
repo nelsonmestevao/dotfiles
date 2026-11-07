@@ -10,13 +10,10 @@
 }:
 let
   # The host says what signs commits here, from config/hosts.nix. The user's
-  # identity is profiles/<username>.ini, included when it exists. A profile
-  # may include other profiles (nelson's picks an identity by folder), so
-  # every profile is linked.
+  # identity is profiles/<username>.ini, included when it exists.
   signingKey = host.git.signingKey or null;
   signingProgram = host.git.signingProgram or null;
   profile = "profiles/${username}.ini";
-  profiles = builtins.attrNames (builtins.readDir ./profiles);
 
   settings = {
     include.path = [
@@ -67,6 +64,11 @@ in
     "git/commit-template" = mkSymlink "commit-template";
     "git/ignore" = mkSymlink "ignore";
     "git/attributes" = mkSymlink "attributes";
-  }
-  // lib.genAttrs (map (f: "git/profiles/${f}") profiles) (f: mkSymlink (lib.removePrefix "git/" f));
+    # The whole folder, so a profile may include another and a new one needs
+    # no rebuild. `force` lets the link replace the folder of per-file links
+    # that earlier generations made.
+    "git/profiles" = mkSymlink "profiles" // {
+      force = true;
+    };
+  };
 }
