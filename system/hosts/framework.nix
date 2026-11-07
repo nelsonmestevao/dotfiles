@@ -11,6 +11,11 @@
   dotfiles.modules.printing.enable = true;
   dotfiles.modules.swap.enable = true;
 
+  # ── Timers ───────────────────────────────────────────────────────────
+  # Runs ../timers/<user>.nix (backups and syncs) for the users picked here.
+  dotfiles.modules.timers.enable = true;
+  dotfiles.modules.timers.users = [ "nelson" ];
+
   # ── Boot ─────────────────────────────────────────────────────────────
   boot.loader.systemd-boot.enable = true;
   boot.loader.systemd-boot.configurationLimit = 10;
