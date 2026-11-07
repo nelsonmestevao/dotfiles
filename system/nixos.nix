@@ -9,16 +9,9 @@
   imports = [
     ./hosts/${hostname}/hardware.nix
     ./hosts/${hostname}.nix
-  ]
-  # Per-user timers are optional — a user with no ./timers/<username>.nix
-  # simply gets none, instead of failing to evaluate.
-  ++ lib.concatMap (
-    username:
-    let
-      file = ./timers/${username}.nix;
-    in
-    lib.optional (builtins.pathExists file) (import file username)
-  ) (lib.attrNames users);
+    # Off unless the host turns it on for some of its users.
+    ./timers
+  ];
 
   # ── Nix ─────────────────────────────────────────────────────────────────
   nix.settings.experimental-features = [

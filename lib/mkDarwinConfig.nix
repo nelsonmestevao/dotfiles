@@ -12,8 +12,7 @@ nix-darwin.lib.darwinSystem {
   specialArgs = {
     inherit hostname;
     inherit (cfg) users;
-  }
-  // import ../system/lib/hostPredicates.nix { inherit lib hostname; };
+  };
   modules = [
     { nixpkgs.hostPlatform = cfg.system; }
     ../system/darwin.nix

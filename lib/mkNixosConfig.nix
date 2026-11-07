@@ -10,8 +10,7 @@ nixpkgs.lib.nixosSystem {
   specialArgs = {
     inherit hostname vicinae;
     inherit (cfg) users;
-  }
-  // import ../system/lib/hostPredicates.nix { inherit lib hostname; };
+  };
   modules = [
     ../system/nixos.nix
     vicinae.nixosModules.default
