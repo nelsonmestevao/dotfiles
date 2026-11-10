@@ -218,11 +218,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1794225254,
-        "narHash": "sha256-OAkRGUSTW/kY1dsEC2PH3lvaCryYUYbBcBkJtgStCCQ=",
+        "lastModified": 1794310098,
+        "narHash": "sha256-3YbV8YmRzQNMQiv85VOBSWTAiv/3hjUYacMAqZwROCs=",
         "owner": "stslex",
         "repo": "orca-nix",
-        "rev": "b935c9e639feb764878fcbb280e5e5eceb44117e",
+        "rev": "7feb48fe43661ae3cd9adb39218d33dd4b4d61fb",
         "type": "github"
       },
       "original": {
