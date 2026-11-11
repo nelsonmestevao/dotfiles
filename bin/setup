@@ -304,6 +304,11 @@ def setup_host(hostname, args):
     roles = resolve("--roles", None if args['--roles'] is None else split_list(args['--roles']),
         lambda: [r for r in $(gum choose --no-limit --header "Roles for this host (none is fine):" @(known_roles())).strip().split("\n") if r],
         default=[])
+    # A new role is fine, but a typo like "desktp" would quietly leave out
+    # every program that user files enable for "desktop", so say so.
+    new_roles = [r for r in roles if r not in known_roles()]
+    if new_roles:
+        print(f"{YELLOW}! New role {', '.join(new_roles)}: no host has it yet (known: {', '.join(known_roles())}). Check the spelling.{RESET}")
 
     created = []
 
