@@ -1,19 +1,31 @@
 // The composer under the thread, as a chat-first agent app draws it: a
 // rounded box to write to the agent, and a row with the agent, the access
 // mode, attach and a round send button. Enter sends the text to the focused
-// pane's agent (hc send) and clears the box.
+// pane's agent (hc send) and clears the box. If hc can't send it (the agent
+// is waiting on a question, say), the text comes back with the reason.
 
 import { View, div, svg, image } from "gpui-kit";
 import { v_flex, h_flex } from "gpui-base";
 import { agents, focused, hc } from "herdr";
 
-const C = { bg: "#09090b", card: "#141417", line: "#26262b", text: "#ececee", dim: "#71717a", muted: "#a1a1aa", accent: "#60a5fa" };
+const C = { bg: "#09090b", card: "#141417", line: "#26262b", text: "#ececee", dim: "#71717a", muted: "#a1a1aa", accent: "#60a5fa", error: "#f87171" };
 const I = (n) => `mods/t4-threads/${n}.svg`;
+
+// hc prints its errors as JSON: {"error": {"message": …}}.
+function why(r) {
+  const out = (r.stderr || r.stdout || "").trim();
+  try {
+    return JSON.parse(out).error.message;
+  } catch {
+    return out.split("\n").pop() || "not sent";
+  }
+}
 
 export default class Composer extends View {
   init(_p, cx) {
     this.handle = cx.focus_handle();
     this.text = "";
+    this.note = "";
   }
 
   agent() {
@@ -25,12 +37,23 @@ export default class Composer extends View {
     const a = this.agent(), text = this.text.trim();
     if (!a || !text) return;
     this.text = "";
+    this.note = "";
     cx.notify();
-    hc(["send", a.address, text]);
+    cx.spawn(async (cx) => {
+      // "--": a message that starts with "-" is the message, not a flag.
+      // No --force: an agent waiting on a question would take the text as
+      // its answer.
+      const r = await hc(["send", "--", a.address, text]).catch((e) => ({ code: 1, stdout: "", stderr: String(e) }));
+      if (r.code === 0) return;
+      if (!this.text) this.text = text; // unless you've started a new one
+      this.note = why(r);
+      cx.notify();
+    });
   }
 
   key(e, cx) {
     if (e.key === "enter") return this.send(cx);
+    this.note = "";
     if (e.key === "backspace") this.text = this.text.slice(0, -1);
     else if (e.key_char && !e.modifiers?.control) this.text += e.key_char;
     cx.notify();
@@ -52,7 +75,7 @@ export default class Composer extends View {
             .child(div().text_color(C.text).child(name)).child(div().child("⌄"))))
           .child(pill(div().child("Full access  ⌄")))
           .child(pill(div().child("Plan")))
-          .child(div().flex_1())
+          .child(div().flex_1().min_w(0).truncate().text_size(12).text_color(C.error).child(this.note))
           .child(div().size(28).flex().items_center().justify_center().text_color(C.muted).child(svg("mods/workspace-chrome/plus.svg").size(16)))
           .child(div().id("send").size(32).rounded(16).bg(this.text ? C.accent : "#2a2a30").flex().items_center().justify_center()
             .text_color(this.text ? "#09090b" : C.muted).text_size(16).font_weight(700).cursor_pointer()
