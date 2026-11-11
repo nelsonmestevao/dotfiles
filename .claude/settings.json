@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "ask": [
+      "Bash(bin/rebuild *)",
+      "Bash(./bin/rebuild *)",
+      "Bash(bin/autoclean *)",
+      "Bash(./bin/autoclean *)",
+      "Bash(bin/update *)",
+      "Bash(./bin/update *)",
+      "Bash(nh os switch *)",
+      "Bash(nh os boot *)",
+      "Bash(nh home switch *)",
+      "Bash(nh darwin switch *)",
+      "Bash(nixos-rebuild *)",
+      "Bash(darwin-rebuild *)",
+      "Bash(home-manager switch *)",
+      "Bash(nix flake update *)",
+      "Bash(nix-collect-garbage *)",
+      "Bash(sudo *)",
+      "Bash(git push *)"
+    ],
+    "allow": [
+      "Bash(bin/lint)",
+      "Bash(bin/format)",
+      "Bash(bin/check *)",
+      "Bash(bin/build *)",
+      "Bash(nix eval *)",
+      "Bash(nix flake check *)"
+    ]
+  }
+}

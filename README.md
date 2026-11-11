@@ -322,6 +322,11 @@ that shell for you (`direnv allow` once).
 `bin/new` and `bin/setup` stage the files they create with `git add`, so the
 flake sees them right away.
 
+Coding agents get their rules from [`AGENTS.md`](AGENTS.md). For Claude Code,
+[`.claude/settings.json`](.claude/settings.json) also makes it ask before it
+runs `bin/rebuild`, `bin/autoclean`, `bin/update`, `sudo` or `git push`, and
+lets it lint, check and build without asking.
+
 To stay up to date:
 
 ```shell

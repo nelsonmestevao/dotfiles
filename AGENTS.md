@@ -95,7 +95,13 @@ never switches and needs no `sudo`, so you don't need to ask first.
 - `bin/rebuild`: switches my live system or home and may need `sudo`.
 - `bin/autoclean`: deletes old generations with `sudo`.
 - `bin/update`: moves every flake input.
+- Anything with `sudo`.
 - Any `git push`, and any commit unless I asked for one.
+
+`.claude/settings.json` makes Claude Code ask before these, and before the
+`nh`, `nixos-rebuild` and `home-manager` commands that switch a system. It
+also lets `bin/lint`, `bin/format`, `bin/check`, `bin/build`, `nix eval` and
+`nix flake check` run without asking. Change this list and that file together.
 
 ## Code style
 
