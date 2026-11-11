@@ -67,25 +67,22 @@ run Mac-only commands and paste the output back.
 Run these before you say a change works:
 
 ```shell
-bin/lint     # deadnix, statix, nixfmt --check (about a minute; CI runs it first)
-bin/format   # fixes nixfmt errors
+bin/lint          # deadnix, statix, nixfmt --check (CI runs it first)
+bin/format        # fixes nixfmt errors
+bin/check --eval  # evaluates every config, Mac ones too; builds nothing
 ```
 
-Evaluate the configs you touched. This catches option and assertion errors
-without a full build:
+`bin/check --eval` takes about a minute. It catches option and assertion
+errors in all seven configs, NixOS, nix-darwin and Home Manager, without a
+full build. The Mac configs evaluate fine from Linux.
+
+To check one config while you work, evaluate just that one:
 
 ```shell
-nix eval --raw '.#nixosConfigurations.framework.config.system.build.toplevel.drvPath'
-nix eval --raw '.#nixosConfigurations.temis.config.system.build.toplevel.drvPath'
 nix eval --raw '.#homeConfigurations."nelson@framework".activationPackage.drvPath'
-nix eval --raw '.#homeConfigurations."nelson.estevao@Remote-Nelson-Estevao".activationPackage.drvPath'
-nix eval --raw '.#darwinConfigurations."Remote-Nelson-Estevao".system.drvPath'
 ```
 
-The Mac configs evaluate fine from Linux. Check them when you touch shared
-modules, overlays, or anything under `system/modules/darwin/`.
-
-`bin/check` runs `nix flake check --all-systems`. It is slow. Use it for
+`bin/check` with no flag builds what CI builds. It is slow. Use it for
 changes to `lib/` or `flake.nix`.
 
 ## Ask first

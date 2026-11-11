@@ -292,6 +292,7 @@ that shell for you (`direnv allow` once).
 | `bin/update`                   | Updates the flake inputs and lists what changed.                     |
 | `bin/update --save`            | Same, then commits `flake.lock` with a note for each input.          |
 | `bin/check`                    | Runs `nix flake check` for every system.                             |
+| `bin/check --eval`             | Evaluates every config without building anything (about a minute).  |
 | `bin/lint`                     | Runs deadnix, statix and nixfmt, like CI does before it builds.      |
 | `bin/format`                   | Formats every Nix file (`nix fmt`).                                  |
 | `bin/autoclean`                | Deletes generations older than 7 days and frees space (uses `sudo`). |
