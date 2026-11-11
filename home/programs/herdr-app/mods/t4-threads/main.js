@@ -1,6 +1,7 @@
 // t4's sidebar: every tab of every space as one inbox
-// of work. Pinned on top, then active (newest first; activity never
-// reshuffles), then the snoozed and settled shelves, folded. A row: its
+// of work. Pinned on top, then active (newest first, by when this layout
+// first saw them; activity never reshuffles), then the snoozed and settled
+// shelves, folded. A row: its
 // project, its status (needs you, done, working for how long) or how long
 // since it last changed; its name; its branch and the icons of what runs in
 // it. A project is a repo, worked out from git (a worktree's space belongs
@@ -15,7 +16,7 @@
 
 import { View, div, svg, image } from "gpui-kit";
 import { v_flex, h_flex } from "gpui-base";
-import { spaces, panes, run, theme, shared, setShared, openOverlay, exec, window as win } from "herdr";
+import { spaces, panes, machines, run, theme, shared, setShared, openOverlay, exec, window as win } from "herdr";
 
 const C = {
   bg: "#0e0e10",
@@ -96,7 +97,13 @@ function duration(ms) {
   return m < 60 ? `${m}m` : `${Math.floor(m / 60)}h ${m % 60}m`;
 }
 
-const num = (id) => Number(String(id).replace(/\D/g, "")) || 0;
+// Ids from another machine start with its name ("temis/tb…"). A thread or
+// space missing on a machine whose spaces haven't loaded, or can't
+// (offline), is only missing for now: keep what's stored for it.
+function loaded(id) {
+  const name = id.includes("/") ? id.split("/")[0] : null;
+  return machines().find((m) => (m.name ?? null) === name)?.layout === "ready";
+}
 
 function glyph(p, size, color) {
   if (!p?.icon) return null;
@@ -119,6 +126,7 @@ export default class Threads extends View {
     // else twice a minute ("3m"). Each tick redraws this whole list.
     this.ticks = 0;
     cx.timer.every(1000, (cx) => {
+      this.noteNew();
       const now = Date.now();
       const seconds = spaces().some((w) => w.tabs.some((c) => c.status === "working" && c.working_since && now - c.working_since < 61000));
       if (seconds || ++this.ticks % 30 === 0) cx.notify();
@@ -175,6 +183,29 @@ export default class Threads extends View {
     const last = w.tabs.every((x) => x.id === c.id || x.settled);
     if (last && this.repos[JSON.stringify([w.machine ?? null, w.folder])]?.linked)
       openOverlay({ mod: "worktree", kind: "dialog", width: 440, height: 190, props: { space: w.id, action: "remove" } });
+  }
+
+  // When this layout first saw each thread (shared "t4.seen"). Tab ids are
+  // random, so "newest first" needs its own record. Threads there at the
+  // start share one time and keep the spaces' and tabs' order.
+  seen() {
+    return shared("t4.seen") ?? {};
+  }
+
+  noteNew() {
+    const old = this.seen(), next = {}, now = Date.now();
+    let changed = false;
+    for (const w of spaces())
+      for (const c of w.tabs) {
+        next[c.id] = old[c.id] ?? now;
+        if (!(c.id in old)) changed = true;
+      }
+    for (const [id, when] of Object.entries(old)) {
+      if (id in next) continue;
+      if (loaded(id)) changed = true; // closed: forget it
+      else next[id] = when;
+    }
+    if (changed) setShared("t4.seen", next);
   }
 
   snoozed() {
@@ -414,7 +445,12 @@ export default class Threads extends View {
     const pins = this.pins();
     const awake = (r) => !r.c.settled && !this.asleep(r.c);
     const pinned = pins.map((id) => rows.find((r) => r.c.id === id && awake(r))).filter(Boolean);
-    const active = rows.filter((r) => awake(r) && !pins.includes(r.c.id)).sort((a, b) => num(b.c.id) - num(a.c.id));
+    // Not noted yet (the timer does it within a second): brand new, so first.
+    const seen = this.seen(), now = Date.now();
+    const born = (r) => seen[r.c.id] ?? now;
+    const active = rows
+      .filter((r) => awake(r) && !pins.includes(r.c.id))
+      .sort((a, b) => born(b) - born(a) || a.w.index - b.w.index || b.c.index - a.c.index);
     const snoozed = rows.filter((r) => this.asleep(r.c)).sort((a, b) => this.snoozed()[a.c.id].until - this.snoozed()[b.c.id].until);
     const settled = rows.filter((r) => r.c.settled).sort((a, b) => (b.c.settled_at ?? 0) - (a.c.settled_at ?? 0));
 
