@@ -298,6 +298,7 @@ that shell for you (`direnv allow` once).
 | `bin/setup user\|host <name>`  | Adds a user or host (see [Installing](#-installing)).                |
 | `bin/new program <name>`       | Creates a Home Manager program in `home/programs/<name>/`.           |
 | `bin/new module <name>`        | Creates a NixOS module in `system/modules/nixos/<name>/`.            |
+| `bin/new module <name> --darwin` | Creates a nix-darwin module in `system/modules/darwin/<name>/`.    |
 | `bin/new extension <name>`     | Creates a GNOME extension in `home/programs/gnome/extensions/<name>/`. |
 
 `bin/new` and `bin/setup` stage the files they create with `git add`, so the

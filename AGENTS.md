@@ -59,7 +59,8 @@ run Mac-only commands and paste the output back.
   a new one (like `orca-app`).
 - **Never change `stateVersion` or `darwinStateVersion`** on an existing host.
 - **New program, module, user, or host:** use `bin/new` or `bin/setup`. Don't
-  write the files by hand.
+  write the files by hand. `bin/new module <name> --darwin` makes a nix-darwin
+  module.
 
 ## Check your work
 

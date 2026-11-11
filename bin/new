@@ -1,22 +1,24 @@
 #!/usr/bin/env -S nix --extra-experimental-features "nix-command flakes" develop --command xonsh
 """
-Scaffolds a new home-manager program, NixOS system module, or GNOME extension.
+Scaffolds a new home-manager program, system module (NixOS or nix-darwin), or
+GNOME extension.
 
 Usage:
   {program} program <name>
-  {program} module <name>
+  {program} module <name> [--darwin]
   {program} extension <name>
   {program} (-h | --help)
   {program} (-v | --version)
 
 Commands:
   program <name>      Create a new home-manager program.
-  module <name>       Create a new NixOS system module.
+  module <name>       Create a new system module (NixOS unless --darwin).
   extension <name>    Create a new GNOME Shell extension module.
 
 Options:
   -h --help           Show this screen.
   -v --version        Show version.
+  --darwin            Create a nix-darwin module instead of a NixOS one.
 """
 import os
 import sys
@@ -138,8 +140,8 @@ def create_extension(name):
     print(f"    dotfiles.programs.gnome.extensions.{name}.enable = true;")
 
 
-def create_module(name):
-    dir_path = f"system/modules/nixos/{name}"
+def create_module(name, platform):
+    dir_path = f"system/modules/{platform}/{name}"
     file_path = f"{dir_path}/{name}.nix"
 
     if os.path.exists(file_path):
@@ -154,7 +156,7 @@ def create_module(name):
         f.write(content)
     stage(file_path)
 
-    print(f"{GREEN}✓{RESET} Created and staged module at {file_path}")
+    print(f"{GREEN}✓{RESET} Created and staged {platform} module at {file_path}")
     print(f"  Enable it in system/hosts/<hostname>.nix:")
     print(f"    dotfiles.modules.{name}.enable = true;")
 
@@ -165,7 +167,7 @@ def main(args):
     if args['program']:
         create_program(name)
     elif args['module']:
-        create_module(name)
+        create_module(name, 'darwin' if args['--darwin'] else 'nixos')
     elif args['extension']:
         create_extension(name)
 
