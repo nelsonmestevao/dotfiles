@@ -18,6 +18,30 @@ let
     "servers"
     "tab-notes"
     "tabbed-changes"
+  ]
+  # The extra layouts' mods (herdrdev/herdr-layout-examples, Apache-2.0).
+  ++ [
+    "call"
+    "chat"
+    "pasture"
+    "t4-composer"
+    "t4-details"
+    "t4-diff"
+    "t4-files"
+    "t4-head"
+    "t4-new"
+    "t4-panel-head"
+    "t4-threads"
+  ];
+
+  # Layouts linked into ~/.config/herdr-app/layouts. main-mods is mine; the
+  # others come from herdrdev/herdr-layout-examples (ctrl-shift-l cycles).
+  layouts = [
+    "main-mods"
+    "call"
+    "chat"
+    "pasture"
+    "threads"
   ];
 in
 {
@@ -37,8 +61,10 @@ in
   xdg.configFile = {
     "herdr-app/keys.json" = mkSymlink (if isDarwin then "keys/macos.json" else "keys/linux.json");
     "herdr-app/settings.json" = mkSymlink "settings.json";
-    "herdr-app/layouts/main-mods.json" = mkSymlink "layouts/main-mods.json";
-  };
+  }
+  // lib.genAttrs' layouts (
+    l: lib.nameValuePair "herdr-app/layouts/${l}.json" (mkSymlink "layouts/${l}.json")
+  );
 
   # Mods are copies, not links: Herdr refuses to follow a link out of
   # ~/.config/herdr-app for a mod's imports and its images (`svg()`,

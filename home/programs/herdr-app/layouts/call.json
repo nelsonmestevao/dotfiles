@@ -1,0 +1,109 @@
+{
+  "id": "root",
+  "type": "column",
+  "titlebar": "none",
+  "preview": "mods/call/preview.svg",
+  "theme": "graphite",
+  "background": "#191b1f",
+  "ui_font": "Geist",
+  "font_size": 13,
+  "terminal_padding": [
+    12,
+    10
+  ],
+  "colors": {
+    "background": "#202328",
+    "foreground": "#e8eaee",
+    "accent": "#49d392",
+    "border": "#363940"
+  },
+  "children": [
+    {
+      "id": "top",
+      "type": "block",
+      "size": {
+        "px": 65
+      },
+      "window_drag": true,
+      "content": {
+        "mod": "call",
+        "props": {
+          "role": "top"
+        }
+      }
+    },
+    {
+      "id": "gallery-body",
+      "type": "column",
+      "padding": [
+        8,
+        18
+      ],
+      "gap": 12,
+      "resizable": false,
+      "children": [
+        {
+          "id": "live",
+          "type": "block",
+          "size": {
+            "weight": 1
+          },
+          "content": {
+            "tab": "active",
+            "pane": {
+              "gap": 12,
+              "radius": 10,
+              "background": "#202328",
+              "border": {
+                "width": 2,
+                "color": "#363940"
+              },
+              "focus": {
+                "width": 2,
+                "color": "#49d392"
+              },
+              "header": {
+                "content": {
+                  "mod": "call",
+                  "props": {
+                    "role": "pane"
+                  }
+                },
+                "height": 36,
+                "position": "bottom",
+                "reveal": "always"
+              },
+              "lone": true
+            }
+          }
+        },
+        {
+          "id": "people",
+          "type": "block",
+          "size": {
+            "px": 215
+          },
+          "content": {
+            "mod": "call",
+            "props": {
+              "role": "gallery"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "toolbar",
+      "type": "block",
+      "size": {
+        "px": 85
+      },
+      "content": {
+        "mod": "call",
+        "props": {
+          "role": "toolbar"
+        }
+      }
+    }
+  ]
+}

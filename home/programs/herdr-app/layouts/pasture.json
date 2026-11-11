@@ -1,0 +1,16 @@
+{
+  "id": "pasture-root", "type": "column", "titlebar": "none", "theme": "paper",
+  "font_size": 13, "ui_font": "Geist", "background": "#ab7748",
+  "colors": { "background": "#fff9e9", "foreground": "#343c32", "accent": "#658342", "border": "#ab7748" },
+  "terminal_padding": [10, 12], "resizable": false,
+  "children": [
+    { "id": "pasture-field", "type": "block", "size": { "weight": 0.85 }, "content": { "mod": "pasture" } },
+    { "id": "pasture-rail", "type": "block", "size": { "px": 29 }, "content": { "mod": "pasture", "props": { "role": "rail" } } },
+    { "id": "pasture-boards", "type": "block", "size": { "weight": 1 }, "padding": [0, 10], "background": "#ab7748",
+      "content": { "tab": "active", "pane": { "gap": 10, "radius": 3, "lone": true, "background": "#fff9e9",
+        "border": { "width": 4, "color": "#8b5e37" }, "focus": { "width": 4, "color": "#8b5e37" },
+        "header": { "content": { "mod": "pasture", "props": { "role": "pane" } }, "height": 28, "position": "top", "reveal": "always" }
+      } }
+    }
+  ]
+}
