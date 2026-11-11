@@ -264,8 +264,10 @@ def finalize(created):
     """Track new files, format, and re-stage so the flake sees them."""
     # Flakes only see git-tracked files; add before any eval/format.
     git add @(created)
+    # Only what this run wrote: `nix fmt .` would also rewrite files that
+    # someone else is in the middle of editing.
     print(f"{BLUE}→{RESET} Formatting...")
-    nix fmt .
+    nix fmt -- @(created)
     git add @(created)
 
 
