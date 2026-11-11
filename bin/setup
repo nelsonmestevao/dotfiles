@@ -175,8 +175,16 @@ def has_terminal():
 
 
 def split_list(value):
-    """"a, b,c" -> ["a", "b", "c"]. An empty value is an empty list."""
+    """"a, b,c" -> ["a", "b", "c"]. An empty value is an empty list; no value
+    (the flag left out) stays None, so resolve() asks or uses the default."""
+    if value is None:
+        return None
     return [v.strip() for v in value.split(",") if v.strip()]
+
+
+def choose_many(header, options):
+    """Any number of `options`, picked with gum."""
+    return [o for o in $(gum choose --no-limit --header @(header) @(options)).strip().split("\n") if o]
 
 
 def resolve(flag, value, prompt, default=None):
@@ -295,20 +303,21 @@ def setup_host(hostname, args):
     arch = require(arch, "No architecture selected.")
     check_choices("--system", [arch], SYSTEMS)
 
-    selected = resolve("--users", args['--users'] and split_list(args['--users']),
-        lambda: [u for u in $(gum choose --no-limit --header "Users for this host:" @(users)).strip().split("\n") if u])
+    selected = resolve("--users", split_list(args['--users']),
+        lambda: choose_many("Users for this host:", users))
     require(selected, "No users selected.")
     check_choices("--users", selected, users)
 
     # Optional: a host with no roles only gets what users enable everywhere.
-    roles = resolve("--roles", None if args['--roles'] is None else split_list(args['--roles']),
-        lambda: [r for r in $(gum choose --no-limit --header "Roles for this host (none is fine):" @(known_roles())).strip().split("\n") if r],
+    known = known_roles()
+    roles = resolve("--roles", split_list(args['--roles']),
+        lambda: choose_many("Roles for this host (none is fine):", known),
         default=[])
     # A new role is fine, but a typo like "desktp" would quietly leave out
     # every program that user files enable for "desktop", so say so.
-    new_roles = [r for r in roles if r not in known_roles()]
+    new_roles = [r for r in roles if r not in known]
     if new_roles:
-        print(f"{YELLOW}! New role {', '.join(new_roles)}: no host has it yet (known: {', '.join(known_roles())}). Check the spelling.{RESET}")
+        print(f"{YELLOW}! New role {', '.join(new_roles)}: no host has it yet (known: {', '.join(known)}). Check the spelling.{RESET}")
 
     created = []
 
@@ -397,7 +406,7 @@ def setup_user(username, args):
     if not name:
         name = username
 
-    groups = resolve("--groups", None if args['--groups'] is None else split_list(args['--groups']),
+    groups = resolve("--groups", split_list(args['--groups']),
         lambda: $(gum input --header "Extra groups (space-separated):" --value @(" ".join(DEFAULT_GROUPS))).strip().split(),
         default=DEFAULT_GROUPS)
 
