@@ -98,78 +98,50 @@ def stage(path):
     git add @(path)
 
 
-def create_program(name):
-    dir_path = f"home/programs/{name}"
+# What each kind makes: its folder, its template, its name in messages, and
+# the file and line that turn it on.
+KINDS = {
+    "program": ("home/programs/{name}", PROGRAM_TEMPLATE, "program",
+                "home/users/<username>.nix", "dotfiles.programs.{name}.enable = true;"),
+    "extension": ("home/programs/gnome/extensions/{name}", EXTENSION_TEMPLATE, "GNOME extension",
+                  "home/users/<username>.nix", "dotfiles.programs.gnome.extensions.{name}.enable = true;"),
+    "nixos": ("system/modules/nixos/{name}", MODULE_TEMPLATE, "nixos module",
+              "system/hosts/<hostname>.nix", "dotfiles.modules.{name}.enable = true;"),
+    "darwin": ("system/modules/darwin/{name}", MODULE_TEMPLATE, "darwin module",
+               "system/hosts/<hostname>.nix", "dotfiles.modules.{name}.enable = true;"),
+}
+
+
+def create(kind, name):
+    folder, template, label, where, line = KINDS[kind]
+    dir_path = folder.format(name=name)
     file_path = f"{dir_path}/{name}.nix"
 
     if os.path.exists(file_path):
-        print(f"{RED}✗{RESET} Program '{name}' already exists at {file_path}")
+        print(f"{RED}✗{RESET} '{name}' already exists at {file_path}")
         sys.exit(1)
 
     os.makedirs(dir_path, exist_ok=True)
-
-    content = render_template(PROGRAM_TEMPLATE, name)
-
     with open(file_path, 'w') as f:
-        f.write(content)
+        f.write(render_template(template, name))
     stage(file_path)
 
-    print(f"{GREEN}✓{RESET} Created and staged program at {file_path}")
-    print(f"  Enable it in home/users/<username>.nix:")
-    print(f"    dotfiles.programs.{name}.enable = true;")
-
-
-def create_extension(name):
-    dir_path = f"home/programs/gnome/extensions/{name}"
-    file_path = f"{dir_path}/{name}.nix"
-
-    if os.path.exists(file_path):
-        print(f"{RED}✗{RESET} Extension '{name}' already exists at {file_path}")
-        sys.exit(1)
-
-    os.makedirs(dir_path, exist_ok=True)
-
-    content = render_template(EXTENSION_TEMPLATE, name)
-
-    with open(file_path, 'w') as f:
-        f.write(content)
-    stage(file_path)
-
-    print(f"{GREEN}✓{RESET} Created and staged GNOME extension at {file_path}")
-    print(f"  Enable it in home/users/<username>.nix:")
-    print(f"    dotfiles.programs.gnome.extensions.{name}.enable = true;")
-
-
-def create_module(name, platform):
-    dir_path = f"system/modules/{platform}/{name}"
-    file_path = f"{dir_path}/{name}.nix"
-
-    if os.path.exists(file_path):
-        print(f"{RED}✗{RESET} Module '{name}' already exists at {file_path}")
-        sys.exit(1)
-
-    os.makedirs(dir_path, exist_ok=True)
-
-    content = render_template(MODULE_TEMPLATE, name)
-
-    with open(file_path, 'w') as f:
-        f.write(content)
-    stage(file_path)
-
-    print(f"{GREEN}✓{RESET} Created and staged {platform} module at {file_path}")
-    print(f"  Enable it in system/hosts/<hostname>.nix:")
-    print(f"    dotfiles.modules.{name}.enable = true;")
+    print(f"{GREEN}✓{RESET} Created and staged {label} at {file_path}")
+    print(f"  Enable it in {where}:")
+    print(f"    {line.format(name=name)}")
 
 
 def main(args):
-    name = args['<name>']
-
-    if args['program']:
-        create_program(name)
-    elif args['module']:
-        create_module(name, 'darwin' if args['--darwin'] else 'nixos')
-    elif args['extension']:
-        create_extension(name)
+    match args:
+        case {'program': True}:
+            kind = 'program'
+        case {'extension': True}:
+            kind = 'extension'
+        case {'--darwin': True}:
+            kind = 'darwin'
+        case _:
+            kind = 'nixos'
+    create(kind, args['<name>'])
 
 
 if __name__ == '__main__':
