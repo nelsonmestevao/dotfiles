@@ -10,6 +10,8 @@
       "Bash(./bin/update *)",
       "Bash(nh os switch *)",
       "Bash(nh os boot *)",
+      "Bash(nh os test *)",
+      "Bash(nh clean *)",
       "Bash(nh home switch *)",
       "Bash(nh darwin switch *)",
       "Bash(nixos-rebuild *)",

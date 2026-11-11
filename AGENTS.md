@@ -98,10 +98,11 @@ never switches and needs no `sudo`, so you don't need to ask first.
 - Anything with `sudo`.
 - Any `git push`, and any commit unless I asked for one.
 
-`.claude/settings.json` makes Claude Code ask before these, and before the
-`nh`, `nixos-rebuild` and `home-manager` commands that switch a system. It
-also lets `bin/lint`, `bin/format`, `bin/check`, `bin/build`, `nix eval` and
-`nix flake check` run without asking. Change this list and that file together.
+`.claude/settings.json` makes Claude Code ask before these, before the `nh`,
+`nixos-rebuild` and `home-manager` commands that switch or test a system, and
+before `nh clean`. It also lets `bin/lint`, `bin/format`, `bin/check`,
+`bin/build`, `nix eval` and `nix flake check` run without asking. Change this
+list and that file together.
 
 ## Code style
 
