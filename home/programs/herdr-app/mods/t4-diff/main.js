@@ -1,4 +1,4 @@
-// t4's diff panel: what changed in the shown tab's folder
+// t4's diff panel: what changed in the shown thread's folder
 // since the last commit (staged, unstaged and new files). The top says the
 // totals; each file says how much changed; click one to read its diff,
 // colored. Refreshes every few seconds while shown. The Diff surface of
@@ -6,7 +6,7 @@
 
 import { View, div, svg } from "gpui-kit";
 import { v_flex, h_flex } from "gpui-base";
-import { exec, focused, settings, readTextFile, layout } from "herdr";
+import { exec, spaces, panes, settings, readTextFile, layout } from "herdr";
 
 const C = { bg: "#0b0b0d", text: "#ececee", muted: "#a1a1aa", dim: "#71717a", line: "#1f1f23", row: "#18181b", add: "#4ade80", del: "#f87171", addBg: "#14532d40", delBg: "#7f1d1d40", hunk: "#60a5fa" };
 const MAX_LINES = 1500;
@@ -25,6 +25,19 @@ function find(node, id) {
   }
   return null;
 }
+// The shown thread's folder, picked as the details card and Files panel
+// pick it: its agent's terminal, else its first, else the space's folder.
+// Not the focused pane, which may be a shell cd'd into another repo.
+function folder() {
+  const p = spaces().find((x) => x.active);
+  const c = p?.tabs.find((x) => x.active);
+  const mine = panes().filter((x) => x.tab === c?.id && x.terminal);
+  const lead = mine.find((x) => x.program?.agent) ?? mine[0];
+  return lead?.cwd ?? p?.folder ?? null;
+}
+const machine = () => spaces().find((s) => s.active)?.machine ?? null;
+const location = () => JSON.stringify([machine(), folder()]);
+
 function onScreen(surface) {
   const l = layout();
   const panel = find(l, "panel"), stack = find(l, "panel-body");
@@ -44,11 +57,10 @@ export default class Diff extends View {
   }
 
   refresh(cx) {
-    const f = focused();
-    const cwd = f?.cwd;
-    const on = f?.terminal?.includes("/") ? f.terminal.split("/")[0] : undefined;
+    const cwd = folder(), on = machine(), key = location();
     if (!cwd || this.busy || !onScreen("diff")) return;
     this.busy = true;
+    this.tried = key;
     this.at = Date.now();
     cx.spawn(async (cx) => {
       try {
@@ -59,7 +71,10 @@ export default class Diff extends View {
           this.lines = [];
         }
         const top = await exec("git", ["rev-parse", "--show-toplevel"], { cwd, on });
+        if (location() !== key) return;
         if (top.code !== 0) {
+          // Not the last repo's name over "not a git folder".
+          this.root = null;
           this.files = [];
           this.error = "not a git folder";
           return;
@@ -78,10 +93,11 @@ export default class Diff extends View {
           });
         const fresh = await exec("git", ["ls-files", "--others", "--exclude-standard", "-z"], { cwd: this.root, on: this.on });
         for (const path of fresh.stdout.split("\0").filter(Boolean)) files.push({ path, add: 0, del: 0, fresh: true });
+        if (location() !== key) return;
         this.files = files;
         this.error = null;
         if (this.open) await this.load(this.open);
-      } catch (error) { this.files = []; this.error = String(error); }
+      } catch (error) { this.root = null; this.files = []; this.error = String(error); }
       finally {
         this.busy = false;
         cx.notify();
@@ -134,8 +150,10 @@ export default class Diff extends View {
   }
 
   render(cx) {
-    // Shown again after a while hidden: catch up now, not at the next tick.
-    if (Date.now() - (this.at ?? 0) > EVERY) this.refresh(cx);
+    // Another thread shown, or shown again after a while hidden: catch up
+    // now, not at the next tick. Once per folder, so a failing exec can't
+    // loop.
+    if (this.tried !== location() || Date.now() - (this.at ?? 0) > EVERY) this.refresh(cx);
     const add = this.files.reduce((n, f) => n + f.add, 0);
     const del = this.files.reduce((n, f) => n + f.del, 0);
     const name = (p) => p.split("/").pop();
