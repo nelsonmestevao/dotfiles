@@ -127,6 +127,7 @@ export default class Threads extends View {
     this.ticks = 0;
     cx.timer.every(1000, (cx) => {
       this.noteNew();
+      this.endSnoozes();
       const now = Date.now();
       const seconds = spaces().some((w) => w.tabs.some((c) => c.status === "working" && c.working_since && now - c.working_since < 61000));
       if (seconds || ++this.ticks % 30 === 0) cx.notify();
@@ -212,12 +213,33 @@ export default class Threads extends View {
     return shared("t4.snoozed") ?? {};
   }
 
+  // Its agent asked for you (needs you, or done) since it was snoozed.
+  woke(c, s) {
+    return (c.status === "blocked" || c.status === "done") && (c.changed_at ?? 0) > s.at;
+  }
+
   // Snoozed now: not yet due, and its agent hasn't asked for you since.
   asleep(c) {
     const s = this.snoozed()[c.id];
     if (!s || c.settled) return false;
     if (Date.now() >= s.until) return false;
-    return !((c.status === "blocked" || c.status === "done") && (c.changed_at ?? 0) > s.at);
+    return !this.woke(c, s);
+  }
+
+  // A snooze ends on time or when its agent needs you. Drop ended ones from
+  // shared "t4.snoozed": a thread its agent woke then stays awake after you
+  // look or answer (its status moves on), and the list doesn't grow forever.
+  endSnoozes() {
+    const all = this.snoozed();
+    const tabs = new Map(spaces().flatMap((w) => w.tabs.map((c) => [c.id, c])));
+    const keep = Object.fromEntries(
+      Object.entries(all).filter(([id, s]) => {
+        const c = tabs.get(id);
+        if (!c) return !loaded(id); // closed, unless its machine just isn't loaded
+        return Date.now() < s.until && !this.woke(c, s);
+      }),
+    );
+    if (Object.keys(keep).length !== Object.keys(all).length) setShared("t4.snoozed", keep);
   }
 
   snooze(id, wake) {
