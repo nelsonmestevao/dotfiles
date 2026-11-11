@@ -6,12 +6,33 @@
 
 import { View, div, svg } from "gpui-kit";
 import { v_flex, h_flex, Editor, EditorState } from "gpui-base";
-import { spaces, panes, exec, readTextFile, settings, theme } from "herdr";
+import { spaces, panes, exec, readTextFile, settings, theme, layout } from "herdr";
 
 const C = { bg: "#0b0b0d", text: "#ececee", muted: "#a1a1aa", dim: "#71717a", line: "#1f1f23", row: "#18181b", on: "#1e2a3d", mod: "#fbbf24", fresh: "#4ade80", field: "#0e0e10", accent: "#60a5fa" };
 const I = (name) => `mods/t4-threads/${name}.svg`;
 const MAX_FILES = 5000;
 const MAX_BYTES = 400e3;
+const EVERY = 5000;
+
+// Herdr keeps a mod's timers running while its block is hidden, and every
+// refresh redraws the whole window. So poll only while this surface is on
+// screen: the "panel" column shown, and this the active child of its
+// "panel-body" stack. In a layout without those, poll as before.
+function find(node, id) {
+  if (!node) return null;
+  if (node.id === id) return node;
+  for (const c of node.children ?? []) {
+    const f = find(c, id);
+    if (f) return f;
+  }
+  return null;
+}
+function onScreen(surface) {
+  const l = layout();
+  const panel = find(l, "panel"), stack = find(l, "panel-body");
+  if (!panel || !stack) return true;
+  return !panel.hidden && (stack.active ?? stack.children?.[0]?.id) === surface;
+}
 // File endings the highlighter doesn't know, read as one it does.
 const LANG = { ts: "js", tsx: "js", mts: "js", cts: "js", jsx: "js", mjs: "js", toml: "yaml", jsonc: "json", svelte: "html", vue: "html" };
 
@@ -52,14 +73,15 @@ export default class Files extends View {
     this.typing = false;
     this.handle = cx.focus_handle();
     this.refresh(cx);
-    cx.timer.every(5000, (cx) => this.refresh(cx));
+    cx.timer.every(EVERY, (cx) => this.refresh(cx));
   }
 
   refresh(cx) {
     const cwd = folder(), on = machine(), key = location();
-    if (!cwd || this.busy) return;
+    if (!cwd || this.busy || !onScreen("files")) return;
     this.busy = true;
     this.tried = key;
+    this.at = Date.now();
     cx.spawn(async (cx) => {
       try {
         const top = await exec("git", ["rev-parse", "--show-toplevel"], { cwd, on });
@@ -161,8 +183,9 @@ export default class Files extends View {
     // A thread not asked about yet (just opened, or you switched): ask now.
     // Only once per folder: when exec fails (a deleted folder, an offline
     // machine), asking on every render would refresh and redraw in a tight
-    // loop. The timer tries again.
-    if (this.tried !== location()) this.refresh(cx);
+    // loop. The timer tries again. Also catch up when shown after a while
+    // hidden, not at the next tick.
+    if (this.tried !== location() || Date.now() - (this.at ?? 0) > EVERY) this.refresh(cx);
     const q = this.query.toLowerCase();
     const list = q
       ? this.paths

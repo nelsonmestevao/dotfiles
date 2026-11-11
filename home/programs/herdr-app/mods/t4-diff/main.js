@@ -6,10 +6,31 @@
 
 import { View, div, svg } from "gpui-kit";
 import { v_flex, h_flex } from "gpui-base";
-import { exec, focused, settings, readTextFile } from "herdr";
+import { exec, focused, settings, readTextFile, layout } from "herdr";
 
 const C = { bg: "#0b0b0d", text: "#ececee", muted: "#a1a1aa", dim: "#71717a", line: "#1f1f23", row: "#18181b", add: "#4ade80", del: "#f87171", addBg: "#14532d40", delBg: "#7f1d1d40", hunk: "#60a5fa" };
 const MAX_LINES = 1500;
+const EVERY = 3000;
+
+// Herdr keeps a mod's timers running while its block is hidden, and every
+// refresh redraws the whole window. So poll only while this surface is on
+// screen: the "panel" column shown, and this the active child of its
+// "panel-body" stack. In a layout without those, poll as before.
+function find(node, id) {
+  if (!node) return null;
+  if (node.id === id) return node;
+  for (const c of node.children ?? []) {
+    const f = find(c, id);
+    if (f) return f;
+  }
+  return null;
+}
+function onScreen(surface) {
+  const l = layout();
+  const panel = find(l, "panel"), stack = find(l, "panel-body");
+  if (!panel || !stack) return true;
+  return !panel.hidden && (stack.active ?? stack.children?.[0]?.id) === surface;
+}
 
 export default class Diff extends View {
   init(_props, cx) {
@@ -19,15 +40,16 @@ export default class Diff extends View {
     this.error = null;
     this.busy = false;
     this.refresh(cx);
-    cx.timer.every(3000, (cx) => this.refresh(cx));
+    cx.timer.every(EVERY, (cx) => this.refresh(cx));
   }
 
   refresh(cx) {
     const f = focused();
     const cwd = f?.cwd;
     const on = f?.terminal?.includes("/") ? f.terminal.split("/")[0] : undefined;
-    if (!cwd || this.busy) return;
+    if (!cwd || this.busy || !onScreen("diff")) return;
     this.busy = true;
+    this.at = Date.now();
     cx.spawn(async (cx) => {
       try {
         if (cwd !== this.cwd || on !== this.on) {
@@ -108,6 +130,8 @@ export default class Diff extends View {
   }
 
   render(cx) {
+    // Shown again after a while hidden: catch up now, not at the next tick.
+    if (Date.now() - (this.at ?? 0) > EVERY) this.refresh(cx);
     const add = this.files.reduce((n, f) => n + f.add, 0);
     const del = this.files.reduce((n, f) => n + f.del, 0);
     const name = (p) => p.split("/").pop();
