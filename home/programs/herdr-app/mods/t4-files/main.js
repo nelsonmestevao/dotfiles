@@ -59,6 +59,7 @@ export default class Files extends View {
     const cwd = folder(), on = machine(), key = location();
     if (!cwd || this.busy) return;
     this.busy = true;
+    this.tried = key;
     cx.spawn(async (cx) => {
       try {
         const top = await exec("git", ["rev-parse", "--show-toplevel"], { cwd, on });
@@ -157,7 +158,11 @@ export default class Files extends View {
   }
 
   render(cx) {
-    if (!this.root) this.refresh(cx);
+    // A thread not asked about yet (just opened, or you switched): ask now.
+    // Only once per folder: when exec fails (a deleted folder, an offline
+    // machine), asking on every render would refresh and redraw in a tight
+    // loop. The timer tries again.
+    if (this.tried !== location()) this.refresh(cx);
     const q = this.query.toLowerCase();
     const list = q
       ? this.paths
