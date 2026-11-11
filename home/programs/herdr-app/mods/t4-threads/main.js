@@ -63,7 +63,9 @@ function until(ms) {
 const PROJECT_COLORS = ["ansi6", "ansi3", "ansi4", "ansi5", "ansi2", "ansi1"];
 function spaceColors() {
   const ids = new Set(spaces().map((p) => p.id));
-  const kept = Object.fromEntries(Object.entries(shared("space.colors") ?? {}).filter(([id]) => ids.has(id)));
+  // Forget a space only when its machine is loaded and it's gone, or an
+  // offline machine's spaces lose their colors and come back with new ones.
+  const kept = Object.fromEntries(Object.entries(shared("space.colors") ?? {}).filter(([id]) => ids.has(id) || !loaded(id)));
   let changed = Object.keys(kept).length !== Object.keys(shared("space.colors") ?? {}).length;
   for (const p of spaces()) {
     if (kept[p.id] || p.name === "~") continue;

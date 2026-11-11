@@ -11,7 +11,7 @@
 
 import { View, div, svg } from "gpui-kit";
 import { h_flex } from "gpui-base";
-import { spaces, panes, run, theme, shared, props, layout, window as win, setShared, exec } from "herdr";
+import { spaces, panes, machines, run, theme, shared, props, layout, window as win, setShared, exec } from "herdr";
 
 const I = (name) => `mods/t4-threads/${name}.svg`;
 const C = { text: "#ececee", muted: "#a1a1aa", dim: "#71717a", chip: "#18181b", line: "#1f1f23" };
@@ -25,9 +25,18 @@ function own(el) {
 // the theme color fewest spaces use, once; every mod does the same in the
 // same order, so they agree, and adding or renaming spaces moves nothing.
 const PROJECT_COLORS = ["ansi6", "ansi3", "ansi4", "ansi5", "ansi2", "ansi1"];
+// Ids from another machine start with its name ("temis/sp…"). A space
+// missing on a machine whose spaces haven't loaded, or can't (offline), is
+// only missing for now: keep what's stored for it.
+function loaded(id) {
+  const name = id.includes("/") ? id.split("/")[0] : null;
+  return machines().find((m) => (m.name ?? null) === name)?.layout === "ready";
+}
 function spaceColors() {
   const ids = new Set(spaces().map((p) => p.id));
-  const kept = Object.fromEntries(Object.entries(shared("space.colors") ?? {}).filter(([id]) => ids.has(id)));
+  // Forget a space only when its machine is loaded and it's gone, or an
+  // offline machine's spaces lose their colors and come back with new ones.
+  const kept = Object.fromEntries(Object.entries(shared("space.colors") ?? {}).filter(([id]) => ids.has(id) || !loaded(id)));
   let changed = Object.keys(kept).length !== Object.keys(shared("space.colors") ?? {}).length;
   for (const p of spaces()) {
     if (kept[p.id] || p.name === "~") continue;

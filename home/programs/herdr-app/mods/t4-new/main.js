@@ -7,7 +7,7 @@
 
 import { View, div } from "gpui-kit";
 import { v_flex, h_flex } from "gpui-base";
-import { spaces, run, theme, props, closeOverlay, openOverlay, shared, setShared, exec } from "herdr";
+import { spaces, machines, run, theme, props, closeOverlay, openOverlay, shared, setShared, exec } from "herdr";
 
 // Name on the chip, and the command. Edit to taste.
 const AGENTS = [
@@ -27,9 +27,18 @@ const branchOf = (name) =>
 // Space colors, kept by space id in shared "space.colors" (the same code
 // in every mod that colors spaces, so they agree).
 const PROJECT_COLORS = ["ansi6", "ansi3", "ansi4", "ansi5", "ansi2", "ansi1"];
+// Ids from another machine start with its name ("temis/sp…"). A space
+// missing on a machine whose spaces haven't loaded, or can't (offline), is
+// only missing for now: keep what's stored for it.
+function loaded(id) {
+  const name = id.includes("/") ? id.split("/")[0] : null;
+  return machines().find((m) => (m.name ?? null) === name)?.layout === "ready";
+}
 function spaceColors() {
   const ids = new Set(spaces().map((p) => p.id));
-  const kept = Object.fromEntries(Object.entries(shared("space.colors") ?? {}).filter(([id]) => ids.has(id)));
+  // Forget a space only when its machine is loaded and it's gone, or an
+  // offline machine's spaces lose their colors and come back with new ones.
+  const kept = Object.fromEntries(Object.entries(shared("space.colors") ?? {}).filter(([id]) => ids.has(id) || !loaded(id)));
   let changed = Object.keys(kept).length !== Object.keys(shared("space.colors") ?? {}).length;
   for (const p of spaces()) {
     if (kept[p.id] || p.name === "~") continue;
