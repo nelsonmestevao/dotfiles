@@ -109,9 +109,11 @@ also lets `bin/lint`, `bin/format`, `bin/check`, `bin/build`, `nix eval` and
   and `repeated_keys` on purpose. Don't "fix" those.
 - Comments say why, in plain words. Section breaks look like
   `# ── Name ─────`.
-- Scripts in `bin/` are xonsh with docopt. Copy the shebang, the `Usage:`
-  block, and the `# vim: ft=xonsh` modeline from an existing script. Full
-  rules: `home/programs/claude/skills/scripting-conventions/SKILL.md`.
+- New scripts in `bin/` are xonsh with docopt. (`autoclean`, `format` and
+  `lint` are short bash wrappers.) Copy the shebang, the `Usage:` block, and
+  the `# vim: ft=xonsh` modeline from a xonsh script like `bin/check`. Tools a
+  script needs go in the dev shell in `flake.nix`. Full rules:
+  `home/programs/claude/skills/scripting-conventions/SKILL.md`.
 - When you change how something works, update `README.md` in the same commit.
   It documents the helpers, the host and user fields, and the scripts table.
 

@@ -9,8 +9,18 @@ If you're writing a CLI script for automation of some task, unless a different l
 
 ## Shebang & Runtime
 
-- Scripts use **nix-shell shebangs** for dependency management.
-- **Project scripts** (e.g. `bin/` in repos): use `nix-shell` directly:
+- Scripts use **nix shebangs** for dependency management.
+- **Project scripts in a repo whose flake has a dev shell** (like `bin/` in
+  my dotfiles): start that dev shell, so the tools come from `flake.lock`.
+  Add any tool the script needs to the dev shell's `packages`, not the
+  shebang. `nix develop` uses the flake in the current folder, so these
+  scripts run from the repo root. This rule wins over the `nix-shell` one
+  below; copy the shebang from a script already in the repo:
+  ```
+  #!/usr/bin/env -S nix --extra-experimental-features "nix-command flakes" develop --command xonsh
+  ```
+- **Other project scripts** (e.g. `bin/` in repos without a dev shell): use
+  `nix-shell` directly:
   ```
   #!/usr/bin/env nix-shell
   #! nix-shell -I nixpkgs=channel:nixos-26.05
@@ -51,7 +61,7 @@ If you're writing a CLI script for automation of some task, unless a different l
 
 ## Script Structure (Top to Bottom)
 
-1. Shebang lines (nix-shell for project scripts; for spells, use whatever `spl` generates)
+1. Shebang lines (dev shell or nix-shell for project scripts, see above; for spells, use whatever `spl` generates)
 2. Docstring with Usage/Commands/Options
 3. Imports (`docopt`, `os`, `sys`, etc.)
 4. `os.chdir(...)` to project root (for project scripts)
