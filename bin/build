@@ -49,25 +49,20 @@ def build(kind):
     print(f"{RED}✗{RESET} nh {kind} build failed")
   return ok
 
-def build_system():
-  return build('darwin' if sys.platform == 'darwin' else 'os')
-
-def build_home():
-  return build('home')
+# Each command, and what nh calls it on this machine.
+KINDS = {
+    'os': 'darwin' if sys.platform == 'darwin' else 'os',
+    'home': 'home',
+}
 
 def main(args):
-    tasks = {
-        'os': build_system,
-        'home': build_home,
-    }
-
-    run_all = not any(args[task] for task in tasks)
+    run_all = not any(args[task] for task in KINDS)
 
     # Build both even when the first fails, so one run reports every error.
     ok = True
-    for task, func in tasks.items():
+    for task, kind in KINDS.items():
         if args[task] or run_all:
-            ok = func() and ok
+            ok = build(kind) and ok
 
     if not ok:
         sys.exit(1)
