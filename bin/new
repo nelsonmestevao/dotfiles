@@ -91,6 +91,11 @@ def render_template(template, name):
     return template.replace("__NAME__", name)
 
 
+def stage(path):
+    """Flakes only see files git tracks, so stage the new file right away."""
+    git add @(path)
+
+
 def create_program(name):
     dir_path = f"home/programs/{name}"
     file_path = f"{dir_path}/{name}.nix"
@@ -105,8 +110,9 @@ def create_program(name):
 
     with open(file_path, 'w') as f:
         f.write(content)
+    stage(file_path)
 
-    print(f"{GREEN}✓{RESET} Created program at {file_path}")
+    print(f"{GREEN}✓{RESET} Created and staged program at {file_path}")
     print(f"  Enable it in home/users/<username>.nix:")
     print(f"    dotfiles.programs.{name}.enable = true;")
 
@@ -125,8 +131,9 @@ def create_extension(name):
 
     with open(file_path, 'w') as f:
         f.write(content)
+    stage(file_path)
 
-    print(f"{GREEN}✓{RESET} Created GNOME extension at {file_path}")
+    print(f"{GREEN}✓{RESET} Created and staged GNOME extension at {file_path}")
     print(f"  Enable it in home/users/<username>.nix:")
     print(f"    dotfiles.programs.gnome.extensions.{name}.enable = true;")
 
@@ -145,8 +152,9 @@ def create_module(name):
 
     with open(file_path, 'w') as f:
         f.write(content)
+    stage(file_path)
 
-    print(f"{GREEN}✓{RESET} Created module at {file_path}")
+    print(f"{GREEN}✓{RESET} Created and staged module at {file_path}")
     print(f"  Enable it in system/hosts/<hostname>.nix:")
     print(f"    dotfiles.modules.{name}.enable = true;")
 

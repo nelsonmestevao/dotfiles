@@ -300,6 +300,9 @@ that shell for you (`direnv allow` once).
 | `bin/new module <name>`        | Creates a NixOS module in `system/modules/nixos/<name>/`.            |
 | `bin/new extension <name>`     | Creates a GNOME extension in `home/programs/gnome/extensions/<name>/`. |
 
+`bin/new` and `bin/setup` stage the files they create with `git add`, so the
+flake sees them right away.
+
 To stay up to date:
 
 ```shell
