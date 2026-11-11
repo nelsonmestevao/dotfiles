@@ -65,16 +65,19 @@ export default class Diff extends View {
           return;
         }
         this.root = top.stdout.trim();
-        const stat = await exec("git", ["diff", "HEAD", "--numstat"], { cwd: this.root, on: this.on });
+        // -z: paths as they are, not quoted (non-ASCII, spaces). No renames:
+        // a rename is "old => new" in numstat, which isn't a path you can
+        // diff; without them it's a deleted file and a new one.
+        const stat = await exec("git", ["diff", "HEAD", "--numstat", "-z", "--no-renames"], { cwd: this.root, on: this.on });
         const files = stat.stdout
-          .split("\n")
+          .split("\0")
           .filter(Boolean)
           .map((l) => {
             const [a, d, ...p] = l.split("\t");
             return { path: p.join("\t"), add: a === "-" ? 0 : +a, del: d === "-" ? 0 : +d, binary: a === "-" };
           });
-        const fresh = await exec("git", ["ls-files", "--others", "--exclude-standard"], { cwd: this.root, on: this.on });
-        for (const path of fresh.stdout.split("\n").filter(Boolean)) files.push({ path, add: 0, del: 0, fresh: true });
+        const fresh = await exec("git", ["ls-files", "--others", "--exclude-standard", "-z"], { cwd: this.root, on: this.on });
+        for (const path of fresh.stdout.split("\0").filter(Boolean)) files.push({ path, add: 0, del: 0, fresh: true });
         this.files = files;
         this.error = null;
         if (this.open) await this.load(this.open);
@@ -100,7 +103,8 @@ export default class Diff extends View {
       this.lines = [`@@ new file, ${body.length} lines @@`, ...body.map((l) => `+${l}`)].slice(0, MAX_LINES);
       return;
     }
-    const r = await exec("git", ["diff", "HEAD", "--", path], { cwd: this.root, on: this.on });
+    // Literal: a path with * or ? in its name is that file, not a pattern.
+    const r = await exec("git", ["--literal-pathspecs", "diff", "HEAD", "--", path], { cwd: this.root, on: this.on });
     // Skip the header down to the first hunk.
     const all = r.stdout.split("\n");
     const start = all.findIndex((l) => l.startsWith("@@"));

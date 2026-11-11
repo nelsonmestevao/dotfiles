@@ -93,13 +93,16 @@ export default class Files extends View {
           this.open = new Set();
           this.show(null);
         }
-        const list = top.code === 0 ? await exec("git", ["ls-files", "-co", "--exclude-standard"], { cwd: root, on }) : await exec("rg", ["--files"], { cwd: root, on });
+        // NUL-separated, so paths come as they are, not quoted (non-ASCII, spaces).
+        const list = top.code === 0 ? await exec("git", ["ls-files", "-co", "--exclude-standard", "-z"], { cwd: root, on }) : await exec("rg", ["--files", "--null"], { cwd: root, on });
         if (location() !== key) return;
-        this.paths = [...new Set(list.stdout.split("\n").filter(Boolean))].sort().slice(0, MAX_FILES);
+        this.paths = [...new Set(list.stdout.split("\0").filter(Boolean))].sort().slice(0, MAX_FILES);
         this.marks = {};
         if (top.code === 0) {
-          const st = await exec("git", ["status", "--porcelain"], { cwd: root, on });
-          for (const l of st.stdout.split("\n").filter(Boolean)) this.marks[l.slice(3)] = l.startsWith("??") ? "U" : "M";
+          // Every new file, not "newdir/" for a new folder, and no renames
+          // ("R  new\0old"): each entry is then "XY path".
+          const st = await exec("git", ["status", "--porcelain", "-z", "--no-renames", "--untracked-files=all"], { cwd: root, on });
+          for (const l of st.stdout.split("\0").filter(Boolean)) this.marks[l.slice(3)] = l.startsWith("??") ? "U" : "M";
         }
       } catch { this.paths = []; this.marks = {}; }
       finally { this.busy = false; cx.notify(); }
