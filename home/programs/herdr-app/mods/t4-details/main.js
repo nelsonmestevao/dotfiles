@@ -28,7 +28,7 @@ function shown(node, id) {
 
 export default class Details extends View {
   init(_props, cx) {
-    this.git = null; // { root, branch, add, del, files, ahead, upstream }
+    this.git = null; // { key, root, branch, add, del, files, ahead, upstream }
     this.message = "";
     this.typing = false;
     this.busy = "";
@@ -46,22 +46,33 @@ export default class Details extends View {
     return lead?.cwd ?? p?.folder ?? null;
   }
 
-  refresh(cx) {
+  // The shown thread's folder and machine. `key` names the pair, and every
+  // result is stamped with it, so the card never shows (or commits in) the
+  // repo of a thread you've left.
+  where() {
     const cwd = this.folder();
     const on = spaces().find((s) => s.active)?.machine;
-    const key = JSON.stringify([on ?? null, cwd]);
+    return { cwd, on, key: JSON.stringify([on ?? null, cwd]) };
+  }
+
+  // What's loaded for the shown thread, or null while it loads.
+  current() {
+    return this.git?.key === this.where().key ? this.git : null;
+  }
+
+  refresh(cx) {
+    const { cwd, on, key } = this.where();
     if (shared("t4.details") !== true || !cwd || this.looking) return;
-    this.loadedFolder = key;
     this.looking = true;
     cx.spawn(async (cx) => {
       try {
         const top = await exec("git", ["rev-parse", "--show-toplevel"], { cwd, on });
-        if (top.code !== 0) this.git = { root: null };
+        if (top.code !== 0) this.git = { key, root: null };
         else {
           const root = top.stdout.trim();
           const st = await exec("git", ["status", "--porcelain=v2", "--branch"], { cwd: root, on });
           const num = await exec("git", ["diff", "HEAD", "--numstat"], { cwd: root, on });
-          const g = { root, on, branch: null, add: 0, del: 0, files: 0, ahead: 0, upstream: false };
+          const g = { key, root, on, branch: null, add: 0, del: 0, files: 0, ahead: 0, upstream: false };
           for (const l of st.stdout.split("\n")) {
             if (l.startsWith("# branch.head ")) g.branch = l.slice(14);
             else if (l.startsWith("# branch.upstream ")) g.upstream = true;
@@ -73,16 +84,24 @@ export default class Details extends View {
             g.add += +a || 0;
             g.del += +d || 0;
           }
-          if (JSON.stringify([spaces().find((s) => s.active)?.machine ?? null, this.folder()]) !== key) return;
+          if (this.where().key !== key) return;
+          // A note about the thread you left doesn't belong to this one.
+          if (this.git?.key !== key) this.note = "";
           this.git = g;
         }
-      } catch (error) { this.git = null; this.note = String(error); }
+      } catch (error) {
+        // Stamped with the key, so render doesn't ask again at once: a deleted
+        // folder or an offline machine would refresh and redraw in a tight
+        // loop. The timer tries again in a few seconds.
+        this.git = { key, root: null };
+        this.note = String(error);
+      }
       finally { this.looking = false; cx.notify(); }
     });
   }
 
   act(cx, label, steps) {
-    if (this.busy || !this.git?.root || this.looking) return;
+    if (this.busy || !this.current()?.root || this.looking) return;
     const { root, on } = this.git;
     this.busy = label;
     this.note = "";
@@ -150,8 +169,9 @@ export default class Details extends View {
 
   render(cx) {
     if (shared("t4.details") !== true) return div();
-    if (!this.git) this.refresh(cx);
-    const g = this.git;
+    // Nothing loaded for this thread yet (just opened, or you switched): ask now.
+    const g = this.current();
+    if (!g) this.refresh(cx);
     const cwd = this.folder();
     const on = g?.on ?? spaces().find((s) => s.active)?.machine;
     const changed = g?.root && g.files > 0;
