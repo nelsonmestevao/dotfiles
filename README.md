@@ -230,6 +230,10 @@ bin/rebuild os --boot  # activate on next boot (handy for major release upgrades
 On a Home Manager–only host, run `bin/rebuild home`. Plain `bin/rebuild` also
 tries to rebuild the OS, which fails there.
 
+To see what would change first, run `bin/build`. It takes the same `os` and
+`home` arguments, builds the configs, and prints the package diff. It doesn't
+switch, so it needs no `sudo`.
+
 ### What goes into a host entry
 
 Each host in `config/hosts.nix` has these fields:
@@ -289,6 +293,7 @@ that shell for you (`direnv allow` once).
 | Script                         | What it does                                                         |
 | ------------------------------ | -------------------------------------------------------------------- |
 | `bin/rebuild [os\|home]`       | Builds the config and switches to it.                                |
+| `bin/build [os\|home]`         | Builds the config and shows what would change, without switching.   |
 | `bin/update`                   | Updates the flake inputs and lists what changed.                     |
 | `bin/update --save`            | Same, then commits `flake.lock` with a note for each input.          |
 | `bin/check`                    | Runs `nix flake check` for every system.                             |

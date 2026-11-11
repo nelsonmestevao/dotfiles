@@ -85,6 +85,10 @@ nix eval --raw '.#homeConfigurations."nelson@framework".activationPackage.drvPat
 `bin/check` with no flag builds what CI builds. It is slow. Use it for
 changes to `lib/` or `flake.nix`.
 
+To prove a change really builds on this machine, run `bin/build` (or
+`bin/build home`). It builds the configs and prints what would change, but
+never switches and needs no `sudo`, so you don't need to ask first.
+
 ## Ask first
 
 - `bin/rebuild`: switches my live system or home and may need `sudo`.

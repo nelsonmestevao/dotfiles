@@ -1,0 +1,80 @@
+#!/usr/bin/env -S nix --extra-experimental-features "nix-command flakes" develop --command xonsh
+"""
+Builds the system and home configuration and shows what would change, without
+switching to it. It needs no sudo and changes nothing on the machine.
+
+Usage:
+  {program} [os | home]
+  {program} (-h | --help)
+  {program} (-v | --version)
+
+Commands:
+  os                Build only the system configuration (NixOS or nix-darwin).
+  home              Build only the home-manager configuration.
+
+Options:
+  -h --help         Show this screen.
+  -v --version      Show version.
+"""
+import os
+import shutil
+import sys
+import tempfile
+
+from docopt import docopt
+
+os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+# Enable flake features for the `nh` calls below.
+$NIX_CONFIG = 'experimental-features = nix-command flakes'
+
+RED="\033[1;31m"
+GREEN="\033[1;32m"
+RESET="\033[0m"
+
+# `nh <kind> build` prints the package diff against the running generation.
+# Unlike `switch`, it never activates.
+def build(kind):
+  # Left alone, `nh os build` drops a `result` link in the repo, which keeps
+  # the build from garbage collection. A throwaway folder avoids that.
+  tmp = tempfile.mkdtemp(prefix='bin-build-')
+  # nom redraws a timer many times a second. Without a terminal to draw on,
+  # that only floods logs and agent output.
+  nom = [] if sys.stdout.isatty() else ['--no-nom']
+  try:
+    ok = ![nh @(kind) build . --out-link @(tmp + '/result') @(nom)].returncode == 0
+  finally:
+    shutil.rmtree(tmp)
+  if not ok:
+    print(f"{RED}✗{RESET} nh {kind} build failed")
+  return ok
+
+def build_system():
+  return build('darwin' if sys.platform == 'darwin' else 'os')
+
+def build_home():
+  return build('home')
+
+def main(args):
+    tasks = {
+        'os': build_system,
+        'home': build_home,
+    }
+
+    run_all = not any(args[task] for task in tasks)
+
+    # Build both even when the first fails, so one run reports every error.
+    ok = True
+    for task, func in tasks.items():
+        if args[task] or run_all:
+            ok = func() and ok
+
+    if not ok:
+        sys.exit(1)
+    print(f"{GREEN}✓{RESET} Built. Nothing was switched.")
+
+if __name__ == '__main__':
+    arguments = docopt(__doc__.format(program=__file__), version=f'{os.path.basename(__file__)} script version 1.0')
+    main(arguments)
+
+# vim: ft=xonsh
