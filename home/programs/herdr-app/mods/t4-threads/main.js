@@ -339,7 +339,7 @@ export default class Threads extends View {
   row(t, r, all) {
     const { w, c } = r;
     const mine = all.filter((p) => p.tab === c.id && p.terminal);
-    const lead = mine.find((p) => p.focused) ?? mine.find((p) => p.program?.agent) ?? mine[0];
+    const lead = this.lead(c, all);
     const programs = [...new Map(mine.map((p) => [p.program?.key, p.program])).values()].filter((p) => p && !p.shell);
     const st = this.status(c);
     const pr = this.pr(lead?.cwd, lead?.branch, w.machine);

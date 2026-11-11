@@ -59,17 +59,16 @@ export default class Diff extends View {
   refresh(cx) {
     const cwd = folder(), on = machine(), key = location();
     if (!cwd || this.busy || !onScreen("diff")) return;
+    // Another thread: close the file that was open in the last one.
+    if (key !== this.tried) {
+      this.open = null;
+      this.lines = [];
+    }
     this.busy = true;
     this.tried = key;
     this.at = Date.now();
     cx.spawn(async (cx) => {
       try {
-        if (cwd !== this.cwd || on !== this.on) {
-          this.cwd = cwd;
-          this.on = on;
-          this.open = null;
-          this.lines = [];
-        }
         const top = await exec("git", ["rev-parse", "--show-toplevel"], { cwd, on });
         if (location() !== key) return;
         if (top.code !== 0) {
@@ -79,11 +78,11 @@ export default class Diff extends View {
           this.error = "not a git folder";
           return;
         }
-        this.root = top.stdout.trim();
+        const root = top.stdout.trim();
         // -z: paths as they are, not quoted (non-ASCII, spaces). No renames:
         // a rename is "old => new" in numstat, which isn't a path you can
         // diff; without them it's a deleted file and a new one.
-        const stat = await exec("git", ["diff", "HEAD", "--numstat", "-z", "--no-renames"], { cwd: this.root, on: this.on });
+        const stat = await exec("git", ["diff", "HEAD", "--numstat", "-z", "--no-renames"], { cwd: root, on });
         const files = stat.stdout
           .split("\0")
           .filter(Boolean)
@@ -91,9 +90,13 @@ export default class Diff extends View {
             const [a, d, ...p] = l.split("\t");
             return { path: p.join("\t"), add: a === "-" ? 0 : +a, del: d === "-" ? 0 : +d, binary: a === "-" };
           });
-        const fresh = await exec("git", ["ls-files", "--others", "--exclude-standard", "-z"], { cwd: this.root, on: this.on });
+        const fresh = await exec("git", ["ls-files", "--others", "--exclude-standard", "-z"], { cwd: root, on });
         for (const path of fresh.stdout.split("\0").filter(Boolean)) files.push({ path, add: 0, del: 0, fresh: true });
         if (location() !== key) return;
+        // Set together, so opening a file never mixes one thread's repo with
+        // another's machine.
+        this.root = root;
+        this.on = on;
         this.files = files;
         this.error = null;
         if (this.open) await this.load(this.open);
