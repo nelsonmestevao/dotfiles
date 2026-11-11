@@ -190,6 +190,18 @@ bin/setup host <hostname>  # system/hosts/ files + an entry in config/hosts.nix
 Add the user first, since `bin/setup host` asks which users go on the host. It
 also asks for the host's roles.
 
+You can pass the answers as flags instead. Anything you leave out is asked for,
+or, with no terminal (a script or an agent), set to its default when it has
+one:
+
+```shell
+bin/setup user alice --name "Alice Smith" --groups docker,wheel
+bin/setup host box --platform nixos --system x86_64-linux --users alice --roles server
+```
+
+Without a terminal, `bin/setup host` writes a stub `hardware.nix` instead of
+reading the hardware of the machine it runs on.
+
 To do it by hand:
 
 1. **Add your user** to `config/users.nix` and create

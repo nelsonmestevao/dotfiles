@@ -60,7 +60,8 @@ run Mac-only commands and paste the output back.
 - **Never change `stateVersion` or `darwinStateVersion`** on an existing host.
 - **New program, module, user, or host:** use `bin/new` or `bin/setup`. Don't
   write the files by hand. `bin/new module <name> --darwin` makes a nix-darwin
-  module.
+  module. `bin/setup` prompts in a terminal; pass its answers as flags
+  instead (see `bin/setup --help`).
 
 ## Check your work
 

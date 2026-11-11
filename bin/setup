@@ -3,18 +3,32 @@
 Scaffolds a new host or user and registers it in config/.
 
 Usage:
-  {program} host <hostname>
-  {program} user <username>
+  {program} host <hostname> [--platform=<platform>] [--system=<system>]
+                            [--users=<users>] [--roles=<roles>]
+  {program} user <username> [--name=<name>] [--groups=<groups>]
   {program} (-h | --help)
   {program} (-v | --version)
 
 Commands:
-  host <hostname>     Create a new host (NixOS, Darwin, or home-only).
-  user <username>     Create a new home-manager user.
+  host <hostname>          Create a new host (NixOS, Darwin, or home-only).
+  user <username>          Create a new home-manager user.
 
 Options:
-  -h --help           Show this screen.
-  -v --version        Show version.
+  -h --help                Show this screen.
+  -v --version             Show version.
+  --platform=<platform>    nixos, darwin, or home (Home Manager only).
+  --system=<system>        x86_64-linux, aarch64-linux, aarch64-darwin, or
+                           x86_64-darwin.
+  --users=<users>          The host's users, comma-separated.
+  --roles=<roles>          The host's roles, comma-separated, like desktop.
+                           Pass an empty value for none.
+  --name=<name>            The user's full name.
+  --groups=<groups>        The user's extra groups, comma-separated.
+
+In a terminal, it asks for each value you leave out. Without one (an agent, a
+pipe), it uses the default where there is one and stops where there isn't.
+Without a terminal it also writes a stub hardware.nix, since it can't check
+that it runs on the new host.
 """
 import glob
 import os
@@ -43,6 +57,10 @@ RESET="\033[0m"
 
 HOSTS_FILE = "config/hosts.nix"
 USERS_FILE = "config/users.nix"
+
+PLATFORMS = ["nixos", "darwin", "home"]
+SYSTEMS = ["x86_64-linux", "aarch64-linux", "aarch64-darwin", "x86_64-darwin"]
+DEFAULT_GROUPS = ["docker", "wheel", "networkmanager"]
 
 # ── Templates ────────────────────────────────────────────────────────────
 
@@ -151,6 +169,36 @@ def require(value, message):
     return value
 
 
+def has_terminal():
+    """gum prompts need a terminal. Agents and pipes don't have one."""
+    return sys.stdin.isatty()
+
+
+def split_list(value):
+    """"a, b,c" -> ["a", "b", "c"]. An empty value is an empty list."""
+    return [v.strip() for v in value.split(",") if v.strip()]
+
+
+def resolve(flag, value, prompt, default=None):
+    """A flag's value: what was passed, else the answer to `prompt` in a
+    terminal, else `default`. With neither a terminal nor a default, stop."""
+    if value is not None:
+        return value
+    if has_terminal():
+        return prompt()
+    if default is not None:
+        return default
+    print(f"{RED}✗{RESET} There's no terminal to ask in. Pass {flag}.")
+    sys.exit(1)
+
+
+def check_choices(flag, values, allowed):
+    unknown = [v for v in values if v not in allowed]
+    if unknown:
+        print(f"{RED}✗{RESET} {flag}: unknown {', '.join(unknown)} (known: {', '.join(allowed)})")
+        sys.exit(1)
+
+
 def quote_key(name):
     """Quote a Nix attribute key unless it is a plain identifier."""
     if re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', name):
@@ -223,7 +271,7 @@ def finalize(created):
 
 # ── Commands ───────────────────────────────────────────────────────────────
 
-def setup_host(hostname):
+def setup_host(hostname, args):
     if os.path.exists(f"system/hosts/{hostname}.nix") or os.path.isdir(f"system/hosts/{hostname}") or config_has_key(HOSTS_FILE, hostname):
         print(f"{RED}✗{RESET} Host '{hostname}' already exists")
         sys.exit(1)
@@ -233,28 +281,38 @@ def setup_host(hostname):
         print(f"{RED}✗{RESET} No users found in home/users/. Run `bin/setup user <name>` first.")
         sys.exit(1)
 
-    host_type = $(gum choose --header "Host type:" nixos darwin home).strip()
+    host_type = resolve("--platform", args['--platform'],
+        lambda: $(gum choose --header "Host type:" @(PLATFORMS)).strip())
     host_type = require(host_type, "No host type selected.")
+    check_choices("--platform", [host_type], PLATFORMS)
 
     default_arch = "aarch64-darwin" if host_type == "darwin" else "x86_64-linux"
-    arch = $(gum choose --header "System architecture:" --selected @(default_arch) x86_64-linux aarch64-linux aarch64-darwin x86_64-darwin).strip()
+    arch = resolve("--system", args['--system'],
+        lambda: $(gum choose --header "System architecture:" --selected @(default_arch) @(SYSTEMS)).strip(),
+        default=default_arch)
     arch = require(arch, "No architecture selected.")
+    check_choices("--system", [arch], SYSTEMS)
 
-    selected = $(gum choose --no-limit --header "Users for this host:" @(users))
-    selected = [u for u in selected.strip().split("\n") if u]
+    selected = resolve("--users", args['--users'] and split_list(args['--users']),
+        lambda: [u for u in $(gum choose --no-limit --header "Users for this host:" @(users)).strip().split("\n") if u])
     require(selected, "No users selected.")
+    check_choices("--users", selected, users)
 
     # Optional: a host with no roles only gets what users enable everywhere.
-    roles = $(gum choose --no-limit --header "Roles for this host (none is fine):" @(known_roles()))
-    roles = [r for r in roles.strip().split("\n") if r]
+    roles = resolve("--roles", None if args['--roles'] is None else split_list(args['--roles']),
+        lambda: [r for r in $(gum choose --no-limit --header "Roles for this host (none is fine):" @(known_roles())).strip().split("\n") if r],
+        default=[])
 
     created = []
 
     # ── Hardware (NixOS only) ──────────────────────────────────────────
+    # Detecting reads the machine this runs on. A person runs setup on the new
+    # host itself; an agent most likely runs it somewhere else, so without a
+    # terminal it writes the stub.
     if host_type == "nixos":
         os.makedirs(f"system/hosts/{hostname}", exist_ok=True)
         hw_path = f"system/hosts/{hostname}/hardware.nix"
-        if shutil.which("nixos-generate-config"):
+        if has_terminal() and shutil.which("nixos-generate-config"):
             print(f"{BLUE}→{RESET} Detecting hardware with nixos-generate-config...")
             hw = $(nixos-generate-config --show-hardware-config)
         else:
@@ -266,7 +324,8 @@ def setup_host(hostname):
         else:
             with open(hw_path, "w") as f:
                 f.write(render_template(HARDWARE_STUB_TEMPLATE, hostname))
-            print(f"{YELLOW}✗ Could not detect hardware; wrote a stub to {hw_path} — replace it on the target machine{RESET}")
+            reason = "Could not detect hardware" if has_terminal() else "No terminal, so no hardware detection"
+            print(f"{YELLOW}✗ {reason}; wrote a stub to {hw_path} — replace it on the target machine{RESET}")
         created.append(hw_path)
 
     # ── Host module file ───────────────────────────────────────────────
@@ -320,17 +379,20 @@ def setup_host(hostname):
         print(f"    {GREEN}→{RESET} Home config: homeConfigurations.\"{u}@{hostname}\"")
 
 
-def setup_user(username):
+def setup_user(username, args):
     if os.path.exists(f"home/users/{username}.nix") or config_has_key(USERS_FILE, username):
         print(f"{RED}✗{RESET} User '{username}' already exists")
         sys.exit(1)
 
-    name = $(gum input --header "Full name:" --placeholder "Nelson Estevão").strip()
+    name = resolve("--name", args['--name'],
+        lambda: $(gum input --header "Full name:" --placeholder "Nelson Estevão").strip(),
+        default=username)
     if not name:
         name = username
 
-    groups_raw = $(gum input --header "Extra groups (space-separated):" --value "docker wheel networkmanager").strip()
-    groups = groups_raw.split()
+    groups = resolve("--groups", None if args['--groups'] is None else split_list(args['--groups']),
+        lambda: $(gum input --header "Extra groups (space-separated):" --value @(" ".join(DEFAULT_GROUPS))).strip().split(),
+        default=DEFAULT_GROUPS)
 
     created = []
 
@@ -363,9 +425,9 @@ def setup_user(username):
 
 def main(args):
     if args['host']:
-        setup_host(args['<hostname>'])
+        setup_host(args['<hostname>'], args)
     elif args['user']:
-        setup_user(args['<username>'])
+        setup_user(args['<username>'], args)
 
 
 if __name__ == '__main__':
