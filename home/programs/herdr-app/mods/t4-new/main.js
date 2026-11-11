@@ -58,7 +58,10 @@ function spaceColor(t, p) {
 export default class NewThread extends View {
   init(_props, cx) {
     this.name = "";
-    this.project = 0;
+    // The space you picked, not a place in the list: the list changes when
+    // the git lookups below finish (a repo's spaces merge into one entry),
+    // and a place would then point at another project. Null: the first.
+    this.picked = null;
     this.agent = Math.max(0, AGENTS.findIndex(([n]) => n === localStorage.getItem("agent")));
     this.worktree = localStorage.getItem("worktree") === "yes";
     this.repos = {}; // folder -> { key, name, main } | null
@@ -80,7 +83,7 @@ export default class NewThread extends View {
   }
 
   // One entry per project: its repo's main-checkout space (else the first),
-  // the shown space's project first.
+  // the shown space's project first. `members`: the ids of all its spaces.
   projects() {
     const out = new Map();
     const list = spaces();
@@ -89,10 +92,18 @@ export default class NewThread extends View {
       const r = this.repos[JSON.stringify([s.machine ?? null, s.folder])];
       const key = r?.key ?? s.id;
       const have = out.get(key);
-      if (!have) out.set(key, { key, name: r?.name ?? s.name, space: s, git: Boolean(r) });
-      else if (r?.main && !this.repos[JSON.stringify([have.space.machine ?? null, have.space.folder])]?.main) have.space = s;
+      if (!have) out.set(key, { key, name: r?.name ?? s.name, space: s, git: Boolean(r), members: [s.id] });
+      else {
+        have.members.push(s.id);
+        if (r?.main && !this.repos[JSON.stringify([have.space.machine ?? null, have.space.folder])]?.main) have.space = s;
+      }
     }
     return [...out.values()];
+  }
+
+  // The project of the space you picked, else the first.
+  current(ps = this.projects()) {
+    return ps.find((p) => p.members.includes(this.picked)) ?? ps[0];
   }
 
   close() {
@@ -105,7 +116,7 @@ export default class NewThread extends View {
       this.nudge = true;
       return;
     }
-    const p = this.projects()[this.project];
+    const p = this.current();
     if (!p) return;
     const [label, argv] = AGENTS[this.agent];
     localStorage.setItem("agent", label);
@@ -143,8 +154,7 @@ export default class NewThread extends View {
   render() {
     const t = theme();
     const ps = this.projects();
-    this.project = Math.min(this.project, Math.max(0, ps.length - 1));
-    const p = ps[this.project];
+    const p = this.current(ps);
     const git = Boolean(p?.git);
     const key = (k) => div().px(5).rounded(4).border_1().border_color(t.border).text_color(t.dim).child(k);
     const hint = (k, what) => h_flex().gap(5).items_center().child(key(k)).child(div().child(what));
@@ -169,7 +179,11 @@ export default class NewThread extends View {
         const m = e.modifiers;
         if (k === "escape") return this.close();
         if (k === "enter") this.start();
-        else if (k === "p" && m.control) this.project = (this.project + 1) % Math.max(1, ps.length);
+        else if (k === "p" && m.control) {
+          // The list as it is now: lookups may have finished since this render.
+          const now = this.projects();
+          this.picked = now[(now.indexOf(this.current(now)) + 1) % Math.max(1, now.length)]?.space.id ?? null;
+        }
         else if (k === "a" && m.control) this.agent = (this.agent + 1) % AGENTS.length;
         else if (k === "w" && m.control) this.worktree = !this.worktree;
         else if (k === "backspace") this.name = this.name.slice(0, -1);
@@ -204,7 +218,17 @@ export default class NewThread extends View {
           .border_b(1)
           .border_color(t.border)
           .text_size(12)
-          .child(row("Project", ...ps.map((x, i) => this.chip(t, `tn-p${i}`, x.name, i === this.project, pick("project", i), spaceColor(t, x.space)))))
+          .child(
+            row(
+              "Project",
+              ...ps.map((x, i) =>
+                this.chip(t, `tn-p${i}`, x.name, x === p, (_e, cx) => {
+                  this.picked = x.space.id;
+                  cx.notify();
+                }, spaceColor(t, x.space)),
+              ),
+            ),
+          )
           .when(git, (el) =>
             el.child(
               row(
