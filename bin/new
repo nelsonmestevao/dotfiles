@@ -63,7 +63,7 @@ PROGRAM_TEMPLATE = """\
   # A file that isn't in the repo fails the build.
   # xdg.configFile."__NAME__/config" = mkSymlink "config";
 
-  # Shell aliases: programs.zsh.envExtra, see bat.nix.
+  # Shell aliases: home.shellAliases, see bat.nix.
   # GNOME keybindings: dconf.settings, see ghostty.nix.
 }
 """

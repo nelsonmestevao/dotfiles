@@ -67,9 +67,8 @@ in
     ERL_AFLAGS = "-kernel shell_history enabled";
   };
 
-  programs.zsh.envExtra = lib.mkIf config.dotfiles.programs.zsh.enable ''
-    export PATH="$HOME/.mix/escripts:$PATH";
-  '';
+  # Where `mix escript.install` puts its commands.
+  home.sessionPath = [ "$HOME/.mix/escripts" ];
 
   home.file.".iex.exs" = mkSymlink "iex.exs";
   home.file.".default-mix-commands" = lib.mkIf config.dotfiles.programs.mise.enable (
