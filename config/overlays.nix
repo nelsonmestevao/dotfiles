@@ -5,13 +5,11 @@
 # inputs, so using a new flake only needs it in flake.nix `inputs` and its
 # overlay here.
 #
-# A package patched or bumped here is wrapped in `untilUpstreamHas` or
-# `expiresWhen` (lib/expiry.nix). It then warns once upstream has caught up and
-# the override can go.
+# A package patched here is wrapped in `final.expiry.expiresWhen` (see
+# lib/expiry.nix), so it warns once upstream has caught up and the patch can
+# go. It is also listed in lib/packages.nix, so it can be built alone.
 inputs:
 let
-  inherit (import ../lib/expiry.nix inputs.nixpkgs.lib) expiresWhen untilUpstreamHas;
-
   # True once nixpkgs' own copy of a GNOME extension is made for the GNOME
   # Shell that nixpkgs ships. `gnomeExtensions` also holds extensions made
   # for older shells, so finding one there says nothing.
@@ -21,6 +19,8 @@ let
       ? ${extension.extensionUuid};
 in
 [
+  # `pkgs.expiry`: the helpers that make an override say when it can go.
+  (_final: prev: { expiry = import ../lib/expiry.nix prev.lib; })
   inputs.claude-code.overlays.default
   inputs.codex-cli-nix.overlays.default
   inputs.herdr-app-nix.overlays.default
@@ -28,17 +28,20 @@ in
   # screen reader of the same name (NixOS installs it with GNOME). Take the
   # app from that overlay but expose it as `orca-app` instead.
   (final: prev: { orca-app = (inputs.orca.overlays.default final prev).orca; })
-  (_final: prev: {
+  (final: prev: {
     # Herdr rings the tab's focused pane even while a side panel mod (notes,
     # files, graph) or a dialog has the keyboard. The patch drops the ring then.
-    # Fixed upstream in 558cf56 (herdrdev/herdr-app#362), after 0.1.12, so the
-    # patch and its file can go with the release after that one, or when the
-    # patch stops applying.
-    herdr-app = untilUpstreamHas "0.1.13" prev.herdr-app "Drop its patch in config/overlays.nix." (
-      prev.herdr-app.overrideAttrs (old: {
-        patches = (old.patches or [ ]) ++ [ ../home/programs/herdr-app/focus-ring-follows-keyboard.patch ];
-      })
-    );
+    # Fixed upstream in 558cf56 (herdrdev/herdr-app#362), after 0.1.12. A
+    # snapshot between releases may already have it, so this warns on any new
+    # version: that is when someone has to look.
+    herdr-app =
+      final.expiry.expiresWhen (prev.herdr-app.version != "0.1.11")
+        "herdr-app is now ${prev.herdr-app.version}. If it has upstream commit 558cf56, drop its patch in config/overlays.nix."
+        (
+          prev.herdr-app.overrideAttrs (old: {
+            patches = (old.patches or [ ]) ++ [ ../home/programs/herdr-app/focus-ring-follows-keyboard.patch ];
+          })
+        );
   })
   (_final: prev: {
     zen-browser = inputs.zen-browser.packages.${prev.stdenv.hostPlatform.system}.default;
@@ -49,12 +52,12 @@ in
     # for it (CI also uses it to keep the build in its cache).
     vicinae = inputs.vicinae.packages.${prev.stdenv.hostPlatform.system}.default;
   })
-  (_final: prev: {
+  (final: prev: {
     gnomeExtensions = prev.gnomeExtensions // {
       # GNOME 49/50 support while waiting for upstream PR #33 to be merged
       # https://github.com/mechtifs/wiggle/pull/33
       wiggle =
-        expiresWhen (madeForThisGnome prev prev.gnomeExtensions.wiggle)
+        final.expiry.expiresWhen (madeForThisGnome prev prev.gnomeExtensions.wiggle)
           "nixpkgs has a wiggle made for this GNOME Shell now. Drop the wiggle override in config/overlays.nix."
           (
             prev.gnomeExtensions.wiggle.overrideAttrs (_: {

@@ -396,19 +396,24 @@ A package says where it runs with `meta.platforms`, and a system only gets
 the ones that run on it.
 
 **Overrides expire.** An override stands in for what upstream will ship one
-day. Each one is wrapped in `untilUpstreamHas` or `expiresWhen`
-(`lib/expiry.nix`). Once upstream has caught up, every evaluation
-(`bin/check --eval`, a build, a switch) warns and names what to delete:
+day. Each one is wrapped in `pkgs.expiry.untilUpstreamHas` or
+`pkgs.expiry.expiresWhen` (`lib/expiry.nix`). Once upstream has caught up,
+every evaluation (`bin/check --eval`, a build, a switch) warns and names what
+to delete:
 
 ```nix
-herdr-app = untilUpstreamHas "0.1.13" prev.herdr-app "Drop its patch in config/overlays.nix." (
-  prev.herdr-app.overrideAttrs …
-);
+# home/programs/cmux/package.nix
+pkgs.expiry.untilUpstreamHas cmux.version pkgs.unstable.cmux "Delete home/programs/cmux/package.nix …" cmux
 ```
 
 ```
-evaluation warning: dotfiles: herdr-app 0.1.13 is out. Drop its patch in config/overlays.nix.
+evaluation warning: dotfiles: cmux 0.65.2.2 is out. Delete home/programs/cmux/package.nix …
 ```
+
+`expiresWhen` takes any condition, for a change with no version to wait for.
+The Herdr patch warns on any new Herdr version, because a snapshot between
+releases may already have the fix. weasyprint's test override on the Mac has
+no such check: it skips every test, so nothing can tell when it may go.
 
 **To bump a package**, run `nix-update` from the dev shell. It edits the
 version and the hash in place:

@@ -15,8 +15,6 @@ let
     python3Packages
     ;
 
-  inherit (import ../../../lib/expiry.nix lib) untilUpstreamHas;
-
   # skia-python's prebuilt wheel for each system. git-sim runs where there is
   # one. Wheels are per Python ABI: bump these when unstable's python3 moves on.
   skiaWheels = {
@@ -66,6 +64,8 @@ let
     pythonImportsCheck = [ "skia" ];
   };
 
+  # The git-dummy and manim overrides go away with this whole file, once
+  # nixpkgs has git-sim 0.4.0, so they need no expiry check of their own.
   git-dummy = python3Packages.git-dummy.overridePythonAttrs {
     version = "0.2.1";
     src = fetchFromGitHub {
@@ -154,6 +154,6 @@ let
     };
   });
 in
-untilUpstreamHas git-sim.version pkgs.unstable.git-sim
+pkgs.expiry.untilUpstreamHas git-sim.version pkgs.unstable.git-sim
   "Delete home/programs/git-sim/package.nix and install pkgs.unstable.git-sim in git-sim.nix."
   git-sim

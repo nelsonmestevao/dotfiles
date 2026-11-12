@@ -5,6 +5,9 @@
 # sit here long after it was needed. Wrapped in one of these, it stays the
 # same package, but once upstream has caught up every evaluation
 # (`bin/check --eval`, a build, a switch) warns and names what to delete.
+#
+# Use it as `pkgs.expiry`: config/overlays.nix adds it to every package set,
+# so a file needs no path to this one.
 lib: rec {
   # `expiresWhen caughtUp "What to delete." override` is `override`, with that
   # warning once `caughtUp` is true.
@@ -14,9 +17,7 @@ lib: rec {
 
   # The usual case: upstream's own package has reached `version`.
   #
-  #   untilUpstreamHas "0.1.13" prev.herdr-app "Drop the patch in config/overlays.nix." (
-  #     prev.herdr-app.overrideAttrs …
-  #   )
+  #   pkgs.expiry.untilUpstreamHas cmux.version pkgs.unstable.cmux "Delete home/programs/cmux/package.nix." cmux
   untilUpstreamHas =
     version: upstream: whatToDelete:
     expiresWhen (lib.versionAtLeast upstream.version version) "${lib.getName upstream} ${upstream.version} is out. ${whatToDelete}";
