@@ -8,17 +8,20 @@ with lib.hm.gvariant;
 {
   platforms = [ "linux" ];
 
-  # Each enabled extension adds itself to these two lists (see
-  # mkGnomeExtensionModule). User files don't set them.
+  # These two are not settings. Each enabled extension adds itself to them
+  # (see mkGnomeExtensionModule), and this module reads them below. User
+  # files leave them alone, hence `internal`.
   options.enabledExtensions = lib.mkOption {
     type = lib.types.listOf lib.types.str;
     default = [ ];
+    internal = true;
     description = "UUIDs of the enabled GNOME extensions.";
   };
 
   options.extensionSchemaDirs = lib.mkOption {
     type = lib.types.listOf lib.types.str;
     default = [ ];
+    internal = true;
     description = "GSettings schema folders of the enabled GNOME extensions.";
   };
 

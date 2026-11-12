@@ -8,7 +8,14 @@ name: body:
   ...
 }@args:
 let
-  result = body args;
+  moduleResult = import ../../lib/moduleResult.nix { inherit lib; };
+
+  # NixOS and nix-darwin modules share this wrapper, so the message can't say
+  # which of the two folders the file is in.
+  result = moduleResult {
+    owner = "dotfiles.modules.${name}";
+    file = "system/modules/<nixos|darwin>/${name}/${name}.nix";
+  } (body args);
 
   # Besides its system config, a module can return `options`: the settings a
   # host file can set beside `enable`. They are declared even while the module
