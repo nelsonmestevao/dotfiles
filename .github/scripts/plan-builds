@@ -1,0 +1,102 @@
+#!/usr/bin/env bash
+# Plans CI's build job: the key of what it builds on each system, and which
+# systems need a build at all. It reads the list that `bin/check --list`
+# prints. Run it by hand the way CI does:
+#
+#   bin/check --list > /tmp/derivations.json
+#   .github/scripts/plan-builds keys /tmp/derivations.json
+#   .github/scripts/plan-builds matrix /tmp/derivations.json false [<found key>...]
+#
+# keys    prints `<system>=<key>` for each system.
+# matrix  prints `systems=<JSON>`, the build job's matrix: every system whose
+#         key is not among the found keys, or every system when the second
+#         argument is `true`.
+#
+# Both print lines that GitHub reads from $GITHUB_OUTPUT. Notes for the run's
+# summary go to $GITHUB_STEP_SUMMARY, or to stderr when it is not set.
+set -euo pipefail
+
+# The systems CI builds, and the runner each one builds on. A new system also
+# needs its own marker lookup in ci.yml.
+RUNNERS='{"x86_64-linux": "ubuntu-latest", "aarch64-darwin": "macos-latest"}'
+
+WORKFLOW="$(dirname "$0")/../workflows/ci.yml"
+
+fail() {
+  echo "plan-builds: $1" >&2
+  exit 1
+}
+
+usage() {
+  fail "usage: plan-builds keys <list> | plan-builds matrix <list> <forced> [<found key>...]"
+}
+
+# Appends stdin to the run's summary.
+summary() {
+  cat >> "${GITHUB_STEP_SUMMARY:-/dev/stderr}"
+}
+
+systems() {
+  jq -r 'keys[]' <<< "$RUNNERS"
+}
+
+# Sets $key for the system $2, from the list in $1.
+#
+# It hashes the home configurations, which is what the build job builds. The
+# nixos-* and darwin-* checks are left out: flake.nix only evaluates them, and
+# the quick job already did. So a change to a system configuration alone
+# starts no build. The workflow is in the hash too, so that a change to the
+# build steps gets one real build.
+make_key() {
+  local homes hash
+  homes=$(jq -cS --arg system "$2" \
+    '.[$system] // {} | with_entries(select(.key | test("^(nixos|darwin)-") | not))' "$1")
+  [ "$homes" != '{}' ] || fail "the list has no home configuration for $2"
+  hash=$({ echo "$homes"; sha256sum < "$WORKFLOW"; } | sha256sum)
+  key="green-$2-${hash%% *}"
+}
+
+# is_found <key> [<found key>...]
+is_found() {
+  local wanted=$1 found
+  shift
+  for found in "$@"; do
+    [ "$found" = "$wanted" ] && return 0
+  done
+  return 1
+}
+
+keys() {
+  local list=$1 system
+  for system in $(systems); do
+    make_key "$list" "$system"
+    echo "$system=$key"
+  done
+  { echo '```json'; cat "$list"; echo '```'; } | summary
+}
+
+matrix() {
+  local list=$1 forced=$2 matrix='[]' system
+  shift 2
+  case $forced in
+    true | false) ;;
+    *) fail "the second argument must be true or false, not '$forced'" ;;
+  esac
+  for system in $(systems); do
+    make_key "$list" "$system"
+    if [ "$forced" = false ] && is_found "$key" "$@"; then
+      echo "- Already built: \`$key\`" | summary
+      continue
+    fi
+    echo "- Building: \`$key\`" | summary
+    matrix=$(jq -c --arg system "$system" --arg key "$key" --argjson runners "$RUNNERS" \
+      '. + [{system: $system, os: $runners[$system], key: $key}]' <<< "$matrix")
+  done
+  echo "systems=$matrix"
+}
+
+case "${1:-}" in
+  keys) [ $# -eq 2 ] || usage; keys "$2" ;;
+  matrix) [ $# -ge 3 ] || usage; shift; matrix "$@" ;;
+  *) usage ;;
+esac

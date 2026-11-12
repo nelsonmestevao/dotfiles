@@ -137,6 +137,8 @@
               statix
               nixfmt
               gum
+              # .github/scripts/plan-builds, which bin/test runs.
+              jq
               nh
               nix-diff
               python3

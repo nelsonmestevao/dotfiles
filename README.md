@@ -432,9 +432,18 @@ system derivations, since those checks only evaluate the system.
 Flakes only see tracked files, so `git add` a new file first. The command
 lists the untracked files it found, whatever their type.
 
-`bin/test` runs the regression tests for `bin/new`, `bin/setup` and
-`bin/check` in throwaway repositories. Pass it unittest's arguments to narrow
-the run, like `bin/test -k hardware`.
+`bin/test` runs the regression tests for `bin/new`, `bin/setup`, `bin/check`
+and CI's planning script. They work in throwaway folders and touch nothing
+else. Pass it unittest's arguments to narrow the run, like
+`bin/test -k hardware`.
+
+CI runs in two steps. A quick job lints, runs `bin/test`, and evaluates every
+config with `bin/check --list`. Then a build job builds each system's home
+configs. A system whose home derivations were built before gets no build job,
+and the quick job's summary says "Already built". A weekly run builds
+everything anyway. [`.github/scripts/plan-builds`](.github/scripts/plan-builds)
+makes that choice, and you can run it by hand on a saved list; its first lines
+say how.
 
 Coding agents get their rules from [`AGENTS.md`](AGENTS.md). For Claude Code,
 [`.claude/settings.json`](.claude/settings.json) also makes it ask before it

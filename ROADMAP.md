@@ -63,7 +63,7 @@ The owner took these on 2026-11-12. Don't reopen one without a new reason.
 | Growth | No new users or machines expected. Multi-user work is P3. | [CONFIG-005](#config-005) |
 | Homebrew on the work Mac | It works under Workbrew. | [CI-005](#ci-005) |
 | Build cache | Cachix, on CI and on all four machines. | [CI-002](#ci-002) |
-| Git flow | Push to `wip`, merge to `main` by hand. No PRs for your own work, no required check. | [CI-006](#ci-006) |
+| Git flow | Push to `wip`, merge to `main` by hand. No required check. PRs come from agents and the update job, and each gets one CI run. | [CI-006](#ci-006) |
 | Input updates | A weekly PR, merged by hand. | [CI-007](#ci-007) |
 | vicinae | From nixpkgs-unstable, not from its own flake. | [CONFIG-012](#config-012) |
 | Herdr mods | Track only the mods written here. Fetch the rest at a pinned revision. | [CI-004](#ci-004) |
@@ -428,8 +428,10 @@ a UDP port in `system/hosts/framework.nix` changed only `nixos-framework`,
 and `--why` showed the new firewall rule. A run takes about 24 seconds, against
 33 with one evaluation after the other, on a busy machine.
 
-Left to do: step 4, in [CI-006](#ci-006). The `fail` helper and the colors in
-`bin/check` should move to the shared file that [CLI-001](#cli-001) adds.
+Step 4 is done in [CI-006](#ci-006): `bin/check --list` prints the same list
+as JSON, and CI keys its builds on it, so the expression lives in one place.
+Left to do: the `fail` helper and the colors in `bin/check` should move to the
+shared file that [CLI-001](#cli-001) adds.
 
 **Plan:**
 
@@ -1588,8 +1590,9 @@ Home Manager, and the managed Mac; diagnosis works without a successful switch.
 178 Nix files, 33 files with no extension (scripts and configs), 19 JSON, 10
 YAML, 6 zsh, 6 Lua, 3 TOML, and 3 shell files, plus the Herdr mods.
 
-- **Verified:** the 16 scaffolding tests pass, and neither CI nor a flake
-  check runs them.
+- **Verified:** the 16 scaffolding tests pass. CI did not run them until
+  [CI-006](#ci-006) put `bin/test` in its first job. No flake check runs
+  them.
 - **Verified:** `shellcheck` reports nothing on the six shell scripts, and
   `zsh -n` passes on the zsh files. Adding both costs nothing today.
 - The Herdr
@@ -1605,9 +1608,10 @@ YAML, 6 zsh, 6 Lua, 3 TOML, and 3 shell files, plus the Herdr mods.
    `flake.lock` and the mods that come from upstream.
 2. Add to the lint check: `shellcheck`, `zsh -n`, `actionlint` for the
    workflow, and `--help` on every helper, which catches xonsh syntax errors.
-3. Add `bin/test`. It runs the Python tests and the JS test
-   (`node --test`). Add Node to the dev shell.
-4. Run `bin/test` in the first CI job ([CI-006](#ci-006)).
+3. Teach `bin/test` the JS test (`node --test`), and add Node to the dev
+   shell. `bin/test` exists since [CI-006](#ci-006) and runs the Python
+   tests.
+4. Done in [CI-006](#ci-006): the first CI job runs `bin/test`.
 5. Add an opt-in hook: a tracked `.githooks/pre-push` that runs `bin/lint` and
    `bin/check --eval`, about 20 seconds. Turn it on with
    `git config core.hooksPath .githooks`. No hook framework is needed.
@@ -1793,6 +1797,34 @@ docs distinguish declarative selection from version reproducibility.
 
 ### [ ] CI-006 Build only when a configuration changed — P1 · M
 
+**Progress:** steps 1–4 are in [ci.yml](.github/workflows/ci.yml). The
+choices live in [plan-builds](.github/scripts/plan-builds), a small script
+that `bin/test` covers, and the list comes from `bin/check --list`, the same
+one `--same` compares.
+
+The first real runs:
+
+- `quick` took 145 s while it still evaluated everything twice (43 s for
+  `bin/check --eval`, 53 s for the list). It now evaluates once, with
+  `bin/check --list`, plus one short step for the dev shells and formatters.
+  So it covers what `bin/check --eval` covered, except `nix flake check`'s
+  own check of the output shapes. Expect about 110 s.
+- Both builds started from the matrix. The Mac build passed in about six
+  minutes, and its closing step saved the marker, under the same key as a
+  local run.
+- The Linux build failed on a flaky Spotify download and saved no marker, as
+  it should.
+
+The box stays open until the checks under **Verify** pass on GitHub. Two known
+costs, left for later:
+
+- A run that skips the build does not touch the Nix store cache. After a week
+  of such runs GitHub may drop it, and the next real build compiles herdr-app
+  from source again, and vicinae too until [CONFIG-012](#config-012) lands.
+  The Cachix cache in [CI-002](#ci-002) ends this.
+- It is not yet known whether the Linux runner sees the marker the Mac saved.
+  If not, the Mac builds on every run: about six minutes, never a wrong pass.
+
 **Evidence:** **Measured:** of the 33 commits since the last input bump, one
 changed any config's derivation (`c15fee8c`, and it changed two of seven).
 The rest touched scripts, docs, live-linked config files, and Herdr mods. None
@@ -1811,28 +1843,37 @@ it loses no confidence.
 
 **Plan:**
 
-1. Triggers: `push` on `wip`, `main`, and `update/**`, a weekly `schedule`,
-   and `workflow_dispatch`. **Decided:** work goes to `wip` and is merged to
-   `main` by hand. So there is no `pull_request` trigger, no double run, and
-   no required check. The merge to `main` carries the same derivations, so
-   its build is skipped.
+1. Triggers: `push` on `wip` and `main`, `pull_request`, a weekly `schedule`,
+   and `workflow_dispatch` with a `force` switch. **Decided:** the owner's
+   work goes to `wip` and is merged to `main` by hand, with no required
+   check. PRs come from agents and from the update job
+   ([CI-007](#ci-007)). A PR branch gets its one run from the PR. A PR whose
+   head is `wip` or `main` gets none, because the push already ran. So
+   nothing runs twice.
 2. Job `quick`, on Linux with no disk cleanup and no store cache: lint,
-   `bin/test`, `nix flake check --no-build --all-systems`, and the derivation
-   list from [CLI-006](#cli-006) as a job output. Expect two to four minutes.
-3. Job `build`, once per system. Its key is the hash of that system's part of
-   the list. Look up `green-<system>-<hash>` with `actions/cache/restore` and
-   `lookup-only`. On a hit, skip the build and say so in the job summary. On
-   a miss, build as today, then save an empty marker under that key.
+   `bin/test`, and `bin/check --list`, which evaluates every check on every
+   system and prints the list ([CLI-006](#cli-006)).
+3. A key per system: a hash of the home derivations of that system and of
+   the workflow file. The `nixos-*` and `darwin-*` checks are left out,
+   because they are only evaluated and `quick` did that. So a change to a
+   system config alone starts no build, and a change to the build steps gets
+   one real build. `quick` looks up `green-<system>-<hash>` for both systems
+   with `actions/cache/restore` and `lookup-only`, and hands the systems that
+   have no marker to `build` as its matrix. A system with a marker gets no
+   build job, and `quick`'s summary says "Already built". A build job that
+   passes saves a tiny marker under its key.
 4. The weekly run ignores the markers and builds everything. It catches a
-   source that vanished or a cache that went stale.
-5. Later, keep one marker per check. A Mac-only change then builds nothing on
-   Linux.
+   source that vanished or a cache that went stale. GitHub runs schedules
+   from the default branch only, so it starts once the workflow is on `main`.
+5. Later, keep one marker per home config. A change to one Linux home then
+   builds that home alone.
 
 **Verify:**
 
-- Push a README-only commit: `build` ends in under a minute and says "already
-  built". The whole run takes under five minutes.
+- Push a README-only commit: no `build` job starts, and `quick` says "Already
+  built" for both systems. The whole run takes under five minutes.
 - Push a commit that adds a package: `build` runs. Run it again: skipped.
+- Push a change to a NixOS module alone: no `build` job starts.
 - Misspell an option: `quick` fails in under four minutes and `build` never
   starts.
 - After a month, compare the median run time with the baseline.
@@ -1844,6 +1885,14 @@ that changes one still gets a full build.
 
 - A marker means "this exact set built once". Markers are dropped after seven
   unused days. A miss costs one build, never a wrong pass.
+- GitHub limits who sees a marker. One saved by a push to `wip` is seen by
+  `wip` and by PRs into `wip`. One saved in a PR is seen by that PR only, so
+  the push that merges it builds once more. `main` does not see the markers
+  from `wip`, so a merge to `main` builds once more too. What `main` saves is
+  seen by every branch.
+- If those extra builds hurt, keep the markers where every branch can read
+  them: a tiny workflow artifact named after the key, found through the API,
+  and trusted only when a branch of this repository made it.
 - `nix-fast-build --skip-cached` with a binary cache can do the same for each
   check, by asking the cache whether the output exists. But that means
   pushing every home generation to Cachix, and the free 5 GB would fill up.
