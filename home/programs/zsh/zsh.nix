@@ -10,6 +10,9 @@
 
   home.packages = with pkgs; [
     zsh
+    # Completion for nix-build, nix-shell and the like. Home Manager added it
+    # while its own compinit was on.
+    (lib.lowPrio nix-zsh-completions)
   ];
 
   home.sessionVariables = {
@@ -19,6 +22,9 @@
   };
 
   programs.zsh.enable = true;
+  # oh-my-zsh runs compinit (see theme.zsh). Home Manager would run it a
+  # second time, before that, which only makes the shell start slower.
+  programs.zsh.enableCompletion = false;
   programs.zsh.initContent = builtins.readFile ./zshrc;
   programs.zsh.envExtra = ''
     export DOTFILES="${config.dotfiles.directory}"
@@ -63,15 +69,6 @@
         repo = "zsh-autopair";
         rev = "v1.0";
         sha256 = "sha256-wd/6x2p5QOSFqWYgQ1BTYBUGNR06Pr2viGjV/JqoG8A=";
-      };
-    };
-
-    ".oh-my-zsh/custom/plugins/zsh-vi-mode" = {
-      source = pkgs.fetchFromGitHub {
-        owner = "jeffreytse";
-        repo = "zsh-vi-mode";
-        rev = "v0.12.0";
-        sha256 = "sha256-EYr/jInRGZSDZj+QVAc9uLJdkKymx1tjuFBWgpsaCFw=";
       };
     };
 

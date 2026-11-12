@@ -1,6 +1,4 @@
 {
-  config,
-  lib,
   pkgs,
   ...
 }:
@@ -17,8 +15,8 @@
     FZF_DEFAULT_OPTS = "--height 50% --bind=ctrl-j:preview-down,ctrl-k:preview-up --reverse --inline-info --preview-window=right:60%";
   };
 
-  programs.zsh.envExtra = lib.mkIf config.dotfiles.programs.zsh.enable ''
-    source "$(fzf-share)/key-bindings.zsh"
-    source "$(fzf-share)/completion.zsh"
-  '';
+  # The key bindings and the completion come from oh-my-zsh's `fzf` plugin
+  # (home/programs/zsh/plugins.zsh). It asks fzf itself for them (`fzf --zsh`),
+  # so it works the same on NixOS, on macOS and on other distros. Sourcing
+  # fzf's files here as well set everything up twice, in every script too.
 }

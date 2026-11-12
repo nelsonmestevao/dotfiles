@@ -1,6 +1,4 @@
 {
-  config,
-  lib,
   pkgs,
   ...
 }:
@@ -9,8 +7,8 @@
     zoxide
   ];
 
-  programs.zsh.envExtra = lib.mkIf config.dotfiles.programs.zsh.enable ''
-    alias j=z
-    alias ji=zi
-  '';
+  home.shellAliases = {
+    j = "z";
+    ji = "zi";
+  };
 }

@@ -24,12 +24,10 @@ if [[ -r "$SPELLS/spells.init" ]]; then
   source "$SPELLS/spells.init"
 fi
 
-for init_file in $(find $DOTFILES -type f -name "*.init" | sort); do
-  source $init_file
-done
-
-for module in $(ls $DOTFILES/home/programs/zsh/*.zsh | sort); do
-  source $module
+# In name order: plugins.zsh must come before theme.zsh, which starts
+# oh-my-zsh. The quotes keep a checkout path with a space in one piece.
+for module in "$DOTFILES"/home/programs/zsh/*.zsh; do
+  source "$module"
 done
 
 # go to working directory if it has one

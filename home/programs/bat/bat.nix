@@ -1,6 +1,4 @@
 {
-  config,
-  lib,
   pkgs,
   mkSymlink,
   ...
@@ -12,7 +10,6 @@
 
   xdg.configFile."bat/config" = mkSymlink "config";
 
-  programs.zsh.envExtra = lib.mkIf config.dotfiles.programs.zsh.enable ''
-    alias cat='bat -p'
-  '';
+  # Only in a shell you type in. A script that calls `cat` gets the real one.
+  home.shellAliases.cat = "bat -p";
 }

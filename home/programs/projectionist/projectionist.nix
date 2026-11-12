@@ -1,6 +1,4 @@
 {
-  config,
-  lib,
   pkgs,
   ...
 }:
@@ -10,8 +8,6 @@
     (callPackage ./package.nix { })
   ];
 
-  # ── Shell Integration (zsh) ──────────────────────────────────────────
-  programs.zsh.envExtra = lib.mkIf config.dotfiles.programs.zsh.enable ''
-    alias pj=projectionist;
-  '';
+  # ── Shell Integration ────────────────────────────────────────────────
+  home.shellAliases.pj = "projectionist";
 }
