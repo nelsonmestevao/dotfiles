@@ -32,9 +32,6 @@
     libx11
   ];
 
-  # Where stack and cabal install commands.
-  home.sessionPath = [ "$HOME/.local/bin" ];
-
   # The OpenGL libraries, for programs built with freeglut. Set once per
   # session, so it doesn't grow in nested shells, and with no empty entry
   # when it was unset: the linker reads one as the current folder.
