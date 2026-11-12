@@ -50,6 +50,17 @@ class PlanBuildsTests(unittest.TestCase):
         self.assertTrue(out.startswith('systems='), out)
         return json.loads(out.removeprefix('systems='))
 
+    def test_a_system_the_runners_dont_know_stops_it(self):
+        listing = dict(LIST, **{'aarch64-linux': {'nelson@pi': '/nix/store/f-home.drv'}})
+        result = self.run_script('keys', self.save(listing), success=False)
+        self.assertIn('aarch64-linux', result.stderr)
+
+    def test_a_check_that_is_not_a_home_gives_no_key(self):
+        listing = dict(LIST, **{LINUX: {'nixos-framework': '/nix/store/c-eval.drv',
+                                        'lib-tests': '/nix/store/g-tests.drv'}})
+        result = self.run_script('keys', self.save(listing), success=False)
+        self.assertIn('no home configuration', result.stderr)
+
     def test_keys_are_stable_and_differ_per_system(self):
         first, second = self.keys(LIST), self.keys(LIST)
         self.assertEqual(first, second)

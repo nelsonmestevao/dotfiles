@@ -42,15 +42,15 @@ systems() {
 
 # Sets $key for the system $2, from the list in $1.
 #
-# It hashes the home configurations, which is what the build job builds. The
-# nixos-* and darwin-* checks are left out: flake.nix only evaluates them, and
-# the quick job already did. So a change to a system configuration alone
-# starts no build. The workflow is in the hash too, so that a change to the
+# It hashes the home configurations (`user@host`), which is what the build job
+# builds. The other checks are left out: the nixos-* and darwin-* ones are only
+# evaluated, and the quick job already did that. So a change to a system
+# configuration alone starts no build. The workflow is in the hash too, so that a change to the
 # build steps gets one real build.
 make_key() {
   local homes hash
   homes=$(jq -cS --arg system "$2" \
-    '.[$system] // {} | with_entries(select(.key | test("^(nixos|darwin)-") | not))' "$1")
+    '.[$system] // {} | with_entries(select(.key | contains("@")))' "$1")
   [ "$homes" != '{}' ] || fail "the list has no home configuration for $2"
   hash=$({ echo "$homes"; sha256sum < "$WORKFLOW"; } | sha256sum)
   key="green-$2-${hash%% *}"
@@ -67,7 +67,10 @@ is_found() {
 }
 
 keys() {
-  local list=$1 system
+  local list=$1 system unknown
+  # A system the list has but RUNNERS lacks would never be built, unnoticed.
+  unknown=$(jq -r --argjson runners "$RUNNERS" 'keys - ($runners | keys) | join(", ")' "$list")
+  [ -z "$unknown" ] || fail "the list has $unknown, which RUNNERS above doesn't know"
   for system in $(systems); do
     make_key "$list" "$system"
     echo "$system=$key"

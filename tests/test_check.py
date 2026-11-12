@@ -1,4 +1,4 @@
-"""Run with: nix develop --command python3 -B -m unittest discover -s tests -v."""
+"""Run with: bin/test."""
 import json
 import os
 from pathlib import Path
