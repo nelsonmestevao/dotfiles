@@ -6,16 +6,25 @@
 # (see mkHomeModule, mkSystemModule). That `folder` is the module's own, like
 # "home/programs/zsh", so a wrapper can name the module's files in messages
 # without knowing the layout. Only sub-directories count, so a stray file — a
-# README, a .gitkeep, an editor backup — can't become a broken import.
+# README, a .gitkeep, an editor backup — can't become a broken import. A
+# folder whose name starts with `_` is left out, for drafts and notes.
 { lib }:
 wrap: folder:
 let
   dir = ../. + "/${folder}";
+  isModule = name: type: type == "directory" && !lib.hasPrefix "_" name;
 in
 lib.mapAttrsToList (
   name: _:
-  wrap {
-    inherit name;
-    folder = "${folder}/${name}";
-  } (import (dir + "/${name}/${name}.nix"))
-) (lib.filterAttrs (_: type: type == "directory") (builtins.readDir dir))
+  let
+    file = "${folder}/${name}/${name}.nix";
+  in
+  lib.throwIfNot (builtins.pathExists (../. + "/${file}"))
+    "${folder}/${name} has no ${name}.nix. Add it, or start the folder's name with _ to leave it out."
+    (
+      wrap {
+        inherit name;
+        folder = "${folder}/${name}";
+      } (import (../. + "/${file}"))
+    )
+) (lib.filterAttrs isModule (builtins.readDir dir))
