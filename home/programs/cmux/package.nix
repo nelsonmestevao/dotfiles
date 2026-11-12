@@ -2,8 +2,6 @@
 # highlighting to the file editor.
 { pkgs }:
 let
-  inherit (import ../../../lib/expiry.nix pkgs.lib) untilUpstreamHas;
-
   cmux = pkgs.unstable.cmux.overrideAttrs (
     finalAttrs: _: {
       version = "0.65.2.2";
@@ -14,6 +12,6 @@ let
     }
   );
 in
-untilUpstreamHas cmux.version pkgs.unstable.cmux
+pkgs.expiry.untilUpstreamHas cmux.version pkgs.unstable.cmux
   "Delete home/programs/cmux/package.nix and install pkgs.unstable.cmux in cmux.nix."
   cmux

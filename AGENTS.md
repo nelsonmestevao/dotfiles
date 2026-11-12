@@ -73,8 +73,11 @@ run Mac-only commands and paste the output back.
 - **A package built here lives next to its program** as `package.nix`. It
   becomes a flake output on its own, named after its folder
   (`nix build .#<name>`), and says where it runs with `meta.platforms`.
-- **Wrap an override** in `untilUpstreamHas` or `expiresWhen`
-  (`lib/expiry.nix`), so it warns once upstream has caught up and it can go.
+- **Wrap the override someone would delete** in
+  `pkgs.expiry.untilUpstreamHas` or `pkgs.expiry.expiresWhen`
+  (`lib/expiry.nix`), so it warns once upstream has caught up. An override
+  inside a package file that goes away with it needs nothing. A package
+  patched in `config/overlays.nix` is also listed in `lib/packages.nix`.
 - **Never change `stateVersion` or `darwinStateVersion`** on an existing host.
 - **New program, module, user, or host:** use `bin/new` or `bin/setup`. Don't
   write the files by hand. `bin/new module <name> --darwin` makes a nix-darwin

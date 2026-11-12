@@ -5,7 +5,7 @@
 # found here and named after that folder.
 #
 # A package says where it runs with `meta.platforms`, and a system only gets
-# the ones that run on it. One that doesn't say is offered everywhere.
+# the ones that run on it. One that doesn't say gets its builder's default.
 { nixpkgs, overlays }:
 system:
 let
@@ -29,7 +29,7 @@ let
   ownPackages = lib.foldl' unionOfDisjoint { } (map packageIn packageFiles);
 
   # A package that config/overlays.nix patches or forks. These have no file to
-  # find, so they are named here.
+  # find, so they are named here: one patched there is added here too.
   overriddenPackages = {
     inherit (pkgs) herdr-app;
     inherit (pkgs.gnomeExtensions) wiggle;
