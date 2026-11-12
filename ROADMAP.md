@@ -1,18 +1,21 @@
 # Dotfiles roadmap
 
 This roadmap covers developer experience, simplification, reliability, CI, and
-the operational pieces that are missing. It comes from two passes over the
-repository on 2026-11-12:
+the operational pieces that are missing. It comes from three steps on
+2026-11-12:
 
 1. A source review. It read the code and ran nothing.
 2. A hands-on review. It ran the helpers on the Mac, read 30 CI runs from
    GitHub's API, tried ideas in a scratch clone, and compared the repo with
    about 15 well-kept flake configs. It changed no file but this one and
    switched nothing.
+3. A round of 24 questions to the owner. The answers are under
+   [Decisions](#decisions) and are worked into the tasks.
 
 Evidence marked **Verified** was run. Evidence marked **Measured** was timed.
-Anything else comes from reading the source. The Linux hosts were not reached,
-so backups, timers, temis's network, and NixOS activation are still untested.
+**Decided** marks an answer from the owner. Anything else comes from reading
+the source. The Linux hosts were not reached, so backups, timers, temis's
+network, and NixOS activation are still untested.
 
 Unchecked items describe proposed work. Checked items record what was done and
 how it was checked.
@@ -39,8 +42,38 @@ The design is good. Every item below must leave these rules standing:
 
 Three modules bend rule 2 today, because a module has no other way to vary by
 user or host: `claude.nix` checks the user name, `zsh.nix` calls `enableFor`,
-and the printing module names one printer. [CONFIG-006](#config-006) gives
-them a proper way.
+and `git.nix` reads its signing key from the host data.
+[CONFIG-006](#config-006) gives them a proper way.
+
+## Decisions
+
+The owner took these on 2026-11-12. Don't reopen one without a new reason.
+
+| Topic | Decision | Task |
+| --- | --- | --- |
+| Aliases | Interactive shells only. Scripts and agent shells see the real commands. | [CONFIG-008](#config-008) |
+| Program settings | Any program may declare settings beside `enable`. | [CONFIG-006](#config-006) |
+| Git signing key | A setting of the git program, set in the user file. It leaves `config/hosts.nix`. | [CONFIG-006](#config-006) |
+| User files | Two full lists. No shared profile file. | [CONFIG-004](#config-004) |
+| `home/packages.nix` | One program per package. | [CONFIG-003](#config-003) |
+| Programs that are off everywhere | Keep all 13 as alternatives. | [PLATFORM-003](#platform-003) |
+| temis | A remote dev box, reached over Tailscale only. | [CONFIG-003](#config-003), [OPS-005](#ops-005) |
+| thinkpad | Rarely used. It keeps building; its tasks are P3. | [PLATFORM-004](#platform-004) |
+| framework | A Framework 16. | [PLATFORM-005](#platform-005) |
+| Growth | No new users or machines expected. Multi-user work is P3. | [CONFIG-005](#config-005) |
+| Homebrew on the work Mac | It works under Workbrew. | [CI-005](#ci-005) |
+| Build cache | Cachix, on CI and on all four machines. | [CI-002](#ci-002) |
+| Git flow | Push to `wip`, merge to `main` by hand. No PRs for your own work, no required check. | [CI-006](#ci-006) |
+| Input updates | A weekly PR, merged by hand. | [CI-007](#ci-007) |
+| vicinae | From nixpkgs-unstable, not from its own flake. | [CONFIG-012](#config-012) |
+| Herdr mods | Track only the mods written here. Fetch the rest at a pinned revision. | [CI-004](#ci-004) |
+| Backup history | At most a day old; three months back. | [OPS-001](#ops-001) |
+| Backup password | Only on framework today. Store a second copy first. | [OPS-004](#ops-004) |
+| Other machines | No backups for temis, thinkpad, or the Mac. | [OPS-001](#ops-001) |
+| Backups and syncs | Home programs with user timers, not system timers. | [OPS-003](#ops-003) |
+| Secrets | A written checklist. No sops-nix or agenix. | [OPS-004](#ops-004) |
+| Top pain | Slow CI. The delivery order starts there. | [Order](#suggested-delivery-order) |
+| This file | It stays one file. | — |
 
 ## Baseline
 
@@ -115,6 +148,9 @@ diff. It never switches. `bin/rebuild` needs a yes first.
 | P2 | Next | Make everyday changes faster and reduce duplication |
 | P3 | Later or when needed | Extend coverage after measuring the benefit |
 
+Slow CI is the owner's top pain, so [CI-006](#ci-006), [CI-002](#ci-002), and
+[CONFIG-012](#config-012) are P1 too.
+
 Effort is relative: **S** is a focused change, **M** spans several files and
 checks, and **L** needs a migration or testing on multiple machines. These are
 planning estimates, not delivery promises. Checkboxes track completed outcomes.
@@ -141,10 +177,11 @@ Each task has **Evidence** (what is wrong today), a **Plan** (steps in order),
 
 ## Quick wins
 
-Each of these is small and safe, and the evidence is verified. Do them first.
+Each of these is small and safe. Do them first. The first row needs no code.
 
 | Fix | Where | Part of |
 | --- | --- | --- |
+| Store a second copy of the restic password and the rclone config, off the laptop. They exist only on framework, so losing it loses the backups too. | a password manager | [OPS-004](#ops-004) |
 | Restore `.envrc` (`use flake`). Commit `c15fee8c` deleted it by accident, one commit after `f6bf77f6` added it. | repo root | [DX-006](#dx-006) |
 | Delete `eval $(gitleaks completion zsh)`. It defines nothing and runs gitleaks in every zsh. | `git.nix` | [DX-002](#dx-002) |
 | Delete the `*.init` loop. No such file is tracked, and it walks the whole checkout on every shell start. | `zshrc` | [DX-002](#dx-002) |
@@ -406,9 +443,10 @@ error: A definition for option `hosts.temis.platform' is not of type `null or on
 
 1. Add `lib/schema.nix`. Hosts: `system` (one of four), `platform` (`null`,
    `"nixos"`, or `"darwin"`), `roles`, `users` (a non-empty list of known user
-   names), `stateVersion`, `darwinStateVersion`, `git.signingKey`, and
-   `git.signingProgram`. Users: `name`, `extraGroups`, `extraSpecialArgs`.
-   Give each option a description.
+   names), `stateVersion`, and `darwinStateVersion`. Users: `name`,
+   `extraGroups`, `extraSpecialArgs`. Give each option a description. The
+   `git.*` fields leave the host data in [CONFIG-006](#config-006); if the
+   schema lands first, include them until then.
 2. Run both data files through it in `lib/default.nix`. Force every field with
    `builtins.deepSeq`, or a lazy field hides its error.
 3. Add the rules that span fields, as one list of named checks: the platform
@@ -495,30 +533,40 @@ gets none of the 37.
 `stat` and `date`, `nixos-diff` is installed on hosts that are not NixOS, and
 `wake-hades` has one machine's MAC address in it.
 
+**Decided:** one program per package. temis is a remote dev box, so it keeps
+the language toolchains and loses what only a desktop needs.
+
 **Plan:**
 
 1. Save the inventory and the sorted package list of every config
    ([How to check a change](#how-to-check-a-change)). On framework, save the
    closure size: `nix path-info -Sh ~/.local/state/nix/profiles/home-manager`.
-2. Turn each group in `packages.nix` into a normal program with
-   `bin/new program`, such as `core-utils` and `build-tools`. A program may
-   hold several packages, as `git` does. Mark the Linux-only ones with
-   `platforms`.
-3. Move the scripts: `hm-diff` to its own program with portable calls,
-   `nixos-diff` to a NixOS module, and `wake-hades` to a program whose address
-   is a setting ([CONFIG-006](#config-006)).
-4. Delete `dotfiles.packages`, `home/packages.nix`, and the flag in the user
-   files and in the user template in `bin/setup`.
-5. Decide what temis needs. Gate the rest by role in the user file.
-6. Save the numbers again.
+2. Make one program for each of the 37 packages with `bin/new program <name>`.
+   Mark the Linux-only ones with `platforms`.
+3. Make one program for each script too: `pkgversion`, `gensecret`, `hm-diff`
+   (with portable `stat` and `date` calls), and `wake-hades`, whose address
+   becomes a setting ([CONFIG-006](#config-006)). `nixos-diff` becomes a
+   NixOS module.
+4. Add the new lines to `nelson.nix`, so each config gets what it had. Use
+   `enableFor [ "desktop" ]` for the ones a server has no use for, such as
+   `mpv` and `impression`.
+5. Delete `dotfiles.packages`, `home/packages.nix`, `home/scripts.nix`, and
+   the flag in the user files and in the user template in `bin/setup`.
+6. Turn on, in the Mac user file, the ones wanted there.
+7. Trim temis. Review Flutter and the media and document tools (ffmpeg,
+   ImageMagick, exiftool, unoconv, pandoc, typst). Keep what you use over
+   SSH.
+8. Save the numbers again.
 
 **Verify:**
 
-- After steps 2–4, the sorted package list of each config is the same as
+- After steps 2–5, the sorted package list of framework is the same as
   before.
-- After step 5, the inventory shows only the removals you meant, and only on
-  temis.
-- The Mac can turn on the portable programs and still evaluates.
+- After steps 4 and 7, the inventory of temis and thinkpad shows only the
+  removals you meant.
+- The Mac evaluates with its new lines, and `bin/build home` there shows only
+  the packages you added.
+- The count of program folders goes from 109 to about 150.
 
 **Done when:** record closure size and package count before and after; temis has
 an intentional server toolset; the portable base evaluates on Linux and Darwin.
@@ -526,47 +574,49 @@ Do not remove tools solely because two packages overlap.
 
 <a id="config-004"></a>
 
-### [ ] CONFIG-004 Share user defaults without hiding choices — P2 · M
+### [ ] CONFIG-004 Keep user files explicit and role-based — P2 · S
 
 **Evidence:** [the two user files](home/users) share 34 identical
-`… .enable = true;` lines. Some choices use a host name where the reason is the
-OS: `cmux` is `enableFor [ "Remote-Nelson-Estevao" ]`, and `aerospace` and
-`colima` are plain `true` in a file that could one day serve a Linux host.
+`… .enable = true;` lines. **Decided:** they stay as two full lists, so each
+file shows everything its user gets. There is no shared profile file.
 
-`enableFor [ "desktop" "linux" ]` means desktop **or** Linux. "Both" already
-works, because the helpers return plain booleans, but no doc says so:
+What is left to fix:
 
-```nix
-dotfiles.programs.gnome.enable = enableFor [ "desktop" ] && enableFor [ "linux" ];
-dotfiles.programs.zed.enable = enableFor [ "desktop" ] && disableFor [ "temis" ];
-```
+- Some choices use a host name where the reason is the OS: `cmux` is
+  `enableFor [ "Remote-Nelson-Estevao" ]`, and `aerospace` and `colima` are
+  plain `true` in a file that could one day serve a Linux host.
+- `enableFor [ "desktop" "linux" ]` means desktop **or** Linux. "Both" already
+  works, because the helpers return plain booleans, but no doc says so:
+
+  ```nix
+  dotfiles.programs.gnome.enable = enableFor [ "desktop" ] && enableFor [ "linux" ];
+  dotfiles.programs.zed.enable = enableFor [ "desktop" ] && disableFor [ "temis" ];
+  ```
 
 **Plan:**
 
-1. Add `home/profiles/cli.nix`: the shared lines, each as
-   `dotfiles.programs.<name>.enable = lib.mkDefault true;`. A user file
-   imports it and overrides any line with a plain assignment.
-2. Move only the lines both users agree on. Identity, desktop choices, and
-   host exceptions stay in the user files.
-3. Use roles where the reason is the OS: `enableFor [ "darwin" ]` for cmux,
+1. Use roles where the reason is the OS: `enableFor [ "darwin" ]` for cmux,
    aerospace, and colima.
-4. Document `&&` and `disableFor` in the README, next to the `enableFor`
+2. Make `gnome`, `vicinae`, and the other Linux desktop programs in
+   `nelson.nix` say both conditions, as above.
+3. Document `&&` and `disableFor` in the README, next to the `enableFor`
    examples.
-5. Make the user template in `bin/setup` import the profile.
+4. Keep both files in the same order with the same section comments, so a
+   `diff` of the two shows what differs.
 
 **Verify:**
 
 - The inventory of all four configs is the same before and after.
 - `bin/check --same` reports "same".
-- Setting `dotfiles.programs.bat.enable = false;` in a user file wins over the
-  profile without `mkForce`.
+- A fixture Mac host with the `desktop` role and user `nelson` evaluates.
+  Today it stops with the wrong-OS error, because `gnome` turns on there.
 
-**Done when:** adding a user or desktop needs few choices, overrides remain
-obvious, and a Mac desktop cannot accidentally enable Linux desktop modules.
+**Done when:** overrides remain obvious, and a Mac desktop cannot accidentally
+enable Linux desktop modules.
 
 <a id="config-005"></a>
 
-### [ ] CONFIG-005 Move Mac deployment facts out of shared modules — P2 · M
+### [ ] CONFIG-005 Move Mac deployment facts out of shared modules — P3 · M
 
 **Evidence:** [system/darwin.nix](system/darwin.nix) disables Nix management for
 every Mac and derives the primary user alphabetically. It also sets the Dock
@@ -574,6 +624,9 @@ and Finder defaults, so NixOS has 16 system modules and the Mac has one.
 [The Homebrew module](system/modules/darwin/homebrew/homebrew.nix) hardcodes
 Workbrew paths, completion workarounds, and one person's apps. The README tells
 another Mac user to edit that shared module.
+
+**Decided:** no new users or Macs are expected, and the Homebrew step works
+under Workbrew today. So this waits until a second Mac shows up.
 
 **Plan:**
 
@@ -610,6 +663,8 @@ the rules:
 - [claude.nix](home/programs/claude/claude.nix) links skills only when
   `username == "nelson"`.
 - [zsh.nix](home/programs/zsh/zsh.nix) calls `enableFor [ "server" ]` itself.
+- [git.nix](home/programs/git/git.nix) reads `host.git.signingKey`, so
+  `config/hosts.nix` holds a fact about one program.
 - [gnome/options.nix](home/programs/gnome/options.nix) is imported by hand in
   [home/default.nix](home/default.nix).
 - The printing module names one printer. The Homebrew module names one
@@ -639,6 +694,9 @@ error: The option `dotfiles.programs.zsh.showHots' does not exist.
 This is the same idea as `enable`, one step further: the program offers, the
 user file picks, and `enableFor` handles the exceptions.
 
+**Decided:** any program may declare settings, and the git signing key
+becomes one of them.
+
 **Plan:**
 
 1. In `mkHomeModule`, add `result.options or { }` beside `enable`, and leave
@@ -648,19 +706,43 @@ user file picks, and `enableFor` handles the exceptions.
 2. Fix the option text: `lib.mkEnableOption "the ${name} program"`.
 3. Share one `mkSymlink` between the home and GNOME wrappers. They carry the
    same code twice.
-4. Convert the cases above: zsh `showHost`, claude `skills`, the GNOME options
-   into `gnome.nix`, then printing and Homebrew ([CONFIG-005](#config-005)).
-5. Add a commented example to the program template in `bin/new`.
-6. Document it in the README under "How modules work". State the one rule: a
+4. Convert the cases above: zsh `showHost`, claude `skills`, and the GNOME
+   options into `gnome.nix`. Printing and Homebrew wait for
+   [CONFIG-005](#config-005).
+5. Move the git signing key. `git.nix` declares `signingKey` and
+   `signingProgram`, the user files set them, and `config/hosts.nix` loses
+   its `git.*` fields:
+
+   ```nix
+   # home/users/nelson.nix
+   dotfiles.programs.git.signingKey =
+     if enableFor [ "temis" ] then "~/.ssh/id_ed25519.pub" else "ssh-ed25519 AAAA…N8b6";
+   ```
+
+6. If such `if` chains grow, add a `valueFor` helper beside `enableFor`. It
+   picks a value by host name or role, with the same typo check. A host name
+   beats a role, and a role beats `default`. Two roles that match with
+   different values are an error. This is a sketch; it has not been tried:
+
+   ```nix
+   dotfiles.programs.git.signingKey = valueFor {
+     temis = "~/.ssh/id_ed25519.pub";
+     default = "ssh-ed25519 AAAA…N8b6";
+   };
+   ```
+
+7. Add a commented example to the program template in `bin/new`.
+8. Document it in the README under "How modules work". State the one rule: a
    program that declares settings must return a plain attribute set. If the
    whole body sits inside `lib.mkIf` or `if`, evaluation loops.
-7. Add a fixture with a setting to the tests ([CONFIG-002](#config-002)).
+9. Add a fixture with a setting to the tests ([CONFIG-002](#config-002)).
 
 **Verify:**
 
-- `bin/check --same` reports "same" after each of steps 1–4.
-- `grep -rnE 'username ==|hostname ==|enableFor' home/programs system/modules`
+- `bin/check --same` reports "same" after each of steps 1–5.
+- `grep -rnE 'username ==|hostname ==|enableFor|host\.' home/programs system/modules`
   finds nothing.
+- `grep -n git config/hosts.nix` finds nothing.
 - A misspelled setting fails with its name.
 
 **Done when:** no module checks a user or host name, and a new setting needs
@@ -668,37 +750,36 @@ one line in the program and one in the user or host file.
 
 <a id="config-007"></a>
 
-### [ ] CONFIG-007 Keep program names out of `lib/` — P2 · S
+### [ ] CONFIG-007 Keep program names out of `lib/` — P3 · S
 
 **Evidence:** `vicinae` is passed by name through [flake.nix](flake.nix),
 [lib/default.nix](lib/default.nix), [mkHomeConfig](lib/mkHomeConfig.nix), and
 [mkNixosConfig](lib/mkNixosConfig.nix), which also holds the switch for its
-input server. [The vicinae system module](system/modules/nixos/vicinae/vicinae.nix)
-is an empty body with a comment that points back at `lib/`. AGENTS.md says a
-new input needs `flake.nix` and `config/overlays.nix`. An input that brings a
-module needs five files.
+input server. AGENTS.md says a new input needs `flake.nix` and
+`config/overlays.nix`. An input that brings a module needs five files.
+
+**Decided:** vicinae moves to nixpkgs ([CONFIG-012](#config-012)). That
+removes every line named above. What stays is the gap: an input that ships a
+module has no home in `config/`. The next one is `nixos-hardware`
+([PLATFORM-005](#platform-005)), and it is for one host only.
 
 **Plan:**
 
-1. Add `config/modules.nix`, next to `overlays.nix`:
-   `inputs: { home = [ … ]; nixos = [ … ]; darwin = [ ]; }`.
-2. Make the builders take those lists. Remove the `vicinae` argument from
-   `flake.nix` and `lib/`.
-3. Move the input-server switch. The default (`lib.mkDefault false`) sits in
-   `config/modules.nix` beside the import. The real setting goes in the
-   vicinae system module, which is no longer empty.
+1. Do [CONFIG-012](#config-012) first.
+2. When the next input with a module arrives, add `config/modules.nix`, next
+   to `overlays.nix`. It lists modules for every home, every NixOS host,
+   every Mac, and for single hosts by name.
+3. Make the builders take those lists. No input is passed to `lib/` by name.
 4. Update AGENTS.md and the README section "Using another flake".
 
 **Verify:**
 
-- `bin/check --same` reports "same".
-- `grep -rn vicinae lib/ flake.nix` shows only the input.
+- `bin/check --same` reports "same" for the hosts the new module does not
+  touch.
+- `grep -rnE 'vicinae|nixos-hardware' lib/` finds nothing.
 
 **Done when:** adding a flake that ships a module touches `flake.nix` and
 `config/`, and nothing in `lib/`.
-
-**Note:** if [CI-002](#ci-002) takes vicinae from nixpkgs, most of this
-wiring goes away. Decide that first.
 
 <a id="config-008"></a>
 
@@ -713,17 +794,17 @@ reads, scripts included.
 script or tool that runs through zsh gets `bat -p` when it asks for `cat`, plus
 `j`, `lg`, `mr`, and `pj`. The fzf key bindings load there too.
 
+**Decided:** aliases belong to interactive shells only.
+
 **Plan:**
 
-1. Decide first: should aliases reach scripts and agent shells? The steps
-   below assume no. If yes, keep them, but still move `cat`.
-2. Move aliases to `home.shellAliases`. Home Manager writes them into each
+1. Move aliases to `home.shellAliases`. Home Manager writes them into each
    enabled shell's interactive config.
-3. Move `PATH` lines to `home.sessionPath`, and interactive setup such as the
+2. Move `PATH` lines to `home.sessionPath`, and interactive setup such as the
    fzf bindings to `programs.zsh.initContent`.
-4. Drop the `lib.mkIf config.dotfiles.programs.zsh.enable` guards that are no
+3. Drop the `lib.mkIf config.dotfiles.programs.zsh.enable` guards that are no
    longer needed.
-5. Update the comment in the `bin/new` template.
+4. Update the comment in the `bin/new` template.
 
 **Verify:**
 
@@ -834,6 +915,67 @@ written here.
 
 **Done when:** the numbers are recorded and the decision is made.
 
+<a id="config-012"></a>
+
+### [ ] CONFIG-012 Take vicinae from nixpkgs — P1 · S
+
+**Evidence:** vicinae comes from its own flake, built against
+nixpkgs-unstable. No cache has that build, so every bump costs about an hour
+in CI and again on the laptop. The flake also brings four more lock nodes
+(`numen`, `soulver-cpp`, a nixpkgs 24.11 pin, `systems`), an overlay entry,
+and wiring in three `lib/` files ([CONFIG-007](#config-007)).
+
+**Verified:**
+
+- nixpkgs-unstable has vicinae 0.29.2, prebuilt in `cache.nixos.org`. The
+  flake gives 0.30.0.
+- That package ships `libexec/vicinae/vicinae-input-server`.
+- The pinned Home Manager has its own `programs.vicinae` module: `enable`,
+  `package`, `systemd`, `useLayerShell`, `settings`, `themes`, `extensions`.
+  The flake's module turns it off to use its own.
+- nixpkgs has no NixOS module for vicinae. The flake's one is six lines: a
+  security wrapper that gives the input server one capability. Clipboard and
+  emoji pasting and snippets need it.
+
+**Decided:** use the nixpkgs package.
+
+**Plan:**
+
+1. Pick the moment. Going from 0.30.0 to 0.29.2 is a step back, and vicinae
+   may not read newer data. Either wait until `pkgs.unstable.vicinae` is at
+   least the installed version, or back up `~/.config/vicinae` and its data
+   folder first.
+2. Home side: set `package = pkgs.unstable.vicinae` and
+   `useLayerShell = true` in [vicinae.nix](home/programs/vicinae/vicinae.nix),
+   and drop `systemd.environment`. Home Manager's own module takes over.
+3. System side: put the wrapper in
+   [the vicinae system module](system/modules/nixos/vicinae/vicinae.nix),
+   which is an empty body today:
+
+   ```nix
+   security.wrappers.vicinae-input-server = {
+     source = "${pkgs.unstable.vicinae}/libexec/vicinae/vicinae-input-server";
+     capabilities = "cap_dac_override+ep";
+     owner = "root";
+     group = "root";
+   };
+   ```
+
+4. Remove the `vicinae` input, its overlay entry, its arguments in
+   `flake.nix` and `lib/`, and its line in CI's "Keep the slow builds" step.
+
+**Verify:**
+
+- `bin/check --eval` passes, and `grep -rn vicinae flake.nix lib/` finds
+  nothing.
+- `flake.lock` has five nodes fewer.
+- On framework, `bin/build` downloads vicinae and compiles nothing.
+- After the switch: the launcher opens with Alt+Space, a clipboard entry
+  pastes, and `getcap /run/wrappers/bin/vicinae-input-server` shows the
+  capability.
+
+**Done when:** no machine and no CI run builds vicinae from source.
+
 ## 3. Make recovery and unattended jobs trustworthy
 
 Nothing in this section was run. The plans come from the source.
@@ -849,14 +991,18 @@ enables these timers in the current host files.
 
 **Plan:**
 
-1. Write the recovery scope for each host in the README: what is backed up,
-   what is left out on purpose, and where the credentials live.
-2. Add retention: `pruneOpts`, for example `--keep-daily 7 --keep-weekly 4
-   --keep-monthly 12`. Review this as its own change; it deletes data.
-3. Add a weekly check: `checkOpts = [ "--read-data-subset=5%" ]`.
-4. Report failures: an `OnFailure=` unit that sends a desktop notification,
-   and a line in the shell greeting when the newest snapshot is too old.
-5. Run a restore drill and record it here: restore one folder to `/tmp`,
+1. Store the second copy of the password first ([OPS-004](#ops-004), step 1).
+2. Write the recovery scope in the README. **Decided:** only framework is
+   backed up. temis, thinkpad, and the Mac hold nothing that is not in git or
+   on framework, so unpushed work there is at risk by choice.
+3. Add retention. **Decided:** at most a day old, three months back:
+   `pruneOpts = [ "--keep-daily 7" "--keep-weekly 4" "--keep-monthly 3" ]`.
+   Review this as its own change; it deletes data.
+4. Add a weekly check: `checkOpts = [ "--read-data-subset=5%" ]`.
+5. Report failures: an `OnFailure=` unit that sends a desktop notification,
+   and a line in the shell greeting when the newest snapshot is more than two
+   days old.
+6. Run a restore drill and record it here: restore one folder to `/tmp`,
    compare it with the original, and write the date and result.
 
 **Verify:**
@@ -905,42 +1051,61 @@ are verified with a dry run and restore.
 
 <a id="ops-003"></a>
 
-### [ ] OPS-003 Make timer services independent of interactive state — P1 · M
+### [ ] OPS-003 Run backups and syncs as home programs — P1 · M
 
 **Evidence:** [mkSystemTimer](system/lib/mkSystemTimer.nix) names units only by
 job name, so multiple users would collide. The database-client backup exits on
 `git diff --quiet`, which misses untracked-only work, and obtains its commit
 message from a network service. Shell backup aliases also hardcode framework's
-repositories in [aliases.zsh](home/programs/zsh/aliases.zsh), though the NixOS
+repositories in [aliases.zsh](home/programs/zsh/aliases.zsh), though the
 restic module already installs a `restic-<name>` wrapper for each one.
+
+Timers are also the one feature that a host turns on for a user
+(`dotfiles.modules.timers.users`). Everything else is a program the user turns
+on.
+
+**Decided:** backups and syncs become home programs with user timers, turned
+on with `enableFor`. **Verified:** the pinned Home Manager ships
+`services.restic` with the options the NixOS module has: `paths`, `exclude`,
+`timerConfig`, `pruneOpts`, `checkOpts`, and a wrapper for each repository. It
+runs on Linux only, which is all that is needed.
 
 **Plan:**
 
-1. Name units and wrappers `<job>-<user>`.
-2. Set a working directory, a timeout, and a restart limit on each service.
-3. Detect changes with `git status --porcelain`, which also sees untracked
-   files.
-4. Use a local commit message (host and date). Push even when there is
-   nothing new to commit, so a failed push gets retried.
-5. Delete the three restic aliases and use the `restic-<name>` wrappers.
-6. Say in the timer file that `rclone sync` mirrors deletions and is not a
-   versioned backup.
+1. Store the second copy of the password ([OPS-004](#ops-004)) and run the
+   restore drill ([OPS-001](#ops-001)) before touching working backups.
+2. Add a `backups` program with `bin/new program`. Its settings
+   ([CONFIG-006](#config-006)) are the repositories and the paths. It fills
+   `services.restic.backups` from them.
+3. Add `sync-books` and `backup-dbclient` as programs with user services and
+   timers. Fix the dbclient script on the way: `git status --porcelain` sees
+   untracked files, the commit message is the host and date, and it pushes
+   even when there is nothing new to commit, so a failed push is tried again.
+4. Give each service a working directory, a timeout, and a restart limit.
+5. Turn all three on in `nelson.nix` with `enableFor [ "framework" ]`.
+6. Run the new backup against a test repository for a week, beside the old
+   one. Then delete `system/timers/`,
+   [mkSystemTimer](system/lib/mkSystemTimer.nix), the `timers` lines in
+   `framework.nix`, and the three restic aliases.
+7. Note the cost in the program's comment: user timers run only while you are
+   logged in. On the laptop that is fine. A server would need lingering.
+8. Say in the `sync-books` program that `rclone sync` mirrors deletions and is
+   not a versioned backup.
 
 **Verify:**
 
-- A fixture host with two users in `timers.users` evaluates, and
-  `systemctl list-timers` shows a unit for each.
+- `systemctl --user list-timers` on framework shows the three jobs on the
+  same schedule as before.
+- The new wrapper lists the same snapshots as the old one:
+  `restic-mega snapshots`.
 - With the network off, the dbclient service fails with a clear log line. The
   next run pushes the pending commit.
 - A new untracked file is committed on the next run.
+- `grep -rn timers system/` finds nothing.
 
-**Done when:** two users can enable jobs without collisions; offline runs fail
-clearly and recover; untracked-only changes and pending pushes are covered.
-
-**Option:** Home Manager ships a `services.restic` module and user timers. As
-home programs, backups would follow the user to any Linux host and turn on
-with `enableFor`, like everything else. The cost: user services only run while
-the user is logged in, unless lingering is on. Weigh it before step 1.
+**Done when:** backups turn on with one `enableFor` line in the user file;
+offline runs fail clearly and recover; untracked-only changes and pending
+pushes are covered.
 
 <a id="ops-004"></a>
 
@@ -950,21 +1115,27 @@ the user is logged in, unless lingering is on. Weigh it before step 1.
 and SSH key. [system/nixos.nix](system/nixos.nix) creates accounts but does not
 define a repository-wide first-login or credential provisioning process.
 
+**Decided:** a written checklist, with no sops-nix or agenix. The surveyed
+configs split about evenly between the two, and either earns its place once a
+secret must reach a second machine. Look again then.
+
 **Plan:**
 
-1. Add a table to the README: each secret's path, owner, mode, which job reads
+1. **Do this first, before any code.** The restic password and the rclone
+   config exist only on framework. Lose the laptop and nobody can open the
+   backups. Store a copy of both in a password manager, and of the SSH key if
+   it has no copy.
+2. Add a table to the README: each secret's path, owner, mode, which job reads
    it, how to create it, and where the recovery copy lives. No values.
-2. Give each timer a clear failure when its secret is missing
+3. Give each timer a clear failure when its secret is missing
    (`ConditionPathExists=` or a first-line check).
-3. Add a check that fails when a file that looks like a credential is tracked.
+4. Add a check that fails when a file that looks like a credential is tracked.
    It prints paths, never contents. `gitleaks` is already installed.
-4. Decide on encrypted secrets in the repo. The surveyed configs split about
-   evenly between sops-nix and agenix. Either earns its place once a secret
-   must reach a second machine or a system service. Today the secrets live on
-   framework alone, so the table may be enough.
 
 **Verify:**
 
+- On another machine, with only the stored copies, `restic -r … snapshots`
+  lists the snapshots.
 - On a fresh user account, following the table makes the first backup pass.
 - Track a fake key on a branch: the check fails and names the path.
 
@@ -974,23 +1145,29 @@ failed machine.
 
 <a id="ops-005"></a>
 
-### [ ] OPS-005 Review temis network access and service exposure — P1 · M
+### [ ] OPS-005 Review temis network access and service exposure — P2 · S
 
 **Evidence:** [temis.nix](system/hosts/temis.nix) enables SSH and Docker while
 explicitly disabling the firewall. No account has `openssh.authorizedKeys` in
 the repo, and no sshd setting is declared, so password login is on by default.
 This review did not inspect its real network exposure.
 
+**Decided:** temis is reached over Tailscale only. That lowers the risk, so
+this drops from P1 to P2. The steps below make the config say what the network
+already does.
+
 **Plan:**
 
-1. List what listens today: `ss -tlnp` on temis and `docker ps`.
+1. Confirm the answer. `ip -br addr` shows no public address, or the
+   provider's firewall blocks every port. List what listens: `ss -tlnp` and
+   `docker ps`.
 2. Declare the SSH keys: add a key list to each user in `config/users.nix`
    and set `users.users.<name>.openssh.authorizedKeys.keys` from it.
 3. Harden sshd: `PasswordAuthentication = false`,
    `KbdInteractiveAuthentication = false`, `PermitRootLogin = "no"`.
-4. Turn the firewall on: allow port 22, trust `tailscale0`, and open nothing
-   else. Docker publishes ports past the firewall, so check each published
-   port too.
+4. Turn the firewall on: trust `tailscale0` and open nothing else. Docker
+   publishes ports past the firewall, so bind published ports to the
+   Tailscale address.
 5. Keep a second SSH session open, and use `nixos-rebuild test` first. It
    reverts on reboot.
 6. Review `extraGroups` per host. The server does not need `lpadmin` or
@@ -998,8 +1175,8 @@ This review did not inspect its real network exposure.
 
 **Verify:**
 
-- From the LAN and from the tailnet: `nmap -Pn temis` shows only what the plan
-  allows.
+- From outside the tailnet, `nmap -Pn <address>` shows nothing open. From the
+  tailnet, SSH works.
 - `ssh -o PreferredAuthentications=password temis` is refused.
 - A new SSH session works before the old one is closed.
 
@@ -1315,7 +1492,7 @@ documentation-only edit has an appropriately cheap validation path.
 
 <a id="ci-002"></a>
 
-### [ ] CI-002 Measure build costs and make cache retention resilient — P2 · M
+### [ ] CI-002 Measure build costs and make cache retention resilient — P1 · M
 
 **Evidence:** **Measured** from the Actions API:
 
@@ -1345,24 +1522,27 @@ Facts checked on 2026-11-12:
 | garnix | Builds the flake's outputs itself and serves a cache | 1,500 minutes a month free; Mac minutes not confirmed |
 | GitHub Actions cache | What the workflow uses now | 10 GB, entries dropped after 7 unused days |
 
+**Decided:** Cachix, on CI and on all four machines, the work Mac included.
+
 **Plan:**
 
 1. Print `df -h / /nix` and each step's time for a week. Add the table here.
-2. Pick one home for your own builds. Cachix fits best: CI fills it, and the
-   machines read it. Push with `nix-fast-build --skip-cached --cachix-cache`
-   or the Cachix action. Then delete the cache-nix-action step and "Keep the
-   slow builds".
-3. Add the cache to each machine: `nix.settings` on NixOS, the Determinate
-   config on the Mac, and Home Manager's `nix.settings` on thinkpad.
+2. Create the Cachix cache and put its token in the repo's secrets. In CI,
+   build the packages that come from source with
+   `nix-fast-build --skip-cached --cachix-cache <name>`. It builds only what
+   the cache lacks and pushes the result. Start with the two paths that "Keep
+   the slow builds" names today; move to the `packages` output when
+   [CONFIG-009](#config-009) lands. Then delete the cache-nix-action step and
+   "Keep the slow builds".
+3. Add the cache and its public key to each machine: `nix.settings` on NixOS,
+   the Determinate config on the Mac, and Home Manager's `nix.settings` on
+   thinkpad. Check with `nix config show substituters`.
 4. If `df` shows room, drop the free-disk step. One outside measurement found
    about 86 GiB free on public runners this month; check before you trust it.
 5. Turn off the Home Manager man page (`manual.manpages.enable = false`) if
    you never read `man home-configuration.nix`.
-6. Decide whether vicinae's own flake earns its hour. nixpkgs-unstable has
-   0.29.2 and the flake gives 0.30.0. Home Manager ships its own
-   `programs.vicinae` module. Taking the package from `pkgs.unstable` removes
-   the long build, one input, and the wiring in [CONFIG-007](#config-007).
-   Check first whether the input server still works that way.
+6. Take vicinae from nixpkgs ([CONFIG-012](#config-012)). That leaves
+   herdr-app, about 35 minutes, as the one long build for the cache to hold.
 
 **Verify:**
 
@@ -1420,17 +1600,26 @@ reference (`jlumbroso/free-disk-space@main`) for external actions.
 1. Pin every action to a commit and let Dependabot propose updates. Add
    `zizmor` to the lint check to keep it that way.
 2. Add a table in `home/programs/herdr-app/`: each mod's source, revision,
-   license, and local changes.
-3. Fetch the icon set at a pinned revision and copy it from the store,
-   instead of tracking 1,190 files. The mods are copied at activation anyway.
+   license, and whether it is yours, upstream, or upstream with your fixes.
+3. **Decided:** track only the mods written here, and fetch the rest at a
+   pinned revision. The activation step then copies those from the Nix store,
+   not from the checkout.
+   - Upstream mods you don't change, and the icon set (it carries the
+     material-icon-theme license): pin upstream.
+   - Upstream mods you keep fixing: pin your fork. **Measured:** 12 of the
+     last 34 commits edit the `t4-*`, `call`, `chat`, and `pasture` mods. As
+     patch files, every fix would mean a new patch. In a fork they are normal
+     commits, and they can go upstream.
+   - Know the cost. A fix to a pinned mod needs a push and a pin bump before
+     `bin/rebuild home` picks it up. Today an edit in the checkout is enough.
 4. Give each override its own removal check ([CONFIG-009](#config-009)).
 5. On every input bump, read the warnings and remove what they name.
 
 **Verify:**
 
 - `zizmor .github/workflows` reports no unpinned action.
-- `git ls-files | wc -l` drops by about 1,190, and the icons still show in
-  Herdr after a switch.
+- `git ls-files | wc -l` drops by more than 1,200, and the icons and the
+  fetched mods still show in Herdr after a switch.
 - Every row in the mods table names a license.
 
 **Done when:** an input upgrade includes a short patch/vendor review, stale
@@ -1444,8 +1633,9 @@ their provenance and licenses.
 **Evidence:** [Homebrew activation](system/modules/darwin/homebrew/homebrew.nix)
 sets `autoUpdate`, `upgrade`, and `cleanup = "uninstall"`. Thus the same Nix
 revision can trigger different external package changes on different days.
-The module also documents a possible Workbrew/sudo conflict, not a verified
-successful activation path.
+The module also documents a possible Workbrew/sudo conflict.
+
+**Decided:** the owner reports that the Homebrew step works on the work Mac.
 
 **Plan:**
 
@@ -1453,8 +1643,8 @@ successful activation path.
    removes. Upgrades become their own step, `brew upgrade`.
 2. Before a switch, print what cleanup would remove
    (`brew bundle cleanup` without `--force`).
-3. Run one switch on the Mac and note whether Workbrew accepts `brew bundle`
-   under sudo. Record the result in the module's comment.
+3. Replace the warning in the module's comment with the fact: `brew bundle`
+   runs under Workbrew on this Mac.
 4. Write down who owns each Mac app: Nix, Workbrew, or the app itself (Herdr
    updates itself).
 
@@ -1488,8 +1678,11 @@ it loses no confidence.
 
 **Plan:**
 
-1. Triggers: `push` on `main` and `wip`, `pull_request` for other branches, a
-   weekly `schedule`, and `workflow_dispatch`.
+1. Triggers: `push` on `wip`, `main`, and `update/**`, a weekly `schedule`,
+   and `workflow_dispatch`. **Decided:** work goes to `wip` and is merged to
+   `main` by hand. So there is no `pull_request` trigger, no double run, and
+   no required check. The merge to `main` carries the same derivations, so
+   its build is skipped.
 2. Job `quick`, on Linux with no disk cleanup and no store cache: lint,
    `bin/test`, `nix flake check --no-build --all-systems`, and the derivation
    list from [CLI-006](#cli-006) as a job output. Expect two to four minutes.
@@ -1499,9 +1692,7 @@ it loses no confidence.
    a miss, build as today, then save an empty marker under that key.
 4. The weekly run ignores the markers and builds everything. It catches a
    source that vanished or a cache that went stale.
-5. Add a last job, `ok`, that needs the others. It is the one required
-   status.
-6. Later, keep one marker per check. A Mac-only change then builds nothing on
+5. Later, keep one marker per check. A Mac-only change then builds nothing on
    Linux.
 
 **Verify:**
@@ -1520,9 +1711,11 @@ that changes one still gets a full build.
 
 - A marker means "this exact set built once". Markers are dropped after seven
   unused days. A miss costs one build, never a wrong pass.
-- `nix-fast-build --skip-cached` with a binary cache does the same for each
-  check, by asking the cache whether the output exists. It fits if
-  [CI-002](#ci-002) picks Cachix or Hestia. Use one of the two ways, not both.
+- `nix-fast-build --skip-cached` with a binary cache can do the same for each
+  check, by asking the cache whether the output exists. But that means
+  pushing every home generation to Cachix, and the free 5 GB would fill up.
+  So keep the two jobs apart: markers answer "has this config built before?",
+  and Cachix holds the packages built from source ([CI-002](#ci-002)).
 - This does not shorten the build when a Linux home does change. That time is
   the download. [CONFIG-003](#config-003) and [CI-002](#ci-002) work on it.
 
@@ -1536,13 +1729,14 @@ hour of compiling in front of it.
 
 **Plan:**
 
-1. Add a weekly workflow: run `bin/update --save` on a branch and open a PR.
-   It reuses the script, so the `chore: upgrade …` commit keeps its format.
-2. Use a token that starts CI. A PR opened with the default `GITHUB_TOKEN`
-   does not trigger workflows, so use a fine-grained token or a GitHub App.
+1. Add a weekly workflow: run `bin/update --save` on the branch
+   `update/inputs` and open a PR. It reuses the script, so the
+   `chore: upgrade …` commit keeps its format.
+2. Make sure CI starts. A push or a PR made with the default `GITHUB_TOKEN`
+   does not trigger workflows. Start the CI workflow on the branch with
+   `gh workflow run`, or push with a fine-grained token.
 3. Let CI build it and fill the cache ([CI-002](#ci-002)).
-4. Merge by hand at first. Turn on auto-merge once the checks have earned
-   trust.
+4. **Decided:** merge by hand, when it is green and you have time to rebuild.
 
 **Verify:**
 
@@ -1615,13 +1809,16 @@ archive abandoned experiments with enough history to recover them.
 
 **Plan:**
 
-1. List the programs that are off for every user: hyprland, wezterm, zellij,
-   espanso, digikam, pinta, shotcut, vlc, wine, zeal, mysql, podman, opencode.
-2. For each: keep it as a real alternative, or delete it and note the commit.
-3. Write the desktop checklist once, in the README.
+1. **Decided:** keep the 13 programs that are off for every user as
+   alternatives: hyprland, wezterm, zellij, espanso, digikam, pinta, shotcut,
+   vlc, wine, zeal, mysql, podman, opencode. They cost nothing while off.
+2. Keep them working. Turn each one on in a fixture config in the tests
+   ([CONFIG-002](#config-002)), so an alternative can't rot unseen.
+3. Measure idle memory and startup services on framework before tuning
+   anything.
+4. Write the desktop checklist once, in the README.
 
-**Verify:** the inventory shows no program that is off everywhere without a
-reason noted.
+**Verify:** the fixture with all 13 turned on evaluates on Linux.
 
 **Done when:** removals have a clear maintenance or measured resource benefit,
 and desktop changes have a short regression checklist covering shortcuts,
@@ -1629,12 +1826,15 @@ theme changes, display behavior, audio, suspend, and notifications.
 
 <a id="platform-004"></a>
 
-### [ ] PLATFORM-004 Set the generic-Linux target on home-only hosts — P2 · S
+### [ ] PLATFORM-004 Set the generic-Linux target on home-only hosts — P3 · S
 
 **Evidence:** thinkpad runs Home Manager on another distro. Nothing in the
 repo sets `targets.genericLinux.enable`. Home Manager offers it for exactly
 this case: it helps Nix-installed programs find fonts, icons, desktop entries,
 and the host's graphics drivers.
+
+**Decided:** thinkpad is rarely used and gets no desktop apps, so this waits.
+It keeps building in CI.
 
 **Plan:**
 
@@ -1660,11 +1860,14 @@ the generated file and nothing more. The `nixos-hardware` project keeps
 profiles for Framework laptops (power, firmware, and suspend fixes). Firmware
 updates (`fwupd`) are not enabled.
 
+**Decided:** the laptop is a Framework 16. **Verified:** `nixos-hardware` has
+`framework-16-7040-amd` and `framework-16-amd-ai-300-series`. `lscpu` on the
+laptop says which board it is.
+
 **Plan:**
 
-1. Add the `nixos-hardware` input and import the profile for this model in
-   framework's host file. That needs a way to reach `inputs` from a host
-   file; add one in [CONFIG-007](#config-007).
+1. Add the `nixos-hardware` input and import the matching profile for
+   framework only, through `config/modules.nix` ([CONFIG-007](#config-007)).
 2. Turn on `services.fwupd`.
 3. Read the package diff from `bin/build os` before switching.
 
@@ -1699,45 +1902,52 @@ repo is `wimpysworld/nix-config`: a data registry builds every NixOS, Mac, and
 | A leading `_` hides a folder from discovery | hlissner, import-tree | **Adapt:** [CONFIG-002](#config-002) |
 | flake-parts, snowfall, blueprint | about half of them | **Skip:** `lib/` is 260 lines and does the job. khanelinix left snowfall. |
 | Home Manager as a NixOS module | Misterio77 | **Skip:** it ends standalone homes on thinkpad. |
-| Import lists and profiles of modules | NotAShelf, hlissner, fufexan | **Skip:** enable flags and roles cover it. |
+| Import lists and profiles of modules | NotAShelf, hlissner, fufexan | **Skip:** enable flags and roles cover it, and the owner wants two full user lists ([CONFIG-004](#config-004)). |
 | One shared nixpkgs instance | NotAShelf, blueprint | **Measure first:** [CONFIG-011](#config-011) |
 | Impermanence, colmena, deploy-rs | Misterio77, ryan4yin | **Skip:** too much for three machines. |
 | A hook framework | lovesegfault, ryan4yin | **Skip:** a five-line hook is enough. |
+| sops-nix or agenix | split about evenly | **Skip for now:** a checklist ([OPS-004](#ops-004)). |
 
 One more idea was weighed and set aside. Of the 109 program modules, 82 are
 12 lines or fewer and mostly just install a package. A table of one-line
-programs would save about 700 lines.
-It would also create a second way to add a program, and `bin/new` makes the
-folder for free. Keep the folders.
+programs would save about 700 lines. It would also create a second way to add
+a program, and `bin/new` makes the folder for free. Keep the folders. The
+owner went further that way on purpose: every package in `home/packages.nix`
+gets its own folder too ([CONFIG-003](#config-003)).
 
 ## Suggested delivery order
 
-1. **Quick wins.** The table near the top. An afternoon.
-2. **Trust the tooling:** [CLI-006](#cli-006), [CLI-001](#cli-001),
-   [CLI-004](#cli-004), [CONFIG-001](#config-001), [CONFIG-002](#config-002),
-   [CI-001](#ci-001), [CI-006](#ci-006), then [CLI-002](#cli-002).
+Slow CI is the top pain, so it comes right after the quick wins.
+
+1. **Before anything else:** store a second copy of the backup password
+   ([OPS-004](#ops-004), step 1). It needs no code.
+2. **Quick wins.** The table near the top. An afternoon.
+3. **Fast CI:** [CI-006](#ci-006), [CONFIG-012](#config-012),
+   [CI-002](#ci-002), [CI-001](#ci-001), then [CLI-002](#cli-002) and
+   [CI-007](#ci-007). After the first three, a push that changes no config
+   takes minutes, and no build takes an hour. [CI-006](#ci-006) can carry the
+   derivation list inline until [CLI-006](#cli-006) exists.
+4. **Trust the tooling:** [CLI-006](#cli-006), [CLI-001](#cli-001),
+   [CLI-004](#cli-004), [CONFIG-001](#config-001), [CONFIG-002](#config-002).
    `bin/check --same` comes first because the later refactors lean on it.
-   [CI-006](#ci-006) pays back at once: most pushes drop from 28 minutes to a
-   few.
-3. **Sharpen the model:** [CONFIG-006](#config-006), [CONFIG-010](#config-010),
-   [CONFIG-008](#config-008), [CONFIG-007](#config-007),
-   [CONFIG-004](#config-004), [CONFIG-003](#config-003),
-   [CONFIG-005](#config-005), [CONFIG-009](#config-009),
-   [PLATFORM-004](#platform-004). Each step should show "same" from
-   `bin/check --same`, or an inventory diff you meant.
-4. **Prove recovery:** [OPS-001](#ops-001), [OPS-003](#ops-003),
-   [OPS-004](#ops-004), [OPS-005](#ops-005), [OPS-006](#ops-006),
-   [DX-001](#dx-001). Record a restore drill before changing backup retention
-   or reducing recovery generations.
-5. **Improve daily use:** [CLI-003](#cli-003), [DX-002](#dx-002),
+5. **Sharpen the model:** [CONFIG-006](#config-006), [CONFIG-010](#config-010),
+   [CONFIG-008](#config-008), [CONFIG-003](#config-003),
+   [CONFIG-004](#config-004), [CONFIG-009](#config-009). Each step should show
+   "same" from `bin/check --same`, or an inventory diff you meant.
+6. **Prove recovery:** [OPS-004](#ops-004), [OPS-001](#ops-001),
+   [OPS-003](#ops-003), [OPS-006](#ops-006), [DX-001](#dx-001), then
+   [OPS-005](#ops-005). Run the restore drill before you move the backups or
+   change their retention.
+7. **Improve daily use:** [CLI-003](#cli-003), [DX-002](#dx-002),
    [DX-003](#dx-003), [DX-004](#dx-004), [DX-005](#dx-005), [DX-006](#dx-006),
    [DX-007](#dx-007).
-6. **Shorten the slow path:** [CI-002](#ci-002), [CI-007](#ci-007),
-   [CI-003](#ci-003), [CI-004](#ci-004), [CI-005](#ci-005),
+8. **Finish CI:** [CI-003](#ci-003), [CI-004](#ci-004), [CI-005](#ci-005),
    [OPS-002](#ops-002).
-7. **Extend only where useful:** [CONFIG-011](#config-011),
+9. **Later, or when a need shows up:** [CONFIG-005](#config-005),
+   [CONFIG-007](#config-007), [CONFIG-011](#config-011),
    [PLATFORM-001](#platform-001), [PLATFORM-002](#platform-002),
-   [PLATFORM-003](#platform-003), [PLATFORM-005](#platform-005).
+   [PLATFORM-003](#platform-003), [PLATFORM-004](#platform-004),
+   [PLATFORM-005](#platform-005).
 
 Implement each item as a reviewable change with its relevant validation. Follow
 the repository's Nix lint/evaluation/build rules for code changes, update the
