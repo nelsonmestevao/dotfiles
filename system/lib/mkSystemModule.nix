@@ -1,4 +1,5 @@
-name: body:
+{ name, folder }:
+body:
 {
   config,
   lib,
@@ -8,25 +9,20 @@ name: body:
   ...
 }@args:
 let
-  moduleResult = import ../../lib/moduleResult.nix { inherit lib; };
+  file = "${folder}/${name}.nix";
 
-  # NixOS and nix-darwin modules share this wrapper, so the message can't say
-  # which of the two folders the file is in.
-  result = moduleResult {
+  # A module returns its system config and its `options`, the settings a host
+  # file can set beside `enable` (see lib/moduleResult.nix).
+  module = import ../../lib/moduleResult.nix { inherit lib; } {
+    inherit file;
     owner = "dotfiles.modules.${name}";
-    file = "system/modules/<nixos|darwin>/${name}/${name}.nix";
+    enable = "the ${name} system module";
   } (body args);
-
-  # Besides its system config, a module can return `options`: the settings a
-  # host file can set beside `enable`. They are declared even while the module
-  # is off, so a host file can always set them.
-  ownOptions = result.options or { };
-  systemConfig = removeAttrs result [ "options" ];
 in
 {
-  options.dotfiles.modules.${name} = ownOptions // {
-    enable = lib.mkEnableOption "the ${name} system module";
-  };
+  _file = file;
 
-  config = lib.mkIf config.dotfiles.modules.${name}.enable systemConfig;
+  options.dotfiles.modules.${name} = module.options;
+
+  config = lib.mkIf config.dotfiles.modules.${name}.enable module.config;
 }

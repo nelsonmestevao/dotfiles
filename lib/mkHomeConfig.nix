@@ -4,12 +4,13 @@
   vicinae,
   overlays,
   knownNames,
-  hosts,
+  hostNames,
 }:
 {
   hostname,
   host,
   roles,
+  homes,
   username,
   user,
 }:
@@ -27,11 +28,10 @@ let
       hostname
       roles
       knownNames
+      hostNames
       username
+      homes
       ;
-    hostNames = lib.attrNames hosts;
-    # The hosts that list this user: the ones the user has a home on.
-    homes = lib.attrNames (lib.filterAttrs (_: h: lib.elem username h.users) hosts);
   };
 in
 home-manager.lib.homeManagerConfiguration {
@@ -64,6 +64,6 @@ home-manager.lib.homeManagerConfiguration {
     # paths against declarations regardless of the condition).
     vicinae.homeManagerModules.default
   ]
-  ++ importModules mkHomeModule ../home/programs
-  ++ importModules mkGnomeExtensionModule ../home/programs/gnome/extensions;
+  ++ importModules mkHomeModule "home/programs"
+  ++ importModules mkGnomeExtensionModule "home/programs/gnome/extensions";
 }
