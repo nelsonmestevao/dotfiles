@@ -859,7 +859,27 @@ module has no home in `config/`. The next one is `nixos-hardware`
 
 <a id="config-008"></a>
 
-### [ ] CONFIG-008 Make shell hooks shell-neutral — P2 · S
+### [x] CONFIG-008 Make shell hooks shell-neutral — P2 · S
+
+**Implemented:** the six aliases (`cat`, `j`, `ji`, `lg`, `mr`, `pj`) are
+`home.shellAliases`, and the two `PATH` entries are `home.sessionPath`. No
+module guards on zsh any more. Haskell's `LD_LIBRARY_PATH` is a session
+variable, set once, with no empty entry when it was unset; only the ghcup line
+stays in `~/.zshenv`, because scripts and editors need it too. fzf sets up its
+own key bindings from `fzf.nix`; it is no longer an Oh My Zsh plugin (see
+[DX-002](#dx-002) for where each half loads). Checked on this Mac with the
+built files, before a switch: a script shell had our six aliases and `cat`
+was `bat`, and now has none and the real `cat`; the interactive alias lists
+are identical (364). The programs and the package lists of all four homes are
+unchanged, `bin/lint`, `bin/check --eval` and the 31 tests pass.
+
+Worth knowing:
+
+- `home.sessionPath` is set once per login session. A new entry shows up
+  after a new login, not in the shells of a session that started before the
+  switch.
+- Home Manager's aliases now load after Oh My Zsh and the zsh files, so they
+  win over an alias of the same name from those.
 
 **Evidence:** nine modules write to `programs.zsh.envExtra`, eight of them
 behind `lib.mkIf config.dotfiles.programs.zsh.enable`. The program template in
@@ -891,27 +911,6 @@ script or tool that runs through zsh gets `bat -p` when it asks for `cat`, plus
 
 **Done when:** a program adds an alias with one line that names no shell, and
 scripts see the real commands.
-
-**Progress:** steps 1 to 4 are done on the branch `zsh/shell-cleanup`.
-
-- The six aliases (`cat`, `j`, `ji`, `lg`, `mr`, `pj`) are in
-  `home.shellAliases`, and the two `PATH` entries are in `home.sessionPath`.
-  Home Manager adds a `PATH` entry once per session, so it no longer grows in
-  nested shells.
-- fzf is set up once, by Oh My Zsh's `fzf` plugin. It asks fzf itself
-  (`fzf --zsh`), so it works on NixOS and on macOS. The module no longer
-  sources fzf's files.
-- Haskell keeps two lines in `~/.zshenv` on purpose: the ghcup env file and
-  `LD_LIBRARY_PATH`. Scripts and editors need those too.
-- Checked on the built files, not in a running shell: the Mac's built
-  `~/.zshenv` and framework's evaluated one hold no alias; the built `~/.zshrc`
-  defines the same six; nothing else in Oh My Zsh or the zsh files defines
-  those names. The sorted package list and the list of programs of all four
-  homes are unchanged.
-- Left to do: run the four Verify lines in a real shell after a switch. And
-  the `lg` alias in `git.nix` keeps its zsh guard until the program settings
-  change is merged, so that file's arguments stay as that change expects.
-  Drop the guard then.
 
 <a id="config-009"></a>
 
@@ -1403,21 +1402,32 @@ and `compinit` is at the top of `zprof`.
 errors; startup from a checkout containing spaces works; before/after timings
 show whether the change helped. Set a latency target after taking the baseline.
 
-**Progress:** steps 2, 3 (first half) and 4 are done on the branch
-`zsh/shell-cleanup`.
+**Progress:** steps 1 to 4 are done on the branch `zsh/shell-cleanup`.
 
-- The gitleaks line and the `*.init` loop are gone, and so is the
-  `zsh-vi-mode` pin, which was fetched and never loaded.
-- Home Manager's own `compinit` is off, so only Oh My Zsh runs it. The built
-  `~/.zshrc` for the Mac no longer has the bare call. `nix-zsh-completions`
-  stays installed; it came with the switch that is now off.
-- The modules load through a quoted glob, in the same name order. With a
-  checkout path that has a space, the old loop named ten paths that don't
-  exist and the new one names the five files.
-- Left to do: steps 1 and 6 (the timings: `hyperfine` and `zprof` before and
-  after a switch), step 5 (the plugin list), and the last three Verify lines
-  in a real shell. After a switch on the Mac, try removing the `fpath` strip
-  in the Homebrew module: the bare `compinit` it works around is gone.
+- **Measured** on the Mac with the built files, before a switch: an
+  interactive shell starts in 303 ms instead of 588, a script shell in 8 ms
+  instead of 37, and `compinit` runs once instead of twice.
+- `compinit` runs once on every OS now. Home Manager's call is off, and so is
+  the one in `/etc/zshrc`: `system/darwin.nix` already turned it off, and
+  `system/nixos.nix` now does too. Only Oh My Zsh runs it.
+  `nix-zsh-completions` stays installed; it came with Home Manager's switch.
+- fzf is one program again. `fzf.nix` loads fzf's two zsh files at the one
+  spot where each works: Tab's before Oh My Zsh, so fzf-tab loads after it
+  and keeps Tab; Ctrl-T, Ctrl-R and Alt-C after it, because Oh My Zsh binds
+  Ctrl-R itself. It was set up twice before, by the module and by Oh My Zsh's
+  plugin.
+- The gitleaks line, the `*.init` loop and the `zsh-vi-mode` pin are gone.
+  So is a long commented-out mise block for the prompt; nothing used it.
+- The history size moved from `zshrc` to Home Manager's own setting. It wrote
+  a smaller value first, which `zshrc` then replaced.
+- The modules load through a quoted glob with `(N)`: a checkout path with a
+  space works, and a folder with no zsh files no longer stops the rest of
+  `~/.zshrc`.
+- Nothing calls `compdef` before Oh My Zsh loads: no tracked file, and nothing
+  in the spells repo.
+- Left to do: step 5 (the plugin list), step 6 (a target), and the "minimal
+  home" check. After a switch on the Mac, try removing the `fpath` strip in
+  the Homebrew module; the bare `compinit` it guarded against is gone.
 
 <a id="dx-003"></a>
 

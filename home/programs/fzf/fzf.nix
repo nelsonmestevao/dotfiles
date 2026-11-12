@@ -1,4 +1,5 @@
 {
+  lib,
   pkgs,
   ...
 }:
@@ -15,8 +16,16 @@
     FZF_DEFAULT_OPTS = "--height 50% --bind=ctrl-j:preview-down,ctrl-k:preview-up --reverse --inline-info --preview-window=right:60%";
   };
 
-  # The key bindings and the completion come from oh-my-zsh's `fzf` plugin
-  # (home/programs/zsh/plugins.zsh). It asks fzf itself for them (`fzf --zsh`),
-  # so it works the same on NixOS, on macOS and on other distros. Sourcing
-  # fzf's files here as well set everything up twice, in every script too.
+  # fzf's two zsh files, each at the one spot where it works. They are the
+  # same files `fzf --zsh` prints, read from the store with no extra process.
+  programs.zsh.initContent = lib.mkMerge [
+    # Tab: before oh-my-zsh, so fzf-tab loads after it and takes over Tab.
+    (lib.mkBefore ''
+      source ${pkgs.fzf}/share/fzf/completion.zsh
+    '')
+    # Ctrl-T, Ctrl-R, Alt-C: after oh-my-zsh, which binds Ctrl-R itself.
+    (lib.mkAfter ''
+      source ${pkgs.fzf}/share/fzf/key-bindings.zsh
+    '')
+  ];
 }

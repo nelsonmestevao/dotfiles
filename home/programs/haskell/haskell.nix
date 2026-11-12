@@ -35,12 +35,15 @@
   # Where stack and cabal install commands.
   home.sessionPath = [ "$HOME/.local/bin" ];
 
-  # Environment, not shell comfort: a script or an editor that builds Haskell
-  # needs ghcup's paths and the OpenGL libraries too. So this stays in the
-  # file every zsh reads, scripts included.
+  # The OpenGL libraries, for programs built with freeglut. Set once per
+  # session, so it doesn't grow in nested shells, and with no empty entry
+  # when it was unset: the linker reads one as the current folder.
+  home.sessionVariables.LD_LIBRARY_PATH = "${pkgs.freeglut}/lib:${pkgs.libGL}/lib\${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}";
+
+  # ghcup's paths, when ghcup is installed. In the file every zsh reads, so
+  # scripts and editors that build Haskell get them too.
   programs.zsh.envExtra = ''
     [ -f ~/.ghcup/env ] && source ~/.ghcup/env
-    export LD_LIBRARY_PATH="${pkgs.freeglut}/lib:${pkgs.libGL}/lib:$LD_LIBRARY_PATH"
   '';
 
   home.file.".ghci" = mkSymlink "ghci";

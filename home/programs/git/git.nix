@@ -65,7 +65,7 @@ in
   ];
 
   # gitleaks ships its own zsh completion, so nothing is set up for it here.
-  home.shellAliases = lib.mkIf config.dotfiles.programs.zsh.enable { lg = "lazygit"; };
+  home.shellAliases.lg = "lazygit";
 
   xdg.configFile = {
     # Generated from the settings above, not linked: it's the one git file
