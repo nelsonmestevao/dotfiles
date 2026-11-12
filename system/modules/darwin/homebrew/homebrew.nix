@@ -59,10 +59,9 @@
   # on each shell start. This strips those dirs right after shellenv; the rest
   # of shellenv (PATH, HOMEBREW_*) stays.
   #
-  # The bare compinit it guarded against was Home Manager's, which is now off
-  # (home/programs/zsh). oh-my-zsh's `compinit -i` skips insecure dirs by
-  # itself, so this may no longer be needed. Only remove it after a switch on
-  # the Mac shows no prompt without it.
+  # Home Manager's bare compinit is now off (home/programs/zsh), but keep this:
+  # oh-my-zsh's `compinit -i` skips these dirs and then prints an "insecure
+  # completion-dependent directories" warning on every shell start.
   programs.zsh.interactiveShellInit = lib.mkAfter ''
     fpath=(''${fpath:#/opt/homebrew/share/zsh*})
   '';
