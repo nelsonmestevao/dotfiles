@@ -123,6 +123,10 @@
     {
       formatter = lib.genAttrs allSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-tree);
 
+      # The packages this repo builds or changes itself, so each one can be
+      # built alone, like `nix build .#git-sim`. lib/packages.nix finds them.
+      packages = lib.genAttrs allSystems (import ./lib/packages.nix { inherit nixpkgs overlays; });
+
       # What the bin/ scripts and the lint check need. The scripts start in
       # this shell on their own; `nix develop` or direnv (.envrc) opens it.
       devShells = lib.genAttrs allSystems (
@@ -142,6 +146,7 @@
               python3
               python3Packages.xonsh
               python3Packages.docopt
+              nix-update
             ];
           };
         }

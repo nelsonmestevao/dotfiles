@@ -33,4 +33,7 @@ pkgs.stdenv.mkDerivation {
   '';
 
   passthru.extensionUuid = uuid;
+
+  # GNOME Shell only runs on Linux.
+  meta.platforms = pkgs.lib.platforms.linux;
 }

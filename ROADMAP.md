@@ -940,6 +940,34 @@ Today nixpkgs has git-sim 0.3.5 (ours is 0.4.0) and cmux 0.64.22 (ours is
 **Done when:** every custom package builds alone, and an out-of-date override
 warns on the next evaluation.
 
+**Progress (2026-11-12):** steps 1 to 3 are done.
+
+- `lib/packages.nix` gives `packages.<system>.<name>`: git-sim, projectionist
+  and cmux on the Mac; git-sim, projectionist, glocalsend, rudra, herdr-app
+  and wiggle on Linux. cmux's bump moved to `home/programs/cmux/package.nix`.
+  Each output has the same derivation path as what the configs install, and
+  all seven configs build the same derivations as before.
+- `lib/expiry.nix` has `untilUpstreamHas` and `expiresWhen`. Five overrides
+  use them: herdr-app (upstream reaching 0.1.13), git-sim and cmux
+  (nixpkgs-unstable reaching our version), wiggle (nixpkgs having one made
+  for this GNOME Shell), and weasyprint on the Mac (nixpkgs skipping
+  `test_unicode_range` itself). Each warning showed up in `bin/check --eval`
+  with its limit lowered. None fires today.
+- `nix-update` is in the dev shell. The README says how to bump each package;
+  the commands for git-sim, cmux and projectionist were run on the Mac.
+- `nix build .#projectionist` compiles on the Mac and passes its 64 tests.
+  The Linux-only packages were evaluated, not built.
+
+Left:
+
+- `bin/update --packages` (step 4) waits for [CLI-002](#cli-002), which
+  reworks that script.
+- Building `packages` in CI (step 5) waits for the CI rewrite and for Cachix
+  ([CI-002](#ci-002)).
+- The six zsh plugin pins have no expiry check yet.
+- wiggle stays: nixpkgs' copy is made for GNOME 48, and upstream PR #33 is
+  still open.
+
 <a id="config-010"></a>
 
 ### [ ] CONFIG-010 Catch selectors that can never be true — P2 · S

@@ -70,6 +70,11 @@ run Mac-only commands and paste the output back.
 - **New flake input:** add it to `inputs` in `flake.nix` and its overlay to
   `config/overlays.nix`. If the overlay reuses a nixpkgs package name, give it
   a new one (like `orca-app`).
+- **A package built here lives next to its program** as `package.nix`. It
+  becomes a flake output on its own, named after its folder
+  (`nix build .#<name>`), and says where it runs with `meta.platforms`.
+- **Wrap an override** in `untilUpstreamHas` or `expiresWhen`
+  (`lib/expiry.nix`), so it warns once upstream has caught up and it can go.
 - **Never change `stateVersion` or `darwinStateVersion`** on an existing host.
 - **New program, module, user, or host:** use `bin/new` or `bin/setup`. Don't
   write the files by hand. `bin/new module <name> --darwin` makes a nix-darwin

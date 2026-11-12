@@ -66,4 +66,7 @@ pkgs.stdenv.mkDerivation {
   '';
 
   passthru.extensionUuid = "glocalsend@donnybeelo.github.com";
+
+  # GNOME Shell only runs on Linux.
+  meta.platforms = pkgs.lib.platforms.linux;
 }
