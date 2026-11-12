@@ -1,11 +1,17 @@
 #!/usr/bin/env -S nix --extra-experimental-features nix-command --extra-experimental-features flakes develop --command xonsh
 """
-Checks that the flake evaluates and every configuration builds.
+Checks the flake: builds this machine's checks, evaluates every configuration,
+or proves that a change still builds the same derivations.
 
 Usage:
-  {program} [--eval]
+  {program} [--eval | --all-systems]
+  {program} --same [<rev>] [--why]
   {program} (-h | --help)
   {program} (-v | --version)
+
+Arguments:
+  <rev>             The commit to compare the working tree with. Defaults to
+                    HEAD, which shows what your uncommitted work changes.
 
 Options:
   -h --help         Show this screen.
@@ -13,18 +19,148 @@ Options:
   --eval            Only evaluate every configuration, the Mac ones too, and
                     build nothing. This catches option and assertion errors in
                     about a minute.
+  --all-systems     Build the checks of every system, not only this machine's.
+                    This needs a builder for the other OS: a Linux builder on
+                    a Mac, a Mac builder on Linux.
+  --same            Compare the derivation of every configuration at <rev>
+                    with the working tree. Exits 0 only when all are the same,
+                    so it proves a refactor changed nothing.
+  --why             With --same, show what differs in each changed derivation.
+
+With no option it builds the checks of this machine's system only, like each
+CI runner does.
 """
+import json
 import os
+import subprocess
+import sys
+from urllib.parse import quote
 
 from docopt import docopt
 
 os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+# A failed command raises and stops the script; the last lines of this file
+# turn that into one plain message. Raising is xonsh's default today. Saying
+# so keeps it true if the default changes. Commands captured with !() don't
+# raise, so those check their own return code.
+$XONSH_SUBPROC_RAISE_ERROR = True
+$XONSH_SHOW_TRACEBACK = False
+
+# Without a terminal Python holds its output back, and the commands' output
+# would overtake it. Writing each line at once keeps a log in order.
+sys.stdout.reconfigure(line_buffering=True)
+
+# Colors only when there is a terminal to show them.
+COLOR = sys.stdout.isatty()
+RED = "\033[1;31m" if COLOR else ""
+YELLOW = "\033[1;33m" if COLOR else ""
+GREEN = "\033[1;32m" if COLOR else ""
+RESET = "\033[0m" if COLOR else ""
+
+# Every check's derivation, by system and name. Lint is left out: it depends
+# on every file in the repo, so it changes with any edit.
+DERIVATIONS = 'c: builtins.mapAttrs (_: s: builtins.mapAttrs (_: d: d.drvPath) (builtins.removeAttrs s [ "lint" ])) c'
+
+
+def fail(message):
+    print(f"{RED}✗{RESET} {message}", file=sys.stderr)
+    sys.exit(1)
+
+
+def resolve(rev):
+    """The full commit hash of `rev`, or stop when git doesn't know it."""
+    found = !(git rev-parse --verify --quiet @(rev + '^{commit}'))
+    if found.returncode != 0:
+        fail(f"Unknown revision {rev!r}.")
+    return found.out.strip()
+
+
+def derivations(flake, label):
+    """{(system, name): drvPath} for every check of `flake`."""
+    print(f"Evaluating {label}…")
+    result = !(nix eval --json @(flake + '#checks') --apply @(DERIVATIONS))
+    if result.returncode != 0:
+        print((result.err or '').rstrip(), file=sys.stderr)
+        fail(f"Could not evaluate {label}.")
+    return {(system, name): drv
+            for system, checks in json.loads(result.out).items()
+            for name, drv in checks.items()}
+
+
+def warn_untracked():
+    """Flakes only see tracked files, so a new .nix file would be left out."""
+    untracked = !(git ls-files --others --exclude-standard -- '*.nix').out.splitlines()
+    if untracked:
+        print(f"{YELLOW}!{RESET} The flake can't see these untracked files. Run `git add` on them first:")
+        for path in untracked:
+            print(f"    {path}")
+
+
+def same(rev, why):
+    rev = rev or 'HEAD'
+    commit = resolve(rev)
+    short = commit[:8]
+    warn_untracked()
+
+    # "HEAD (fb7b439d)", but not "fb7b439d (fb7b439d)".
+    label = short if commit.startswith(rev) else f'{rev} ({short})'
+    before = derivations(f'git+file://{quote(os.getcwd())}?rev={commit}', label)
+    after = derivations('.', 'the working tree')
+
+    status = {}
+    for key in sorted(before.keys() | after.keys()):
+        if key not in after:
+            status[key] = 'removed'
+        elif key not in before:
+            status[key] = 'added'
+        else:
+            status[key] = 'same' if before[key] == after[key] else 'changed'
+
+    print()
+    for (system, name), state in status.items():
+        color = GREEN if state == 'same' else RED
+        print(f"  {color}{state:<8}{RESET} {system:<15} {name}")
+    print()
+
+    different = [key for key, state in status.items() if state != 'same']
+    if not different:
+        print(f"{GREEN}✓{RESET} All {len(status)} derivations are the same as {short}.")
+        return
+
+    if why:
+        for key in different:
+            system, name = key
+            if status[key] != 'changed':
+                print(f"{name} ({system}) was {status[key]}: there is no pair to compare.\n")
+                continue
+            print(f"{name} ({system}):")
+            ![nix-diff @(before[key]) @(after[key])]
+            print()
+
+    hint = "" if why else " Run it with --why to see what differs."
+    fail(f"{len(different)} of {len(status)} derivations differ from {short}.{hint}")
+
+
 def main(args):
-    nix flake check --all-systems @(['--no-build'] if args['--eval'] else [])
+    match args:
+        case {'--same': True}:
+            same(args['<rev>'], args['--why'])
+        case {'--eval': True}:
+            nix flake check --all-systems --no-build
+        case {'--all-systems': True}:
+            nix flake check --all-systems
+        case _:
+            nix flake check
+
 
 if __name__ == '__main__':
     arguments = docopt(__doc__.format(program=__file__), version=f'{os.path.basename(__file__)} script version 1.0')
-    main(arguments)
+    try:
+        main(arguments)
+    except subprocess.CalledProcessError as error:
+        fail(f"{' '.join(map(str, error.cmd))} failed")
+    except KeyboardInterrupt:
+        fail("Interrupted.")
 
 # vim: ft=xonsh
