@@ -372,6 +372,58 @@ use a new flake:
    it a new name instead, like `orca-app` there. Otherwise it replaces that
    package on the systems too.
 
+### Custom packages
+
+A few packages are built or changed here, because nixpkgs lacks them or has
+an older version. Each one is a flake output, so you can build it alone:
+
+```shell
+nix build .#git-sim
+nix flake show        # lists them for each system
+```
+
+There are two kinds:
+
+- **A program's own package** is the `package.nix` next to its module, like
+  `home/programs/git-sim/package.nix`. Every `package.nix` under
+  `home/programs/` becomes an output named after its folder. The module
+  installs it with `pkgs.callPackage ./package.nix { }`, so the output is the
+  very package a home gets.
+- **A package that `config/overlays.nix` changes**, like the patched Herdr,
+  is listed by name in `lib/packages.nix`.
+
+A package says where it runs with `meta.platforms`, and a system only gets
+the ones that run on it.
+
+**Overrides expire.** An override stands in for what upstream will ship one
+day. Each one is wrapped in `untilUpstreamHas` or `expiresWhen`
+(`lib/expiry.nix`). Once upstream has caught up, every evaluation
+(`bin/check --eval`, a build, a switch) warns and names what to delete:
+
+```nix
+herdr-app = untilUpstreamHas "0.1.13" prev.herdr-app "Drop its patch in config/overlays.nix." (
+  prev.herdr-app.overrideAttrs …
+);
+```
+
+```
+evaluation warning: dotfiles: herdr-app 0.1.13 is out. Drop its patch in config/overlays.nix.
+```
+
+**To bump a package**, run `nix-update` from the dev shell. It edits the
+version and the hash in place:
+
+| Package | Command | Then, by hand |
+| ------- | ------- | ------------- |
+| git-sim | `nix-update --flake git-sim` | The skia-python wheels and git-dummy are pinned inside the file. |
+| cmux | `nix-update --flake cmux --version=<version>` | Nothing. Give the version yourself: its release feed has other tags too. |
+| projectionist | `nix-update --flake projectionist --version=branch=globs-ordering-global-config --src-only` | Regenerate `Cargo.lock` with `cargo generate-lockfile` in a checkout of the new commit. |
+| glocalsend, rudra | `nix-update --flake <name> --version=branch`, on a Linux machine | glocalsend has a second hash, for its dependencies. |
+| wiggle | Edit `rev` and `hash` in `config/overlays.nix`. | |
+| herdr-app | It comes from a flake input, so `bin/update` moves it. | |
+
+Then run `bin/check --eval` and `nix build .#<name>`.
+
 ## 🧰 Scripts
 
 Runnable helpers live in `bin/`; shared code lives in `scripts/`.

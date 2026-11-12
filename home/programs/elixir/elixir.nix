@@ -6,17 +6,26 @@
   ...
 }:
 let
+  inherit (import ../../../lib/expiry.nix lib) expiresWhen;
+
+  nixpkgsWeasyprint = pkgs.python313Packages.weasyprint;
+
   # weasyprint's font-rendering pixel tests render slightly differently on
   # darwin; the nixpkgs derivation already deselects several flaky ones but
   # misses test_unicode_range on this snapshot, so the build fails on macOS.
-  # Deselect it there too, leaving the Linux build (and its binary cache) alone.
+  # Skip the tests there, leaving the Linux build (and its binary cache) alone.
+  # The override can go once nixpkgs deselects that test itself.
   weasyprint =
     if pkgs.stdenv.hostPlatform.isDarwin then
-      pkgs.python313Packages.weasyprint.overridePythonAttrs (_old: {
-        doCheck = false;
-      })
+      expiresWhen (lib.elem "test_unicode_range" (nixpkgsWeasyprint.disabledTests or [ ]))
+        "nixpkgs skips weasyprint's test_unicode_range itself now. Drop the darwin override in home/programs/elixir/elixir.nix."
+        (
+          nixpkgsWeasyprint.overridePythonAttrs (_old: {
+            doCheck = false;
+          })
+        )
     else
-      pkgs.python313Packages.weasyprint;
+      nixpkgsWeasyprint;
 in
 {
   home.packages =
