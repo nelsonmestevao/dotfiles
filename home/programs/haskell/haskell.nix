@@ -1,6 +1,4 @@
 {
-  config,
-  lib,
   pkgs,
   mkSymlink,
   ...
@@ -34,8 +32,13 @@
     libx11
   ];
 
-  programs.zsh.envExtra = lib.mkIf config.dotfiles.programs.zsh.enable ''
-    export PATH="$HOME/.local/bin:$PATH";
+  # Where stack and cabal install commands.
+  home.sessionPath = [ "$HOME/.local/bin" ];
+
+  # Environment, not shell comfort: a script or an editor that builds Haskell
+  # needs ghcup's paths and the OpenGL libraries too. So this stays in the
+  # file every zsh reads, scripts included.
+  programs.zsh.envExtra = ''
     [ -f ~/.ghcup/env ] && source ~/.ghcup/env
     export LD_LIBRARY_PATH="${pkgs.freeglut}/lib:${pkgs.libGL}/lib:$LD_LIBRARY_PATH"
   '';

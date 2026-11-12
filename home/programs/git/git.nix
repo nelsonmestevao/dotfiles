@@ -64,11 +64,8 @@ in
     lazygit
   ];
 
-  programs.zsh.envExtra = lib.mkIf config.dotfiles.programs.zsh.enable ''
-    eval $(${pkgs.gitleaks}/bin/gitleaks completion zsh)
-
-    alias lg='lazygit'
-  '';
+  # gitleaks ships its own zsh completion, so nothing is set up for it here.
+  home.shellAliases = lib.mkIf config.dotfiles.programs.zsh.enable { lg = "lazygit"; };
 
   xdg.configFile = {
     # Generated from the settings above, not linked: it's the one git file

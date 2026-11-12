@@ -1,6 +1,4 @@
 {
-  config,
-  lib,
   pkgs,
   ...
 }:
@@ -9,7 +7,5 @@
     mise
   ];
 
-  programs.zsh.envExtra = lib.mkIf config.dotfiles.programs.zsh.enable ''
-    alias mr='mise run'
-  '';
+  home.shellAliases.mr = "mise run";
 }

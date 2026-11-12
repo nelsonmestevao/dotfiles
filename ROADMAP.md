@@ -892,6 +892,27 @@ script or tool that runs through zsh gets `bat -p` when it asks for `cat`, plus
 **Done when:** a program adds an alias with one line that names no shell, and
 scripts see the real commands.
 
+**Progress:** steps 1 to 4 are done on the branch `zsh/shell-cleanup`.
+
+- The six aliases (`cat`, `j`, `ji`, `lg`, `mr`, `pj`) are in
+  `home.shellAliases`, and the two `PATH` entries are in `home.sessionPath`.
+  Home Manager adds a `PATH` entry once per session, so it no longer grows in
+  nested shells.
+- fzf is set up once, by Oh My Zsh's `fzf` plugin. It asks fzf itself
+  (`fzf --zsh`), so it works on NixOS and on macOS. The module no longer
+  sources fzf's files.
+- Haskell keeps two lines in `~/.zshenv` on purpose: the ghcup env file and
+  `LD_LIBRARY_PATH`. Scripts and editors need those too.
+- Checked on the built files, not in a running shell: the Mac's built
+  `~/.zshenv` and framework's evaluated one hold no alias; the built `~/.zshrc`
+  defines the same six; nothing else in Oh My Zsh or the zsh files defines
+  those names. The sorted package list and the list of programs of all four
+  homes are unchanged.
+- Left to do: run the four Verify lines in a real shell after a switch. And
+  the `lg` alias in `git.nix` keeps its zsh guard until the program settings
+  change is merged, so that file's arguments stay as that change expects.
+  Drop the guard then.
+
 <a id="config-009"></a>
 
 ### [ ] CONFIG-009 Expose custom packages and let overrides expire — P2 · M
@@ -1381,6 +1402,22 @@ and `compinit` is at the top of `zprof`.
 **Done when:** a minimal home opens a usable shell without missing-command
 errors; startup from a checkout containing spaces works; before/after timings
 show whether the change helped. Set a latency target after taking the baseline.
+
+**Progress:** steps 2, 3 (first half) and 4 are done on the branch
+`zsh/shell-cleanup`.
+
+- The gitleaks line and the `*.init` loop are gone, and so is the
+  `zsh-vi-mode` pin, which was fetched and never loaded.
+- Home Manager's own `compinit` is off, so only Oh My Zsh runs it. The built
+  `~/.zshrc` for the Mac no longer has the bare call. `nix-zsh-completions`
+  stays installed; it came with the switch that is now off.
+- The modules load through a quoted glob, in the same name order. With a
+  checkout path that has a space, the old loop named ten paths that don't
+  exist and the new one names the five files.
+- Left to do: steps 1 and 6 (the timings: `hyperfine` and `zprof` before and
+  after a switch), step 5 (the plugin list), and the last three Verify lines
+  in a real shell. After a switch on the Mac, try removing the `fpath` strip
+  in the Homebrew module: the bare `compinit` it works around is gone.
 
 <a id="dx-003"></a>
 
