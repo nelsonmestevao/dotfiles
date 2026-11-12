@@ -39,13 +39,15 @@ run Mac-only commands and paste the output back.
 - **Flakes only see tracked files.** `git add` a new file before you build or
   evaluate, or Nix acts as if it doesn't exist.
 - **Host choices go in user and host files, not in modules.** Use
-  `enableFor` / `disableFor` with roles (`desktop`, `server`, `linux`,
-  `darwin`) or host names in `home/users/*.nix`. A module should not check the
-  host name or the user name.
+  `enableFor` / `disableFor` (or `valueFor` to pick a value) with roles
+  (`desktop`, `server`, `linux`, `darwin`) or host names in
+  `home/users/*.nix`. A module should not check the host name or the user
+  name.
 - **A value that differs per user or host is a setting.** The module declares
   it with `options.<setting>` next to its config and reads it from
   `config.dotfiles.programs.<name>.<setting>`. The user file sets it (the git
-  signing key works this way, named per host and ending in `null`).
+  signing key works this way: `valueFor` names each host, and a host left out
+  signs nothing).
 - **A module returns a plain attribute set.** Put `lib.mkIf` on single values
   inside it. A body wrapped whole in `lib.mkIf` or `lib.mkMerge` is an error
   that names the module. A body that is `if config.… then … else …` loops

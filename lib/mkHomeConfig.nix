@@ -21,7 +21,8 @@ let
   mkHomeModule = import ../home/lib/mkHomeModule.nix;
   mkGnomeExtensionModule = import ../home/lib/mkGnomeExtensionModule.nix;
 
-  # What enableFor/disableFor need to know about this host and this user.
+  # What enableFor, disableFor and valueFor need to know about this host and
+  # this user.
   hostInfo = {
     inherit
       lib
@@ -48,6 +49,7 @@ home-manager.lib.homeManagerConfiguration {
       ;
     enableFor = import ../home/lib/enableFor.nix hostInfo;
     disableFor = import ../home/lib/disableFor.nix hostInfo;
+    valueFor = import ../home/lib/valueFor.nix hostInfo;
   }
   // (user.extraSpecialArgs or { });
   modules = [

@@ -706,16 +706,19 @@ to the host. Evaluate fixtures on Linux and test activation on the actual Mac.
 
 ### [ ] CONFIG-006 Let a program declare its own settings — P2 · S
 
-**Progress (2026-11-12):** steps 1–5, 7, and 8 are done on the branch
-`home/program-settings`.
+**Progress (2026-11-12):** steps 1–8 are done.
 
 - The three wrappers take `options` and the option text is fixed. One helper,
   `mkSymlinkIn` in [home/lib](home/lib/default.nix), serves the home and
   GNOME wrappers.
 - Converted: zsh `showHost`, claude `skills`, the two GNOME lists (now in
   `gnome.nix`, marked internal), and the git signing key, which left
-  `config/hosts.nix`. Each user file names the hosts that sign and ends in
-  `null`, so a new host signs nothing until it is added.
+  `config/hosts.nix`. Each user file names the hosts that sign, so a new
+  host signs nothing until it is added.
+- Added `valueFor` (step 6) in [home/lib](home/lib/valueFor.nix) once the
+  signing key's `if` chains grew: `nelson.estevao.nix` tested the same host
+  twice. It checks every key on every host. The `if` chain stopped at the
+  first match, so a typo in a later branch passed on most homes.
 - Guarded: a body wrapped whole in `lib.mkIf`, or a setting named `enable`,
   stops the build with a message that names the module
   ([lib/moduleResult.nix](lib/moduleResult.nix)).
@@ -727,8 +730,7 @@ to the host. Evaluate fixtures on Linux and test activation on the actual Mac.
   `bin/check --eval` pass.
 
 Left: the fixture test (step 9) waits for [CONFIG-002](#config-002). Printing
-and Homebrew wait for [CONFIG-005](#config-005). `valueFor` (step 6) is not
-needed yet: one `if` covers the signing key.
+and Homebrew wait for [CONFIG-005](#config-005).
 
 **Evidence** (how it was before): the wrappers declared one option, `enable`.
 A program had no way to offer a setting that a user or a host can change, so

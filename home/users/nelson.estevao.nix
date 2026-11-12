@@ -1,5 +1,6 @@
 {
   enableFor,
+  valueFor,
   ...
 }:
 {
@@ -43,16 +44,13 @@
   dotfiles.programs.git.enable = true;
   # 1Password on this Mac holds the key that signs commits, and signs with
   # it. A host that isn't named here signs nothing.
-  dotfiles.programs.git.signingKey =
-    if enableFor [ "Remote-Nelson-Estevao" ] then
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDLaSmNmQBu2OUMctje364/orYOTUwpIq/7V+az8b+dw"
-    else
-      null;
-  dotfiles.programs.git.signingProgram =
-    if enableFor [ "Remote-Nelson-Estevao" ] then
-      "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
-    else
-      null;
+  dotfiles.programs.git.signingKey = valueFor {
+    "Remote-Nelson-Estevao" =
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDLaSmNmQBu2OUMctje364/orYOTUwpIq/7V+az8b+dw";
+  };
+  dotfiles.programs.git.signingProgram = valueFor {
+    "Remote-Nelson-Estevao" = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
+  };
   dotfiles.programs.glab.enable = true;
   dotfiles.programs.herdr-app.enable = enableFor [ "desktop" ];
   dotfiles.programs.httpie.enable = true;

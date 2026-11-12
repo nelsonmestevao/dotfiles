@@ -171,6 +171,13 @@ safe:
   none of your hosts has yet.
 - A role can't have the same name as a host, so every name means one thing.
 
+A third helper, `valueFor`, picks a value instead of on or off. It takes a set
+keyed by the same names. A host name beats a role, a role beats `default`, and
+with no match the value is `null`. The rules above apply to every key, on
+every host. Two of a host's roles with different values stop the build too:
+name the host to pick one. The git signing key uses it (see
+[What goes into a user entry](#what-goes-into-a-user-entry)).
+
 ```nix
 # system/hosts/framework.nix
 dotfiles.modules.audio.enable = true;
@@ -336,19 +343,16 @@ it's the file `home/programs/git/profiles/<username>.ini`, included when it
 exists. Without it, git refuses to commit until you set an email.
 
 The SSH key that signs your commits is a setting of the git program. Set it in
-your user file, as the public key or the path of its file. A key belongs to a
-machine, so name each host and end in `null`. A new host then signs nothing
-until you add it:
+your user file with `valueFor`, as the public key or the path of its file. A
+key belongs to a machine, so name each host, not a role. A host you leave out
+gets `null`, so a new host signs nothing until you add it:
 
 ```nix
 # home/users/<username>.nix
-dotfiles.programs.git.signingKey =
-  if enableFor [ "framework" ] then
-    "ssh-ed25519 AAAA…"
-  else if enableFor [ "temis" ] then
-    "~/.ssh/id_ed25519.pub"
-  else
-    null;
+dotfiles.programs.git.signingKey = valueFor {
+  framework = "ssh-ed25519 AAAA…";
+  temis = "~/.ssh/id_ed25519.pub";
+};
 ```
 
 `dotfiles.programs.git.signingProgram` is the program that signs with it, when

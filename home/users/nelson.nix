@@ -1,5 +1,6 @@
 {
   enableFor,
+  valueFor,
   ...
 }:
 {
@@ -81,18 +82,11 @@
   dotfiles.programs.fzf.enable = true;
   dotfiles.programs.git.enable = true;
   # The key that signs commits. A host that isn't named here signs nothing.
-  dotfiles.programs.git.signingKey =
-    if
-      enableFor [
-        "framework"
-        "thinkpad"
-      ]
-    then
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINt6s4KNjVHcH0qA0CPKWYPyCTPXkbwXFlfljrToN8b6"
-    else if enableFor [ "temis" ] then
-      "~/.ssh/id_ed25519.pub"
-    else
-      null;
+  dotfiles.programs.git.signingKey = valueFor {
+    framework = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINt6s4KNjVHcH0qA0CPKWYPyCTPXkbwXFlfljrToN8b6";
+    thinkpad = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINt6s4KNjVHcH0qA0CPKWYPyCTPXkbwXFlfljrToN8b6";
+    temis = "~/.ssh/id_ed25519.pub";
+  };
   dotfiles.programs.git-sim.enable = enableFor [ "framework" ];
   dotfiles.programs.glab.enable = true;
   dotfiles.programs.glow.enable = true;
