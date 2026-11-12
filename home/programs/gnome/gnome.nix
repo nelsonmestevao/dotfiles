@@ -8,6 +8,20 @@ with lib.hm.gvariant;
 {
   platforms = [ "linux" ];
 
+  # Each enabled extension adds itself to these two lists (see
+  # mkGnomeExtensionModule). User files don't set them.
+  options.enabledExtensions = lib.mkOption {
+    type = lib.types.listOf lib.types.str;
+    default = [ ];
+    description = "UUIDs of the enabled GNOME extensions.";
+  };
+
+  options.extensionSchemaDirs = lib.mkOption {
+    type = lib.types.listOf lib.types.str;
+    default = [ ];
+    description = "GSettings schema folders of the enabled GNOME extensions.";
+  };
+
   home.packages = with pkgs; [
     wmctrl
     gnome-tweaks

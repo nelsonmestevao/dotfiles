@@ -3,18 +3,16 @@
   lib,
   pkgs,
   mkSymlink,
-  host,
   username,
   ...
 }:
 let
-  # The host says what signs commits here, from config/hosts.nix. The user's
-  # identity is profiles/<username>.ini, included when it exists.
-  signingKey = host.git.signingKey or null;
-  signingProgram = host.git.signingProgram or null;
+  inherit (config.dotfiles.programs.git) signingKey signingProgram;
+
+  # The user's identity is profiles/<username>.ini, included when it exists.
   profile = "profiles/${username}.ini";
 
-  settings = {
+  gitConfig = {
     include.path = [
       "~/.config/git/common.ini"
     ]
@@ -30,6 +28,29 @@ let
   };
 in
 {
+  # ── Settings ──────────────────────────────────────────────────────────
+  # Keys differ per machine, so a user file picks one with `enableFor`.
+  options.signingKey = lib.mkOption {
+    type = lib.types.nullOr lib.types.str;
+    default = null;
+    example = "~/.ssh/id_ed25519.pub";
+    description = ''
+      The SSH key that signs commits and tags: the public key, or the path of
+      its file. Leave it out and nothing is signed.
+    '';
+  };
+
+  options.signingProgram = lib.mkOption {
+    type = lib.types.nullOr lib.types.str;
+    default = null;
+    example = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
+    description = ''
+      The program that signs with the key, when it isn't ssh-keygen (1Password
+      on a Mac).
+    '';
+  };
+
+  # ── Packages ──────────────────────────────────────────────────────────
   home.packages = with pkgs; [
     delta
     diffpdf
@@ -50,9 +71,10 @@ in
   '';
 
   xdg.configFile = {
-    # Generated from config/, not linked: it's the one git file that differs
-    # per host. Everything it includes is still a link you can edit in place.
-    "git/config".text = lib.generators.toGitINI settings;
+    # Generated from the settings above, not linked: it's the one git file
+    # that differs per host. Everything it includes is still a link you can
+    # edit in place.
+    "git/config".text = lib.generators.toGitINI gitConfig;
     "git/common.ini" = mkSymlink "common.ini";
     "git/allowed_signers" = mkSymlink "allowed_signers";
     "git/commit-template" = mkSymlink "commit-template";

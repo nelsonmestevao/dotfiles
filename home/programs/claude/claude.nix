@@ -3,10 +3,13 @@
   lib,
   pkgs,
   mkSymlink,
-  username,
   ...
 }:
 {
+  # ── Settings ──────────────────────────────────────────────────────────
+  # Off by default: a user may keep their skills somewhere else.
+  options.skills = lib.mkEnableOption "this repo's skills, linked as ~/.claude/skills";
+
   # ── Packages ──────────────────────────────────────────────────────────
   home.packages = with pkgs; [
     claude-code
@@ -15,7 +18,7 @@
   ];
 
   # ── Symlinked Config Files ───────────────────────────────────────────
-  home.file.".claude/skills" = lib.mkIf (username == "nelson") (mkSymlink "skills");
+  home.file.".claude/skills" = lib.mkIf config.dotfiles.programs.claude.skills (mkSymlink "skills");
 
   # Claude Code saves settings.json atomically, writing a tmp file next to the
   # symlink target after resolving only one level. A home.file symlink resolves

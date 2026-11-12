@@ -28,6 +28,7 @@
 
   # Shells
   dotfiles.programs.zsh.enable = true;
+  dotfiles.programs.zsh.showHost = enableFor [ "server" ];
 
   # Desktop Launchers & App Switchers
   dotfiles.programs.vicinae.enable = enableFor [ "desktop" ];
@@ -60,8 +61,9 @@
   dotfiles.programs.bruno.enable = enableFor [ "desktop" ];
   dotfiles.programs.btop.enable = true;
   dotfiles.programs.claude.enable = true;
+  dotfiles.programs.claude.skills = true;
   dotfiles.programs.codex.enable = true;
-  dotfiles.programs.colima.enable = enableFor [ "Remote-Nelson-Estevao" ];
+  dotfiles.programs.colima.enable = enableFor [ "darwin" ];
   dotfiles.programs.copilot.enable = true;
   dotfiles.programs.cpufetch.enable = true;
   dotfiles.programs.ctop.enable = true;
@@ -78,6 +80,12 @@
   dotfiles.programs.figlet.enable = true;
   dotfiles.programs.fzf.enable = true;
   dotfiles.programs.git.enable = true;
+  # The key that signs commits. temis signs with the key file it has on disk.
+  dotfiles.programs.git.signingKey =
+    if enableFor [ "temis" ] then
+      "~/.ssh/id_ed25519.pub"
+    else
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINt6s4KNjVHcH0qA0CPKWYPyCTPXkbwXFlfljrToN8b6";
   dotfiles.programs.git-sim.enable = enableFor [ "framework" ];
   dotfiles.programs.glab.enable = true;
   dotfiles.programs.glow.enable = true;

@@ -4,6 +4,7 @@
   vicinae,
   overlays,
   knownNames,
+  hosts,
 }:
 {
   hostname,
@@ -19,21 +20,25 @@ let
   mkHomeModule = import ../home/lib/mkHomeModule.nix;
   mkGnomeExtensionModule = import ../home/lib/mkGnomeExtensionModule.nix;
 
-  # What enableFor/disableFor need to know about this host.
+  # What enableFor/disableFor need to know about this host and this user.
   hostInfo = {
     inherit
       lib
       hostname
       roles
       knownNames
+      username
       ;
+    hostNames = lib.attrNames hosts;
+    # The hosts that list this user: the ones the user has a home on.
+    homes = lib.attrNames (lib.filterAttrs (_: h: lib.elem username h.users) hosts);
   };
 in
 home-manager.lib.homeManagerConfiguration {
   inherit pkgs;
   # `host` and `user` are the entries from config/hosts.nix and
-  # config/users.nix, so a module can read a host fact (a signing key, the
-  # state version) without knowing the host's name.
+  # config/users.nix, so a module can read a host fact (the state version)
+  # without knowing the host's name.
   extraSpecialArgs = {
     inherit
       username

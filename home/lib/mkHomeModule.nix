@@ -9,30 +9,38 @@ name: body:
   ...
 }@args:
 let
-  # A link to a file that isn't in the repo would dangle, and the program
-  # would run with no config and no error. So a missing file fails the build.
-  mkSymlink =
-    relativePath:
-    lib.throwIfNot (builtins.pathExists (../programs + "/${name}/${relativePath}"))
-      "dotfiles.programs.${name}: home/programs/${name}/${relativePath} does not exist"
-      (
-        config.lib.dotfiles.mkSymlinkFrom "${config.dotfiles.directory}/home/programs/${name}" relativePath
-      );
+  mkSymlink = config.lib.dotfiles.mkSymlinkIn {
+    owner = "dotfiles.programs.${name}";
+    folder = "home/programs/${name}";
+  };
 
   result = body (args // { inherit mkSymlink; });
 
-  # A module that only runs on one OS says so with `platforms = [ "linux" ]`
-  # or `[ "darwin" ]`. Enabling it on the other OS is an error with the host's
-  # name in it, instead of a failure deep inside a package build.
+  # Besides its Home Manager config, a module can return two things.
+  #
+  # `platforms`, when it only runs on one OS: `[ "linux" ]` or `[ "darwin" ]`.
+  # Enabling it on the other OS is an error with the host's name in it,
+  # instead of a failure deep inside a package build.
+  #
+  # `options`, the settings a user file can set beside `enable`, like
+  # `dotfiles.programs.zsh.showHost`. They are declared even while the program
+  # is off, so a user file can always set them.
   platforms = result.platforms or null;
-  settings = removeAttrs result [ "platforms" ];
+  ownOptions = result.options or { };
+  homeConfig = removeAttrs result [
+    "platforms"
+    "options"
+  ];
+
   platform = if pkgs.stdenv.hostPlatform.isDarwin then "darwin" else "linux";
   supported = platforms == null || lib.elem platform platforms;
 
   enabled = config.dotfiles.programs.${name}.enable;
 in
 {
-  options.dotfiles.programs.${name}.enable = lib.mkEnableOption "Enable ${name} configuration.";
+  options.dotfiles.programs.${name} = ownOptions // {
+    enable = lib.mkEnableOption "the ${name} program";
+  };
 
   config = lib.mkMerge [
     {
@@ -45,6 +53,6 @@ in
         }
       ];
     }
-    (lib.mkIf (enabled && supported) settings)
+    (lib.mkIf (enabled && supported) homeConfig)
   ];
 }

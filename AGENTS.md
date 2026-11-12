@@ -12,7 +12,8 @@ to work here safely.
   inputs, checks, and the dev shell.
 - `home/programs/<name>/<name>.nix`: one Home Manager program per folder,
   wrapped by `home/lib/mkHomeModule.nix`. It adds the
-  `dotfiles.programs.<name>.enable` option and the `mkSymlink` helper.
+  `dotfiles.programs.<name>.enable` option and the `mkSymlink` helper. A
+  module adds its own settings with `options.<setting>`.
 - `home/users/<username>.nix`: which programs a user gets, and where.
 - `system/modules/{nixos,darwin}/<name>/<name>.nix`: system modules, with
   `dotfiles.modules.<name>.enable`.
@@ -40,11 +41,17 @@ run Mac-only commands and paste the output back.
 - **Host choices go in user and host files, not in modules.** Use
   `enableFor` / `disableFor` with roles (`desktop`, `server`, `linux`,
   `darwin`) or host names in `home/users/*.nix`. A module should not check the
-  host name.
+  host name or the user name.
+- **A value that differs per user or host is a setting.** The module declares
+  it with `options.<setting>` next to its config and reads it from
+  `config.dotfiles.programs.<name>.<setting>`. The user file sets it (the git
+  signing key works this way). Such a module must return a plain attribute
+  set, not one wrapped in `lib.mkIf` or `if`.
 - **Prefer roles over host names.** A new desktop should need one line in
-  `config/hosts.nix`, not edits to user files.
+  `config/hosts.nix`, not edits to user files. Naming a host the user has no
+  home on is an error.
 - **Mark one-OS modules** with `platforms = [ "linux" ]` or `[ "darwin" ]`
-  next to the settings. Turning one on for the wrong OS then fails with a clear
+  next to the config. Turning one on for the wrong OS then fails with a clear
   message.
 - **Link config files with `mkSymlink "path"`.** The file must exist in the
   program's folder, or the build fails. These are real links into this repo,

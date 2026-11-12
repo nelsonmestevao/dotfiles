@@ -282,7 +282,8 @@ def setup_host(hostname, args):
         print(f'  Verify root and boot filesystems in {hw_path}.')
         print(f'  Set a boot loader in system/hosts/{hostname}.nix before evaluation or rebuilding.')
     print('  Review the changes, then run bin/lint and bin/check --eval.')
-    print(f'  To sign commits on this host, add git.signingKey in {HOSTS_FILE}.')
+    print('  To sign commits on this host, set dotfiles.programs.git.signingKey in')
+    print('  the user file (home/users/<username>.nix).')
     if host_type != 'home':
         output = 'nixosConfigurations' if host_type == 'nixos' else 'darwinConfigurations'
         print(f'  System config: {output}.{hostname}')

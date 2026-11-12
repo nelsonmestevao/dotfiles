@@ -51,6 +51,10 @@ PROGRAM_TEMPLATE = """\
   # Only on one OS? Say so, and enabling it elsewhere is a clear error.
   # platforms = [ "linux" ];
 
+  # A setting that user files can set beside `enable` (add lib and config to
+  # the arguments). Read it as config.dotfiles.programs.__NAME__.someSetting.
+  # options.someSetting = lib.mkEnableOption "what it turns on";
+
   home.packages = with pkgs; [
     __NAME__
   ];

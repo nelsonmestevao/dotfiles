@@ -15,10 +15,9 @@
 # layouts, file locations), so it stays put as the inputs move on. A Mac also
 # sets `darwinStateVersion`, nix-darwin's own number, for the same reason.
 #
-# `git.signingKey` is the SSH key that signs commits on this host: the public
-# key, or the path of its file. `git.signingProgram` is the program that signs
-# with it, when it isn't ssh-keygen (1Password on a Mac). Leave both out and
-# commits aren't signed there.
+# A host entry holds facts about the machine, not about one program. What a
+# program needs per host (like the key that signs commits) is a setting of
+# that program, set in the user file: see home/users/.
 {
   framework = {
     system = "x86_64-linux";
@@ -26,13 +25,11 @@
     roles = [ "desktop" ];
     users = [ "nelson" ];
     stateVersion = "25.11";
-    git.signingKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINt6s4KNjVHcH0qA0CPKWYPyCTPXkbwXFlfljrToN8b6";
   };
   thinkpad = {
     system = "x86_64-linux";
     users = [ "nelson" ];
     stateVersion = "25.11";
-    git.signingKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINt6s4KNjVHcH0qA0CPKWYPyCTPXkbwXFlfljrToN8b6";
   };
   temis = {
     system = "x86_64-linux";
@@ -40,7 +37,6 @@
     roles = [ "server" ];
     users = [ "nelson" ];
     stateVersion = "25.11";
-    git.signingKey = "~/.ssh/id_ed25519.pub";
   };
   "Remote-Nelson-Estevao" = {
     system = "aarch64-darwin";
@@ -49,7 +45,5 @@
     users = [ "nelson.estevao" ];
     stateVersion = "25.11";
     darwinStateVersion = 6;
-    git.signingKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDLaSmNmQBu2OUMctje364/orYOTUwpIq/7V+az8b+dw";
-    git.signingProgram = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
   };
 }

@@ -6,23 +6,29 @@ name: body:
   ...
 }@args:
 let
-  # As in mkHomeModule: a file that isn't in the repo fails the build.
-  mkSymlink =
-    relativePath:
-    lib.throwIfNot (builtins.pathExists (../programs/gnome/extensions + "/${name}/${relativePath}"))
-      "dotfiles.programs.gnome.extensions.${name}: home/programs/gnome/extensions/${name}/${relativePath} does not exist"
-      (
-        config.lib.dotfiles.mkSymlinkFrom "${config.dotfiles.directory}/home/programs/gnome/extensions/${name}" relativePath
-      );
+  mkSymlink = config.lib.dotfiles.mkSymlinkIn {
+    owner = "dotfiles.programs.gnome.extensions.${name}";
+    folder = "home/programs/gnome/extensions/${name}";
+  };
 
-  bodyResult = body (args // { inherit mkSymlink; });
-  package = bodyResult.package or pkgs.gnomeExtensions.${name};
+  result = body (args // { inherit mkSymlink; });
+
+  # Besides its config, an extension can return `package`, when it isn't
+  # pkgs.gnomeExtensions.<name>, and `options`, its own settings (as in
+  # mkHomeModule).
+  package = result.package or pkgs.gnomeExtensions.${name};
+  ownOptions = result.options or { };
+  extensionConfig = removeAttrs result [
+    "package"
+    "options"
+  ];
+
   uuid = package.extensionUuid;
-  userConfig = removeAttrs bodyResult [ "package" ];
 in
 {
-  options.dotfiles.programs.gnome.extensions.${name}.enable =
-    lib.mkEnableOption "Enable ${name} GNOME extension.";
+  options.dotfiles.programs.gnome.extensions.${name} = ownOptions // {
+    enable = lib.mkEnableOption "the ${name} GNOME extension";
+  };
 
   config =
     lib.mkIf
@@ -36,7 +42,7 @@ in
               "${package}/share/gnome-shell/extensions/${uuid}/schemas"
             ];
           }
-          userConfig
+          extensionConfig
         ]
       );
 }
