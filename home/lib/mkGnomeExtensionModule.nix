@@ -6,12 +6,17 @@ name: body:
   ...
 }@args:
 let
+  moduleResult = import ../../lib/moduleResult.nix { inherit lib; };
+
   mkSymlink = config.lib.dotfiles.mkSymlinkIn {
     owner = "dotfiles.programs.gnome.extensions.${name}";
     folder = "home/programs/gnome/extensions/${name}";
   };
 
-  result = body (args // { inherit mkSymlink; });
+  result = moduleResult {
+    owner = "dotfiles.programs.gnome.extensions.${name}";
+    file = "home/programs/gnome/extensions/${name}/${name}.nix";
+  } (body (args // { inherit mkSymlink; }));
 
   # Besides its config, an extension can return `package`, when it isn't
   # pkgs.gnomeExtensions.<name>, and `options`, its own settings (as in

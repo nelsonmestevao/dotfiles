@@ -80,12 +80,19 @@
   dotfiles.programs.figlet.enable = true;
   dotfiles.programs.fzf.enable = true;
   dotfiles.programs.git.enable = true;
-  # The key that signs commits. temis signs with the key file it has on disk.
+  # The key that signs commits. A host that isn't named here signs nothing.
   dotfiles.programs.git.signingKey =
-    if enableFor [ "temis" ] then
+    if
+      enableFor [
+        "framework"
+        "thinkpad"
+      ]
+    then
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINt6s4KNjVHcH0qA0CPKWYPyCTPXkbwXFlfljrToN8b6"
+    else if enableFor [ "temis" ] then
       "~/.ssh/id_ed25519.pub"
     else
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINt6s4KNjVHcH0qA0CPKWYPyCTPXkbwXFlfljrToN8b6";
+      null;
   dotfiles.programs.git-sim.enable = enableFor [ "framework" ];
   dotfiles.programs.glab.enable = true;
   dotfiles.programs.glow.enable = true;

@@ -9,12 +9,17 @@ name: body:
   ...
 }@args:
 let
+  moduleResult = import ../../lib/moduleResult.nix { inherit lib; };
+
   mkSymlink = config.lib.dotfiles.mkSymlinkIn {
     owner = "dotfiles.programs.${name}";
     folder = "home/programs/${name}";
   };
 
-  result = body (args // { inherit mkSymlink; });
+  result = moduleResult {
+    owner = "dotfiles.programs.${name}";
+    file = "home/programs/${name}/${name}.nix";
+  } (body (args // { inherit mkSymlink; }));
 
   # Besides its Home Manager config, a module can return two things.
   #

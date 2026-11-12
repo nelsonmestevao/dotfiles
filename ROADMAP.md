@@ -663,7 +663,12 @@ to the host. Evaluate fixtures on Linux and test activation on the actual Mac.
   `mkSymlinkIn` in [home/lib](home/lib/default.nix), serves the home and
   GNOME wrappers.
 - Converted: zsh `showHost`, claude `skills`, the two GNOME lists (now in
-  `gnome.nix`), and the git signing key, which left `config/hosts.nix`.
+  `gnome.nix`, marked internal), and the git signing key, which left
+  `config/hosts.nix`. Each user file names the hosts that sign and ends in
+  `null`, so a new host signs nothing until it is added.
+- Guarded: a body wrapped whole in `lib.mkIf`, or a setting named `enable`,
+  stops the build with a message that names the module
+  ([lib/moduleResult.nix](lib/moduleResult.nix)).
 - Checked: all seven configs build the same derivations as before, and the
   generated git config of each home is byte for byte the same. `showHots`
   stops the build with "The option `dotfiles.programs.zsh.showHots' does not
@@ -889,8 +894,9 @@ warns on the next evaluation.
 
 **Progress (2026-11-12):** steps 1 and 2 are done on the branch
 `home/program-settings`. `enableFor` and `disableFor` know which hosts list
-the user. The old line now stops the build with "nelson has no home on
-Remote-Nelson-Estevao (homes: framework, temis, thinkpad)". `colima` in
+the user. The old line now stops the build with "Remote-Nelson-Estevao is a
+host where nelson has no home, so naming it does nothing here (homes:
+framework, temis, thinkpad)". `colima` in
 `nelson.nix` is `enableFor [ "darwin" ]`. All seven configs build the same
 derivations as before.
 

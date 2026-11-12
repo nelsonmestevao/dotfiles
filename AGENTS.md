@@ -45,8 +45,11 @@ run Mac-only commands and paste the output back.
 - **A value that differs per user or host is a setting.** The module declares
   it with `options.<setting>` next to its config and reads it from
   `config.dotfiles.programs.<name>.<setting>`. The user file sets it (the git
-  signing key works this way). Such a module must return a plain attribute
-  set, not one wrapped in `lib.mkIf` or `if`.
+  signing key works this way, named per host and ending in `null`).
+- **A module returns a plain attribute set.** Put `lib.mkIf` on single values
+  inside it. A body wrapped whole in `lib.mkIf` or `lib.mkMerge` is an error
+  that names the module. A body that is `if config.… then … else …` loops
+  forever. A setting can't be named `enable`; the wrapper owns it.
 - **Prefer roles over host names.** A new desktop should need one line in
   `config/hosts.nix`, not edits to user files. Naming a host the user has no
   home on is an error.

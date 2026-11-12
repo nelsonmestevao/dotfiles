@@ -113,10 +113,15 @@ dotfiles.programs.zsh.showHost = enableFor [ "server" ];
 ```
 
 A misspelled setting stops the build with its name. So a module never checks
-a host name or a user name: it offers a setting, and the user file picks. One
-rule: a module that declares settings must return a plain attribute set. If
-the whole body sits inside `lib.mkIf` or an `if`, the evaluation loops. System
-modules and GNOME extensions take `options` the same way.
+a host name or a user name: it offers a setting, and the user file picks.
+System modules and GNOME extensions take `options` the same way.
+
+One rule: a module returns a plain attribute set, with `lib.mkIf` on single
+values inside it. A body wrapped whole in `lib.mkIf` or `lib.mkMerge` stops
+the build with a message that names the module, because the wrapper could not
+see its settings. A body that picks between two sets with
+`if config.… then … else …` loops forever. The wrapper also owns the name
+`enable`, so a setting can't be called that.
 
 Similarly, system-level concerns live under `system/modules/`, split by platform
 into `nixos/` and `darwin/`. Each module provides a
@@ -161,9 +166,9 @@ safe:
 
 - A name that is neither a host nor a role stops the build, so a typo can't
   quietly turn a program off.
-- A host the user has no home on stops the build too, since that line could
-  never be true. Roles stay open: you may name a role none of your hosts has
-  yet.
+- A host the user has no home on stops the build too. Your user file is never
+  used there, so naming it does nothing. Roles stay open: you may name a role
+  none of your hosts has yet.
 - A role can't have the same name as a host, so every name means one thing.
 
 ```nix
@@ -331,18 +336,24 @@ it's the file `home/programs/git/profiles/<username>.ini`, included when it
 exists. Without it, git refuses to commit until you set an email.
 
 The SSH key that signs your commits is a setting of the git program. Set it in
-your user file, as the public key or the path of its file. Keys differ per
-machine, so pick with `enableFor`:
+your user file, as the public key or the path of its file. A key belongs to a
+machine, so name each host and end in `null`. A new host then signs nothing
+until you add it:
 
 ```nix
 # home/users/<username>.nix
 dotfiles.programs.git.signingKey =
-  if enableFor [ "temis" ] then "~/.ssh/id_ed25519.pub" else "ssh-ed25519 AAAA…";
+  if enableFor [ "framework" ] then
+    "ssh-ed25519 AAAA…"
+  else if enableFor [ "temis" ] then
+    "~/.ssh/id_ed25519.pub"
+  else
+    null;
 ```
 
 `dotfiles.programs.git.signingProgram` is the program that signs with it, when
-it isn't ssh-keygen (1Password's, for one). Leave both out and commits aren't
-signed.
+it isn't ssh-keygen (1Password's, for one). Set it the same way, per host.
+Leave both out and commits aren't signed.
 
 ### Using another flake
 

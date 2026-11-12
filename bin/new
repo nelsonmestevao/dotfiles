@@ -75,6 +75,11 @@ _: {
   # package = pkgs.unstable.gnomeExtensions.__NAME__;
   # package = pkgs.callPackage ./package.nix { };
 
+  # A setting that user files can set beside `enable` (add lib and config to
+  # the arguments). Read it as
+  # config.dotfiles.programs.gnome.extensions.__NAME__.someSetting.
+  # options.someSetting = lib.mkEnableOption "what it turns on";
+
   # dconf.settings."org/gnome/shell/extensions/__NAME__" = {
   #   some-key = [ "<Super>x" ];
   # };
@@ -87,6 +92,10 @@ MODULE_TEMPLATE = """\
   ...
 }:
 {
+  # A setting that host files can set beside `enable` (add lib and config to
+  # the arguments). Read it as config.dotfiles.modules.__NAME__.someSetting.
+  # options.someSetting = lib.mkEnableOption "what it turns on";
+
   environment.systemPackages = with pkgs; [
     __NAME__
   ];
