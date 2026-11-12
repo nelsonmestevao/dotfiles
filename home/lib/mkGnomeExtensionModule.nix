@@ -1,4 +1,5 @@
-name: body:
+{ name, folder }:
+body:
 {
   config,
   lib,
@@ -6,34 +7,28 @@ name: body:
   ...
 }@args:
 let
-  moduleResult = import ../../lib/moduleResult.nix { inherit lib; };
+  owner = "dotfiles.programs.gnome.extensions.${name}";
+  file = "${folder}/${name}.nix";
 
-  mkSymlink = config.lib.dotfiles.mkSymlinkIn {
-    owner = "dotfiles.programs.gnome.extensions.${name}";
-    folder = "home/programs/gnome/extensions/${name}";
-  };
+  mkSymlink = config.lib.dotfiles.mkSymlinkIn { inherit owner folder; };
 
-  result = moduleResult {
-    owner = "dotfiles.programs.gnome.extensions.${name}";
-    file = "home/programs/gnome/extensions/${name}/${name}.nix";
-  } (body (args // { inherit mkSymlink; }));
+  result = body (args // { inherit mkSymlink; });
 
-  # Besides its config, an extension can return `package`, when it isn't
-  # pkgs.gnomeExtensions.<name>, and `options`, its own settings (as in
-  # mkHomeModule).
+  # Besides its config and its `options` (see lib/moduleResult.nix), an
+  # extension can return `package`, when it isn't pkgs.gnomeExtensions.<name>.
+  module = import ../../lib/moduleResult.nix { inherit lib; } {
+    inherit owner file;
+    enable = "the ${name} GNOME extension";
+    reserved = [ "package" ];
+  } result;
   package = result.package or pkgs.gnomeExtensions.${name};
-  ownOptions = result.options or { };
-  extensionConfig = removeAttrs result [
-    "package"
-    "options"
-  ];
 
   uuid = package.extensionUuid;
 in
 {
-  options.dotfiles.programs.gnome.extensions.${name} = ownOptions // {
-    enable = lib.mkEnableOption "the ${name} GNOME extension";
-  };
+  _file = file;
+
+  options.dotfiles.programs.gnome.extensions.${name} = module.options;
 
   config =
     lib.mkIf
@@ -47,7 +42,7 @@ in
               "${package}/share/gnome-shell/extensions/${uuid}/schemas"
             ];
           }
-          extensionConfig
+          module.config
         ]
       );
 }

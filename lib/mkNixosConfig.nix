@@ -30,5 +30,5 @@ nixpkgs.lib.nixosSystem {
       }
     )
   ]
-  ++ importModules mkSystemModule ../system/modules/nixos;
+  ++ importModules mkSystemModule "system/modules/nixos";
 }

@@ -26,7 +26,7 @@ let
       vicinae
       overlays
       knownNames
-      hosts
+      hostNames
       ;
   };
 
@@ -41,13 +41,17 @@ let
       (hostCfg.roles or [ ]) ++ [ (lib.systems.elaborate hostCfg.system).parsed.kernel.name ]
     );
 
+  hostNames = lib.attrNames hosts;
+
+  # The hosts that list a user: the ones the user has a home on.
+  homesOf = username: lib.attrNames (lib.filterAttrs (_: h: lib.elem username h.users) hosts);
+
   # Every host name and role that enableFor/disableFor accept. A role named
   # like a host would make `enableFor [ "x" ]` ambiguous, so that's an error.
   # "linux" and "darwin" always count, even with no host on that OS, so a
   # user file doesn't break when you remove your last Mac or Linux host.
   knownNames =
     let
-      hostNames = lib.attrNames hosts;
       roles = lib.unique (
         [
           "linux"
@@ -89,6 +93,7 @@ let
       inherit hostname username;
       host = checkHost hostname hostCfg;
       roles = rolesOf hostCfg;
+      homes = homesOf username;
       user = users.${username};
     });
 

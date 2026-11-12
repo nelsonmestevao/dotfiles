@@ -20,22 +20,21 @@
       { owner, folder }:
       relativePath:
       let
-        targetPath = "${config.dotfiles.directory}/${folder}/${relativePath}";
+        path = "${folder}/${relativePath}";
+        targetPath = "${config.dotfiles.directory}/${path}";
       in
-      lib.throwIfNot (builtins.pathExists (../.. + "/${folder}/${relativePath}"))
-        "${owner}: ${folder}/${relativePath} does not exist"
-        {
-          source = config.lib.file.mkOutOfStoreSymlink targetPath;
-          onChange = ''
-            RED="\033[1;31m"
-            YELLOW="\033[1;33m"
-            GREEN="\033[1;32m"
-            RESET="\033[0m"
+      lib.throwIfNot (builtins.pathExists (../.. + "/${path}")) "${owner}: ${path} does not exist" {
+        source = config.lib.file.mkOutOfStoreSymlink targetPath;
+        onChange = ''
+          RED="\033[1;31m"
+          YELLOW="\033[1;33m"
+          GREEN="\033[1;32m"
+          RESET="\033[0m"
 
-            if [ ! -e "${targetPath}" ]; then
-              echo -e "$YELLOW⚠ Warning$RESET: '${targetPath}' does not exist $RED✗$RESET" >&2
-            fi
-          '';
-        };
+          if [ ! -e "${targetPath}" ]; then
+            echo -e "$YELLOW⚠ Warning$RESET: '${targetPath}' does not exist $RED✗$RESET" >&2
+          fi
+        '';
+      };
   };
 }

@@ -23,5 +23,5 @@ nix-darwin.lib.darwinSystem {
     }
     ../system/darwin.nix
   ]
-  ++ importModules mkSystemModule ../system/modules/darwin;
+  ++ importModules mkSystemModule "system/modules/darwin";
 }
