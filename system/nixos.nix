@@ -35,6 +35,11 @@
   # ── Users ───────────────────────────────────────────────────────────────
   programs.zsh.enable = true;
 
+  # Don't emit a bare `compinit` into /etc/zshrc. It runs before ~/.zshrc,
+  # where oh-my-zsh runs `compinit -i` anyway, so it would only set up
+  # completion twice and slow every shell start.
+  programs.zsh.enableGlobalCompInit = false;
+
   programs.nix-ld.enable = true;
 
   users.users = lib.mapAttrs (_username: userCfg: {

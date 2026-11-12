@@ -22,9 +22,13 @@
   };
 
   programs.zsh.enable = true;
-  # oh-my-zsh runs compinit (see theme.zsh). Home Manager would run it a
-  # second time, before that, which only makes the shell start slower.
+  # oh-my-zsh sets up completion (compinit, see theme.zsh). Home Manager would
+  # run it once more before that, and so would /etc/zshrc, which
+  # system/nixos.nix and system/darwin.nix turn off. Each run only makes the
+  # shell start slower.
   programs.zsh.enableCompletion = false;
+  # Saved to ~/.zsh_history, as before.
+  programs.zsh.history.size = 100000;
   programs.zsh.initContent = builtins.readFile ./zshrc;
   programs.zsh.envExtra = ''
     export DOTFILES="${config.dotfiles.directory}"

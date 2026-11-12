@@ -55,10 +55,14 @@
 
   # brew shellenv above prepends Workbrew-owned /opt/homebrew/share/zsh/
   # site-functions to fpath. compaudit only trusts dirs owned by root or the
-  # current user, so every bare compinit after that (e.g. home-manager's in
-  # ~/.zshrc) prompts "insecure directories" on each shell start. Strip the
-  # dirs right after shellenv: compinit would refuse to load completions from
-  # them anyway, and everything else from shellenv (PATH, HOMEBREW_*) stays.
+  # current user, so a bare compinit after that prompts "insecure directories"
+  # on each shell start. This strips those dirs right after shellenv; the rest
+  # of shellenv (PATH, HOMEBREW_*) stays.
+  #
+  # The bare compinit it guarded against was Home Manager's, which is now off
+  # (home/programs/zsh). oh-my-zsh's `compinit -i` skips insecure dirs by
+  # itself, so this may no longer be needed. Only remove it after a switch on
+  # the Mac shows no prompt without it.
   programs.zsh.interactiveShellInit = lib.mkAfter ''
     fpath=(''${fpath:#/opt/homebrew/share/zsh*})
   '';

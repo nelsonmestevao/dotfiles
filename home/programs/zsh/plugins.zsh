@@ -1,4 +1,6 @@
 # OMZ PLUGINS
+#
+# fzf is not here: its program sets up its own key bindings (see fzf.nix).
 
 plugins=(
   # asdf
@@ -8,7 +10,6 @@ plugins=(
   direnv
   docker-compose
   extract
-  fzf
   fzf-tab
   git
   gitignore
@@ -24,7 +25,6 @@ plugins=(
   # themes #
   # vagrant
   # vi-mode #
-  # zsh-vi-mode
   # web-search
   zoxide
   zsh-autopair
