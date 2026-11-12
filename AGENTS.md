@@ -84,7 +84,8 @@ the Mac. Evaluating a config does not test that it activates on the other OS.
 commit, or with `<rev>` in `bin/check --same <rev>`. A refactor must show
 every config as "same". A change that is meant to alter a config should alter
 only the configs you expect. Add `--why` to see what differs. `git add` new
-files first, or the flake can't see them.
+files first, or the flake can't see them; the command lists the untracked
+files it found.
 
 To check one config while you work, evaluate just that one:
 
@@ -92,10 +93,10 @@ To check one config while you work, evaluate just that one:
 nix eval --raw '.#homeConfigurations."nelson@framework".activationPackage.drvPath'
 ```
 
-`bin/check` with no flag builds the checks of this machine's system, as each
-CI runner does for its own. It is slow. Use it for changes to `lib/` or
-`flake.nix`. `bin/check --all-systems` also builds the other OS and needs a
-builder for it.
+`bin/check` with no flag evaluates every config on every system, then builds
+the checks of this machine's system, as each CI runner does for its own. It
+is slow. Use it for changes to `lib/` or `flake.nix`. `bin/check
+--all-systems` also builds the other OS and needs a builder for it.
 
 To prove a change really builds on this machine, run `bin/build` (or
 `bin/build home`). It builds the configs and prints what would change, but

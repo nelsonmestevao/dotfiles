@@ -335,7 +335,7 @@ that shell for you (`direnv allow` once).
 | `bin/build [os\|home]`         | Builds the config and shows what would change, without switching.   |
 | `bin/update`                   | Updates the flake inputs and lists what changed.                     |
 | `bin/update --save`            | Same, then commits `flake.lock` with a note for each input.          |
-| `bin/check`                    | Builds this machine's checks (`nix flake check`), like a CI runner.  |
+| `bin/check`                    | Evaluates every config, then builds this machine's checks.           |
 | `bin/check --eval`             | Evaluates every config without building anything (about a minute).  |
 | `bin/check --all-systems`      | Builds every system's checks. Needs a builder for the other OS.      |
 | `bin/check --same [<rev>]`     | Shows which configs build a different derivation than `<rev>` did.   |
@@ -352,12 +352,13 @@ that shell for you (`direnv allow` once).
 flake sees them right away. Existing configuration files retain their staged
 contents; their new entries are left in the working tree for review.
 
-`bin/check` has three depths. Plain `bin/check` builds the checks of this
-machine's system, which is what each CI runner does. `bin/check --eval`
-evaluates every config on every system and builds nothing. It reads the Mac
-config on Linux and the Linux ones on a Mac, but it does not test that a
-config activates on the other OS. `bin/check --all-systems` builds them all
-and needs a builder for the other OS.
+`bin/check` has three depths. `bin/check --eval` evaluates every config on
+every system and builds nothing. It reads the Mac config on Linux and the
+Linux ones on a Mac, but it does not test that a config activates on the
+other OS. Plain `bin/check` does that evaluation first, then builds the checks
+of this machine's system, which is what each CI runner builds.
+`bin/check --all-systems` builds the checks of every system and needs a
+builder for the other OS.
 
 `bin/check --same` proves that a change builds what was built before. It lists
 the derivation of every config at a commit (`HEAD` unless you name another)
@@ -370,8 +371,12 @@ bin/check --same             # what does my uncommitted work change?
 bin/check --same main --why  # what changed since main, and why?
 ```
 
+It evaluates both sides at the same time and shows the warnings Nix printed
+for each. For a `nixos-<host>` or `darwin-<host>` check, `--why` compares the
+system derivations, since those checks only evaluate the system.
+
 Flakes only see tracked files, so `git add` a new file first. The command
-warns about `.nix` files that are not tracked.
+lists the untracked files it found, whatever their type.
 
 Run the regression tests for `bin/new`, `bin/setup` and `bin/check` in
 disposable repositories with:

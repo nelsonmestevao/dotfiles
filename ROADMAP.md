@@ -129,7 +129,7 @@ diff /tmp/before.json /tmp/after.json && echo "same derivations"
 ```
 
 `git add` new files first, or the flake can't see them; `bin/check --same`
-warns about untracked `.nix` files. Lint is left out because it changes with
+lists the untracked files it finds. Lint is left out because it changes with
 any file.
 
 **3. Inventory.** For changes to user files, roles, or package lists, compare
@@ -320,18 +320,24 @@ before invoking a system builder.
 
 ### [x] CLI-004 Separate native builds from evaluation of all systems — P1 · S
 
-**Implemented:** plain `bin/check` runs `nix flake check`, so it builds this
-machine's system only. `bin/check --eval` is unchanged. `bin/check
---all-systems` is the explicit way to build the other OS, and its help says it
-needs a builder for it. The README and AGENTS.md say what each one covers, and
-that evaluating a config does not test activation on the other OS.
+**Implemented:** plain `bin/check` runs two commands. First
+`nix flake check --all-systems --no-build`, which evaluates every config on
+every system, as `bin/check --eval` does. Then `nix flake check`, which builds
+this machine's system only. So it still reads the other OS's configs, and it
+no longer needs a builder for them. `bin/check --eval` is unchanged.
+`bin/check --all-systems` is the explicit way to build the other OS, and its
+help says it needs a builder for it. The README and AGENTS.md say what each
+one covers, and that evaluating a config does not test activation on the other
+OS.
 
-Checked on the Mac: plain `bin/check` passed in 14 seconds, built only the
-`aarch64-darwin` checks, and reported "omitted these incompatible systems:
-x86_64-linux". `bin/check --eval` still listed all seven configs. Tests in
-[tests/test_check.py](tests/test_check.py) pin the command each flag runs. The
-Linux side was not run by hand: it is the same `nix flake check` that the
-Linux CI job already runs with no Mac builder.
+Checked on the Mac: plain `bin/check` passed in 20 seconds. It evaluated all
+seven configs, built only the `aarch64-darwin` checks, and reported "omitted
+these incompatible systems: x86_64-linux" for the build. `bin/check --eval`
+still listed all seven configs. Tests in
+[tests/test_check.py](tests/test_check.py) pin the commands each flag runs,
+and that a failed evaluation stops before the build. The Linux side was not
+run by hand: its build step is the same `nix flake check` that the Linux CI
+job already runs with no Mac builder.
 
 **Original evidence:** [bin/check](bin/check) always passed `--all-systems`,
 including when building. [CI](.github/workflows/ci.yml) instead builds native
@@ -401,17 +407,29 @@ scratch clone ([CONFIG-006](#config-006)).
 
 **Progress:** steps 1 to 3 are done. `bin/check --same [<rev>] [--why]`
 exists, `nix-diff` is in the dev shell (it is prebuilt for both systems), and
-the README and AGENTS.md describe it. It also reports a config that exists on
-one side only as "added" or "removed", stops on an unknown revision, and warns
-about untracked `.nix` files. Ten tests in
-[tests/test_check.py](tests/test_check.py) cover it with a stand-in `nix`.
+the README and AGENTS.md describe it. Beyond the plan, it:
+
+- reports a config that exists on one side only as "added" or "removed";
+- fails when there is nothing to compare, and on an unknown revision;
+- lists untracked files of any type, since the flake reads more than `.nix`;
+- evaluates both sides at once and prints the warnings Nix gave for each;
+- compares the system derivations for the eval-only `nixos-<host>` and
+  `darwin-<host>` checks, so `--why` shows the real difference;
+- works in a shallow clone.
+
+Fifteen tests in [tests/test_check.py](tests/test_check.py) cover it with a
+stand-in `nix`.
 
 Checked on the Mac, from a git worktree: a clean tree and a comment-only edit
-showed all seven as "same" and exited 0, in about 30 seconds. Adding `hello`
-to `home/programs/curl/curl.nix` changed the four home configs that enable
-curl and neither system config, exited 1, and `--why` named `hello-2.12.3`.
+showed all seven as "same" and exited 0. Adding `hello` to
+`home/programs/curl/curl.nix` changed the four home configs that enable curl
+and neither system config, exited 1, and `--why` named `hello-2.12.3`. Adding
+a UDP port in `system/hosts/framework.nix` changed only `nixos-framework`,
+and `--why` showed the new firewall rule. A run takes about 24 seconds, against
+33 with one evaluation after the other, on a busy machine.
 
-Left to do: step 4, in [CI-006](#ci-006).
+Left to do: step 4, in [CI-006](#ci-006). The `fail` helper and the colors in
+`bin/check` should move to the shared file that [CLI-001](#cli-001) adds.
 
 **Plan:**
 
