@@ -391,6 +391,7 @@ that shell for you (`direnv allow` once).
 | `bin/check --eval`             | Evaluates every config without building anything (about a minute).  |
 | `bin/check --all-systems`      | Builds every system's checks. Needs a builder for the other OS.      |
 | `bin/check --same [<rev>]`     | Shows which configs build a different derivation than `<rev>` did.   |
+| `bin/check --list`             | Prints the derivation of every check as JSON, the list CI keys on.   |
 | `bin/lint`                     | Runs deadnix, statix and nixfmt, like CI does before it builds.      |
 | `bin/format`                   | Formats every Nix file (`nix fmt`).                                  |
 | `bin/test`                     | Runs the tests for the helper scripts, like CI does.                 |

@@ -262,6 +262,23 @@ class CheckTests(unittest.TestCase):
         self.assertIn('Could not evaluate the working tree', result.stderr)
         self.assertEqual(self.states(result), {})
 
+    def test_list_prints_the_working_tree_as_json(self):
+        checks = {LINUX: {'nelson@framework': '/nix/store/a.drv', 'nixos-framework': '/nix/store/b.drv'},
+                  MAC: {'darwin-mac': '/nix/store/c.drv'}}
+        self.derivations({}, checks)
+        (self.fakes / 'after.err').write_text('warning: renamed option\n')
+        result = self.check('--list')
+        # stdout is the JSON alone; Nix's warnings go to stderr.
+        self.assertEqual(json.loads(result.stdout), checks)
+        self.assertIn('warning: renamed option', result.stderr)
+        self.assertEqual(self.evaluated(), ['.#checks'])
+
+    def test_list_fails_when_the_working_tree_does_not_evaluate(self):
+        result = self.check('--list', success=False)
+        self.assertEqual(result.stdout, '')
+        self.assertIn('error: evaluation broke', result.stderr)
+        self.assertIn('Could not evaluate the working tree', result.stderr)
+
     def test_why_needs_same(self):
         result = self.run_command('xonsh', '--no-rc', 'bin/check', '--why', success=False)
         self.assertIn('Usage:', result.stdout + result.stderr)

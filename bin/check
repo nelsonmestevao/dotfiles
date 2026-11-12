@@ -6,6 +6,7 @@ or proves that a change still builds the same derivations.
 Usage:
   {program} [--eval | --all-systems]
   {program} --same [<rev>] [--why]
+  {program} --list
   {program} (-h | --help)
   {program} (-v | --version)
 
@@ -26,6 +27,9 @@ Options:
                     with the working tree. Exits 0 only when all are the same,
                     so it proves a refactor changed nothing.
   --why             With --same, show what differs in each changed derivation.
+  --list            Print the derivation of every check in the working tree,
+                    by system and name, as JSON. This is the list --same
+                    compares, and CI keys its builds on it.
 
 With no option it evaluates every configuration on every system, then builds
 the checks of this machine's system only, like each CI runner does.
@@ -227,10 +231,23 @@ def same(rev, why):
     fail(f"{len(different)} of {len(status)} derivations differ from {short}.{hint}")
 
 
+def print_list():
+    """The working tree's derivations as JSON on stdout. Everything else goes
+    to stderr, so `bin/check --list > file` gets JSON and nothing more."""
+    print("Evaluating the working tree…", file=sys.stderr)
+    run = evaluate('.')
+    show_messages('the working tree', run)
+    if run.returncode != 0:
+        fail("Could not evaluate the working tree.")
+    print(json.dumps(json.loads(run.stdout), indent=2, sort_keys=True))
+
+
 def main(args):
     match args:
         case {'--same': True}:
             same(args['<rev>'], args['--why'])
+        case {'--list': True}:
+            print_list()
         case {'--eval': True}:
             nix flake check --all-systems --no-build
         case {'--all-systems': True}:
