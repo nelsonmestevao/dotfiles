@@ -7,4 +7,4 @@ cd "$(dirname "$0")/.."
 # repositories and need the dev shell's tools (xonsh, nixfmt, deadnix, statix).
 # CI runs them in its first job. Extra arguments go to unittest, like
 # `bin/test -k hardware`.
-nix develop --command python3 -B -m unittest discover -s tests -v "$@"
+nix --extra-experimental-features 'nix-command flakes' develop --command python3 -B -m unittest discover -s tests -v "$@"
