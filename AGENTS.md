@@ -8,8 +8,10 @@ to work here safely.
 
 - `config/hosts.nix`, `config/users.nix`, `config/overlays.nix`: the data.
   Hosts, users, and the overlays every config shares.
-- `lib/`: turns `config/` into the flake outputs. `flake.nix` only declares
-  inputs, checks, and the dev shell.
+- `lib/`: turns `config/` into the flake outputs. `lib/schema.nix` checks the
+  data first; a new host or user field needs an option there. `lib/checks.nix`
+  holds the checks. `flake.nix` only declares inputs, checks, and the dev
+  shell.
 - `home/programs/<name>/<name>.nix`: one Home Manager program per folder,
   wrapped by `home/lib/mkHomeModule.nix`. It adds the
   `dotfiles.programs.<name>.enable` option and the `mkSymlink` helper. A
@@ -23,6 +25,8 @@ to work here safely.
 - `scripts/`: shared libraries imported by the helpers in `bin/`.
 - `.github/scripts/`: scripts only CI runs, next to the workflow that calls
   them. They run outside the dev shell, so they need only bash and jq.
+- `tests/lib.nix`: tests for the helpers in `lib/` and `home/lib/`, against
+  `tests/fixtures/`. `bin/check --eval` runs them. Change a helper, add a case.
 
 ## Hosts
 

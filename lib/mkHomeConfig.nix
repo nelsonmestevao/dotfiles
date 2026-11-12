@@ -39,19 +39,22 @@ home-manager.lib.homeManagerConfiguration {
   inherit pkgs;
   # `host` and `user` are the entries from config/hosts.nix and
   # config/users.nix, so a module can read a host fact (the state version)
-  # without knowing the host's name.
-  extraSpecialArgs = {
-    inherit
-      username
-      hostname
-      host
-      user
-      ;
-    enableFor = import ../home/lib/enableFor.nix hostInfo;
-    disableFor = import ../home/lib/disableFor.nix hostInfo;
-    valueFor = import ../home/lib/valueFor.nix hostInfo;
-  }
-  // (user.extraSpecialArgs or { });
+  # without knowing the host's name. The modules get exactly the names in
+  # ./homeArguments.nix, plus the user's own `extraSpecialArgs`, which the
+  # schema keeps off those names.
+  extraSpecialArgs =
+    lib.getAttrs (import ./homeArguments.nix) {
+      inherit
+        username
+        hostname
+        host
+        user
+        ;
+      enableFor = import ../home/lib/enableFor.nix hostInfo;
+      disableFor = import ../home/lib/disableFor.nix hostInfo;
+      valueFor = import ../home/lib/valueFor.nix hostInfo;
+    }
+    // user.extraSpecialArgs;
   modules = [
     { nixpkgs.overlays = overlays; }
     ../home

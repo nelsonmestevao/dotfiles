@@ -129,6 +129,10 @@ into `nixos/` and `darwin/`. Each module provides a
 audio, boot, networking, and Docker, while the macOS (nix-darwin) side currently
 manages Homebrew (see [macOS notes](#-macos--nix-darwin)).
 
+Every folder in those trees is picked up as `<name>/<name>.nix`, with no list
+to keep. A folder without that file stops the build and says which one. Start
+a folder's name with `_` to keep drafts or notes there.
+
 #### Where things are wired together
 
 - **`config/hosts.nix`** — lists each host (see
@@ -359,6 +363,38 @@ dotfiles.programs.git.signingKey = valueFor {
 it isn't ssh-keygen (1Password's, for one). Set it the same way, per host.
 Leave both out and commits aren't signed.
 
+### How the entries are checked
+
+`lib/schema.nix` checks both files before any configuration is built. A
+mistake stops every configuration with the host or user and the field in the
+message. The dev shell still opens, so `bin/` keeps working while you fix it.
+
+First, each field must exist, be there when required, and hold the right kind
+of value. A misspelled field, a missing `stateVersion` or `platform = "nixoss"`
+fails here, one mistake per run:
+
+```
+error: The option `hosts.framework.rolse' does not exist. …
+Did you mean `hosts.framework.roles', …?
+```
+
+Then the entries must fit together, and every broken rule is listed at once:
+
+- every user a host lists is in `config/users.nix`, and no user or role is
+  listed twice;
+- the `platform` fits the `system`, and a Mac has `darwinStateVersion`;
+- no role has the same name as a host;
+- a user's `extraSpecialArgs` don't take a name the modules already get
+  (`lib/homeArguments.nix`);
+- the files exist: `home/users/<username>.nix`, and for a host with a
+  `platform`, `system/hosts/<hostname>.nix` (plus `hardware.nix` on NixOS).
+
+```
+error: config/hosts.nix: thinkpad.users has "nelsno", which is not in config/users.nix (known: nelson, nelson.estevao)
+```
+
+A role can be any word, so a misspelled role still passes.
+
 ### Using another flake
 
 Packages from other flakes (Zen Browser, Claude Code, …) and `pkgs.unstable`
@@ -501,6 +537,14 @@ build job, and the quick job's summary says "Already built". A weekly run builds
 everything anyway. [`.github/scripts/plan-builds`](.github/scripts/plan-builds)
 makes that choice, and you can run it by hand on a saved list; its first lines
 say how.
+
+`tests/lib.nix` tests the helpers in `lib/` and `home/lib/` against the
+made-up repository in `tests/fixtures/`. It is the flake check `lib-tests`, so
+`bin/check --eval` runs it, and a failure names its case. To run it alone:
+
+```shell
+nix build --no-link ".#checks.$(nix config show system).lib-tests"
+```
 
 Coding agents get their rules from [`AGENTS.md`](AGENTS.md). For Claude Code,
 [`.claude/settings.json`](.claude/settings.json) also makes it ask before it

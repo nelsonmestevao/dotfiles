@@ -1,4 +1,4 @@
-# Assembly: turns the data in `config/` into the flake's configuration outputs.
+# Turns the data in `config/` into the flake's configurations.
 {
   nixpkgs,
   home-manager,
@@ -7,17 +7,45 @@
   hosts,
   users,
   overlays,
+  # The repository the data describes. Only the tests point it at a fixture.
+  root ? ../.,
 }:
 let
   inherit (nixpkgs) lib;
+  inherit (import ./roles.nix { inherit lib; }) rolesOf rolesAcross;
 
-  # ── Builders ───────────────────────────────────────────────────────────────
+  # ── Data ───────────────────────────────────────────────────────────────────
 
-  # Keyed by the host's `platform`, so the filter and the builder can't diverge.
+  # The host and user entries, checked (see ./schema.nix), with every field
+  # filled in. A mistake stops every configuration here and says what it is.
+  checked = (import ./schema.nix { inherit lib; }).check { inherit hosts users root; };
+
+  hostNames = lib.attrNames checked.hosts;
+
+  # Every host name and role that enableFor, disableFor and valueFor accept.
+  knownNames = hostNames ++ rolesAcross checked.hosts;
+
+  # The hosts that list a user: the ones the user has a home on.
+  homesOf =
+    username: lib.attrNames (lib.filterAttrs (_: host: lib.elem username host.users) checked.hosts);
+
+  # ── Configurations ─────────────────────────────────────────────────────────
+
   builders = {
     nixos = import ./mkNixosConfig.nix { inherit nixpkgs vicinae overlays; };
     darwin = import ./mkDarwinConfig.nix { inherit nixpkgs nix-darwin overlays; };
   };
+
+  # The hosts with this `platform`, each with its users' entries.
+  systemsOn =
+    platform:
+    lib.mapAttrs (
+      hostname: host:
+      builders.${platform} hostname {
+        inherit host;
+        users = lib.getAttrs host.users checked.users;
+      }
+    ) (lib.filterAttrs (_: host: host.platform == platform) checked.hosts);
 
   mkHomeConfig = import ./mkHomeConfig.nix {
     inherit
@@ -30,103 +58,33 @@ let
       ;
   };
 
-  # ── Helpers ────────────────────────────────────────────────────────────────
-
-  # A host's roles: the ones it lists, plus its OS kernel ("linux" or
-  # "darwin"), read from `system`. Home-only hosts get it too. Listing the
-  # OS role by hand is harmless, since duplicates are dropped.
-  rolesOf =
-    hostCfg:
-    lib.unique (
-      (hostCfg.roles or [ ]) ++ [ (lib.systems.elaborate hostCfg.system).parsed.kernel.name ]
-    );
-
-  hostNames = lib.attrNames hosts;
-
-  # The hosts that list a user: the ones the user has a home on.
-  homesOf = username: lib.attrNames (lib.filterAttrs (_: h: lib.elem username h.users) hosts);
-
-  # Every host name and role that enableFor, disableFor and valueFor accept. A
-  # role named like a host would make `enableFor [ "x" ]` ambiguous, so that's
-  # an error. "linux" and "darwin" always count, even with no host on that OS,
-  # so a user file doesn't break when you remove your last Mac or Linux host.
-  knownNames =
-    let
-      roles = lib.unique (
-        [
-          "linux"
-          "darwin"
-        ]
-        ++ lib.concatMap rolesOf (lib.attrValues hosts)
-      );
-      clashes = lib.intersectLists hostNames roles;
-    in
-    lib.throwIf (clashes != [ ])
-      "config/hosts.nix: role ${lib.concatStringsSep ", " clashes} has the same name as a host"
-      (hostNames ++ roles);
-
-  # Every host records the release it was first installed with: home-manager
-  # and NixOS keep that release's defaults for stateful things. A Mac also
-  # records nix-darwin's own number. Neither has a sane default, so a host
-  # without them is an error before anything is built.
-  checkHost =
-    hostname: cfg:
-    lib.throwIfNot (cfg ? stateVersion)
-      "config/hosts.nix: ${hostname} needs stateVersion, the release it was first installed with (like \"26.05\")"
-      (
-        lib.throwIfNot (normalizePlatform (cfg.platform or "") != "darwin" || cfg ? darwinStateVersion)
-          "config/hosts.nix: ${hostname} needs darwinStateVersion, the nix-darwin version it was first installed with (like 7)"
-          cfg
-      );
-
-  # Hosts list their users by name; system builders want the definitions too.
-  # { users = [ "nelson" ]; ... } -> { host = <the entry>; users = { nelson = <user definition>; }; }
-  withUsers = hostname: cfg: {
-    host = checkHost hostname cfg;
-    users = lib.genAttrs cfg.users (u: users.${u});
-  };
-
   # "username@hostname" -> home-manager configuration.
-  mkHomeEntry =
-    hostname: hostCfg: username:
+  homeOf =
+    hostname: host: username:
     lib.nameValuePair "${username}@${hostname}" (mkHomeConfig {
-      inherit hostname username;
-      host = checkHost hostname hostCfg;
-      roles = rolesOf hostCfg;
+      inherit hostname host username;
+      roles = rolesOf host;
       homes = homesOf username;
-      user = users.${username};
+      user = checked.users.${username};
     });
-
-  # Platform names are matched loosely, so `" NixOS "` still resolves.
-  # Applied to both sides of the comparison, never to what the user sees.
-  normalizePlatform = p: lib.toLower (lib.trim p);
 in
 {
-  # Every system targeted by at least one host.
-  allSystems = lib.unique (lib.mapAttrsToList (_: h: h.system) hosts);
-
-  # Hosts declaring this `platform`, each built by that platform's builder.
-  # Names are normalized on both sides (see `normalizePlatform`). The guard is
-  # what makes a misspelled platform fail loudly: without it the filter just
-  # yields no hosts, and `mapAttrs` never forces the missing builder, so you'd
-  # get a silently empty attrset instead of an error.
-  systemConfigsFor =
-    platform:
-    let
-      key = normalizePlatform platform;
-    in
-    lib.throwIfNot (builders ? ${key})
-      "systemConfigsFor: unknown platform \"${platform}\" (known: ${lib.concatStringsSep ", " (lib.attrNames builders)})"
-      (
-        lib.mapAttrs builders.${key} (
-          lib.mapAttrs withUsers (
-            lib.filterAttrs (_: cfg: normalizePlatform (cfg.platform or "") == key) hosts
-          )
-        )
-      );
-
-  # Every "username@hostname" pair across all hosts.
+  nixosConfigs = systemsOn "nixos";
+  darwinConfigs = systemsOn "darwin";
   homeConfigs = lib.concatMapAttrs (
-    hostname: hostCfg: lib.listToAttrs (map (mkHomeEntry hostname hostCfg) hostCfg.users)
-  ) hosts;
+    hostname: host: lib.listToAttrs (map (homeOf hostname host) host.users)
+  ) checked.hosts;
+
+  # The systems the hosts run, for the dev shell, the formatter and the
+  # checks. They are read from the data as it is written, skipping a host
+  # whose system can't be used: every bin/ script starts in the dev shell, so
+  # it has to open while a mistake in the data is being fixed.
+  allSystems = lib.unique (
+    lib.concatMap (
+      host:
+      lib.optional (
+        lib.isAttrs host && lib.elem (host.system or null) lib.systems.flakeExposed
+      ) host.system
+    ) (lib.attrValues hosts)
+  );
 }

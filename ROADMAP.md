@@ -458,23 +458,49 @@ changed" with one command.
 
 <a id="config-001"></a>
 
-### [ ] CONFIG-001 Validate every host and user entry centrally — P1 · M
+### [x] CONFIG-001 Validate every host and user entry centrally — P1 · M
 
-**Evidence:** [lib/default.nix](lib/default.nix) checks state-version presence
-and role/name collisions, and nothing else. **Verified** in a scratch clone:
+**Implemented:** [lib/schema.nix](lib/schema.nix) checks both data files before
+[lib/default.nix](lib/default.nix) builds any configuration, in two steps:
 
-| Mistake in `config/hosts.nix` | What happens today |
+1. Types. Every field is an option, so a misspelled field, a missing one and a
+   value of the wrong kind stop the build. The module system reports one per
+   run. A `system` may be any that nixpkgs supports in flakes, and no user or
+   role may be listed twice.
+2. Rules, listed together: unknown users, a platform on the wrong OS, a Mac
+   without `darwinStateVersion`, a role named like a host, `extraSpecialArgs`
+   that take a module argument's name, and missing user or host files.
+
+A new field needs one option, and a rule only if it must agree with something
+else. `normalizePlatform` and `checkHost` are gone. Modules get the checked
+entries, with defaults filled in. The dev shell and the formatter read the
+systems straight from the data, and [lib/checks.nix](lib/checks.nix) folds
+the configuration checks into one when the data is wrong. So with a broken
+host entry, `nix develop`, `bin/lint` and the lib tests still work, and
+`bin/check --eval` fails with the named message.
+
+The four mistakes in the table below fail by name. All seven configs build the
+same derivations as before. `bin/lint`, `bin/check --eval`, and the Python
+tests passed. No live system was switched.
+
+**Left open:** a role is any word, so `roles = [ "dekstop" ]` still passes,
+and the host misses every program turned on for `desktop`. A declared list of
+roles would close this, at the cost of one more place to edit when a role is
+added. That choice is still to make.
+
+**Original evidence:** [lib/default.nix](lib/default.nix) checked state-version
+presence and role/name collisions, and nothing else. **Verified** in a scratch
+clone:
+
+| Mistake in `config/hosts.nix` | What happened before |
 | --- | --- |
 | `platform = "nixoss"` on temis | No error. temis leaves `nixosConfigurations`; its home still builds. |
 | `rolse = [ "desktop" ]` on framework | No error. Every desktop program turns off. |
 | `users = [ "nelsno" ]` | `error: attribute 'nelsno' missing`, with no file or host named. |
 | `system = "x86-64-linux"` | `error: attribute 'x86-64-linux' missing`. |
 
-The second row breaks the promise that a typo can't quietly turn a program
-off.
-
-**Verified** fix: a 34-line schema, checked by `lib.evalModules`, catches all
-four with the host and field named. Two of its messages:
+The second row broke the promise that a typo can't quietly turn a program
+off. Two of the messages now:
 
 ```
 error: The option `hosts.framework.rolse' does not exist. Definition values:
@@ -483,11 +509,11 @@ error: The option `hosts.framework.rolse' does not exist. Definition values:
       "desktop"
     ]
 
-Did you mean `hosts.framework.roles', `hosts.framework.git' or `hosts.framework.system'?
+Did you mean `hosts.framework.roles', `hosts.framework.system' or `hosts.framework.users'?
 ```
 
 ```
-error: A definition for option `hosts.temis.platform' is not of type `null or one of "nixos", "darwin"'. Definition values:
+error: A definition for option `hosts.temis.platform' is not of type `null or one of "darwin", "nixos"'. Definition values:
 - In `config/hosts.nix': "nixoss"
 ```
 
@@ -526,9 +552,26 @@ unchanged.
 
 <a id="config-002"></a>
 
-### [ ] CONFIG-002 Add focused regression tests for the shared helpers — P1 · M
+### [x] CONFIG-002 Add focused regression tests for the shared helpers — P1 · M
 
-**Evidence:** the flake evaluates real configurations, but does not declare
+**Implemented:** [tests/lib.nix](tests/lib.nix) holds 34 cases, run with
+`lib.runTests` against a made-up repository in `tests/fixtures/`. They cover
+`enableFor` and `disableFor`, the data check, the assembly, module discovery,
+and the program and system wrappers. There are three kinds:
+
+- `values`: an expression and the value it must have.
+- `holds`: must be true. Most read the sentence a rule of the schema writes.
+- `stops`: a mistake must stop the evaluation while the same thing without it
+  goes through, so a broken fixture can't pass as a caught mistake.
+
+[lib/checks.nix](lib/checks.nix) runs them as `checks.<system>.lib-tests`,
+which fails while it is evaluated and names the failed cases, so
+`bin/check --eval` runs them. [importModules](lib/importModules.nix) now
+leaves out a folder that starts with `_`, and names a folder that has no
+`<name>.nix`. Breaking `enableFor` on purpose failed the check by case name.
+No case builds a package or touches a real home.
+
+**Original evidence:** the flake evaluated real configurations, but did not
 dedicated tests for [role selection](home/lib/enableFor.nix),
 [module discovery](lib/importModules.nix), or
 [module wrappers](home/lib/mkHomeModule.nix). The real hosts only test the
