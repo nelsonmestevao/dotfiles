@@ -21,6 +21,8 @@ to work here safely.
   that host needs (boot loader, firewall, keyboard layout).
 - `bin/`: helper scripts. Each one runs inside the flake's dev shell.
 - `scripts/`: shared libraries imported by the helpers in `bin/`.
+- `.github/scripts/`: scripts only CI runs. They run on the bare runner,
+  next to the workflow that calls them, so they need only bash and jq.
 
 ## Hosts
 
