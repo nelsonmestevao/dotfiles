@@ -1,6 +1,6 @@
 #!/usr/bin/env -S nix --extra-experimental-features nix-command --extra-experimental-features flakes develop --command xonsh
 """
-Checks the flake: builds this machine's checks, evaluates every configuration,
+Checks the flake: evaluates every configuration, builds this machine's checks,
 or proves that a change still builds the same derivations.
 
 Usage:
@@ -27,9 +27,11 @@ Options:
                     so it proves a refactor changed nothing.
   --why             With --same, show what differs in each changed derivation.
 
-With no option it builds the checks of this machine's system only, like each
-CI runner does.
+With no option it evaluates every configuration on every system, then builds
+the checks of this machine's system only, like each CI runner does.
 """
+from collections import Counter
+from concurrent.futures import ThreadPoolExecutor
 import json
 import os
 import subprocess
@@ -51,21 +53,31 @@ $XONSH_SHOW_TRACEBACK = False
 # would overtake it. Writing each line at once keeps a log in order.
 sys.stdout.reconfigure(line_buffering=True)
 
-# Colors only when there is a terminal to show them.
-COLOR = sys.stdout.isatty()
-RED = "\033[1;31m" if COLOR else ""
-YELLOW = "\033[1;33m" if COLOR else ""
-GREEN = "\033[1;32m" if COLOR else ""
-RESET = "\033[0m" if COLOR else ""
+RED, GREEN, YELLOW = 31, 32, 33
 
 # Every check's derivation, by system and name. Lint is left out: it depends
 # on every file in the repo, so it changes with any edit.
 DERIVATIONS = 'c: builtins.mapAttrs (_: s: builtins.mapAttrs (_: d: d.drvPath) (builtins.removeAttrs s [ "lint" ])) c'
 
+# How many untracked files to name before "and N more".
+UNTRACKED_SHOWN = 10
+
+
+def paint(text, color, stream=sys.stdout):
+    """`text` in `color` when `stream` is a terminal, plain when it's a file
+    or a pipe. Each stream decides for itself, so `2> err.log` stays clean."""
+    return f"\033[1;{color}m{text}\033[0m" if stream.isatty() else text
+
 
 def fail(message):
-    print(f"{RED}✗{RESET} {message}", file=sys.stderr)
+    cross = paint('✗', RED, sys.stderr)
+    print(f"{cross} {message}", file=sys.stderr)
     sys.exit(1)
+
+
+def warn(message):
+    mark = paint('!', YELLOW, sys.stderr)
+    print(f"{mark} {message}", file=sys.stderr)
 
 
 def resolve(rev):
@@ -76,37 +88,106 @@ def resolve(rev):
     return found.out.strip()
 
 
-def derivations(flake, label):
-    """{(system, name): drvPath} for every check of `flake`."""
-    print(f"Evaluating {label}…")
-    result = !(nix eval --json @(flake + '#checks') --apply @(DERIVATIONS))
-    if result.returncode != 0:
-        print((result.err or '').rstrip(), file=sys.stderr)
-        fail(f"Could not evaluate {label}.")
-    return {(system, name): drv
-            for system, checks in json.loads(result.out).items()
-            for name, drv in checks.items()}
+def is_shallow():
+    return !(git rev-parse --is-shallow-repository).out.strip() == 'true'
 
 
 def warn_untracked():
-    """Flakes only see tracked files, so a new .nix file would be left out."""
-    untracked = !(git ls-files --others --exclude-standard -- '*.nix').out.splitlines()
-    if untracked:
-        print(f"{YELLOW}!{RESET} The flake can't see these untracked files. Run `git add` on them first:")
-        for path in untracked:
-            print(f"    {path}")
+    """Flakes only see tracked files. That covers more than .nix files: the
+    flake also reads configs, patches and lists that sit next to them."""
+    untracked = [path for path in !(git ls-files --others --exclude-standard -z).out.split('\0') if path]
+    if not untracked:
+        return
+    warn("The flake can't see untracked files. If your change needs one of these, run `git add` on it first:")
+    for path in untracked[:UNTRACKED_SHOWN]:
+        print(f"    {path}", file=sys.stderr)
+    if len(untracked) > UNTRACKED_SHOWN:
+        print(f"    and {len(untracked) - UNTRACKED_SHOWN} more", file=sys.stderr)
+
+
+def evaluate(flake):
+    """`nix eval` of every check's derivation in `flake`. The two sides run at
+    the same time, so this uses subprocess, which is safe to call from two
+    threads."""
+    return subprocess.run(['nix', 'eval', '--json', f'{flake}#checks', '--apply', DERIVATIONS],
+                          capture_output=True, text=True)
+
+
+def show_messages(label, run):
+    """What Nix said while it evaluated one side: warnings from the configs
+    when it passed, the error when it failed. Nothing is hidden. A warning that
+    repeats is shown once, with a count."""
+    lines = [line for line in run.stderr.splitlines() if line.strip()]
+    if not lines:
+        return
+    print(f"Messages from {label}:", file=sys.stderr)
+    if run.returncode != 0:
+        # An error trace reads top to bottom: keep every line where it is.
+        print(run.stderr.rstrip(), file=sys.stderr)
+        return
+    for line, count in Counter(lines).items():
+        print(f"  {line}" + (f"  (×{count})" if count > 1 else ""), file=sys.stderr)
+
+
+def by_check(run):
+    """{(system, name): drvPath} from what `evaluate` printed."""
+    return {(system, name): drv
+            for system, checks in json.loads(run.stdout).items()
+            for name, drv in checks.items()}
+
+
+def stands_for(drv):
+    """The derivation an eval-only check stands for, or None for a real one.
+
+    The nixos-<host> and darwin-<host> checks in flake.nix don't build the
+    system. They are small wrappers that carry the system's derivation path
+    in their `drvPath` variable, so that path is the thing worth comparing."""
+    shown = !(nix derivation show @(drv))
+    if shown.returncode != 0:
+        return None
+    shown = json.loads(shown.out)
+    # Newer Nix nests the derivations under a "derivations" key.
+    for derivation in shown.get('derivations', shown).values():
+        if isinstance(derivation, dict):
+            return derivation.get('env', {}).get('drvPath')
+    return None
+
+
+def explain(old, new):
+    """Show what differs between two derivations."""
+    inner = stands_for(old), stands_for(new)
+    if all(inner):
+        print("  (an eval-only check: comparing the system derivations it stands for)")
+        old, new = inner
+    ![nix-diff @(old) @(new)]
 
 
 def same(rev, why):
     rev = rev or 'HEAD'
     commit = resolve(rev)
     short = commit[:8]
+    shallow = is_shallow()
     warn_untracked()
 
     # "HEAD (fb7b439d)", but not "fb7b439d (fb7b439d)".
     label = short if commit.startswith(rev) else f'{rev} ({short})'
-    before = derivations(f'git+file://{quote(os.getcwd())}?rev={commit}', label)
-    after = derivations('.', 'the working tree')
+    # Nix refuses a shallow clone unless it is told to expect one.
+    committed = f'git+file://{quote(os.getcwd())}?rev={commit}' + ('&shallow=1' if shallow else '')
+
+    print(f"Evaluating {label} and the working tree…")
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        runs = dict(zip([label, 'the working tree'], pool.map(evaluate, [committed, '.'])))
+
+    for side, run in runs.items():
+        show_messages(side, run)
+    for side, run in runs.items():
+        if run.returncode != 0:
+            hint = ""
+            if shallow and side == label:
+                hint = " This clone is shallow, so that commit may be out of reach: run `git fetch --unshallow`."
+            fail(f"Could not evaluate {side}.{hint}")
+
+    before, after = (by_check(run) for run in runs.values())
 
     status = {}
     for key in sorted(before.keys() | after.keys()):
@@ -117,15 +198,19 @@ def same(rev, why):
         else:
             status[key] = 'same' if before[key] == after[key] else 'changed'
 
+    if not status:
+        fail("Nothing to compare: neither side has a derivation under the flake's `checks` output.")
+
     print()
     for (system, name), state in status.items():
-        color = GREEN if state == 'same' else RED
-        print(f"  {color}{state:<8}{RESET} {system:<15} {name}")
+        word = paint(state.ljust(8), GREEN if state == 'same' else RED)
+        print(f"  {word} {system:<15} {name}")
     print()
 
     different = [key for key, state in status.items() if state != 'same']
     if not different:
-        print(f"{GREEN}✓{RESET} All {len(status)} derivations are the same as {short}.")
+        tick = paint('✓', GREEN)
+        print(f"{tick} All {len(status)} derivations are the same as {short}.")
         return
 
     if why:
@@ -135,7 +220,7 @@ def same(rev, why):
                 print(f"{name} ({system}) was {status[key]}: there is no pair to compare.\n")
                 continue
             print(f"{name} ({system}):")
-            ![nix-diff @(before[key]) @(after[key])]
+            explain(before[key], after[key])
             print()
 
     hint = "" if why else " Run it with --why to see what differs."
@@ -151,6 +236,9 @@ def main(args):
         case {'--all-systems': True}:
             nix flake check --all-systems
         case _:
+            # `nix flake check` alone only looks at this machine's system. So
+            # evaluate every system first, then build this one's checks.
+            nix flake check --all-systems --no-build
             nix flake check
 
 
