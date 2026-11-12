@@ -393,6 +393,7 @@ that shell for you (`direnv allow` once).
 | `bin/check --same [<rev>]`     | Shows which configs build a different derivation than `<rev>` did.   |
 | `bin/lint`                     | Runs deadnix, statix and nixfmt, like CI does before it builds.      |
 | `bin/format`                   | Formats every Nix file (`nix fmt`).                                  |
+| `bin/test`                     | Runs the tests for the helper scripts, like CI does.                 |
 | `bin/autoclean`                | Deletes generations older than 7 days and frees space (uses `sudo`). |
 | `bin/setup user\|host <name>`  | Adds a user or host (see [Installing](#-installing)).                |
 | `bin/new program <name>`       | Creates a Home Manager program in `home/programs/<name>/`.           |
@@ -430,12 +431,9 @@ system derivations, since those checks only evaluate the system.
 Flakes only see tracked files, so `git add` a new file first. The command
 lists the untracked files it found, whatever their type.
 
-Run the regression tests for `bin/new`, `bin/setup` and `bin/check` in
-disposable repositories with:
-
-```shell
-nix develop --command python3 -B -m unittest discover -s tests -v
-```
+`bin/test` runs the regression tests for `bin/new`, `bin/setup` and
+`bin/check` in throwaway repositories. Pass it unittest's arguments to narrow
+the run, like `bin/test -k hardware`.
 
 Coding agents get their rules from [`AGENTS.md`](AGENTS.md). For Claude Code,
 [`.claude/settings.json`](.claude/settings.json) also makes it ask before it

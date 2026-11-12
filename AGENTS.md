@@ -83,9 +83,12 @@ Run these before you say a change works:
 ```shell
 bin/lint          # deadnix, statix, nixfmt --check (CI runs it first)
 bin/format        # fixes nixfmt errors
+bin/test          # the helper scripts' tests (CI runs them too)
 bin/check --eval  # evaluates every config, Mac ones too; builds nothing
 bin/check --same  # shows which configs your change builds differently
 ```
+
+Run `bin/test` when you touch `bin/`, `scripts/`, `tests/` or `.github/`.
 
 `bin/check --eval` takes about a minute. It catches option and assertion
 errors in all seven configs, NixOS, nix-darwin and Home Manager, without a
