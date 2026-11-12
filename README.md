@@ -199,8 +199,33 @@ bin/setup user alice --name "Alice Smith" --groups docker,wheel
 bin/setup host box --platform nixos --system x86_64-linux --users alice --roles server
 ```
 
-Without a terminal, `bin/setup host` writes a stub `hardware.nix` instead of
-reading the hardware of the machine it runs on.
+`bin/setup host` writes a stub `hardware.nix` by default, even in a terminal.
+To detect hardware, run setup on the new NixOS machine and pass
+`--detect-hardware`:
+
+```shell
+bin/setup host box --platform nixos --users alice --roles server --detect-hardware
+```
+
+Before evaluating or rebuilding a NixOS host, replace any hardware stub with
+the target machine's configuration, verify its root and boot filesystems, and
+set a boot loader in `system/hosts/<hostname>.nix`. Setup prints these next
+steps. Hardware detection failures stop setup without creating host files.
+
+Both scaffolding helpers validate names and rendered Nix in a temporary
+directory before changing the repository. Setup also checks platform and
+architecture compatibility, registered users and their module files, and role
+collisions. Display names can contain quotes, backslashes, and literal Nix
+interpolation syntax. File names must be single components containing letters,
+digits, underscores, or hyphens; host and user names can also contain dots.
+Program, module, and extension names must start with a lowercase letter.
+
+New files are formatted, linted, and staged. Changes to existing `config/`
+files stay unstaged, preserving any edits already staged there. Review and
+stage those configuration changes when ready. If writing or staging fails,
+the helpers restore the files they changed. This is validation of the scaffold,
+not a full configuration evaluation; unknown package names and incomplete
+hardware still need to be resolved before building.
 
 To do it by hand:
 
@@ -297,7 +322,9 @@ use a new flake:
 
 ## 🧰 Scripts
 
-All scripts live in `bin/`. Run any of them with `--help` for details. Run
+Runnable helpers live in `bin/`; shared code lives in `scripts/`.
+`scripts/scaffold.xsh` provides validation and file transactions for `bin/new`
+and `bin/setup`. Run any helper with `--help` for details. Run
 them from inside the repo: each one starts in the flake's dev shell, so the
 tools it needs come from `flake.lock`. With direnv, `cd` into the repo loads
 that shell for you (`direnv allow` once).
@@ -320,7 +347,14 @@ that shell for you (`direnv allow` once).
 | `bin/new extension <name>`     | Creates a GNOME extension in `home/programs/gnome/extensions/<name>/`. |
 
 `bin/new` and `bin/setup` stage the files they create with `git add`, so the
-flake sees them right away.
+flake sees them right away. Existing configuration files retain their staged
+contents; their new entries are left in the working tree for review.
+
+Run the scaffolding regression tests in disposable repositories with:
+
+```shell
+nix develop --command python3 -B -m unittest discover -s tests -v
+```
 
 Coding agents get their rules from [`AGENTS.md`](AGENTS.md). For Claude Code,
 [`.claude/settings.json`](.claude/settings.json) also makes it ask before it

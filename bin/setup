@@ -4,7 +4,7 @@ Scaffolds a new host or user and registers it in config/.
 
 Usage:
   {program} host <hostname> [--platform=<platform>] [--system=<system>]
-                            [--users=<users>] [--roles=<roles>]
+                            [--users=<users>] [--roles=<roles>] [--detect-hardware]
   {program} user <username> [--name=<name>] [--groups=<groups>]
   {program} (-h | --help)
   {program} (-v | --version)
@@ -22,26 +22,26 @@ Options:
   --users=<users>          The host's users, comma-separated.
   --roles=<roles>          The host's roles, comma-separated, like desktop.
                            Pass an empty value for none.
+  --detect-hardware        Read this machine's hardware (NixOS only).
   --name=<name>            The user's full name.
   --groups=<groups>        The user's extra groups, comma-separated.
 
 In a terminal, it asks for each value you leave out. Without one (an agent, a
 pipe), it uses the default where there is one and stops where there isn't.
-Without a terminal it also writes a stub hardware.nix, since it can't check
-that it runs on the new host.
+Hardware defaults to a stub. Pass --detect-hardware only when running on the
+new NixOS machine. Supply filesystems and a boot loader before evaluating it.
 """
-import glob
 import os
 import re
-import shutil
 import sys
 
 from docopt import docopt
 
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
+from scaffold import apply_files, checked, insert_entry, read_config, require, validate_name
+
 os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# Enable flake features for the `nix fmt` call below.
-$NIX_CONFIG = 'experimental-features = nix-command flakes'
 
 $RED="\033[1;31m"
 $YELLOW="\033[1;33m"
@@ -66,9 +66,6 @@ DEFAULT_GROUPS = ["docker", "wheel", "networkmanager"]
 
 HOST_NIXOS_TEMPLATE = """\
 {
-  config,
-  lib,
-  pkgs,
   ...
 }:
 {
@@ -90,9 +87,6 @@ HOST_NIXOS_TEMPLATE = """\
 
 HOST_DARWIN_TEMPLATE = """\
 {
-  config,
-  lib,
-  pkgs,
   ...
 }:
 {
@@ -105,9 +99,6 @@ HARDWARE_STUB_TEMPLATE = """\
 # TODO: Replace with the real hardware config. On the target NixOS machine run:
 #   nixos-generate-config --show-hardware-config > system/hosts/__NAME__/hardware.nix
 {
-  config,
-  lib,
-  pkgs,
   modulesPath,
   ...
 }:
@@ -124,8 +115,6 @@ HARDWARE_STUB_TEMPLATE = """\
 
 USER_TEMPLATE = """\
 {
-  enableFor,
-  disableFor,
   ...
 }:
 {
@@ -140,33 +129,17 @@ USER_TEMPLATE = """\
 
   # Enable more programs as needed (see home/programs/):
   # dotfiles.programs.docker.enable = true;
+  # Add enableFor to the arguments before using role selectors:
   # dotfiles.programs.vscode.enable = enableFor [ "desktop" ];
 
   dotfiles.packages.enable = true;
 }
 """
 
-# config/users.nix entry. __KEY__/__NAME__/__GROUPS__ are substituted.
-USER_BLOCK_TEMPLATE = """\
-  __KEY__ = {
-    name = "__NAME__";
-    extraGroups = [
-__GROUPS__
-    ];
-  };"""
-
-
 # ── Helpers ──────────────────────────────────────────────────────────────
 
 def render_template(template, name):
     return template.replace("__NAME_CAP__", name.capitalize()).replace("__NAME__", name)
-
-
-def require(value, message):
-    if not value:
-        print(f"{RED}✗{RESET} {message}")
-        sys.exit(1)
-    return value
 
 
 def has_terminal():
@@ -207,42 +180,6 @@ def check_choices(flag, values, allowed):
         sys.exit(1)
 
 
-def quote_key(name):
-    """Quote a Nix attribute key unless it is a plain identifier."""
-    if re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', name):
-        return name
-    return '"' + name + '"'
-
-
-def config_has_key(path, name):
-    """Whether `path` already has a top-level `<name> = ...` entry (nixfmt indents those by two spaces)."""
-    with open(path) as f:
-        content = f.read()
-    pattern = r'(?m)^  (' + re.escape(name) + r'|"' + re.escape(name) + r'") ='
-    return re.search(pattern, content) is not None
-
-
-def insert_into_config(path, block):
-    """Insert a rendered block as the first entry of the attrset in `path`.
-
-    The entries live in the file's last top-level `{` line, so this also works
-    for a file that is a function, whose first `{` opens the argument set.
-    """
-    with open(path) as f:
-        lines = f.readlines()
-    opens = [i for i, line in enumerate(lines) if line.rstrip("\n") == "{"]
-    if not opens:
-        print(f"{RED}✗{RESET} Could not find the top-level attrset in {path}")
-        sys.exit(1)
-    lines.insert(opens[-1] + 1, block + "\n")
-    with open(path, "w") as f:
-        f.writelines(lines)
-
-
-def existing_users():
-    return sorted(os.path.basename(p)[:-len(".nix")] for p in glob.glob("home/users/*.nix"))
-
-
 def nixpkgs_release():
     """The release flake.nix follows, like "26.05". A host installed now records it as stateVersion."""
     with open("flake.nix") as f:
@@ -252,44 +189,24 @@ def nixpkgs_release():
 
 def darwin_max_state_version():
     """nix-darwin's current system.maxStateVersion, read from the locked input. A Mac installed now records it as darwinStateVersion."""
-    source = $(nix eval --raw --impure --expr '(builtins.getFlake (toString ./.)).inputs.nix-darwin.outPath').strip()
+    source = checked(['nix', '--extra-experimental-features', 'nix-command flakes', 'eval', '--raw', '--impure', '--expr', '(builtins.getFlake (toString ./.)).inputs.nix-darwin.outPath'])
     with open(f"{source}/modules/system/version.nix") as f:
         match = re.search(r'maxStateVersion = mkOption \{.*?default = (\d+);', f.read(), re.DOTALL)
     return require(match and match.group(1), "Could not find system.maxStateVersion in nix-darwin")
 
-
-def known_roles():
-    """Roles any host in config/hosts.nix declares, plus the usual two."""
-    with open(HOSTS_FILE) as f:
-        content = f.read()
-    roles = {"desktop", "server"}
-    for block in re.findall(r'roles = \[(.*?)\]', content, re.DOTALL):
-        roles.update(re.findall(r'"([^"]+)"', block))
-    return sorted(roles)
-
-
-def finalize(created):
-    """Track new files, format, and re-stage so the flake sees them."""
-    # Flakes only see git-tracked files; add before any eval/format.
-    git add @(created)
-    # Only what this run wrote: `nix fmt .` would also rewrite files that
-    # someone else is in the middle of editing.
-    print(f"{BLUE}→{RESET} Formatting...")
-    nix fmt -- @(created)
-    git add @(created)
-
-
 # ── Commands ───────────────────────────────────────────────────────────────
 
 def setup_host(hostname, args):
-    if os.path.exists(f"system/hosts/{hostname}.nix") or os.path.isdir(f"system/hosts/{hostname}") or config_has_key(HOSTS_FILE, hostname):
-        print(f"{RED}✗{RESET} Host '{hostname}' already exists")
-        sys.exit(1)
-
-    users = existing_users()
-    if not users:
-        print(f"{RED}✗{RESET} No users found in home/users/. Run `bin/setup user <name>` first.")
-        sys.exit(1)
+    validate_name(hostname, 'host')
+    with open(HOSTS_FILE) as source:
+        original = source.read()
+    hosts = read_config(HOSTS_FILE)
+    users = read_config(USERS_FILE)
+    require(hostname not in hosts, f"Host '{hostname}' already exists.")
+    require(not os.path.lexists(f'system/hosts/{hostname}.nix')
+            and not os.path.lexists(f'system/hosts/{hostname}'),
+            f"Host files for '{hostname}' already exist.")
+    require(users, 'No registered users found. Run bin/setup user <name> first.')
 
     host_type = resolve("--platform", args['--platform'],
         lambda: $(gum choose --header "Host type:" @(PLATFORMS)).strip())
@@ -302,103 +219,84 @@ def setup_host(hostname, args):
         default=default_arch)
     arch = require(arch, "No architecture selected.")
     check_choices("--system", [arch], SYSTEMS)
+    require(host_type == 'home' or arch.endswith('-' + ('linux' if host_type == 'nixos' else 'darwin')),
+            f'--platform={host_type} is incompatible with --system={arch}.')
+    require(not args['--detect-hardware'] or host_type == 'nixos',
+            '--detect-hardware is only valid with --platform=nixos.')
 
     selected = resolve("--users", split_list(args['--users']),
-        lambda: choose_many("Users for this host:", users))
+        lambda: choose_many("Users for this host:", sorted(users)))
     require(selected, "No users selected.")
     check_choices("--users", selected, users)
+    require(len(selected) == len(set(selected)), '--users contains duplicates.')
+    for username in selected:
+        validate_name(username, 'user')
+        require(os.path.isfile(f'home/users/{username}.nix'),
+                f'Registered user {username!r} is missing home/users/{username}.nix.')
 
     # Optional: a host with no roles only gets what users enable everywhere.
-    known = known_roles()
+    known = sorted({'desktop', 'server', 'linux', 'darwin'} |
+                   {role for host in hosts.values() for role in host.get('roles', [])})
     roles = resolve("--roles", split_list(args['--roles']),
         lambda: choose_many("Roles for this host (none is fine):", known),
         default=[])
+    require(len(roles) == len(set(roles)), '--roles contains duplicates.')
+    for role in roles:
+        validate_name(role, 'role')
+        require(role not in hosts and role != hostname, f'Role {role!r} clashes with a host name.')
+    require(hostname not in set(known) | set(roles), f'Host {hostname!r} clashes with a role.')
     # A new role is fine, but a typo like "desktp" would quietly leave out
     # every program that user files enable for "desktop", so say so.
     new_roles = [r for r in roles if r not in known]
     if new_roles:
         print(f"{YELLOW}! New role {', '.join(new_roles)}: no host has it yet (known: {', '.join(known)}). Check the spelling.{RESET}")
 
-    created = []
-
-    # ── Hardware (NixOS only) ──────────────────────────────────────────
-    # Detecting reads the machine this runs on. A person runs setup on the new
-    # host itself; an agent most likely runs it somewhere else, so without a
-    # terminal it writes the stub.
-    if host_type == "nixos":
-        os.makedirs(f"system/hosts/{hostname}", exist_ok=True)
-        hw_path = f"system/hosts/{hostname}/hardware.nix"
-        if has_terminal() and shutil.which("nixos-generate-config"):
-            print(f"{BLUE}→{RESET} Detecting hardware with nixos-generate-config...")
-            hw = $(nixos-generate-config --show-hardware-config)
-        else:
-            hw = ""
-        if hw.strip():
-            with open(hw_path, "w") as f:
-                f.write(hw)
-            print(f"{GREEN}✓{RESET} Generated {hw_path}")
-        else:
-            with open(hw_path, "w") as f:
-                f.write(render_template(HARDWARE_STUB_TEMPLATE, hostname))
-            reason = "Could not detect hardware" if has_terminal() else "No terminal, so no hardware detection"
-            print(f"{YELLOW}✗ {reason}; wrote a stub to {hw_path} — replace it on the target machine{RESET}")
-        created.append(hw_path)
-
-    # ── Host module file ───────────────────────────────────────────────
-    if host_type == "nixos":
-        host_path = f"system/hosts/{hostname}.nix"
-        with open(host_path, "w") as f:
-            f.write(render_template(HOST_NIXOS_TEMPLATE, hostname))
-        print(f"{GREEN}✓{RESET} Created {host_path}")
-        created.append(host_path)
-    elif host_type == "darwin":
-        host_path = f"system/hosts/{hostname}.nix"
-        with open(host_path, "w") as f:
-            f.write(render_template(HOST_DARWIN_TEMPLATE, hostname))
-        print(f"{GREEN}✓{RESET} Created {host_path}")
-        created.append(host_path)
-
-    # ── Register in config/hosts.nix ───────────────────────────────────
-    block_lines = [
-        "  " + quote_key(hostname) + " = {",
-        '    system = "' + arch + '";',
-    ]
-    if host_type in ("nixos", "darwin"):
-        block_lines.append('    platform = "' + host_type + '";')
+    entry = {'system': arch, 'users': selected, 'stateVersion': nixpkgs_release()}
+    if host_type in ('nixos', 'darwin'):
+        entry['platform'] = host_type
     if roles:
-        block_lines.append("    roles = [ " + " ".join('"' + r + '"' for r in roles) + " ];")
-    users_str = " ".join('"' + u + '"' for u in selected)
-    block_lines.append("    users = [ " + users_str + " ];")
-    block_lines.append('    stateVersion = "' + nixpkgs_release() + '";')
-    if host_type == "darwin":
-        block_lines.append("    darwinStateVersion = " + darwin_max_state_version() + ";")
-    block_lines.append("  };")
-    insert_into_config(HOSTS_FILE, "\n".join(block_lines))
-    print(f"{GREEN}✓{RESET} Registered host in {HOSTS_FILE}")
-    created.append(HOSTS_FILE)
+        entry['roles'] = roles
+    if host_type == 'darwin':
+        entry['darwinStateVersion'] = int(darwin_max_state_version())
 
-    finalize(created)
+    files = {}
+    if host_type == 'nixos':
+        hw_path = f'system/hosts/{hostname}/hardware.nix'
+        hardware = render_template(HARDWARE_STUB_TEMPLATE, hostname)
+        if args['--detect-hardware']:
+            hardware = checked(['nixos-generate-config', '--show-hardware-config'])
+            require(hardware, 'Hardware detection returned no configuration.')
+        files[hw_path] = hardware
+        files[f'system/hosts/{hostname}.nix'] = HOST_NIXOS_TEMPLATE
+    elif host_type == 'darwin':
+        files[f'system/hosts/{hostname}.nix'] = HOST_DARWIN_TEMPLATE
 
-    print()
-    print(f"{GREEN}✓{RESET} Host '{hostname}' created.")
-    print(f"  Next steps:")
-    print(f"    {GREEN}→{RESET} To sign commits there, add git.signingKey to its entry in {HOSTS_FILE}")
-    if host_type == "nixos":
-        print(f"    {GREEN}→{RESET} Rebuild the system:  bin/rebuild os")
-        print(f"    {GREEN}→{RESET} Config: nixosConfigurations.{hostname}")
-    elif host_type == "darwin":
-        print(f"    {GREEN}→{RESET} Rebuild the system:  bin/rebuild os")
-        print(f"    {GREEN}→{RESET} Config: darwinConfigurations.{hostname}")
-    else:
-        print(f"    {GREEN}→{RESET} Rebuild home:  bin/rebuild home")
-    for u in selected:
-        print(f"    {GREEN}→{RESET} Home config: homeConfigurations.\"{u}@{hostname}\"")
+    files[HOSTS_FILE] = insert_entry(original, hostname, entry)
+    apply_files(files, {HOSTS_FILE: original}, {HOSTS_FILE: hosts | {hostname: entry}})
+
+    print(f"{GREEN}✓{RESET} Host '{hostname}' created; new files staged, config edit left unstaged.")
+    if host_type == 'nixos':
+        if not args['--detect-hardware']:
+            print(f"{YELLOW}! Incomplete hardware stub: {hw_path}{RESET}")
+            print(f"  On the target machine: nixos-generate-config --show-hardware-config > {hw_path}")
+        print(f'  Verify root and boot filesystems in {hw_path}.')
+        print(f'  Set a boot loader in system/hosts/{hostname}.nix before evaluation or rebuilding.')
+    print('  Review the changes, then run bin/lint and bin/check --eval.')
+    print(f'  To sign commits on this host, add git.signingKey in {HOSTS_FILE}.')
+    if host_type != 'home':
+        output = 'nixosConfigurations' if host_type == 'nixos' else 'darwinConfigurations'
+        print(f'  System config: {output}.{hostname}')
+    for username in selected:
+        print(f'  Home config: homeConfigurations."{username}@{hostname}"')
 
 
 def setup_user(username, args):
-    if os.path.exists(f"home/users/{username}.nix") or config_has_key(USERS_FILE, username):
-        print(f"{RED}✗{RESET} User '{username}' already exists")
-        sys.exit(1)
+    validate_name(username, 'user')
+    with open(USERS_FILE) as source:
+        original = source.read()
+    users = read_config(USERS_FILE)
+    require(username not in users and not os.path.lexists(f'home/users/{username}.nix'),
+            f"User '{username}' already exists.")
 
     name = resolve("--name", args['--name'],
         lambda: $(gum input --header "Full name:" --placeholder "Nelson Estevão").strip(),
@@ -410,33 +308,19 @@ def setup_user(username, args):
         lambda: $(gum input --header "Extra groups (space-separated):" --value @(" ".join(DEFAULT_GROUPS))).strip().split(),
         default=DEFAULT_GROUPS)
 
-    created = []
-
-    # ── Home-manager user file ─────────────────────────────────────────
-    user_path = f"home/users/{username}.nix"
-    with open(user_path, "w") as f:
-        f.write(render_template(USER_TEMPLATE, username))
-    print(f"{GREEN}✓{RESET} Created {user_path}")
-    created.append(user_path)
-
-    # ── Register in config/users.nix ───────────────────────────────────
-    group_lines = "\n".join('      "' + g + '"' for g in groups)
-    block = (USER_BLOCK_TEMPLATE
-             .replace("__KEY__", quote_key(username))
-             .replace("__NAME__", name)
-             .replace("__GROUPS__", group_lines))
-    insert_into_config(USERS_FILE, block)
-    print(f"{GREEN}✓{RESET} Registered user in {USERS_FILE}")
-    created.append(USERS_FILE)
-
-    finalize(created)
-
-    print()
-    print(f"{GREEN}✓{RESET} User '{username}' created.")
-    print(f"  Next steps:")
-    print(f"    {GREEN}→{RESET} Put your git identity (email) in home/programs/git/profiles/{username}.ini")
-    print(f"    {GREEN}→{RESET} Add '{username}' to a host's `users` list in {HOSTS_FILE},")
-    print(f"      or run `bin/setup host <hostname>` and select them.")
+    require(len(groups) == len(set(groups)), '--groups contains duplicates.')
+    for group in groups:
+        validate_name(group, 'group')
+    entry = {'name': name, 'extraGroups': groups}
+    files = {
+        f'home/users/{username}.nix': USER_TEMPLATE,
+        USERS_FILE: insert_entry(original, username, entry),
+    }
+    apply_files(files, {USERS_FILE: original}, {USERS_FILE: users | {username: entry}})
+    print(f"{GREEN}✓{RESET} User '{username}' created; new file staged, config edit left unstaged.")
+    print(f'  Put your git identity in home/programs/git/profiles/{username}.ini.')
+    print(f"  Add the user to an existing host's users list in {HOSTS_FILE},")
+    print(f'  or create a host with bin/setup host <hostname> --users={username}.')
 
 
 def main(args):
@@ -448,6 +332,10 @@ def main(args):
 
 if __name__ == '__main__':
     arguments = docopt(__doc__.format(program=__file__), version=f'{os.path.basename(__file__)} script version 1.0')
-    main(arguments)
+    try:
+        main(arguments)
+    except (ValueError, OSError) as error:
+        print(f"{RED}✗{RESET} {error}", file=sys.stderr)
+        sys.exit(1)
 
 # vim: ft=xonsh

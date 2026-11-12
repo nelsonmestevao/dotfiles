@@ -19,6 +19,7 @@ to work here safely.
 - `system/hosts/<hostname>.nix`: which modules a host gets, plus settings only
   that host needs (boot loader, firewall, keyboard layout).
 - `bin/`: helper scripts. Each one runs inside the flake's dev shell.
+- `scripts/`: shared libraries imported by the helpers in `bin/`.
 
 ## Hosts
 

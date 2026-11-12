@@ -25,6 +25,9 @@ import sys
 
 from docopt import docopt
 
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
+from scaffold import apply_files, validate_name
+
 os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 $RED="\033[1;31m"
@@ -93,11 +96,6 @@ def render_template(template, name):
     return template.replace("__NAME__", name)
 
 
-def stage(path):
-    """Flakes only see files git tracks, so stage the new file right away."""
-    git add @(path)
-
-
 # What each kind makes: its folder, its template, its name in messages, and
 # the file and line that turn it on.
 KINDS = {
@@ -113,6 +111,7 @@ KINDS = {
 
 
 def create(kind, name):
+    validate_name(name, 'module')
     folder, template, label, where, line = KINDS[kind]
     dir_path = folder.format(name=name)
     file_path = f"{dir_path}/{name}.nix"
@@ -121,10 +120,7 @@ def create(kind, name):
         print(f"{RED}✗{RESET} '{name}' already exists at {file_path}")
         sys.exit(1)
 
-    os.makedirs(dir_path, exist_ok=True)
-    with open(file_path, 'w') as f:
-        f.write(render_template(template, name))
-    stage(file_path)
+    apply_files({file_path: render_template(template, name)})
 
     print(f"{GREEN}✓{RESET} Created and staged {label} at {file_path}")
     print(f"  Enable it in {where}:")
@@ -146,6 +142,10 @@ def main(args):
 
 if __name__ == '__main__':
     arguments = docopt(__doc__.format(program=__file__), version=f'{os.path.basename(__file__)} script version 1.0')
-    main(arguments)
+    try:
+        main(arguments)
+    except (ValueError, OSError) as error:
+        print(f"{RED}✗{RESET} {error}", file=sys.stderr)
+        sys.exit(1)
 
 # vim: ft=xonsh
