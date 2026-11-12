@@ -17,7 +17,7 @@ If you're writing a CLI script for automation of some task, unless a different l
   scripts run from the repo root. This rule wins over the `nix-shell` one
   below; copy the shebang from a script already in the repo:
   ```
-  #!/usr/bin/env -S nix --extra-experimental-features "nix-command flakes" develop --command xonsh
+  #!/usr/bin/env -S nix --extra-experimental-features nix-command --extra-experimental-features flakes develop --command xonsh
   ```
 - **Other project scripts** (e.g. `bin/` in repos without a dev shell): use
   `nix-shell` directly:

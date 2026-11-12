@@ -1,4 +1,4 @@
-#!/usr/bin/env -S nix --extra-experimental-features "nix-command flakes" develop --command xonsh
+#!/usr/bin/env -S nix --extra-experimental-features nix-command --extra-experimental-features flakes develop --command xonsh
 """
 Checks that the flake evaluates and every configuration builds.
 
