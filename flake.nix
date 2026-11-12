@@ -38,11 +38,6 @@
       url = "github:stslex/orca-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    vicinae = {
-      url = "github:vicinaehq/vicinae";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
-    };
   };
   outputs =
     inputs@{
@@ -50,7 +45,6 @@
       nixpkgs,
       home-manager,
       nix-darwin,
-      vicinae,
       ...
     }:
     let
@@ -68,7 +62,6 @@
             nixpkgs
             home-manager
             nix-darwin
-            vicinae
             hosts
             users
             overlays

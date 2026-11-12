@@ -3,7 +3,6 @@
   nixpkgs,
   home-manager,
   nix-darwin,
-  vicinae,
   hosts,
   users,
   overlays,
@@ -44,7 +43,7 @@ let
   # ── Configurations ─────────────────────────────────────────────────────────
 
   builders = {
-    nixos = import ./mkNixosConfig.nix { inherit nixpkgs vicinae overlays; };
+    nixos = import ./mkNixosConfig.nix { inherit nixpkgs overlays; };
     darwin = import ./mkDarwinConfig.nix { inherit nixpkgs nix-darwin overlays; };
   };
 
@@ -63,7 +62,6 @@ let
     inherit
       nixpkgs
       home-manager
-      vicinae
       overlays
       knownNames
       hostNames
