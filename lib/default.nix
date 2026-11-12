@@ -26,6 +26,7 @@ let
       vicinae
       overlays
       knownNames
+      hosts
       ;
   };
 

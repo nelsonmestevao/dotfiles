@@ -2,10 +2,12 @@
   config,
   lib,
   pkgs,
-  enableFor,
   ...
 }:
 {
+  # On a machine you reach over SSH, the prompt says which one it is.
+  options.showHost = lib.mkEnableOption "the host name in the prompt";
+
   home.packages = with pkgs; [
     zsh
   ];
@@ -13,7 +15,7 @@
   home.sessionVariables = {
     SHELL = "${pkgs.zsh}/bin/zsh";
     DOTFILES = config.dotfiles.directory;
-    PROMPT_SHOW_HOST = lib.mkIf (enableFor [ "server" ]) "1";
+    PROMPT_SHOW_HOST = lib.mkIf config.dotfiles.programs.zsh.showHost "1";
   };
 
   programs.zsh.enable = true;

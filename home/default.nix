@@ -7,7 +7,6 @@
 {
   imports = [
     ./packages.nix
-    ./programs/gnome/options.nix
     ./users/${username}.nix
   ];
 

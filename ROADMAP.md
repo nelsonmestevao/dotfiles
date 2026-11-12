@@ -706,16 +706,35 @@ to the host. Evaluate fixtures on Linux and test activation on the actual Mac.
 
 ### [ ] CONFIG-006 Let a program declare its own settings — P2 · S
 
-**Evidence:** the wrappers declare one option, `enable`. A program has no way
-to offer a setting that a user or a host can change, so modules reach around
-the rules:
+**Progress (2026-11-12):** steps 1–5, 7, and 8 are done on the branch
+`home/program-settings`.
 
-- [claude.nix](home/programs/claude/claude.nix) links skills only when
+- The three wrappers take `options` and the option text is fixed. One helper,
+  `mkSymlinkIn` in [home/lib](home/lib/default.nix), serves the home and
+  GNOME wrappers.
+- Converted: zsh `showHost`, claude `skills`, the two GNOME lists (now in
+  `gnome.nix`), and the git signing key, which left `config/hosts.nix`.
+- Checked: all seven configs build the same derivations as before, and the
+  generated git config of each home is byte for byte the same. `showHots`
+  stops the build with "The option `dotfiles.programs.zsh.showHots' does not
+  exist" and a "Did you mean" hint. A program made by `bin/new` with a setting
+  of its own evaluates. The 16 scaffolding tests, `bin/lint`, and
+  `bin/check --eval` pass.
+
+Left: the fixture test (step 9) waits for [CONFIG-002](#config-002). Printing
+and Homebrew wait for [CONFIG-005](#config-005). `valueFor` (step 6) is not
+needed yet: one `if` covers the signing key.
+
+**Evidence** (how it was before): the wrappers declared one option, `enable`.
+A program had no way to offer a setting that a user or a host can change, so
+modules reached around the rules:
+
+- [claude.nix](home/programs/claude/claude.nix) linked skills only when
   `username == "nelson"`.
-- [zsh.nix](home/programs/zsh/zsh.nix) calls `enableFor [ "server" ]` itself.
-- [git.nix](home/programs/git/git.nix) reads `host.git.signingKey`, so
-  `config/hosts.nix` holds a fact about one program.
-- [gnome/options.nix](home/programs/gnome/options.nix) is imported by hand in
+- [zsh.nix](home/programs/zsh/zsh.nix) called `enableFor [ "server" ]` itself.
+- [git.nix](home/programs/git/git.nix) read `host.git.signingKey`, so
+  `config/hosts.nix` held a fact about one program.
+- `home/programs/gnome/options.nix` was imported by hand in
   [home/default.nix](home/default.nix).
 - The printing module names one printer. The Homebrew module names one
   person's apps.
@@ -790,7 +809,7 @@ becomes one of them.
 **Verify:**
 
 - `bin/check --same` reports "same" after each of steps 1–5.
-- `grep -rnE 'username ==|hostname ==|enableFor|host\.' home/programs system/modules`
+- `grep -rnE --include='*.nix' 'username ==|hostname ==|enableFor \[|host\.[a-zA-Z]' home/programs system/modules`
   finds nothing.
 - `grep -n git config/hosts.nix` finds nothing.
 - A misspelled setting fails with its name.
@@ -918,10 +937,19 @@ warns on the next evaluation.
 
 ### [ ] CONFIG-010 Catch selectors that can never be true — P2 · S
 
-**Evidence:** [nelson.nix](home/users/nelson.nix) has
+**Progress (2026-11-12):** steps 1 and 2 are done on the branch
+`home/program-settings`. `enableFor` and `disableFor` know which hosts list
+the user. The old line now stops the build with "nelson has no home on
+Remote-Nelson-Estevao (homes: framework, temis, thinkpad)". `colima` in
+`nelson.nix` is `enableFor [ "darwin" ]`. All seven configs build the same
+derivations as before.
+
+Left: the two test cases (step 3) wait for [CONFIG-002](#config-002).
+
+**Evidence** (how it was before): [nelson.nix](home/users/nelson.nix) had
 `colima.enable = enableFor [ "Remote-Nelson-Estevao" ]`. **Verified:** `nelson`
-is not a user on that host, so the line is never true. `enableFor` accepts it
-because the name is a known host.
+is not a user on that host, so the line was never true. `enableFor` accepted
+it because the name is a known host.
 
 **Plan:**
 

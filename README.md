@@ -93,9 +93,30 @@ linking config files back to this repo.
 > ```
 
 A module that only runs on one OS says so with `platforms = [ "linux" ]` or
-`[ "darwin" ]`, next to its settings. Turning it on for a host on the other OS
+`[ "darwin" ]`, next to its config. Turning it on for a host on the other OS
 stops the build with a message that names the host, instead of failing deep
 inside a package build. Most modules run everywhere and leave it out.
+
+A program can also offer **settings** beside `enable`. It declares each one
+with `options.<setting>`, next to its config, and reads it from
+`config.dotfiles.programs.<name>.<setting>`. A user file sets it, with
+`enableFor` for the exceptions:
+
+```nix
+# home/programs/zsh/zsh.nix
+options.showHost = lib.mkEnableOption "the host name in the prompt";
+
+home.sessionVariables.PROMPT_SHOW_HOST = lib.mkIf config.dotfiles.programs.zsh.showHost "1";
+
+# home/users/nelson.nix
+dotfiles.programs.zsh.showHost = enableFor [ "server" ];
+```
+
+A misspelled setting stops the build with its name. So a module never checks
+a host name or a user name: it offers a setting, and the user file picks. One
+rule: a module that declares settings must return a plain attribute set. If
+the whole body sits inside `lib.mkIf` or an `if`, the evaluation loops. System
+modules and GNOME extensions take `options` the same way.
 
 Similarly, system-level concerns live under `system/modules/`, split by platform
 into `nixos/` and `darwin/`. Each module provides a
@@ -135,10 +156,14 @@ programs that only run on Linux. Both names always work, even when no host
 runs that OS.
 
 Use roles where you can. A new desktop then needs one line in
-`config/hosts.nix`, with no edits to the user files. Two rules keep this safe:
+`config/hosts.nix`, with no edits to the user files. Three rules keep this
+safe:
 
 - A name that is neither a host nor a role stops the build, so a typo can't
   quietly turn a program off.
+- A host the user has no home on stops the build too, since that line could
+  never be true. Roles stay open: you may name a role none of your hosts has
+  yet.
 - A role can't have the same name as a host, so every name means one thing.
 
 ```nix
@@ -285,13 +310,11 @@ Each host in `config/hosts.nix` has these fields:
   things, so never bump it. A Mac also sets **`darwinStateVersion`**, the
   nix-darwin version it was first installed with. `bin/setup host` fills both
   in.
-- **`git.signingKey`** — the SSH key that signs commits on this host, as the
-  public key or the path of its file. **`git.signingProgram`** is the program
-  that signs with it, like 1Password's. Leave both out and commits aren't
-  signed there.
 
 Modules get the whole entry as `host`, so a module can read a host fact
-without knowing the host's name.
+without knowing the host's name. An entry holds facts about the machine. What
+one program needs per host is a setting of that program, set in the user file
+(see [How modules work](#how-modules-work)).
 
 ### What goes into a user entry
 
@@ -306,6 +329,20 @@ Each user in `config/users.nix` has these fields:
 Modules get the whole entry as `user`. Your git identity is not in the entry:
 it's the file `home/programs/git/profiles/<username>.ini`, included when it
 exists. Without it, git refuses to commit until you set an email.
+
+The SSH key that signs your commits is a setting of the git program. Set it in
+your user file, as the public key or the path of its file. Keys differ per
+machine, so pick with `enableFor`:
+
+```nix
+# home/users/<username>.nix
+dotfiles.programs.git.signingKey =
+  if enableFor [ "temis" ] then "~/.ssh/id_ed25519.pub" else "ssh-ed25519 AAAA…";
+```
+
+`dotfiles.programs.git.signingProgram` is the program that signs with it, when
+it isn't ssh-keygen (1Password's, for one). Leave both out and commits aren't
+signed.
 
 ### Using another flake
 
