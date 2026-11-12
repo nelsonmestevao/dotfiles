@@ -335,8 +335,10 @@ that shell for you (`direnv allow` once).
 | `bin/build [os\|home]`         | Builds the config and shows what would change, without switching.   |
 | `bin/update`                   | Updates the flake inputs and lists what changed.                     |
 | `bin/update --save`            | Same, then commits `flake.lock` with a note for each input.          |
-| `bin/check`                    | Runs `nix flake check` for every system.                             |
+| `bin/check`                    | Builds this machine's checks (`nix flake check`), like a CI runner.  |
 | `bin/check --eval`             | Evaluates every config without building anything (about a minute).  |
+| `bin/check --all-systems`      | Builds every system's checks. Needs a builder for the other OS.      |
+| `bin/check --same [<rev>]`     | Shows which configs build a different derivation than `<rev>` did.   |
 | `bin/lint`                     | Runs deadnix, statix and nixfmt, like CI does before it builds.      |
 | `bin/format`                   | Formats every Nix file (`nix fmt`).                                  |
 | `bin/autoclean`                | Deletes generations older than 7 days and frees space (uses `sudo`). |
@@ -350,7 +352,29 @@ that shell for you (`direnv allow` once).
 flake sees them right away. Existing configuration files retain their staged
 contents; their new entries are left in the working tree for review.
 
-Run the scaffolding regression tests in disposable repositories with:
+`bin/check` has three depths. Plain `bin/check` builds the checks of this
+machine's system, which is what each CI runner does. `bin/check --eval`
+evaluates every config on every system and builds nothing. It reads the Mac
+config on Linux and the Linux ones on a Mac, but it does not test that a
+config activates on the other OS. `bin/check --all-systems` builds them all
+and needs a builder for the other OS.
+
+`bin/check --same` proves that a change builds what was built before. It lists
+the derivation of every config at a commit (`HEAD` unless you name another)
+and in the working tree, and prints each one as `same` or `changed`. It exits
+0 only when all are the same, so use it after a refactor. Add `--why` to see
+what differs in each changed derivation:
+
+```shell
+bin/check --same             # what does my uncommitted work change?
+bin/check --same main --why  # what changed since main, and why?
+```
+
+Flakes only see tracked files, so `git add` a new file first. The command
+warns about `.nix` files that are not tracked.
+
+Run the regression tests for `bin/new`, `bin/setup` and `bin/check` in
+disposable repositories with:
 
 ```shell
 nix develop --command python3 -B -m unittest discover -s tests -v

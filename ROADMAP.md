@@ -109,8 +109,13 @@ take about 20 seconds and catch option, type, and assertion errors in all
 seven configs.
 
 **2. Same derivations.** A refactor should build exactly what was built
-before. One `nix eval` lists the derivation of every config. If the list is
-the same before and after, the refactor changed nothing.
+before. `bin/check --same` lists the derivation of every config at the last
+commit and in the working tree, and prints each one as "same" or "changed". It
+exits 0 only when all are the same, so then the refactor changed nothing.
+`bin/check --same <rev>` compares with another commit, and `--why` shows what
+differs in each changed derivation.
+
+It runs one `nix eval` for each side. By hand, that is:
 
 ```shell
 snapshot() {
@@ -123,9 +128,9 @@ snapshot . > /tmp/after.json                                              # the 
 diff /tmp/before.json /tmp/after.json && echo "same derivations"
 ```
 
-`git add` new files first, or the flake can't see them. Lint is left out
-because it changes with any file. [CLI-006](#cli-006) turns this into
-`bin/check --same`.
+`git add` new files first, or the flake can't see them; `bin/check --same`
+warns about untracked `.nix` files. Lint is left out because it changes with
+any file.
 
 **3. Inventory.** For changes to user files, roles, or package lists, compare
 what is on:
@@ -313,12 +318,25 @@ before invoking a system builder.
 
 <a id="cli-004"></a>
 
-### [ ] CLI-004 Separate native builds from evaluation of all systems — P1 · S
+### [x] CLI-004 Separate native builds from evaluation of all systems — P1 · S
 
-**Evidence:** [bin/check](bin/check) always passes `--all-systems`, including
-when building. [CI](.github/workflows/ci.yml) instead builds native checks on
-separate Linux and Mac runners. On the Mac, plain `bin/check` asks Nix to build
-the three Linux home configs, which needs a Linux builder.
+**Implemented:** plain `bin/check` runs `nix flake check`, so it builds this
+machine's system only. `bin/check --eval` is unchanged. `bin/check
+--all-systems` is the explicit way to build the other OS, and its help says it
+needs a builder for it. The README and AGENTS.md say what each one covers, and
+that evaluating a config does not test activation on the other OS.
+
+Checked on the Mac: plain `bin/check` passed in 14 seconds, built only the
+`aarch64-darwin` checks, and reported "omitted these incompatible systems:
+x86_64-linux". `bin/check --eval` still listed all seven configs. Tests in
+[tests/test_check.py](tests/test_check.py) pin the command each flag runs. The
+Linux side was not run by hand: it is the same `nix flake check` that the
+Linux CI job already runs with no Mac builder.
+
+**Original evidence:** [bin/check](bin/check) always passed `--all-systems`,
+including when building. [CI](.github/workflows/ci.yml) instead builds native
+checks on separate Linux and Mac runners. On the Mac, plain `bin/check` asked
+Nix to build the three Linux home configs, which needs a Linux builder.
 
 **Plan:**
 
@@ -380,6 +398,20 @@ command for that. **Verified:** one `nix eval` lists the derivation of all
 seven configs in 15 seconds (see [How to check a change](#how-to-check-a-change)).
 `HEAD~1` and `HEAD` gave the same list, and so did a wrapper change tried in a
 scratch clone ([CONFIG-006](#config-006)).
+
+**Progress:** steps 1 to 3 are done. `bin/check --same [<rev>] [--why]`
+exists, `nix-diff` is in the dev shell (it is prebuilt for both systems), and
+the README and AGENTS.md describe it. It also reports a config that exists on
+one side only as "added" or "removed", stops on an unknown revision, and warns
+about untracked `.nix` files. Ten tests in
+[tests/test_check.py](tests/test_check.py) cover it with a stand-in `nix`.
+
+Checked on the Mac, from a git worktree: a clean tree and a comment-only edit
+showed all seven as "same" and exited 0, in about 30 seconds. Adding `hello`
+to `home/programs/curl/curl.nix` changed the four home configs that enable
+curl and neither system config, exited 1, and `--why` named `hello-2.12.3`.
+
+Left to do: step 4, in [CI-006](#ci-006).
 
 **Plan:**
 

@@ -138,6 +138,7 @@
               nixfmt
               gum
               nh
+              nix-diff
               python3
               python3Packages.xonsh
               python3Packages.docopt
