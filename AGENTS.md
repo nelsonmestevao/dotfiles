@@ -37,7 +37,7 @@ to work here safely.
 | `thinkpad`              | Home Manager | `x86_64-linux`   |
 | `Remote-Nelson-Estevao` | nix-darwin   | `aarch64-darwin` |
 
-An agent may run on any of these machines, so run `hostname` first. A command
+An agent may run on any of these machines, so run `hostname -s` first. A command
 that only works on another OS (a Mac build on Linux, `nixos-rebuild` on the
 Mac) can't run there: ask me to run it and paste the output back.
 
@@ -98,12 +98,13 @@ Run these before you say a change works:
 ```shell
 bin/lint          # deadnix, statix, nixfmt --check (CI runs it first)
 bin/format        # fixes nixfmt errors
-bin/test          # the helper scripts' tests (CI runs them too)
+bin/test          # the helper scripts' tests and the docs check (CI too)
 bin/check --eval  # evaluates every config, Mac ones too; builds nothing
 bin/check --same  # shows which configs your change builds differently
 ```
 
-Run `bin/test` when you touch `bin/`, `scripts/`, `tests/` or `.github/`.
+Run `bin/test` when you touch `bin/`, `scripts/`, `tests/`, `.github/`, the
+docs, or `config/hosts.nix`.
 
 `bin/check --eval` takes about a minute. It catches option and assertion
 errors in all seven configs, NixOS, nix-darwin and Home Manager, without a
