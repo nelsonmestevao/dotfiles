@@ -13,18 +13,18 @@
 let
   inherit (nixpkgs) lib;
 
-  # The lib tests (tests/lib.nix) run while this is evaluated, so
-  # `bin/check --eval` runs them, and a failure names its cases. They are the
-  # same on every system, so they run once.
+  # The tests in tests/lib.nix run whenever the flake is checked, so
+  # `bin/check --eval` runs them, and a failed test is named. They don't
+  # depend on the system, so they run once.
   failedLibTests = import ../tests/lib.nix { inherit nixpkgs home-manager; };
   show = lib.generators.toPretty { };
   libTestsReport = lib.concatMapStringsSep "\n" (
     case: "  ${case.name}: expected ${show case.expected}, got ${show case.result}"
   ) failedLibTests;
 
-  # The system each configuration runs, from the checked host data. Asking
-  # the configuration would evaluate its modules, and a broken Mac module
-  # would then hide the Linux checks too.
+  # Which system each configuration is for, read from config/hosts.nix.
+  # Asking the configuration itself would load its modules, and then a broken
+  # Mac module would hide the Linux checks too.
   systemOfHost = hostname: checkedData.hosts.${hostname}.system;
   systemOfHome = home: systemOfHost (lib.last (lib.splitString "@" home));
 in
@@ -33,12 +33,10 @@ let
   pkgs = nixpkgs.legacyPackages.${system};
   runningHere = systemOf: lib.filterAttrs (name: _: systemOf name == system);
 
-  # A check that evaluates a system configuration without building it.
-  # Working out the top-level derivation's path evaluates every module,
-  # option and assertion, which is where configuration errors show up.
-  # Building the closure would take hours on a runner. `nix flake check`
-  # doesn't know darwinConfigurations at all, so this is the only check the
-  # Mac system config gets.
+  # Checks a system configuration without building it. Nix still reads every
+  # module, option and assertion, which is where mistakes show up; building
+  # the whole system would take hours in CI. `nix flake check` skips
+  # darwinConfigurations, so this is the only check the Mac system gets.
   evalOnly =
     name: toplevel:
     pkgs.runCommand "eval-${name}" {
@@ -82,7 +80,7 @@ in
     ) "these cases in tests/lib.nix failed:\n${libTestsReport}" ''touch "$out"''
   );
 }
-# With a mistake in the host or user data, one check, `data`, fails with the
-# data's message in place of the configurations. Lint and the lib tests still
-# run.
+# With a mistake in config/hosts.nix or config/users.nix, one check, `data`,
+# fails with the message in place of the configuration checks. Lint and the
+# tests still run.
 // (if dataIsRight then configurations else { data = checkedData; })

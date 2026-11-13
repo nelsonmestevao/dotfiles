@@ -49,12 +49,12 @@ let
     broken = check (edit hosts name change) users;
   };
 
-  # ── The assembly ───────────────────────────────────────────────────────────
+  # ── Building the configurations ────────────────────────────────────────────
 
-  # lib/default.nix over some data. Home Manager is a stand-in that hands back
-  # what it was given, so a case can read what a home gets without building
-  # it. Only the arguments the assembly asks for are passed, so this keeps
-  # working when it gains or loses a flake input.
+  # lib/default.nix over some data. Home Manager is replaced by a function
+  # that hands back what it was given, so a test can read what a home gets
+  # without building it. Only the arguments lib/default.nix asks for are
+  # passed, so this keeps working when it gains or loses a flake input.
   assemble =
     hosts: users:
     let
@@ -261,9 +261,8 @@ let
         ];
       };
     };
-    # With a mistake in the data, the checks exist for every tool system, so
-    # the one that reports it runs wherever you look. The dev shell's systems
-    # don't depend on the data at all.
+    # With a mistake in the data, the checks are made for all four systems, so
+    # the one that reports it shows up on every machine.
     theChecksSurviveBrokenData = {
       expr =
         let
@@ -388,7 +387,7 @@ let
   # without the mistake, goes through. An error's text can't be read back, so
   # the pair is what keeps a broken fixture from passing as a caught mistake.
   stops = {
-    # The four typos that used to pass in silence, and their kin.
+    # The four typos that used to pass in silence, and others like them.
     aMisspelledPlatform = inHost "box" (set {
       platform = "nixoss";
     });
@@ -446,9 +445,9 @@ let
   casesOf =
     kind: toCase: lib.mapAttrs' (name: case: lib.nameValuePair "test ${kind}: ${name}" (toCase case));
 
-  # Like lib.runTests, but a case that throws is a failed case with its name,
-  # not an error that stops every case. (An error that isn't a throw, like a
-  # missing attribute, still stops them all: tryEval can't catch it.)
+  # Like lib.runTests, but a test that fails with an error is reported by name,
+  # instead of stopping every test. (A missing attribute still stops them
+  # all: Nix can only catch errors raised with `throw`.)
   failedCases =
     cases:
     lib.concatLists (
