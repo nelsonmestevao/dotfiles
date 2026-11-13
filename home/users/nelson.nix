@@ -58,11 +58,18 @@
   dotfiles.programs.rust.enable = true;
 
   # Dev Tools
+  dotfiles.programs.appimage-run.enable = true;
+  dotfiles.programs.autoconf.enable = true;
+  dotfiles.programs.automake.enable = true;
   dotfiles.programs.bat.enable = true;
+  dotfiles.programs.bc.enable = true;
   dotfiles.programs.bruno.enable = enableFor [ "desktop" ];
   dotfiles.programs.btop.enable = true;
+  dotfiles.programs.cached-nix-shell.enable = true;
+  dotfiles.programs.clang-tools.enable = true;
   dotfiles.programs.claude.enable = true;
   dotfiles.programs.claude.skills = true;
+  dotfiles.programs.cloudflared.enable = true;
   dotfiles.programs.codex.enable = true;
   dotfiles.programs.colima.enable = enableFor [ "darwin" ];
   dotfiles.programs.copilot.enable = true;
@@ -70,16 +77,24 @@
   dotfiles.programs.ctop.enable = true;
   dotfiles.programs.curl.enable = true;
   dotfiles.programs.cursor.enable = false;
+  dotfiles.programs.dconf2nix.enable = true;
   dotfiles.programs.devcontainer.enable = true;
+  dotfiles.programs.dig.enable = true;
   dotfiles.programs.direnv.enable = true;
   dotfiles.programs.docker.enable = true;
+  dotfiles.programs.dust.enable = true;
+  dotfiles.programs.eva.enable = true;
   dotfiles.programs.exiftool.enable = true;
   dotfiles.programs.eza.enable = true;
   dotfiles.programs.fastfetch.enable = true;
   dotfiles.programs.fd.enable = true;
   dotfiles.programs.ffmpeg.enable = true;
   dotfiles.programs.figlet.enable = true;
+  dotfiles.programs.fop.enable = true;
+  dotfiles.programs.fuse.enable = true;
   dotfiles.programs.fzf.enable = true;
+  dotfiles.programs.gcc.enable = true;
+  dotfiles.programs.gensecret.enable = true;
   dotfiles.programs.git.enable = true;
   # The key that signs commits. A host that isn't named here signs nothing.
   dotfiles.programs.git.signingKey = valueFor {
@@ -90,39 +105,64 @@
   dotfiles.programs.git-sim.enable = enableFor [ "framework" ];
   dotfiles.programs.glab.enable = true;
   dotfiles.programs.glow.enable = true;
+  dotfiles.programs.gnumake.enable = true;
+  dotfiles.programs.gnupg.enable = true;
+  dotfiles.programs.gping.enable = true;
+  dotfiles.programs.grex.enable = true;
+  dotfiles.programs.gvfs.enable = true;
   dotfiles.programs.herdr-app.enable = enableFor [ "desktop" ];
   dotfiles.programs.herdr-core.enable = enableFor [
     "desktop"
     "server"
   ];
+  dotfiles.programs.hm-diff.enable = true;
   dotfiles.programs.httpie.enable = true;
   dotfiles.programs.hyperfine.enable = true;
   dotfiles.programs.imagemagick.enable = true;
   dotfiles.programs.jj.enable = true;
   dotfiles.programs.jq.enable = true;
+  dotfiles.programs.k6.enable = true;
   dotfiles.programs.kamal.enable = true;
+  dotfiles.programs.lazysql.enable = true;
+  dotfiles.programs.lftp.enable = true;
+  dotfiles.programs.libsecret.enable = true;
   dotfiles.programs.mise.enable = true;
   dotfiles.programs.mysql.enable = false;
   dotfiles.programs.ngrok.enable = true;
+  dotfiles.programs.nix-search-tv.enable = true;
+  dotfiles.programs.nixos-diff.enable = true;
+  dotfiles.programs.nushell.enable = true;
   dotfiles.programs.onefetch.enable = true;
   dotfiles.programs.opencode.enable = false;
   dotfiles.programs.orca.enable = enableFor [ "desktop" ];
+  dotfiles.programs.ouch.enable = true;
   dotfiles.programs.pandoc.enable = true;
+  dotfiles.programs.pkg-config.enable = true;
+  dotfiles.programs.pkgversion.enable = true;
   dotfiles.programs.podman.enable = false;
+  dotfiles.programs.poppler-utils.enable = true;
   dotfiles.programs.projectionist.enable = true;
   dotfiles.programs.rclone.enable = true;
   dotfiles.programs.restic.enable = true;
   dotfiles.programs.ripgrep.enable = true;
+  dotfiles.programs.scc.enable = true;
   dotfiles.programs.shellcheck.enable = true;
   dotfiles.programs.shfmt.enable = true;
+  dotfiles.programs.silicon.enable = true;
   dotfiles.programs.speedtest.enable = true;
   dotfiles.programs.sqlite.enable = true;
   dotfiles.programs.ssh.enable = true;
+  dotfiles.programs.stripe-cli.enable = true;
+  dotfiles.programs.terminaltexteffects.enable = true;
   dotfiles.programs.terraform.enable = enableFor [ "framework" ];
+  dotfiles.programs.tldr.enable = true;
+  dotfiles.programs.tokei.enable = true;
   dotfiles.programs.unoconv.enable = true;
   dotfiles.programs.unzip.enable = true;
+  dotfiles.programs.wake-hades.enable = true;
   dotfiles.programs.watchman.enable = true;
   dotfiles.programs.wget.enable = true;
+  dotfiles.programs.yazi.enable = true;
   dotfiles.programs.yq.enable = true;
   dotfiles.programs.zellij.enable = false;
   dotfiles.programs.zoxide.enable = true;
@@ -140,10 +180,12 @@
   dotfiles.programs.discord.enable = enableFor [ "framework" ];
   dotfiles.programs.espanso.enable = false;
   dotfiles.programs.gimp.enable = enableFor [ "desktop" ];
+  dotfiles.programs.impression.enable = true;
   dotfiles.programs.inkscape.enable = enableFor [ "desktop" ];
   dotfiles.programs.kdenlive.enable = enableFor [ "framework" ];
   dotfiles.programs.libreoffice.enable = enableFor [ "desktop" ];
   dotfiles.programs.localsend.enable = enableFor [ "desktop" ];
+  dotfiles.programs.mpv.enable = true;
   dotfiles.programs.obs.enable = enableFor [ "framework" ];
   dotfiles.programs.obsidian.enable = enableFor [ "desktop" ];
   dotfiles.programs.pdfmixtool.enable = enableFor [ "desktop" ];
@@ -158,6 +200,4 @@
   dotfiles.programs.wine.enable = false;
   dotfiles.programs.zeal.enable = false;
   dotfiles.programs.zen.enable = enableFor [ "desktop" ];
-
-  dotfiles.packages.enable = true;
 }

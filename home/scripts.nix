@@ -1,8 +1,5 @@
-# Small shell commands installed alongside the package list, kept out of
-# packages.nix so that file stays a plain list of package names.
-#
-# Returns a list of derivations, appended to `home.packages` by packages.nix —
-# so these inherit its `dotfiles.packages.enable` gate rather than restating it.
+# Small shell commands of my own, by name. home/programs/plain.nix adds them
+# to its list, so each one is a program that a user file turns on.
 { pkgs }:
 let
   # Pick two generations with fzf and diff them with nvd. Home-manager and
@@ -38,35 +35,30 @@ let
       ${pkgs.nvd}/bin/nvd diff "$older" "$newer"
     '';
 in
-[
-  (
-    let
-      flakeLockPath = ../flake.lock;
-    in
-    pkgs.writeShellScriptBin "pkgversion" ''
-      PACKAGE="$1"
-      REVISION="$2"
+{
+  pkgversion = pkgs.writeShellScriptBin "pkgversion" ''
+    PACKAGE="$1"
+    REVISION="$2"
 
-      [[ -z "$PACKAGE" ]] && echo "Package name is required" && exit 1
-      [[ -z "$REVISION" ]] && REVISION=$(${pkgs.jq}/bin/jq -r '.nodes.nixpkgs.original.ref' ${flakeLockPath})
+    [[ -z "$PACKAGE" ]] && echo "Package name is required" && exit 1
+    [[ -z "$REVISION" ]] && REVISION=$(${pkgs.jq}/bin/jq -r '.nodes.nixpkgs.original.ref' ${../flake.lock})
 
-      echo $(nix eval --raw "github:NixOS/nixpkgs/$REVISION#$PACKAGE.version")
-    ''
-  )
+    echo $(nix eval --raw "github:NixOS/nixpkgs/$REVISION#$PACKAGE.version")
+  '';
 
-  (pkgs.writeShellScriptBin "gensecret" ''
+  gensecret = pkgs.writeShellScriptBin "gensecret" ''
     SIZE="$1"
 
     [[ -z "$SIZE" ]] && SIZE="32"
 
     ${pkgs.openssl}/bin/openssl rand -hex "$SIZE"
-  '')
+  '';
 
-  (pkgs.writeShellScriptBin "wake-hades" ''
+  wake-hades = pkgs.writeShellScriptBin "wake-hades" ''
     ${pkgs.wakeonlan}/bin/wakeonlan 2c:f0:5d:59:3c:0d
-  '')
+  '';
 
   # Nix leaves $HOME alone (only ${ interpolates), so the shell expands it.
-  (mkGenerationDiff "hm-diff" "$HOME/.local/state/nix/profiles" "home-manager-")
-  (mkGenerationDiff "nixos-diff" "/nix/var/nix/profiles" "system-")
-]
+  hm-diff = mkGenerationDiff "hm-diff" "$HOME/.local/state/nix/profiles" "home-manager-";
+  nixos-diff = mkGenerationDiff "nixos-diff" "/nix/var/nix/profiles" "system-";
+}

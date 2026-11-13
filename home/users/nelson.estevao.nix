@@ -67,6 +67,4 @@
   dotfiles.programs.unzip.enable = true;
   dotfiles.programs.wget.enable = true;
   dotfiles.programs.zoxide.enable = true;
-
-  #dotfiles.packages.enable = true;
 }
