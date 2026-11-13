@@ -137,7 +137,7 @@
               statix
               nixfmt
               gum
-              # .github/scripts/plan-builds, which bin/test runs.
+              # For .github/scripts/plan-builds and its tests.
               jq
               nh
               nix-diff
