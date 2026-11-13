@@ -8,10 +8,10 @@ in
 {
   services.printing.enable = true;
 
-  # The Brother HL-L3240CDW is IPP Everywhere / AirPrint capable and accepts
-  # application/pdf natively, so it needs no vendor driver. Avoid cups-browsed:
-  # the `implicitclass://` queue it auto-creates silently wedges (queue goes
-  # disabled and jobs pile up unfiltered) — declare the queue directly instead.
+  # The Brother HL-L3240CDW speaks IPP Everywhere (AirPrint) and prints PDF as
+  # is, so it needs no driver from Brother. cups-browsed stays off: the
+  # `implicitclass://` queue it makes on its own gets stuck without a word (the
+  # queue turns off and jobs pile up), so the queue below is set up by hand.
   services.printing.browsed.enable = false;
 
   # mDNS, so the printer's .local name resolves without a static DHCP lease.

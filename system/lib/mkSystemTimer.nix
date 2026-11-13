@@ -1,6 +1,6 @@
 { pkgs, username }:
 name: onCalendar: scriptCmd: {
-  systemd.timers."${name}" = {
+  systemd.timers.${name} = {
     wantedBy = [ "timers.target" ];
     timerConfig = {
       Unit = "${name}.service";
@@ -9,7 +9,7 @@ name: onCalendar: scriptCmd: {
     };
   };
 
-  systemd.services."${name}" = {
+  systemd.services.${name} = {
     script = scriptCmd;
     serviceConfig = {
       Type = "oneshot";
@@ -18,7 +18,7 @@ name: onCalendar: scriptCmd: {
   };
 
   environment.systemPackages = [
-    (pkgs.writeShellScriptBin "${name}" ''
+    (pkgs.writeShellScriptBin name ''
       COMMAND="$1"
 
       [[ -z "$COMMAND" ]] && COMMAND="start"
