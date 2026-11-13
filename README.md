@@ -488,7 +488,7 @@ that shell for you (`direnv allow` once).
 | `bin/check --all-systems`      | Builds every system's checks. Needs a builder for the other OS.      |
 | `bin/check --same [<rev>]`     | Shows which configs build a different derivation than `<rev>` did.   |
 | `bin/check --list`             | Prints what every config builds, as JSON. CI decides from this list. |
-| `bin/lint`                     | Runs deadnix, statix and nixfmt, like CI does before it builds.      |
+| `bin/lint`                     | Checks the Nix, shell and zsh files and the workflow, like CI does.  |
 | `bin/format`                   | Formats every Nix file (`nix fmt`).                                  |
 | `bin/test`                     | Tests the helper scripts and checks the docs, like CI does.          |
 | `bin/autoclean`                | Deletes generations older than 7 days and frees space (uses `sudo`). |
