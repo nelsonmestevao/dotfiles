@@ -55,7 +55,8 @@ let
     // systemChecks "darwin" (cfg: cfg.system) darwinConfigs;
 in
 {
-  # deadnix, statix and nixfmt over every .nix file. CI runs it before the
+  # Every Nix file (deadnix, statix, nixfmt), the shell scripts (shellcheck),
+  # the zsh files (zsh -n) and the workflow (actionlint). CI runs it before the
   # builds, and bin/lint runs it here.
   lint =
     pkgs.runCommand "lint"
@@ -64,6 +65,9 @@ in
           deadnix
           statix
           nixfmt
+          shellcheck
+          zsh
+          actionlint
         ];
       }
       ''
@@ -71,6 +75,22 @@ in
         deadnix --fail .
         statix check .
         nixfmt --check $(find . -name '*.nix')
+
+        # The shell scripts: the ones in bin/ and .github/scripts/ that start
+        # with a bash or sh line, and the .sh files next to the programs. The
+        # xonsh scripts in bin/ are left to bin/test.
+        shellcheck \
+          $(grep -lE '^#!(/usr/bin/env (bash|sh)|/bin/(ba)?sh)' bin/* .github/scripts/*) \
+          $(find home/programs -name '*.sh')
+
+        # The zsh files, only read: a typo there would break every new shell.
+        for file in $(find home/programs/zsh -name '*.zsh') home/programs/zsh/zshrc; do
+          zsh -n "$file"
+        done
+
+        # The workflow, with the shell in its steps checked by shellcheck too.
+        actionlint .github/workflows/*.yml
+
         touch "$out"
       '';
 
