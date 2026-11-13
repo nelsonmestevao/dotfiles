@@ -513,7 +513,7 @@ that shell for you (`direnv allow` once).
 | `bin/lint`                     | Checks the Nix, shell, xonsh and zsh files and the workflow, like CI. |
 | `bin/format`                   | Formats every Nix file (`nix fmt`).                                  |
 | `bin/test`                     | Tests the helper scripts and checks the docs, like CI does.          |
-| `bin/autoclean [--dry-run]`    | Deletes old generations and frees space (uses `sudo`).               |
+| `bin/autoclean [--dry-run]`    | Deletes old generations and frees space (asks for your password).    |
 | `bin/setup user\|host <name>`  | Adds a user or host (see [Installing](#-installing)).                |
 | `bin/new program <name>`       | Creates a Home Manager program in `home/programs/<name>/`.           |
 | `bin/new module <name>`        | Creates a NixOS module in `system/modules/nixos/<name>/`.            |

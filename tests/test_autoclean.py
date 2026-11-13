@@ -6,6 +6,7 @@ nothing is deleted.
 import json
 import os
 from pathlib import Path
+import shutil
 import subprocess
 import tempfile
 import unittest
@@ -26,11 +27,15 @@ class AutocleanTests(unittest.TestCase):
     def setUp(self):
         temp = tempfile.TemporaryDirectory(prefix='autoclean test ')
         self.addCleanup(temp.cleanup)
-        self.log = Path(temp.name) / 'nh.log'
-        stub = Path(temp.name) / 'nh'
-        stub.write_text(f'#!/bin/sh\necho "$@" > "{self.log}"\n')
-        stub.chmod(0o755)
-        self.env = dict(os.environ, PATH=f'{temp.name}{os.pathsep}{os.environ["PATH"]}')
+        self.dir = Path(temp.name)
+        self.log = self.dir / 'nh.log'
+        self.stub('nh', f'echo "$@" > "{self.log}"')
+        self.env = dict(os.environ, PATH=f'{self.dir}{os.pathsep}{os.environ["PATH"]}')
+
+    def stub(self, name, body):
+        path = self.dir / name
+        path.write_text(f'#!/bin/sh\n{body}\n')
+        path.chmod(0o755)
 
     def run_script(self, *args, env=None):
         return subprocess.run([str(SCRIPT), *args], env=env or self.env, text=True, capture_output=True)
@@ -49,7 +54,15 @@ class AutocleanTests(unittest.TestCase):
 
     def test_a_dry_run_deletes_nothing(self):
         self.assertEqual(self.run_script('--dry-run').returncode, 0)
-        self.assertEqual(self.asked()[-1], '--dry')
+        self.assertEqual(self.asked(), ['clean', 'all', *keep_rule(), '--dry'])
+
+    def test_without_the_rule_nothing_is_cleaned(self):
+        # Without the rule nh would keep only one generation and delete the
+        # project gcroots too, so a failed read must stop everything.
+        self.stub('nix', 'echo "nix broke" >&2; exit 1')
+        result = self.run_script()
+        self.assertNotEqual(result.returncode, 0)
+        self.assertFalse(self.log.exists(), 'nh must not run without the rule')
 
     def test_help_prints_the_usage(self):
         result = self.run_script('--help')
@@ -66,7 +79,10 @@ class AutocleanTests(unittest.TestCase):
                 self.assertFalse(self.log.exists(), 'nothing may run on a bad argument')
 
     def test_a_missing_nh_says_what_to_do(self):
-        result = self.run_script(env=dict(self.env, PATH='/usr/bin:/bin'))
+        # Just what the script needs to start, wherever bash lives (on NixOS
+        # it isn't in /bin), and no nh.
+        bash = os.path.dirname(shutil.which('bash'))
+        result = self.run_script(env=dict(self.env, PATH=f'{bash}{os.pathsep}/usr/bin{os.pathsep}/bin'))
         self.assertEqual(result.returncode, 1)
         self.assertIn('nh is missing', result.stderr)
 

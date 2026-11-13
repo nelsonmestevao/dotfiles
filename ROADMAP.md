@@ -1380,9 +1380,9 @@ delete and deletes nothing. The README has a
 "Rolling back" section. Still open: following the walkthrough once on
 framework.
 
-**Evidence:** [bin/autoclean](bin/autoclean) uses seven-day deletion while
-[system/nixos.nix](system/nixos.nix) configures monthly collection with 31-day
-retention. The README explains build and switch but has no recovery procedure.
+**Evidence (before this task):** `bin/autoclean` used seven-day deletion while
+`system/nixos.nix` set up monthly collection with 31-day retention. The README
+explained build and switch but had no recovery procedure.
 
 **Plan:**
 

@@ -31,5 +31,17 @@ if ! command -v nh > /dev/null; then
   exit 1
 fi
 
-read -ra keep <<< "$(nix --extra-experimental-features nix-command eval --raw --file config/cleanup.nix --apply toString)"
+# Read the rule into a variable first: a failed `nix eval` then stops the
+# script here. Without the rule, nh would fall back to its own defaults, which
+# keep far less and delete the project gcroots too.
+rule=$(nix --extra-experimental-features nix-command eval --raw --file config/cleanup.nix --apply toString)
+read -ra keep <<< "$rule"
+case " ${keep[*]} " in
+  *" --keep-since "*" --no-gcroots "*) ;;
+  *)
+    echo "bin/autoclean: config/cleanup.nix gave no usable rule ('$rule'), so nothing was cleaned." >&2
+    exit 1
+    ;;
+esac
+
 exec nh clean all "${keep[@]}" ${dry[@]+"${dry[@]}"}
