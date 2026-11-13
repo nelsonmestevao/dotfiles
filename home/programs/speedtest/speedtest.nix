@@ -3,7 +3,5 @@
   ...
 }:
 {
-  home.packages = with pkgs; [
-    speedtest-cli
-  ];
+  home.packages = [ pkgs.speedtest-cli ];
 }

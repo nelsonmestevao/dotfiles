@@ -3,8 +3,5 @@
   ...
 }:
 {
-  # ── Packages ──────────────────────────────────────────────────────────
-  home.packages = with pkgs; [
-    github-copilot-cli
-  ];
+  home.packages = [ pkgs.github-copilot-cli ];
 }

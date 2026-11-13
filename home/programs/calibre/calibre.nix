@@ -3,8 +3,5 @@
   ...
 }:
 {
-  # ── Packages ──────────────────────────────────────────────────────────
-  home.packages = with pkgs; [
-    calibre
-  ];
+  home.packages = [ pkgs.calibre ];
 }

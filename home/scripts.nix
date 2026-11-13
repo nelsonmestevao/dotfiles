@@ -1,8 +1,8 @@
-# Small shell commands installed alongside the package list, kept out of
+# Small shell commands installed with the package list, kept out of
 # packages.nix so that file stays a plain list of package names.
 #
-# Returns a list of derivations, appended to `home.packages` by packages.nix —
-# so these inherit its `dotfiles.packages.enable` gate rather than restating it.
+# packages.nix adds this list to `home.packages`, so these are installed only
+# when `dotfiles.packages.enable` is on, with no check of their own.
 { pkgs }:
 let
   # Pick two generations with fzf and diff them with nvd. Home-manager and
@@ -39,20 +39,15 @@ let
     '';
 in
 [
-  (
-    let
-      flakeLockPath = ../flake.lock;
-    in
-    pkgs.writeShellScriptBin "pkgversion" ''
-      PACKAGE="$1"
-      REVISION="$2"
+  (pkgs.writeShellScriptBin "pkgversion" ''
+    PACKAGE="$1"
+    REVISION="$2"
 
-      [[ -z "$PACKAGE" ]] && echo "Package name is required" && exit 1
-      [[ -z "$REVISION" ]] && REVISION=$(${pkgs.jq}/bin/jq -r '.nodes.nixpkgs.original.ref' ${flakeLockPath})
+    [[ -z "$PACKAGE" ]] && echo "Package name is required" && exit 1
+    [[ -z "$REVISION" ]] && REVISION=$(${pkgs.jq}/bin/jq -r '.nodes.nixpkgs.original.ref' ${../flake.lock})
 
-      echo $(nix eval --raw "github:NixOS/nixpkgs/$REVISION#$PACKAGE.version")
-    ''
-  )
+    echo $(nix eval --raw "github:NixOS/nixpkgs/$REVISION#$PACKAGE.version")
+  '')
 
   (pkgs.writeShellScriptBin "gensecret" ''
     SIZE="$1"

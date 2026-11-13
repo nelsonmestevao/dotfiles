@@ -4,22 +4,20 @@
   mkSymlink,
   ...
 }:
-{
-  home.packages = with pkgs; [
-    pkgs.unstable.vscode
-  ];
-
+let
   # VS Code reads its user config from ~/Library/Application Support on macOS,
   # but from $XDG_CONFIG_HOME (~/.config) on Linux.
-  home.file = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
-    "Library/Application Support/Code/User/settings.json" = mkSymlink "settings.json";
-    "Library/Application Support/Code/User/keybindings.json" = mkSymlink "keybindings.json";
-    "Library/Application Support/Code/User/tasks.json" = mkSymlink "tasks.json";
-  };
+  userFiles =
+    folder:
+    lib.genAttrs' [ "settings.json" "keybindings.json" "tasks.json" ] (
+      file: lib.nameValuePair "${folder}/${file}" (mkSymlink file)
+    );
+in
+{
+  home.packages = [ pkgs.unstable.vscode ];
 
-  xdg.configFile = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
-    "Code/User/settings.json" = mkSymlink "settings.json";
-    "Code/User/keybindings.json" = mkSymlink "keybindings.json";
-    "Code/User/tasks.json" = mkSymlink "tasks.json";
-  };
+  home.file = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin (
+    userFiles "Library/Application Support/Code/User"
+  );
+  xdg.configFile = lib.mkIf pkgs.stdenv.hostPlatform.isLinux (userFiles "Code/User");
 }

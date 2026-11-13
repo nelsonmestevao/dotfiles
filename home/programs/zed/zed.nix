@@ -4,9 +4,7 @@
   ...
 }:
 {
-  home.packages = with pkgs; [
-    zed-editor
-  ];
+  home.packages = [ pkgs.zed-editor ];
 
   xdg.configFile."zed/settings.json" = mkSymlink "settings.json";
   xdg.configFile."zed/keymap.json" = mkSymlink "keymap.json";

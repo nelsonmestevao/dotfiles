@@ -3,7 +3,5 @@
   ...
 }:
 {
-  home.packages = with pkgs; [
-    shotcut
-  ];
+  home.packages = [ pkgs.shotcut ];
 }

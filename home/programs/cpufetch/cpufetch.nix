@@ -3,7 +3,5 @@
   ...
 }:
 {
-  home.packages = with pkgs; [
-    cpufetch
-  ];
+  home.packages = [ pkgs.cpufetch ];
 }

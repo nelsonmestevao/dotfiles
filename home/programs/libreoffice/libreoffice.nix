@@ -3,7 +3,5 @@
   ...
 }:
 {
-  home.packages = with pkgs; [
-    libreoffice
-  ];
+  home.packages = [ pkgs.libreoffice ];
 }

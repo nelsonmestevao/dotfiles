@@ -3,7 +3,5 @@
   ...
 }:
 {
-  home.packages = with pkgs; [
-    ctop
-  ];
+  home.packages = [ pkgs.ctop ];
 }

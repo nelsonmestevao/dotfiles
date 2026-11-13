@@ -4,9 +4,7 @@
   ...
 }:
 {
-  home.packages = with pkgs; [
-    direnv
-  ];
+  home.packages = [ pkgs.direnv ];
 
   xdg.configFile."direnv/direnvrc" = mkSymlink "direnvrc";
 }

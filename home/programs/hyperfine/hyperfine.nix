@@ -3,7 +3,5 @@
   ...
 }:
 {
-  home.packages = with pkgs; [
-    hyperfine
-  ];
+  home.packages = [ pkgs.hyperfine ];
 }

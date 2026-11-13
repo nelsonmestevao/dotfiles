@@ -3,7 +3,5 @@
   ...
 }:
 {
-  home.packages = with pkgs; [
-    onefetch
-  ];
+  home.packages = [ pkgs.onefetch ];
 }

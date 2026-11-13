@@ -3,7 +3,5 @@
   ...
 }:
 {
-  home.packages = with pkgs; [
-    shfmt
-  ];
+  home.packages = [ pkgs.shfmt ];
 }

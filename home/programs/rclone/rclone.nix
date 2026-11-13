@@ -3,7 +3,5 @@
   ...
 }:
 {
-  home.packages = with pkgs; [
-    rclone
-  ];
+  home.packages = [ pkgs.rclone ];
 }

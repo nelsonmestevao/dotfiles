@@ -1,5 +1,7 @@
 { lib, mkSymlink, ... }:
-with lib.hm.gvariant;
+let
+  inherit (lib.hm.gvariant) mkUint32;
+in
 {
   xdg.configFile."pop-shell/config.json" = mkSymlink "config.json";
 

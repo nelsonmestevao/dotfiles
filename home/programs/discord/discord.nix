@@ -3,7 +3,5 @@
   ...
 }:
 {
-  home.packages = with pkgs; [
-    discord
-  ];
+  home.packages = [ pkgs.discord ];
 }

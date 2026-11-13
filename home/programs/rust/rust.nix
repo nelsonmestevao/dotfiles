@@ -3,8 +3,5 @@
   ...
 }:
 {
-  # ── Packages ──────────────────────────────────────────────────────────
-  home.packages = with pkgs; [
-    rustup
-  ];
+  home.packages = [ pkgs.rustup ];
 }

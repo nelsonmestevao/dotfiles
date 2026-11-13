@@ -3,8 +3,5 @@
   ...
 }:
 {
-  # ── Packages ──────────────────────────────────────────────────────────
-  home.packages = with pkgs; [
-    pkgs.unstable.beeper
-  ];
+  home.packages = [ pkgs.unstable.beeper ];
 }

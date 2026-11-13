@@ -10,8 +10,9 @@
   home.packages = lib.optionals pkgs.stdenv.hostPlatform.isLinux [ pkgs.unstable.ghostty ];
 
   xdg.configFile."ghostty/config" = mkSymlink "config";
-  xdg.configFile."ghostty/keybindings" =
-    if pkgs.stdenv.hostPlatform.isDarwin then mkSymlink "macos" else mkSymlink "linux";
+  xdg.configFile."ghostty/keybindings" = mkSymlink (
+    if pkgs.stdenv.hostPlatform.isDarwin then "macos" else "linux"
+  );
 
   xdg.configFile."ghostty/themes/Day" = mkSymlink "themes/Day";
   xdg.configFile."ghostty/themes/Night" = mkSymlink "themes/Night";
@@ -23,5 +24,4 @@
       binding = "<Super>Return";
     };
   };
-
 }

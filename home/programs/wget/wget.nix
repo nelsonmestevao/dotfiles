@@ -3,7 +3,5 @@
   ...
 }:
 {
-  home.packages = with pkgs; [
-    wget
-  ];
+  home.packages = [ pkgs.wget ];
 }

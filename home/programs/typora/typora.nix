@@ -3,8 +3,5 @@
   ...
 }:
 {
-  # ── Packages ──────────────────────────────────────────────────────────
-  home.packages = with pkgs; [
-    typora
-  ];
+  home.packages = [ pkgs.typora ];
 }

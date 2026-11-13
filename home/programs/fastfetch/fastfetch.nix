@@ -3,7 +3,5 @@
   ...
 }:
 {
-  home.packages = with pkgs; [
-    fastfetch
-  ];
+  home.packages = [ pkgs.fastfetch ];
 }

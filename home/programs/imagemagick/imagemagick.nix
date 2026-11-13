@@ -3,7 +3,5 @@
   ...
 }:
 {
-  home.packages = with pkgs; [
-    imagemagick
-  ];
+  home.packages = [ pkgs.imagemagick ];
 }

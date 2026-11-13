@@ -4,9 +4,7 @@
   ...
 }:
 {
-  home.packages = with pkgs; [
-    texliveFull
-  ];
+  home.packages = [ pkgs.texliveFull ];
 
   home.file.".latexmkrc" = mkSymlink "latexmkrc";
 }

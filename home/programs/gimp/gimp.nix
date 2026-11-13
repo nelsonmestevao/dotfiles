@@ -3,7 +3,5 @@
   ...
 }:
 {
-  home.packages = with pkgs; [
-    gimp
-  ];
+  home.packages = [ pkgs.gimp ];
 }

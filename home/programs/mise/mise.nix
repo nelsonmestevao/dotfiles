@@ -3,9 +3,7 @@
   ...
 }:
 {
-  home.packages = with pkgs; [
-    mise
-  ];
+  home.packages = [ pkgs.mise ];
 
   home.shellAliases.mr = "mise run";
 }

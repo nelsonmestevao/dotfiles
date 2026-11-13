@@ -55,9 +55,7 @@ PROGRAM_TEMPLATE = """\
   # the arguments). Read it as config.dotfiles.programs.__NAME__.someSetting.
   # options.someSetting = lib.mkEnableOption "what it turns on";
 
-  home.packages = with pkgs; [
-    __NAME__
-  ];
+  home.packages = [ pkgs.__NAME__ ];
 
   # Config files are links into this folder (add mkSymlink to the arguments).
   # A file that isn't in the repo fails the build.

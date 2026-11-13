@@ -3,7 +3,5 @@
   ...
 }:
 {
-  home.packages = with pkgs; [
-    watchman
-  ];
+  home.packages = [ pkgs.watchman ];
 }

@@ -3,7 +3,5 @@
   ...
 }:
 {
-  home.packages = with pkgs; [
-    kamal
-  ];
+  home.packages = [ pkgs.kamal ];
 }

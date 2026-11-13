@@ -3,7 +3,5 @@
   ...
 }:
 {
-  home.packages = with pkgs; [
-    kdePackages.kdenlive
-  ];
+  home.packages = [ pkgs.kdePackages.kdenlive ];
 }

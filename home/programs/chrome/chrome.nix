@@ -3,8 +3,5 @@
   ...
 }:
 {
-  home.packages = with pkgs; [
-    # chromedriver
-    google-chrome
-  ];
+  home.packages = [ pkgs.google-chrome ];
 }

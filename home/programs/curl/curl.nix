@@ -3,7 +3,5 @@
   ...
 }:
 {
-  home.packages = with pkgs; [
-    curl
-  ];
+  home.packages = [ pkgs.curl ];
 }

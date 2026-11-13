@@ -3,7 +3,5 @@
   ...
 }:
 {
-  home.packages = with pkgs; [
-    pdfmixtool
-  ];
+  home.packages = [ pkgs.pdfmixtool ];
 }

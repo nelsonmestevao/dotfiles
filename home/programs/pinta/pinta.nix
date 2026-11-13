@@ -3,7 +3,5 @@
   ...
 }:
 {
-  home.packages = with pkgs; [
-    pinta
-  ];
+  home.packages = [ pkgs.pinta ];
 }

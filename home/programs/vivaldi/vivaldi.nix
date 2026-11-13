@@ -3,8 +3,5 @@
   ...
 }:
 {
-  # ── Packages ──────────────────────────────────────────────────────────
-  home.packages = with pkgs; [
-    vivaldi
-  ];
+  home.packages = [ pkgs.vivaldi ];
 }

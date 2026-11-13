@@ -3,7 +3,5 @@
   ...
 }:
 {
-  home.packages = with pkgs; [
-    glab
-  ];
+  home.packages = [ pkgs.glab ];
 }

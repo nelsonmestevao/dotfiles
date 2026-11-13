@@ -6,17 +6,14 @@
   ...
 }:
 let
-  # weasyprint's font-rendering pixel tests render slightly differently on
-  # darwin; the nixpkgs derivation already deselects several flaky ones but
-  # misses test_unicode_range on this snapshot, so the build fails on macOS.
-  # Deselect it there too, leaving the Linux build (and its binary cache) alone.
-  # Nothing can tell when this may go, because it skips every test: try
-  # without it after nixpkgs bumps weasyprint.
+  # On macOS, weasyprint's test_unicode_range fails: its font pixel tests draw
+  # a little differently there, and nixpkgs skips some of them but not this
+  # one. So the tests are off on macOS only, which keeps the Linux build in the
+  # binary cache. No check can say when this may go, since no test runs: try
+  # without it after nixpkgs updates weasyprint.
   weasyprint =
     if pkgs.stdenv.hostPlatform.isDarwin then
-      pkgs.python313Packages.weasyprint.overridePythonAttrs (_old: {
-        doCheck = false;
-      })
+      pkgs.python313Packages.weasyprint.overridePythonAttrs { doCheck = false; }
     else
       pkgs.python313Packages.weasyprint;
 in
@@ -24,23 +21,14 @@ in
   home.packages =
     with pkgs;
     [
-      # elixir_1_18
-      # erlang_27
-
-      ## pdf documents
-      # k2pdfopt
+      # pdf documents
       pdftk
       weasyprint
 
-      ## image processing and optimization
+      # image processing and optimization
       file
       image_optim
-      # gifsicle
-      # jpegoptim
-      # libwebp
       svgo
-      # optipng
-      # pngquant
 
       (pkgs.writeShellScriptBin "runex" ''
         FILE="$1"
@@ -56,10 +44,10 @@ in
       '')
     ]
     ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
-      ## system utils (linux only)
-      pkgs.inotify-tools
+      # system utils
+      inotify-tools
 
-      ## pdf documents (linux only)
+      # pdf documents
       wkhtmltopdf
     ];
 

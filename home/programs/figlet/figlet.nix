@@ -3,7 +3,5 @@
   ...
 }:
 {
-  home.packages = with pkgs; [
-    figlet
-  ];
+  home.packages = [ pkgs.figlet ];
 }

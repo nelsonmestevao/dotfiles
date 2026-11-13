@@ -3,7 +3,5 @@
   ...
 }:
 {
-  home.packages = with pkgs; [
-    shellcheck
-  ];
+  home.packages = [ pkgs.shellcheck ];
 }
