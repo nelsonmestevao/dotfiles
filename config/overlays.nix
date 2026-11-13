@@ -6,13 +6,13 @@
 # overlay here.
 #
 # A package patched here is wrapped in `final.expiry.expiresWhen` (see
-# lib/expiry.nix), so it warns once upstream has caught up and the patch can
-# go. It is also listed in lib/packages.nix, so it can be built alone.
+# lib/expiry.nix), so it warns once the fix is out and the patch can go. It is
+# also listed in lib/packages.nix, so it can be built on its own.
 inputs:
 let
-  # True once nixpkgs' own copy of a GNOME extension is made for the GNOME
-  # Shell that nixpkgs ships. `gnomeExtensions` also holds extensions made
-  # for older shells, so finding one there says nothing.
+  # True once nixpkgs has a copy of a GNOME extension made for the GNOME
+  # version it ships. `gnomeExtensions` also holds copies made for older GNOME
+  # versions, so finding one there proves nothing.
   madeForThisGnome =
     prev: extension:
     (prev."gnome${prev.lib.versions.major prev.gnome-shell.version}Extensions" or { })
@@ -31,9 +31,9 @@ in
   (final: prev: {
     # Herdr rings the tab's focused pane even while a side panel mod (notes,
     # files, graph) or a dialog has the keyboard. The patch drops the ring then.
-    # Fixed upstream in 558cf56 (herdrdev/herdr-app#362), after 0.1.12. A
-    # snapshot between releases may already have it, so this warns on any new
-    # version: that is when someone has to look.
+    # Fixed in herdr-app's commit 558cf56 (herdrdev/herdr-app#362), after
+    # 0.1.12. A build between releases may already have it, so this warns on
+    # any new version: that is when someone has to look.
     herdr-app =
       final.expiry.expiresWhen (prev.herdr-app.version != "0.1.11")
         "herdr-app is now ${prev.herdr-app.version}. If it has upstream commit 558cf56, drop its patch in config/overlays.nix."
