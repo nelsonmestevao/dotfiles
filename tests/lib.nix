@@ -245,7 +245,7 @@ let
           homes = lib.attrNames assembly.homeConfigs;
           nixos = lib.attrNames assembly.nixosConfigs;
           darwin = lib.attrNames assembly.darwinConfigs;
-          systems = assembly.checkSystems;
+          systems = assembly.hostSystems;
         };
       expected = {
         homes = [
@@ -270,7 +270,7 @@ let
             platform = "nixoss";
           })) users;
         in
-        broken.checkSystems == broken.toolSystems && !broken.dataIsRight;
+        broken.hostSystems == broken.toolSystems && !broken.dataIsRight;
       expected = true;
     };
     aHomeGetsItsEntriesAndArguments = {
