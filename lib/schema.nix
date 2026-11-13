@@ -21,10 +21,6 @@ let
 
   # ── Types ──────────────────────────────────────────────────────────────────
 
-  # The systems nixpkgs supports in flakes. A host's `system` must be one of
-  # them, and `systemsIn` below skips any other.
-  systems = lib.systems.flakeExposed;
-
   # The OS each platform's system has to run.
   osFor = {
     nixos = "linux";
@@ -38,7 +34,7 @@ let
 
   hostFields = {
     system = mkOption {
-      type = types.enum systems;
+      type = types.enum lib.systems.flakeExposed;
       description = "The Nix system the host runs, like \"x86_64-linux\".";
     };
     platform = mkOption {
@@ -154,7 +150,7 @@ let
 
   # A user's own argument by one of these names would replace it, and break
   # modules far from the mistake. The module system and Home Manager pass the
-  # last few on their own.
+  # rest on their own.
   argumentsTheModulesAlreadyGet =
     { users, ... }:
     let
@@ -165,6 +161,10 @@ let
         "options"
         "modulesPath"
         "osConfig"
+        "specialArgs"
+        "extendModules"
+        "moduleType"
+        "_class"
       ];
     in
     inEach users (
@@ -233,13 +233,4 @@ in
     }:
     problemsIn (typed { inherit hosts users; }) root;
 
-  # The systems the hosts run, read without checking anything else, for the
-  # outputs that have to work while the data is wrong.
-  systemsIn =
-    hosts:
-    lib.unique (
-      lib.filter (system: lib.elem system systems) (
-        map (host: host.system or null) (lib.filter lib.isAttrs (lib.attrValues hosts))
-      )
-    );
 }

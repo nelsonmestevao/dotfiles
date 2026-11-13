@@ -5,6 +5,7 @@
   home-manager,
   self,
   checkedData,
+  dataIsRight,
   nixosConfigs,
   darwinConfigs,
   homeConfigs,
@@ -20,10 +21,6 @@ let
   libTestsReport = lib.concatMapStringsSep "\n" (
     case: "  ${case.name}: expected ${show case.expected}, got ${show case.result}"
   ) failedLibTests;
-
-  # Only a mistake in the host or user data keeps the configurations from
-  # being listed. Any other error fails the check of the configuration it is in.
-  dataIsRight = (builtins.tryEval checkedData).success;
 
   # The system each configuration runs, from the checked host data. Asking
   # the configuration would evaluate its modules, and a broken Mac module

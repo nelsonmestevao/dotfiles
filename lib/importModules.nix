@@ -17,14 +17,14 @@ in
 lib.mapAttrsToList (
   name: _:
   let
-    file = "${folder}/${name}/${name}.nix";
+    file = ../. + "/${folder}/${name}/${name}.nix";
   in
-  lib.throwIfNot (builtins.pathExists (../. + "/${file}"))
-    "${folder}/${name} has no ${name}.nix. Add it, or start the folder's name with _ to leave it out."
+  lib.throwIfNot (builtins.pathExists file)
+    "${folder}/${name} has no ${name}.nix. Add it (and `git add` it: the flake only sees tracked files), or start the folder's name with _ to leave it out."
     (
       wrap {
         inherit name;
         folder = "${folder}/${name}";
-      } (import (../. + "/${file}"))
+      } (import file)
     )
 ) (lib.filterAttrs isModule (builtins.readDir dir))

@@ -367,11 +367,13 @@ Leave both out and commits aren't signed.
 
 `lib/schema.nix` checks both files before any configuration is built. A
 mistake stops every configuration with the host or user and the field in the
-message. The dev shell still opens, so `bin/` keeps working while you fix it.
+message, as one failing check named `data`. The dev shell and the formatter
+don't depend on the data, so `bin/` keeps working while you fix it.
 
 First, each field must exist, be there when required, and hold the right kind
 of value. A misspelled field, a missing `stateVersion`, `platform = "nixoss"`,
-or a user or role listed twice fails here, one mistake per run:
+a host with no users, or a user or role listed twice fails here, one mistake
+per run:
 
 ```
 error: The option `hosts.framework.rolse' does not exist. …
@@ -384,8 +386,9 @@ Then the entries must fit together, and every broken rule is listed at once:
 - the `platform` fits the `system`, and a Mac has `darwinStateVersion`;
 - no role has the same name as a host;
 - a user's `extraSpecialArgs` don't take a name the modules already get:
-  those in `lib/homeArguments.nix`, and `lib`, `pkgs`, `config`, `options`,
-  `modulesPath` and `osConfig`;
+  those in `lib/homeArguments.nix`, and the ones the module system and Home
+  Manager pass, like `lib`, `pkgs` and `config` (the full list is in
+  `lib/schema.nix`);
 - the files exist: `home/users/<username>.nix`, and for a host with a
   `platform`, `system/hosts/<hostname>.nix` (plus `hardware.nix` on NixOS).
 
@@ -540,7 +543,8 @@ say how.
 
 `tests/lib.nix` tests the helpers in `lib/` and `home/lib/` against the
 made-up repository in `tests/fixtures/`. It is the flake check `lib-tests`, so
-`bin/check --eval` runs it, and a failure names its case. To run it alone:
+`bin/check --eval` runs it, and a failure names its case, even one that
+throws. To run it alone:
 
 ```shell
 nix build --no-link ".#checks.$(nix config show system).lib-tests"
