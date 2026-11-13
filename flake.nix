@@ -90,8 +90,9 @@
       # built alone, like `nix build .#git-sim`. lib/packages.nix finds them.
       packages = lib.genAttrs hostSystems (import ./lib/packages.nix { inherit nixpkgs overlays; });
 
-      # What the bin/ scripts and the lint check need. The scripts start in
-      # this shell on their own; `nix develop` or direnv (.envrc) opens it.
+      # What the bin/ scripts need; the lint check brings its own tools (see
+      # lib/checks.nix). The scripts start in this shell on their own, and
+      # `nix develop` or direnv (.envrc) opens it.
       devShells = lib.genAttrs toolSystems (
         system:
         let

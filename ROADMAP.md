@@ -1661,9 +1661,9 @@ Home Manager, and the managed Mac; diagnosis works without a successful switch.
 
 ### [ ] CI-001 Add fast checks for the files that actually change — P2 · M
 
-**Progress:** the lint check now runs shellcheck on the shell scripts, each
-xonsh script in `bin/` with `--help` (which fails on a syntax error), `zsh -n`
-on the zsh files, and actionlint on the workflow. A file in `bin/` that is
+**Progress:** the lint check now runs shellcheck on the shell scripts, parses
+each xonsh script in `bin/` and `scripts/` without running it, runs `zsh -n` on
+the zsh files, and actionlint on the workflow. A file in `bin/` that is
 neither kind fails it. Each was checked by breaking a file of its kind.
 `bin/test` runs in CI since #34. Still open: one formatter for every file kind
 (step 1), zsh code written inside Nix strings, Lua and the Herdr JS test, and
