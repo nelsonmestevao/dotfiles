@@ -77,7 +77,7 @@ run Mac-only commands and paste the output back.
   (`nix build .#<name>`), and says where it runs with `meta.platforms`.
 - **Wrap the override someone would delete** in
   `pkgs.expiry.untilUpstreamHas` or `pkgs.expiry.expiresWhen`
-  (`lib/expiry.nix`), so it warns once upstream has caught up. An override
+  (`lib/expiry.nix`), so it warns once the fix it waits for is out. An override
   inside a package file that goes away with it needs nothing. A package
   patched in `config/overlays.nix` is also listed in `lib/packages.nix`.
 - **Never change `stateVersion` or `darwinStateVersion`** on an existing host.
