@@ -1,4 +1,4 @@
-#!/usr/bin/env -S nix --extra-experimental-features nix-command --extra-experimental-features flakes develop --command xonsh
+#!/usr/bin/env -S nix --extra-experimental-features nix-command --extra-experimental-features flakes develop --command xonsh --no-rc
 """
 Rebuilds the system and home configuration.
 
@@ -20,43 +20,48 @@ Options:
                     for nix-darwin and home.
 """
 import os
+import subprocess
 import sys
 
-from docopt import docopt
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
+from common import fail, failed, run, with_flakes
 
-os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+with_flakes()
 
-# Enable flake features for the `nh`/`nix` calls below.
-$NIX_CONFIG = 'experimental-features = nix-command flakes'
 
-def rebuild_system(action='switch'):
-  if sys.platform == 'darwin':
-    nh darwin switch .
-  else:
-    #nixos-rebuild switch --use-remote-sudo --flake '.'
-    nh os @(action) .
+def rebuild_system(action):
+    if sys.platform == 'darwin':
+        nh darwin switch .
+    else:
+        nh os @(action) .
 
-def rebuild_home(action='switch'):
-  # home-manager switch --flake '.'
-  # home-manager switch --flake .#nelson@framework
-  nh home switch .
+
+def rebuild_home(action):
+    nh home switch .
+
+
+TASKS = {
+    'os': ('system', rebuild_system),
+    'home': ('home', rebuild_home),
+}
+
 
 def main(args):
     action = 'boot' if args['--boot'] else 'switch'
+    chosen = [task for task in TASKS if args[task]] or list(TASKS)
 
-    tasks = {
-        'os': rebuild_system,
-        'home': rebuild_home,
-    }
+    for done, task in enumerate(chosen):
+        name, rebuild = TASKS[task]
+        try:
+            rebuild(action)
+        except subprocess.CalledProcessError as error:
+            # Say what was left undone, so nobody thinks the rest went through.
+            skipped = [TASKS[t][0] for t in chosen[done + 1:]]
+            note = f"; {' and '.join(skipped)} not switched" if skipped else ""
+            fail(f"{failed(error)} failed{note}.")
 
-    run_all = not any(args[task] for task in tasks)
-
-    for task, func in tasks.items():
-        if args[task] or run_all:
-            func(action)
 
 if __name__ == '__main__':
-    arguments = docopt(__doc__.format(program=__file__), version=f'{os.path.basename(__file__)} script version 1.0')
-    main(arguments)
+    run(main, __doc__, __file__)
 
 # vim: ft=xonsh

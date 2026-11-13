@@ -47,7 +47,8 @@ class CheckTests(unittest.TestCase):
         self.fakes = Path(self.temp.name) / 'fake'
         self.env = dict(os.environ, PYTHONDONTWRITEBYTECODE='1', FAKE_DIR=str(self.fakes),
                         PATH=str(self.fakes) + os.pathsep + os.environ['PATH'])
-        self.write('bin/check', (SOURCE / 'bin/check').read_text())
+        for name in ('bin/check', 'scripts/common.xsh'):
+            self.write(name, (SOURCE / name).read_text())
         self.fake('nix', NIX)
         self.fake('nix-diff', 'echo "$*" >> "$FAKE_DIR/nix-diff.log"')
         self.run_command('git', 'init', '-q')
