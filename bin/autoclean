@@ -1,7 +1,28 @@
 #!/usr/bin/env bash
+# Deletes old generations in every profile on this machine, the system's and
+# every user's, and frees the space they held. It keeps the last 31 days, and
+# at least the newest 3 of each profile, however old. NixOS runs the same
+# cleanup once a month (system/nixos.nix).
+#
+# With --dry-run it lists what it would delete and deletes nothing. Both ask
+# for your password: nh needs root to read the system's profiles.
 set -euo pipefail
 
-# System profiles (NixOS/nix-darwin generations) are owned by root, while
-# standalone home-manager generations live in the user profile.
-sudo nix-collect-garbage -d --delete-older-than 7d
-nix-collect-garbage -d --delete-older-than 7d
+USAGE="Usage: bin/autoclean [--dry-run]"
+KEEP=(--keep-since 31d --keep 3)
+
+if [ $# -eq 0 ]; then
+  dry=()
+elif [ $# -eq 1 ] && [ "$1" = --dry-run ]; then
+  dry=(--dry)
+elif [ $# -eq 1 ] && { [ "$1" = -h ] || [ "$1" = --help ]; }; then
+  echo "$USAGE"
+  exit 0
+else
+  echo "$USAGE" >&2
+  exit 1
+fi
+
+cd "$(dirname "$0")/.."
+exec nix --extra-experimental-features 'nix-command flakes' develop --command \
+  nh clean all "${KEEP[@]}" ${dry[@]+"${dry[@]}"}
