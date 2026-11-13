@@ -3,5 +3,7 @@
   ...
 }:
 {
-  home.packages = [ pkgs.digikam ];
+  home.packages = with pkgs; [
+    digikam
+  ];
 }

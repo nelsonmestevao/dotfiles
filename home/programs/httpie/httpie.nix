@@ -3,5 +3,7 @@
   ...
 }:
 {
-  home.packages = [ pkgs.httpie ];
+  home.packages = with pkgs; [
+    httpie
+  ];
 }

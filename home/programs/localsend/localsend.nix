@@ -3,5 +3,7 @@
   ...
 }:
 {
-  home.packages = [ pkgs.localsend ];
+  home.packages = with pkgs; [
+    localsend
+  ];
 }

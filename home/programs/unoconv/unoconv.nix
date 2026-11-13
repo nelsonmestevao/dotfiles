@@ -3,5 +3,7 @@
   ...
 }:
 {
-  home.packages = [ pkgs.unoconv ];
+  home.packages = with pkgs; [
+    unoconv
+  ];
 }

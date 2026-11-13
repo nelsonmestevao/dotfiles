@@ -3,5 +3,7 @@
   ...
 }:
 {
-  home.packages = [ pkgs.colima ];
+  home.packages = with pkgs; [
+    colima
+  ];
 }

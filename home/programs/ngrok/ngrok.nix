@@ -3,5 +3,7 @@
   ...
 }:
 {
-  home.packages = [ pkgs.ngrok ];
+  home.packages = with pkgs; [
+    ngrok
+  ];
 }

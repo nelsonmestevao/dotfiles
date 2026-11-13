@@ -3,5 +3,7 @@
   ...
 }:
 {
-  home.packages = [ pkgs.mysql84 ];
+  home.packages = with pkgs; [
+    mysql84
+  ];
 }

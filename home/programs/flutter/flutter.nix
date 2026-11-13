@@ -3,5 +3,7 @@
   ...
 }:
 {
-  home.packages = [ pkgs.flutter ];
+  home.packages = with pkgs; [
+    flutter
+  ];
 }

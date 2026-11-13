@@ -3,5 +3,7 @@
   ...
 }:
 {
-  home.packages = [ pkgs.vivaldi ];
+  home.packages = with pkgs; [
+    vivaldi
+  ];
 }

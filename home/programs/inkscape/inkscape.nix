@@ -3,5 +3,7 @@
   ...
 }:
 {
-  home.packages = [ pkgs.inkscape ];
+  home.packages = with pkgs; [
+    inkscape
+  ];
 }

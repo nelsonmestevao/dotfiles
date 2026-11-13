@@ -4,7 +4,9 @@
   ...
 }:
 {
-  home.packages = [ pkgs.openssh ];
+  home.packages = with pkgs; [
+    openssh
+  ];
 
   home.file.".ssh/config" = mkSymlink "config";
 }

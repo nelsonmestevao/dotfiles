@@ -3,5 +3,7 @@
   ...
 }:
 {
-  home.packages = [ pkgs.terraform ];
+  home.packages = with pkgs; [
+    terraform
+  ];
 }

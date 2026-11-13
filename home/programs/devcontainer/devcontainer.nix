@@ -3,5 +3,7 @@
   ...
 }:
 {
-  home.packages = [ pkgs.devcontainer ];
+  home.packages = with pkgs; [
+    devcontainer
+  ];
 }

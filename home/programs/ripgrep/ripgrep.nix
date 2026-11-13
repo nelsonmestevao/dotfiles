@@ -3,5 +3,7 @@
   ...
 }:
 {
-  home.packages = [ pkgs.ripgrep ];
+  home.packages = with pkgs; [
+    ripgrep
+  ];
 }

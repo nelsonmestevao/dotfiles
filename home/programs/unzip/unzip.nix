@@ -3,5 +3,7 @@
   ...
 }:
 {
-  home.packages = [ pkgs.unzip ];
+  home.packages = with pkgs; [
+    unzip
+  ];
 }

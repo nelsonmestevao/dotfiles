@@ -14,7 +14,9 @@ let
     );
 in
 {
-  home.packages = [ pkgs.unstable.vscode ];
+  home.packages = with pkgs; [
+    pkgs.unstable.vscode
+  ];
 
   home.file = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin (
     userFiles "Library/Application Support/Code/User"

@@ -3,5 +3,7 @@
   ...
 }:
 {
-  home.packages = [ pkgs.glow ];
+  home.packages = with pkgs; [
+    glow
+  ];
 }

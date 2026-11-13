@@ -5,7 +5,9 @@
 }:
 {
   # `orca-app`, not `orca`, which is GNOME's screen reader (see the overlay).
-  home.packages = [ pkgs.orca-app ];
+  home.packages = with pkgs; [
+    orca-app
+  ];
 
   # Orca keeps its settings in a SQLite profile database, so there is no
   # config file to manage. Its "Import from Warp" button scans this folder;

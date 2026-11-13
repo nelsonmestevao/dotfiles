@@ -3,5 +3,7 @@
   ...
 }:
 {
-  home.packages = [ pkgs.thunderbird ];
+  home.packages = with pkgs; [
+    thunderbird
+  ];
 }

@@ -3,5 +3,7 @@
   ...
 }:
 {
-  home.packages = [ pkgs.exiftool ];
+  home.packages = with pkgs; [
+    exiftool
+  ];
 }

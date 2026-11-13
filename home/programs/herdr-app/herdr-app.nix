@@ -47,7 +47,12 @@ in
 {
   # On macOS, Herdr.app installs and updates itself (herdr-app, hc and
   # herdr-core in ~/.local/bin), so Nix only links the config there.
-  home.packages = lib.optionals (!isDarwin) [ pkgs.herdr-app ];
+  home.packages = lib.optionals (!isDarwin) (
+    with pkgs;
+    [
+      herdr-app
+    ]
+  );
 
   # Herdr writes through these links (settings, zoom, theme picks), but it
   # doesn't see edits made through them while running. After changing a file

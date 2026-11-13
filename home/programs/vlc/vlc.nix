@@ -3,5 +3,7 @@
   ...
 }:
 {
-  home.packages = [ pkgs.vlc ];
+  home.packages = with pkgs; [
+    vlc
+  ];
 }

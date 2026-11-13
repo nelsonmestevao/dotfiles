@@ -3,5 +3,7 @@
   ...
 }:
 {
-  home.packages = [ pkgs.obsidian ];
+  home.packages = with pkgs; [
+    obsidian
+  ];
 }

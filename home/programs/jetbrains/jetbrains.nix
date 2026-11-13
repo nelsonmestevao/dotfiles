@@ -4,7 +4,9 @@
   ...
 }:
 {
-  home.packages = [ pkgs.jetbrains.datagrip ];
+  home.packages = with pkgs; [
+    jetbrains.datagrip
+  ];
 
   home.file.".ideavimrc" = mkSymlink "ideavimrc";
 }

@@ -3,5 +3,7 @@
   ...
 }:
 {
-  home.packages = [ pkgs.slack ];
+  home.packages = with pkgs; [
+    slack
+  ];
 }

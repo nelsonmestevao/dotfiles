@@ -3,5 +3,7 @@
   ...
 }:
 {
-  home.packages = [ pkgs.typora ];
+  home.packages = with pkgs; [
+    typora
+  ];
 }

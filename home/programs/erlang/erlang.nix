@@ -1,8 +1,13 @@
 {
+  pkgs,
   mkSymlink,
   ...
 }:
 {
+  home.packages = with pkgs; [
+    # erlang_27
+  ];
+
   home.sessionVariables = {
     KERL_BUILD_DOCS = "yes";
     KERL_INSTALL_HTMLDOCS = "yes";

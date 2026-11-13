@@ -4,7 +4,9 @@
   ...
 }:
 {
-  home.packages = [ pkgs.bat ];
+  home.packages = with pkgs; [
+    bat
+  ];
 
   xdg.configFile."bat/config" = mkSymlink "config";
 

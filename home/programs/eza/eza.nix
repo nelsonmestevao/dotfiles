@@ -3,5 +3,7 @@
   ...
 }:
 {
-  home.packages = [ pkgs.eza ];
+  home.packages = with pkgs; [
+    eza
+  ];
 }

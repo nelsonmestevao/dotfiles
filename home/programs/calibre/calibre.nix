@@ -3,5 +3,7 @@
   ...
 }:
 {
-  home.packages = [ pkgs.calibre ];
+  home.packages = with pkgs; [
+    calibre
+  ];
 }

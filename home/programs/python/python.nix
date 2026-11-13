@@ -6,7 +6,9 @@
   ...
 }:
 {
-  home.packages = [ pkgs.python314 ];
+  home.packages = with pkgs; [
+    python314
+  ];
 
   home.file.".default-python-packages" = lib.mkIf config.dotfiles.programs.mise.enable (
     mkSymlink "default-python-packages"

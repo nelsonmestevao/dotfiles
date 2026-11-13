@@ -3,5 +3,7 @@
   ...
 }:
 {
-  home.packages = [ pkgs.typst ];
+  home.packages = with pkgs; [
+    typst
+  ];
 }

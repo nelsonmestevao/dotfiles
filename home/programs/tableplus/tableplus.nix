@@ -5,5 +5,7 @@
 {
   platforms = [ "linux" ];
 
-  home.packages = [ pkgs.tableplus ];
+  home.packages = with pkgs; [
+    tableplus
+  ];
 }

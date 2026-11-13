@@ -4,7 +4,9 @@
   ...
 }:
 {
-  home.packages = [ pkgs.jujutsu ];
+  home.packages = with pkgs; [
+    jujutsu
+  ];
 
   xdg.configFile."jj/config.toml" = mkSymlink "config.toml";
 }

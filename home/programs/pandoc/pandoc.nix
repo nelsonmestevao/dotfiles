@@ -3,5 +3,7 @@
   ...
 }:
 {
-  home.packages = [ pkgs.pandoc ];
+  home.packages = with pkgs; [
+    pandoc
+  ];
 }

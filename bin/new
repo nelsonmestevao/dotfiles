@@ -55,7 +55,9 @@ PROGRAM_TEMPLATE = """\
   # the arguments). Read it as config.dotfiles.programs.__NAME__.someSetting.
   # options.someSetting = lib.mkEnableOption "what it turns on";
 
-  home.packages = [ pkgs.__NAME__ ];
+  home.packages = with pkgs; [
+    __NAME__
+  ];
 
   # Config files are links into this folder (add mkSymlink to the arguments).
   # A file that isn't in the repo fails the build.
@@ -94,7 +96,9 @@ MODULE_TEMPLATE = """\
   # the arguments). Read it as config.dotfiles.modules.__NAME__.someSetting.
   # options.someSetting = lib.mkEnableOption "what it turns on";
 
-  environment.systemPackages = [ pkgs.__NAME__ ];
+  environment.systemPackages = with pkgs; [
+    __NAME__
+  ];
 
   # services.__NAME__.enable = true;
 }

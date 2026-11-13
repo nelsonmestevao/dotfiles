@@ -3,5 +3,7 @@
   ...
 }:
 {
-  home.packages = [ pkgs.codex ];
+  home.packages = with pkgs; [
+    codex
+  ];
 }

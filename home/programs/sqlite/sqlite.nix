@@ -4,7 +4,9 @@
   ...
 }:
 {
-  home.packages = [ pkgs.sqlite ];
+  home.packages = with pkgs; [
+    sqlite
+  ];
 
   home.file.".sqliterc" = mkSymlink "sqliterc";
 }

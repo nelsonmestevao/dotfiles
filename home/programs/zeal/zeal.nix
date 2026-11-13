@@ -3,5 +3,7 @@
   ...
 }:
 {
-  home.packages = [ pkgs.zeal ];
+  home.packages = with pkgs; [
+    zeal
+  ];
 }

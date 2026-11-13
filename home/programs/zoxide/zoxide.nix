@@ -3,7 +3,9 @@
   ...
 }:
 {
-  home.packages = [ pkgs.zoxide ];
+  home.packages = with pkgs; [
+    zoxide
+  ];
 
   home.shellAliases = {
     j = "z";
