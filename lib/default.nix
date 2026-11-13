@@ -13,12 +13,13 @@
 let
   inherit (nixpkgs) lib;
   inherit (import ./roles.nix { inherit lib; }) rolesOf rolesAcross;
+  schema = import ./schema.nix { inherit lib; };
 
   # ── Data ───────────────────────────────────────────────────────────────────
 
   # The host and user entries, checked (see ./schema.nix), with every field
   # filled in. A mistake stops every configuration here and says what it is.
-  checked = (import ./schema.nix { inherit lib; }).check { inherit hosts users root; };
+  checked = schema.check { inherit hosts users root; };
 
   hostNames = lib.attrNames checked.hosts;
 
@@ -75,16 +76,12 @@ in
     hostname: host: lib.listToAttrs (map (homeOf hostname host) host.users)
   ) checked.hosts;
 
+  # The checked data, for the checks (see ./checks.nix).
+  checkedData = checked;
+
   # The systems the hosts run, for the dev shell, the formatter and the
-  # checks. They are read from the data as it is written, skipping a host
-  # whose system can't be used: every bin/ script starts in the dev shell, so
-  # it has to open while a mistake in the data is being fixed.
-  allSystems = lib.unique (
-    lib.concatMap (
-      host:
-      lib.optional (
-        lib.isAttrs host && lib.elem (host.system or null) lib.systems.flakeExposed
-      ) host.system
-    ) (lib.attrValues hosts)
-  );
+  # checks. They are read from the data as it is written: every bin/ script
+  # starts in the dev shell, so it has to open while a mistake in the data is
+  # being fixed.
+  allSystems = schema.systemsIn hosts;
 }

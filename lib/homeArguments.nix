@@ -1,5 +1,6 @@
-# The arguments every home module gets. ./mkHomeConfig.nix passes exactly
-# these, and ./schema.nix keeps a user's own `extraSpecialArgs` off them.
+# The arguments every home module gets. ./schema.nix keeps a user's own
+# `extraSpecialArgs` off them, and ./mkHomeConfig.nix stops the build if it
+# passes any other set.
 [
   "username"
   "hostname"
