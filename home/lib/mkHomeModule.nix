@@ -3,7 +3,8 @@ body:
 {
   config,
   lib,
-  # The module system only passes args a module names, and body needs pkgs.
+  # The module system only passes args a module names. The platform check
+  # below and body both need pkgs.
   pkgs,
   hostname,
   ...

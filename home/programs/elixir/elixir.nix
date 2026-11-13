@@ -9,13 +9,18 @@ let
   # On macOS, weasyprint's test_unicode_range fails: its font pixel tests draw
   # a little differently there, and nixpkgs skips some of them but not this
   # one. So the tests are off on macOS only, which keeps the Linux build in the
-  # binary cache. No check can say when this may go, since no test runs: try
-  # without it after nixpkgs updates weasyprint.
+  # binary cache. A new weasyprint in nixpkgs may fix the test, so it warns.
+  testedVersion = "68.1-unstable-2026-05-18";
   weasyprint =
+    let
+      upstream = pkgs.python313Packages.weasyprint;
+    in
     if pkgs.stdenv.hostPlatform.isDarwin then
-      pkgs.python313Packages.weasyprint.overridePythonAttrs { doCheck = false; }
+      pkgs.expiry.expiresWhen (upstream.version != testedVersion)
+        "weasyprint ${upstream.version} is in nixpkgs. Build it on the Mac without doCheck = false in home/programs/elixir/elixir.nix. Delete the override if its tests pass, or set testedVersion to the new version if not."
+        (upstream.overridePythonAttrs { doCheck = false; })
     else
-      pkgs.python313Packages.weasyprint;
+      upstream;
 in
 {
   home.packages =

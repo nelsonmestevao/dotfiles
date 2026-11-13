@@ -12,8 +12,9 @@ let
     action: count: keys:
     lib.genAttrs' (lib.range 1 count) (n: lib.nameValuePair "${action}-${toString n}" (keys n));
 
-  # Workspaces 1 to 9 are on the number keys 1 to 9, and workspace 10 is on 0.
-  workspaceKey = n: toString (lib.mod n 10);
+  # The number keys in the order they sit on the keyboard, so workspace 10 is
+  # on 0. There are only ten, so a count over 10 fails here.
+  workspaceKey = n: lib.elemAt (lib.stringToCharacters "1234567890") (n - 1);
 in
 {
   platforms = [ "linux" ];
@@ -41,6 +42,13 @@ in
     wl-clipboard
     adwaita-icon-theme
   ];
+
+  # Commands for settings this file leaves alone:
+  #
+  #   dconf write /org/gnome/desktop/input-sources/xkb-options "['caps:ctrl_modifier']"
+  #   gsettings get org.gnome.desktop.interface color-scheme
+  #   gsettings set org.gnome.desktop.background picture-uri-dark file:///home/nelson/Pictures/desktop.jpg
+  #   gsettings set org.gnome.desktop.background picture-uri file:///home/nelson/Pictures/login.jpg
 
   home.sessionVariables.GSETTINGS_SCHEMA_DIR = lib.concatStringsSep ":" config.dotfiles.programs.gnome.extensionSchemaDirs;
 

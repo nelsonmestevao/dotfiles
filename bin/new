@@ -94,9 +94,7 @@ MODULE_TEMPLATE = """\
   # the arguments). Read it as config.dotfiles.modules.__NAME__.someSetting.
   # options.someSetting = lib.mkEnableOption "what it turns on";
 
-  environment.systemPackages = with pkgs; [
-    __NAME__
-  ];
+  environment.systemPackages = [ pkgs.__NAME__ ];
 
   # services.__NAME__.enable = true;
 }
