@@ -1,10 +1,10 @@
 # Overrides that say when they can go.
 #
-# A package that this repo patches or bumps stands in for what upstream will
-# ship one day. Nothing used to say when that day came, so an override could
-# sit here long after it was needed. Wrapped in one of these, it stays the
-# same package, but once upstream has caught up every evaluation
-# (`bin/check --eval`, a build, a switch) warns and names what to delete.
+# A package this repo patches or bumps waits for a fix that nixpkgs or its
+# authors will ship one day. Nothing used to say when that day came, so a
+# patch could stay long after it was needed. Wrapped in one of these, it is
+# the same package, but once the fix is out, every `bin/check --eval`, build
+# and switch prints a warning that names what to delete.
 #
 # Use it as `pkgs.expiry`: config/overlays.nix adds it to every package set,
 # so a file needs no path to this one.

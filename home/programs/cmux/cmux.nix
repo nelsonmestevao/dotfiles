@@ -6,7 +6,7 @@
 {
   platforms = [ "darwin" ];
 
-  # cmux 0.65 bumped here; nixpkgs still ships 0.64. See package.nix.
+  # cmux 0.65, built here while nixpkgs still has 0.64. See package.nix.
   home.packages = [
     (pkgs.callPackage ./package.nix { })
   ];

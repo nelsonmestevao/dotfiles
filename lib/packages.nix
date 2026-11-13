@@ -14,8 +14,8 @@ let
   # Otherwise one would quietly replace the other.
   inherit (lib.attrsets) unionOfDisjoint;
 
-  # The package set the configurations use, so an output is the very
-  # derivation a home installs.
+  # The same packages the configurations use, so `nix build .#git-sim` builds
+  # exactly what a home installs.
   pkgs = import nixpkgs {
     inherit system overlays;
     config.allowUnfree = true;
@@ -28,8 +28,9 @@ let
   packageIn = file: { ${baseNameOf (dirOf file)} = pkgs.callPackage file { }; };
   ownPackages = lib.foldl' unionOfDisjoint { } (map packageIn packageFiles);
 
-  # A package that config/overlays.nix patches or forks. These have no file to
-  # find, so they are named here: one patched there is added here too.
+  # The packages config/overlays.nix patches or swaps for a fork. They have no
+  # package.nix to find, so they are named here: add one here when you patch
+  # it there.
   overriddenPackages = {
     inherit (pkgs) herdr-app;
     inherit (pkgs.gnomeExtensions) wiggle;
