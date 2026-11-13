@@ -395,11 +395,11 @@ There are two kinds:
 A package says where it runs with `meta.platforms`, and a system only gets
 the ones that run on it.
 
-**Overrides expire.** An override stands in for what upstream will ship one
-day. Each one is wrapped in `pkgs.expiry.untilUpstreamHas` or
-`pkgs.expiry.expiresWhen` (`lib/expiry.nix`). Once upstream has caught up,
-every evaluation (`bin/check --eval`, a build, a switch) warns and names what
-to delete:
+**Overrides expire.** An override waits for a fix that nixpkgs or the
+program's authors will ship one day. Each one is wrapped in
+`pkgs.expiry.untilUpstreamHas` or `pkgs.expiry.expiresWhen`
+(`lib/expiry.nix`). Once the fix is out, every `bin/check --eval`, build and
+switch prints a warning that names what to delete:
 
 ```nix
 # home/programs/cmux/package.nix
