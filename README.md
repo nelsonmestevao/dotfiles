@@ -490,7 +490,7 @@ that shell for you (`direnv allow` once).
 | `bin/check --list`             | Prints what every config builds, as JSON. CI decides from this list. |
 | `bin/lint`                     | Runs deadnix, statix and nixfmt, like CI does before it builds.      |
 | `bin/format`                   | Formats every Nix file (`nix fmt`).                                  |
-| `bin/test`                     | Runs the tests for the helper scripts, like CI does.                 |
+| `bin/test`                     | Tests the helper scripts and checks the docs, like CI does.          |
 | `bin/autoclean`                | Deletes generations older than 7 days and frees space (uses `sudo`). |
 | `bin/setup user\|host <name>`  | Adds a user or host (see [Installing](#-installing)).                |
 | `bin/new program <name>`       | Creates a Home Manager program in `home/programs/<name>/`.           |
@@ -528,10 +528,12 @@ system derivations, since those checks only evaluate the system.
 Flakes only see tracked files, so `git add` a new file first. The command
 lists the untracked files it found, whatever their type.
 
-`bin/test` runs the regression tests for `bin/new`, `bin/setup`, `bin/check`
-and CI's planning script. They work in throwaway folders and touch nothing
-else. Pass it unittest's arguments to narrow the run, like
-`bin/test -k hardware`.
+`bin/test` runs the tests for `bin/new`, `bin/setup`, `bin/check` and CI's
+planning script, which work in throwaway folders and touch nothing else. It
+also checks the docs: every link in README.md, AGENTS.md and ROADMAP.md
+points to something, every `bin/` script is in the table above, and both
+hosts tables match `config/hosts.nix`. Pass it unittest's arguments to narrow
+the run, like `bin/test -k hardware`.
 
 CI runs in two steps. A quick job lints, runs `bin/test`, and reads through
 every config with `bin/check --list`. Then a build job builds each system's
