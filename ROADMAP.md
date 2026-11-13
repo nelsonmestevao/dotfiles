@@ -1600,6 +1600,8 @@ real home.
 
 ### [ ] DX-006 Add a read-only diagnostic command and finish onboarding — P2 · M
 
+**Progress:** step 1 is done: `.envrc` is back (see [DX-007](#dx-007)).
+
 **Evidence:** useful diagnostics are spread across the README and helpers. The
 README and a comment in `flake.nix` promise automatic direnv loading.
 **Verified:** commit `f6bf77f6` added `.envrc`, and the next commit,
@@ -1630,11 +1632,12 @@ Home Manager, and the managed Mac; diagnosis works without a successful switch.
 ### [x] DX-007 Keep the docs and the repo in step — P2 · S
 
 **Implemented:** `.envrc` is back, and AGENTS.md says an agent may run on any
-host and should run `hostname` first. `tests/test_docs.py` fails when README.md,
-AGENTS.md or ROADMAP.md links to a missing file, when a `bin/` script is missing
-from the README, or when a hosts table disagrees with `config/hosts.nix` (names,
-system, build). `bin/test` and CI run it. Each test was checked by breaking the
-doc it guards.
+host and should run `hostname -s` first. `tests/test_docs.py` fails when
+README.md, AGENTS.md or ROADMAP.md links to a file git doesn't track (HTML
+`src` and `href` included) or to a heading that is gone, when the README's
+scripts table and `bin/` disagree, or when a hosts table disagrees with
+`config/hosts.nix` (names, system, build, roles). `bin/test` and CI run it.
+Each rule was checked by breaking the doc it guards.
 
 **Evidence:** the docs drift, and nothing notices:
 
