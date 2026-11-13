@@ -115,13 +115,14 @@ def targets(only=None):
     found = []
     if only != 'home':
         if platform:
-            kind = 'os' if platform == 'nixos' else 'darwin'
+            kind = {'nixos': 'os', 'darwin': 'darwin'}[platform]
             found.append((f"{platform}Configurations.{host}", kind, ['-H', host]))
         elif only == 'os':
             fail(f"{host} has no system config, only a home.")
     if only != 'os':
         if user not in hosts[host].get('users', []):
-            fail(f"{host} has no home for {user}. config/hosts.nix lists its users.")
+            hint = " Pass os for the system only." if platform and only is None else ""
+            fail(f"{host} has no home for {user}. config/hosts.nix lists its users.{hint}")
         found.append((f"{user}@{host}", 'home', ['-c', f"{user}@{host}"]))
     return found
 
