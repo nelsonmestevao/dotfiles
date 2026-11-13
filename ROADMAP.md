@@ -1627,7 +1627,14 @@ Home Manager, and the managed Mac; diagnosis works without a successful switch.
 
 <a id="dx-007"></a>
 
-### [ ] DX-007 Keep the docs and the repo in step — P2 · S
+### [x] DX-007 Keep the docs and the repo in step — P2 · S
+
+**Implemented:** `.envrc` is back, and AGENTS.md says an agent may run on any
+host and should run `hostname` first. `tests/test_docs.py` fails when README.md,
+AGENTS.md or ROADMAP.md links to a missing file, when a `bin/` script is missing
+from the README, or when a hosts table disagrees with `config/hosts.nix` (names,
+system, build). `bin/test` and CI run it. Each test was checked by breaking the
+doc it guards.
 
 **Evidence:** the docs drift, and nothing notices:
 

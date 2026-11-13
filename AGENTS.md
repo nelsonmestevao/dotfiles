@@ -37,8 +37,9 @@ to work here safely.
 | `thinkpad`              | Home Manager | `x86_64-linux`   |
 | `Remote-Nelson-Estevao` | nix-darwin   | `aarch64-darwin` |
 
-Agents run on the Linux machine. You can't run commands on the Mac. Ask me to
-run Mac-only commands and paste the output back.
+An agent may run on any of these machines, so run `hostname` first. A command
+that only works on another OS (a Mac build on Linux, `nixos-rebuild` on the
+Mac) can't run there: ask me to run it and paste the output back.
 
 ## Rules
 
