@@ -1159,6 +1159,29 @@ and wiring in three `lib/` files ([CONFIG-007](#config-007)).
 
 **Done when:** no machine and no CI run builds vicinae from source.
 
+**Progress:** steps 2 to 4 are done and evaluate for all seven configs. Not
+built or switched yet; the checks on framework above are still open.
+
+How it differs from the plan:
+
+- `pkgs.vicinae` is one name, set in `config/overlays.nix`. The home program
+  and the system wrapper both use it.
+- The home program wraps the package, as the flake did. Home Manager's module
+  has no option for these, and the service alone would miss a server started
+  by hand. The wrapper sets the repo's settings file (same store path as
+  before; Home Manager's `settings` would make the app's own file read-only),
+  points vicinae at the input-server wrapper (without it, pasting silently
+  fails), and puts `pactl` on `PATH`.
+- A warning asks for a backup while nixpkgs is behind 0.30.0. It stops by
+  itself when nixpkgs catches up; then delete it.
+- `USE_LAYER_SHELL` is gone: 0.29.2 does not read it. Browser integration
+  needed no port: Home Manager's firefox and chrome programs are off.
+
+Still different: numen is 0.7.0, not 0.8.1, and Home Manager refreshes
+vicinae's app list on each switch (a failure is ignored). The comment on CI's
+"Keep the slow builds" step still speaks of an hour-long vicinae build; fix
+it once this and [CI-006](#ci-006) are both merged.
+
 ## 3. Make recovery and unattended jobs trustworthy
 
 Nothing in this section was run. The plans come from the source.

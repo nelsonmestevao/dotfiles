@@ -1,7 +1,6 @@
 {
   nixpkgs,
   home-manager,
-  vicinae,
   overlays,
   knownNames,
   hostNames,
@@ -68,16 +67,9 @@ home-manager.lib.homeManagerConfiguration {
     { nixpkgs.overlays = overlays; }
     ../home
     ../home/lib
-    # Always import every module so its options are *declared* on every
-    # platform. GNOME extensions and Vicinae are Linux/Wayland-only, but their
-    # activation is already gated by per-program `enable` flags (off on Darwin),
-    # and module `config` blocks / option defaults are lazy `mkIf`-guarded — so
-    # importing them on Darwin evaluates cleanly and activates nothing. Gating
-    # the *imports* instead would drop the option declarations, which breaks
-    # any `mkIf false` reference to them (the module system checks definition
-    # paths against declarations regardless of the condition).
-    vicinae.homeManagerModules.default
   ]
+  # Every module is loaded on every OS, the Linux-only ones too, so a user file
+  # can set its options anywhere. A module only does something where it is on.
   ++ importModules mkHomeModule "home/programs"
   ++ importModules mkGnomeExtensionModule "home/programs/gnome/extensions";
 }

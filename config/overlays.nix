@@ -46,11 +46,11 @@ in
   (_final: prev: {
     zen-browser = inputs.zen-browser.packages.${prev.stdenv.hostPlatform.system}.default;
   })
-  (_final: prev: {
-    # vicinae from its own flake, which is newer than nixpkgs' copy. The
-    # NixOS and home-manager modules use `pkgs.vicinae`, so there's one name
-    # for it (CI also uses it to keep the build in its cache).
-    vicinae = inputs.vicinae.packages.${prev.stdenv.hostPlatform.system}.default;
+  (final: _prev: {
+    # vicinae from nixpkgs-unstable: newer than stable's, and already built, so
+    # nothing has to compile it. The home program and the NixOS module both
+    # use `pkgs.vicinae`.
+    vicinae = final.unstable.vicinae;
   })
   (final: prev: {
     gnomeExtensions = prev.gnomeExtensions // {
