@@ -9,6 +9,8 @@ A helper imports this before anything else:
 and ends with `run(main, __doc__, __file__)`. Importing it also turns on
 flakes for every nix and nh call the helper makes.
 """
+import getpass
+import json
 import os
 import shutil
 import subprocess
@@ -96,6 +98,32 @@ def interrupted(problem):
     ordinary failure."""
     code = getattr(problem, 'returncode', 0)
     return code in (130, -2)
+
+
+def targets(only=None):
+    """This machine's configs, read from config/hosts.nix: its system, when it
+    has one, and the home of whoever runs the helper. `only` is "os" or
+    "home" to pick one. Each config is (its name, the nh command for it, the
+    nh flags that pick it). Stops with one plain line when there is nothing
+    to pick."""
+    hosts = json.loads($(nix eval --json --file config/hosts.nix))
+    host = $(hostname -s).strip()
+    if host not in hosts:
+        fail(f"config/hosts.nix has no host named {host}. It has {', '.join(sorted(hosts))}.")
+    platform = hosts[host].get('platform')
+    user = getpass.getuser()
+    found = []
+    if only != 'home':
+        if platform:
+            kind = 'os' if platform == 'nixos' else 'darwin'
+            found.append((f"{platform}Configurations.{host}", kind, ['-H', host]))
+        elif only == 'os':
+            fail(f"{host} has no system config, only a home.")
+    if only != 'os':
+        if user not in hosts[host].get('users', []):
+            fail(f"{host} has no home for {user}. config/hosts.nix lists its users.")
+        found.append((f"{user}@{host}", 'home', ['-c', f"{user}@{host}"]))
+    return found
 
 
 def run(main, doc, file):

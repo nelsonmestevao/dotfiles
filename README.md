@@ -217,8 +217,9 @@ git clone https://github.com/nelsonmestevao/spells ~/.spells
 
 ### 2. Add your user and host
 
-`bin/rebuild` picks the config that matches the machine's hostname and your
-username. On a new machine, add both first, or the build fails.
+`bin/rebuild` finds the machine in `config/hosts.nix` by its short host name
+(`hostname -s`), and your home by your username. On a new machine, add both
+first, or it stops and names the hosts it knows.
 
 The fast way is `bin/setup`. It asks a few questions, writes the files, and adds
 the entries to `config/`:
@@ -296,17 +297,21 @@ To do it by hand:
 
 ### 3. Build it
 
-`bin/rebuild` detects the platform and drives NixOS or nix-darwin accordingly.
+`bin/rebuild` switches what `config/hosts.nix` gives the machine: its system
+when the host has a `platform` (NixOS or nix-darwin), and your home. It says
+which configs first, like "Switching nixosConfigurations.framework and
+nelson@framework".
 
 ```shell
-bin/rebuild            # rebuild both OS and home config
-bin/rebuild os         # rebuild only the system config (NixOS or nix-darwin)
-bin/rebuild home       # rebuild only the home-manager configuration
-bin/rebuild os --boot  # activate on next boot (handy for major release upgrades)
+bin/rebuild            # the system, when the host has one, and your home
+bin/rebuild os         # only the system (NixOS or nix-darwin)
+bin/rebuild home       # only your home
+bin/rebuild os --boot  # start the new NixOS system on the next boot (for major upgrades)
 ```
 
-On a Home Manager–only host, run `bin/rebuild home`. Plain `bin/rebuild` also
-tries to rebuild the OS, which fails there.
+On a host with only a home, plain `bin/rebuild` switches the home, and
+`bin/rebuild os` stops before it runs anything. `--boot` works only for a
+NixOS system.
 
 To see what would change first, run `bin/build`. It takes the same `os` and
 `home` arguments, builds the configs, and prints the package diff. It doesn't

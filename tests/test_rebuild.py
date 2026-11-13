@@ -1,23 +1,30 @@
 """Run with: bin/test.
 
 bin/rebuild and bin/build with a stand-in `nh` that records each call and
-fails when told to, so nothing is built or switched. They check what happens
-when a step fails: the helper stops with one plain line, says what it left
-undone, and runs nothing it shouldn't.
+fails when told to, so nothing is built or switched, and a stand-in
+`hostname`, so each test picks the machine it runs on. They check that each
+host in config/hosts.nix gets its own configs, and what happens when a step
+fails: the helper stops with one plain line, says what it left undone, and
+runs nothing it shouldn't.
 """
+import json
 import os
 from pathlib import Path
 import shutil
 import subprocess
-import sys
 import tempfile
 import unittest
 
 
 ROOT = Path(__file__).resolve().parents[1]
 
-# What nh calls the system on the machine running the tests.
-OS = 'darwin' if sys.platform == 'darwin' else 'os'
+HOSTS = json.loads(subprocess.run(['nix-instantiate', '--eval', '--strict', '--json', 'config/hosts.nix'],
+                                  cwd=ROOT, text=True, capture_output=True, check=True).stdout)
+
+
+def host_with(platform):
+    """A host in config/hosts.nix with this platform (None: a home only)."""
+    return next((name for name, host in HOSTS.items() if host.get('platform') == platform), None)
 
 # Records `nh <args>` and NIX_CONFIG. It fails when its first argument is in
 # $FAIL (like "os home"), and acts as if Ctrl-C hit it when it is $INTERRUPT.
@@ -39,22 +46,24 @@ class HelperTests(unittest.TestCase):
         # were ever missed, a real one would find no flake here and change
         # nothing.
         self.repo = self.dir / 'repo'
-        for name in ('bin/rebuild', 'bin/build', 'scripts/common.xsh'):
+        for name in ('bin/rebuild', 'bin/build', 'scripts/common.xsh', 'config/hosts.nix'):
             (self.repo / name).parent.mkdir(parents=True, exist_ok=True)
             shutil.copy(ROOT / name, self.repo / name)
         bin_dir = self.dir / 'stub'
         bin_dir.mkdir()
-        stub = bin_dir / 'nh'
-        stub.write_text(NH)
-        stub.chmod(0o755)
+        for name, script in (('nh', NH), ('hostname', '#!/bin/sh\necho "$HOST"\n')):
+            stub = bin_dir / name
+            stub.write_text(script)
+            stub.chmod(0o755)
         self.log = self.dir / 'nh.log'
         self.xonsh = shutil.which('xonsh')
         self.env = dict(os.environ, PATH=f'{bin_dir}{os.pathsep}{os.environ["PATH"]}',
                         LOG=str(self.log), FAIL='', INTERRUPT='', KILL='')
         self.env.pop('NIX_CONFIG', None)
 
-    def helper(self, name, *args, fail='', interrupt='', kill='', nix_config=None, without_nh=False):
-        env = dict(self.env, FAIL=fail, INTERRUPT=interrupt, KILL=kill)
+    def helper(self, name, *args, host='framework', user='nelson', fail='', interrupt='', kill='',
+               nix_config=None, without_nh=False):
+        env = dict(self.env, HOST=host, USER=user, LOGNAME=user, FAIL=fail, INTERRUPT=interrupt, KILL=kill)
         if nix_config is not None:
             env['NIX_CONFIG'] = nix_config
         if without_nh:
@@ -70,23 +79,33 @@ class HelperTests(unittest.TestCase):
 
 
 class RebuildTests(HelperTests):
-    def test_it_switches_the_system_then_the_home(self):
+    def test_each_host_switches_its_own_configs(self):
+        for host, data in HOSTS.items():
+            for user in data['users']:
+                with self.subTest(host=host, user=user):
+                    self.log.unlink(missing_ok=True)
+                    result = self.helper('rebuild', host=host, user=user)
+                    self.assertEqual(result.returncode, 0, result.stderr)
+                    system = {'nixos': ['os switch . -H ' + host],
+                              'darwin': ['darwin switch . -H ' + host]}.get(data.get('platform'), [])
+                    self.assertEqual(self.calls(), system + [f'home switch . -c {user}@{host}'])
+
+    def test_it_says_what_it_switches(self):
         result = self.helper('rebuild')
-        self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertEqual(self.calls(), [f'{OS} switch .', 'home switch .'])
+        self.assertIn('Switching nixosConfigurations.framework and nelson@framework', result.stdout)
 
     def test_a_failed_system_switch_leaves_the_home_alone(self):
-        result = self.helper('rebuild', fail=OS)
+        result = self.helper('rebuild', fail='os')
         self.assertEqual(result.returncode, 1)
-        self.assertEqual(self.calls(), [f'{OS} switch .'], 'the home must not be switched')
-        self.assertIn(f'✗ nh {OS} switch . failed; home not switched.', result.stderr)
+        self.assertEqual(self.calls(), ['os switch . -H framework'], 'the home must not be switched')
+        self.assertIn('✗ nh os switch . -H framework failed; nelson@framework not switched.', result.stderr)
         self.assertNotIn('Traceback', result.stderr)
         self.assertNotIn('CalledProcessError', result.stderr)
 
     def test_a_failed_home_switch_says_so(self):
         result = self.helper('rebuild', 'home', fail='home')
         self.assertEqual(result.returncode, 1)
-        self.assertIn('✗ nh home switch . failed.', result.stderr)
+        self.assertIn('✗ nh home switch . -c nelson@framework failed.', result.stderr)
 
     def test_it_keeps_what_nix_config_already_holds(self):
         result = self.helper('rebuild', 'home', nix_config='access-tokens = github.com=secret')
@@ -95,10 +114,10 @@ class RebuildTests(HelperTests):
         self.assertIn('extra-experimental-features = nix-command flakes', self.config())
 
     def test_ctrl_c_stops_it_and_says_what_was_left(self):
-        result = self.helper('rebuild', interrupt=OS)
+        result = self.helper('rebuild', interrupt='os')
         self.assertEqual(result.returncode, 1)
-        self.assertEqual(self.calls(), [f'{OS} switch .'])
-        self.assertIn('Interrupted; home not switched.', result.stderr)
+        self.assertEqual(self.calls(), ['os switch . -H framework'])
+        self.assertIn('Interrupted; nelson@framework not switched.', result.stderr)
 
     def test_a_missing_nh_is_one_plain_line(self):
         result = self.helper('rebuild', without_nh=True)
@@ -107,33 +126,80 @@ class RebuildTests(HelperTests):
                          ['✗ nh is missing. Run this from the repo, so it starts in the dev shell.'])
         self.assertEqual(self.calls(), [])
 
-    def test_boot_on_a_mac_is_refused(self):
-        if OS != 'darwin':
-            self.skipTest('nix-darwin only runs on a Mac')
+    def test_boot_starts_the_nixos_system_on_the_next_boot(self):
         result = self.helper('rebuild', '--boot')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(self.calls(), ['os boot . -H framework', 'home switch . -c nelson@framework'])
+
+    def test_boot_without_a_nixos_system_is_refused(self):
+        # A home, a Mac, and a host with only a home.
+        cases = [(['home'], 'framework'), ([], host_with('darwin')), ([], host_with(None))]
+        for command, host in cases:
+            if host is None:
+                continue
+            with self.subTest(command=command, host=host):
+                result = self.helper('rebuild', *command, '--boot', host=host, user=HOSTS[host]['users'][0])
+                self.assertEqual(result.returncode, 1)
+                self.assertIn('--boot is for a NixOS system only', result.stderr)
+                self.assertEqual(self.calls(), [], 'nothing may be switched')
+
+    def test_os_on_a_host_with_only_a_home_stops_before_nh(self):
+        host = host_with(None)
+        if host is None:
+            self.skipTest('config/hosts.nix has no host with only a home')
+        result = self.helper('rebuild', 'os', host=host, user=HOSTS[host]['users'][0])
         self.assertEqual(result.returncode, 1)
-        self.assertIn('nix-darwin has no --boot', result.stderr)
-        self.assertEqual(self.calls(), [], 'nothing may be switched')
+        self.assertIn(f'✗ {host} has no system config, only a home.', result.stderr)
+        self.assertEqual(self.calls(), [])
+
+    def test_an_unknown_host_names_the_known_ones(self):
+        result = self.helper('rebuild', host='nowhere')
+        self.assertEqual(result.returncode, 1)
+        self.assertIn(f"config/hosts.nix has no host named nowhere. It has {', '.join(sorted(HOSTS))}.",
+                      result.stderr)
+        self.assertEqual(self.calls(), [])
+
+    def test_a_user_without_a_home_there_stops_before_nh(self):
+        result = self.helper('rebuild', user='someone')
+        self.assertEqual(result.returncode, 1)
+        self.assertIn('✗ framework has no home for someone.', result.stderr)
+        self.assertEqual(self.calls(), [])
 
 
 class BuildTests(HelperTests):
     def test_it_builds_both_even_when_the_first_fails(self):
-        result = self.helper('build', fail=OS)
+        result = self.helper('build', fail='os')
         self.assertEqual(result.returncode, 1)
-        self.assertEqual([call.split()[:2] for call in self.calls()], [[OS, 'build'], ['home', 'build']])
-        self.assertIn(f'✗ nh {OS} build failed', result.stderr)
+        self.assertEqual([call.split()[:2] for call in self.calls()], [['os', 'build'], ['home', 'build']])
+        self.assertIn('✗ nh os build failed', result.stderr)
         self.assertNotIn('Built.', result.stdout)
 
+    def test_it_builds_the_configs_of_this_host(self):
+        result = self.helper('build')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual([call.split()[:5] for call in self.calls()],
+                         [['os', 'build', '.', '-H', 'framework'], ['home', 'build', '.', '-c', 'nelson@framework']])
+        self.assertIn('Building nixosConfigurations.framework and nelson@framework', result.stdout)
+
+    def test_a_host_with_only_a_home_builds_the_home(self):
+        host = host_with(None)
+        if host is None:
+            self.skipTest('config/hosts.nix has no host with only a home')
+        user = HOSTS[host]['users'][0]
+        result = self.helper('build', host=host, user=user)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual([call.split()[:5] for call in self.calls()], [['home', 'build', '.', '-c', f'{user}@{host}']])
+
     def test_a_killed_build_is_a_failure_not_ctrl_c(self):
-        result = self.helper('build', kill=OS)
+        result = self.helper('build', kill='os')
         self.assertEqual(result.returncode, 1)
-        self.assertEqual([call.split()[0] for call in self.calls()], [OS, 'home'], 'the home build must still run')
+        self.assertEqual([call.split()[0] for call in self.calls()], ['os', 'home'], 'the home build must still run')
         self.assertNotIn('Interrupted', result.stderr)
 
     def test_ctrl_c_stops_every_build(self):
-        result = self.helper('build', interrupt=OS)
+        result = self.helper('build', interrupt='os')
         self.assertEqual(result.returncode, 1)
-        self.assertEqual([call.split()[0] for call in self.calls()], [OS], 'the home build must not start')
+        self.assertEqual([call.split()[0] for call in self.calls()], ['os'], 'the home build must not start')
         self.assertIn('Interrupted.', result.stderr)
 
     def test_it_keeps_what_nix_config_already_holds(self):
