@@ -59,9 +59,9 @@ sys.stdout.reconfigure(line_buffering=True)
 
 RED, GREEN, YELLOW = 31, 32, 33
 
-# Every check's derivation, by system and name. Lint is left out: it depends
-# on every file in the repo, so it changes with any edit.
-DERIVATIONS = 'c: builtins.mapAttrs (_: s: builtins.mapAttrs (_: d: d.drvPath) (builtins.removeAttrs s [ "lint" ])) c'
+# Every configuration's derivation, by system and name. Lint and the lib tests
+# are left out: neither is a configuration, and lint changes with any edit.
+DERIVATIONS = 'c: builtins.mapAttrs (_: s: builtins.mapAttrs (_: d: d.drvPath) (builtins.removeAttrs s [ "lint" "lib-tests" ])) c'
 
 # How many untracked files to name before "and N more".
 UNTRACKED_SHOWN = 10
@@ -143,7 +143,7 @@ def by_check(run):
 def stands_for(drv):
     """The derivation an eval-only check stands for, or None for a real one.
 
-    The nixos-<host> and darwin-<host> checks in flake.nix don't build the
+    The nixos-<host> and darwin-<host> checks in lib/checks.nix don't build the
     system. They are small wrappers that carry the system's derivation path
     in their `drvPath` variable, so that path is the thing worth comparing."""
     shown = !(nix derivation show @(drv))

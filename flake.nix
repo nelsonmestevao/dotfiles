@@ -74,15 +74,17 @@
             overlays
             ;
         })
-        allSystems
+        toolSystems
+        checkSystems
         checkedData
+        dataIsRight
         nixosConfigs
         darwinConfigs
         homeConfigs
         ;
     in
     {
-      formatter = lib.genAttrs allSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-tree);
+      formatter = lib.genAttrs toolSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-tree);
 
       # The packages this repo builds or changes itself, so each one can be
       # built alone, like `nix build .#git-sim`. lib/packages.nix finds them.
@@ -90,7 +92,7 @@
 
       # What the bin/ scripts and the lint check need. The scripts start in
       # this shell on their own; `nix develop` or direnv (.envrc) opens it.
-      devShells = lib.genAttrs allSystems (
+      devShells = lib.genAttrs toolSystems (
         system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
@@ -115,13 +117,14 @@
         }
       );
 
-      checks = lib.genAttrs allSystems (
+      checks = lib.genAttrs checkSystems (
         import ./lib/checks.nix {
           inherit
             nixpkgs
             home-manager
             self
             checkedData
+            dataIsRight
             nixosConfigs
             darwinConfigs
             homeConfigs

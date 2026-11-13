@@ -21,6 +21,17 @@ let
   # filled in. A mistake stops every configuration here and says what it is.
   checked = schema.check { inherit hosts users root; };
 
+  # Only a mistake in the data stops `checked` from evaluating. The checks use
+  # this to tell it apart from an error inside one configuration.
+  dataIsRight = (builtins.tryEval checked).success;
+
+  toolSystems = [
+    "x86_64-linux"
+    "aarch64-linux"
+    "x86_64-darwin"
+    "aarch64-darwin"
+  ];
+
   hostNames = lib.attrNames checked.hosts;
 
   # Every host name and role that enableFor, disableFor and valueFor accept.
@@ -78,10 +89,18 @@ in
 
   # The checked data, for the checks (see ./checks.nix).
   checkedData = checked;
+  inherit dataIsRight;
 
-  # The systems the hosts run, for the dev shell, the formatter and the
-  # checks. They are read from the data as it is written: every bin/ script
-  # starts in the dev shell, so it has to open while a mistake in the data is
-  # being fixed.
-  allSystems = schema.systemsIn hosts;
+  # The systems the dev shell and the formatter exist for: the ones bin/setup
+  # offers. They don't depend on the data, so a mistake in it can't take them
+  # away, and every bin/ script starts in the dev shell.
+  inherit toolSystems;
+
+  # The systems the checks exist for: the ones the hosts run. With a mistake in
+  # the data, the tool systems, so the check that reports it exists everywhere.
+  checkSystems =
+    if dataIsRight then
+      lib.unique (lib.mapAttrsToList (_: host: host.system) checked.hosts)
+    else
+      toolSystems;
 }

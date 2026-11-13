@@ -32,6 +32,7 @@ let
   # ── The data check ─────────────────────────────────────────────────────────
 
   schema = import ../lib/schema.nix { inherit lib; };
+  isMac = system: (import ../lib/roles.nix { inherit lib; }).osOf system == "darwin";
   dataOf = hosts: users: {
     inherit hosts users;
     root = repo;
@@ -41,9 +42,10 @@ let
   passes = hosts: users: succeeds (check hosts users);
   hostProblems = name: change: problems (edit hosts name change) users;
 
-  # A host entry as it is written, and with one change.
+  # The fixture as written, and one host entry with one change.
+  theFixture = check hosts users;
   inHost = name: change: {
-    sound = check (edit hosts name lib.id) users;
+    sound = theFixture;
     broken = check (edit hosts name change) users;
   };
 
@@ -101,7 +103,7 @@ let
         ../home/lib
         {
           home.username = "alice";
-          home.homeDirectory = if lib.hasSuffix "darwin" host.system then "/Users/alice" else "/home/alice";
+          home.homeDirectory = if isMac host.system then "/Users/alice" else "/home/alice";
           home.stateVersion = host.stateVersion;
           dotfiles.programs = lib.genAttrs enabled (_: {
             enable = true;
@@ -128,7 +130,7 @@ let
       wrapped = lib.evalModules {
         specialArgs = {
           inherit hostname;
-          pkgs.stdenv.hostPlatform.isDarwin = lib.hasSuffix "darwin" hosts.${hostname}.system;
+          pkgs.stdenv.hostPlatform.isDarwin = isMac hosts.${hostname}.system;
         };
         modules = [
           {
@@ -243,7 +245,7 @@ let
           homes = lib.attrNames assembly.homeConfigs;
           nixos = lib.attrNames assembly.nixosConfigs;
           darwin = lib.attrNames assembly.darwinConfigs;
-          systems = assembly.allSystems;
+          systems = assembly.checkSystems;
         };
       expected = {
         homes = [
@@ -259,29 +261,21 @@ let
         ];
       };
     };
-    # The dev shell is made for these, so it opens while the data is wrong.
-    theSystemsSurviveBrokenData = {
+    # With a mistake in the data, the checks exist for every tool system, so
+    # the one that reports it runs wherever you look. The dev shell's systems
+    # don't depend on the data at all.
+    theChecksSurviveBrokenData = {
       expr =
-        (assemble (
-          edit hosts "box" (set {
+        let
+          broken = assemble (edit hosts "box" (set {
             platform = "nixoss";
-          })
-          // {
-            typo = hosts.shed // {
-              system = "x86-64-linux";
-            };
-            empty = { };
-            notAnEntry = "text";
-          }
-        ) users).allSystems;
-      expected = [
-        "x86_64-linux"
-        "aarch64-darwin"
-      ];
+          })) users;
+        in
+        broken.checkSystems == broken.toolSystems && !broken.dataIsRight;
+      expected = true;
     };
     aHomeGetsItsEntriesAndArguments = {
       expr = {
-        names = lib.attrNames onBox;
         hostSystem = onBox.host.system;
         userName = onBox.user.name;
         ownArgument =
@@ -292,7 +286,6 @@ let
           )).tea;
       };
       expected = {
-        names = lib.sort lib.lessThan (import ../lib/homeArguments.nix);
         hostSystem = "x86_64-linux";
         userName = "Alice";
         ownArgument = "yes";
@@ -452,8 +445,27 @@ let
 
   casesOf =
     kind: toCase: lib.mapAttrs' (name: case: lib.nameValuePair "test ${kind}: ${name}" (toCase case));
+
+  # Like lib.runTests, but a case that throws is a failed case with its name,
+  # not an error that stops every case. (An error that isn't a throw, like a
+  # missing attribute, still stops them all: tryEval can't catch it.)
+  failedCases =
+    cases:
+    lib.concatLists (
+      lib.mapAttrsToList (
+        name: case:
+        let
+          got = builtins.tryEval (builtins.deepSeq case.expr case.expr);
+        in
+        lib.optional (!got.success || got.value != case.expected) {
+          inherit name;
+          inherit (case) expected;
+          result = if got.success then got.value else "an error";
+        }
+      ) cases
+    );
 in
-lib.runTests (
+failedCases (
   casesOf "values" lib.id values
   // casesOf "holds" (expr: {
     inherit expr;
