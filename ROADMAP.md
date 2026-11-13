@@ -1373,9 +1373,10 @@ identified. Do not assume Tailscale alone defines the host's exposure.
 
 **Progress:** one rule everywhere: keep 31 days, and at least the newest 3 of
 each profile. `bin/autoclean` and NixOS's monthly job both run `nh clean all`,
-which also cleans the users' home profiles that `nix.gc` left alone.
-`bin/autoclean --dry-run` lists what it would delete and deletes nothing.
-`tests/test_autoclean.py` keeps the script and NixOS the same. The README has a
+which also cleans the users' home profiles that `nix.gc` left alone, and
+leaves project gcroots (`result` links, direnv shells) alone. Both read the
+rule from `config/cleanup.nix`. `bin/autoclean --dry-run` lists what it would
+delete and deletes nothing. The README has a
 "Rolling back" section. Still open: following the walkthrough once on
 framework.
 

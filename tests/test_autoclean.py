@@ -1,12 +1,11 @@
 """Run with: bin/test.
 
-bin/autoclean with a stand-in `nix` that records what it was asked, so
-nothing is deleted. It also checks that bin/autoclean and NixOS's monthly
-cleanup keep the same generations.
+bin/autoclean with a stand-in `nh` that records what it was asked, so
+nothing is deleted.
 """
+import json
 import os
 from pathlib import Path
-import re
 import subprocess
 import tempfile
 import unittest
@@ -16,25 +15,37 @@ ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / 'bin' / 'autoclean'
 
 
+def keep_rule():
+    """config/cleanup.nix, which NixOS's monthly cleanup reads too."""
+    out = subprocess.run(['nix-instantiate', '--eval', '--strict', '--json', 'config/cleanup.nix'],
+                         cwd=ROOT, text=True, capture_output=True, check=True).stdout
+    return json.loads(out)
+
+
 class AutocleanTests(unittest.TestCase):
     def setUp(self):
         temp = tempfile.TemporaryDirectory(prefix='autoclean test ')
         self.addCleanup(temp.cleanup)
-        self.log = Path(temp.name) / 'nix.log'
-        stub = Path(temp.name) / 'nix'
+        self.log = Path(temp.name) / 'nh.log'
+        stub = Path(temp.name) / 'nh'
         stub.write_text(f'#!/bin/sh\necho "$@" > "{self.log}"\n')
         stub.chmod(0o755)
         self.env = dict(os.environ, PATH=f'{temp.name}{os.pathsep}{os.environ["PATH"]}')
 
-    def run_script(self, *args):
-        return subprocess.run([str(SCRIPT), *args], env=self.env, text=True, capture_output=True)
+    def run_script(self, *args, env=None):
+        return subprocess.run([str(SCRIPT), *args], env=env or self.env, text=True, capture_output=True)
 
     def asked(self):
-        return self.log.read_text().split(' develop --command ')[1].split()
+        self.assertTrue(self.log.exists(), 'nh was never called')
+        return self.log.read_text().split()
 
-    def test_it_cleans_every_profile(self):
-        self.assertEqual(self.run_script().returncode, 0)
-        self.assertEqual(self.asked(), ['nh', 'clean', 'all', '--keep-since', '31d', '--keep', '3'])
+    def test_it_cleans_every_profile_by_the_shared_rule(self):
+        result = self.run_script()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(self.asked(), ['clean', 'all', *keep_rule()])
+
+    def test_it_leaves_project_gcroots_alone(self):
+        self.assertIn('--no-gcroots', keep_rule())
 
     def test_a_dry_run_deletes_nothing(self):
         self.assertEqual(self.run_script('--dry-run').returncode, 0)
@@ -54,10 +65,10 @@ class AutocleanTests(unittest.TestCase):
                 self.assertIn('Usage:', result.stderr)
                 self.assertFalse(self.log.exists(), 'nothing may run on a bad argument')
 
-    def test_it_keeps_what_nixos_keeps(self):
-        script = re.search(r'^KEEP=\((.+)\)$', SCRIPT.read_text(), re.M).group(1)
-        nixos = re.search(r'extraArgs = "(.+)";', (ROOT / 'system/nixos.nix').read_text()).group(1)
-        self.assertEqual(script, nixos, 'bin/autoclean and system/nixos.nix keep different generations')
+    def test_a_missing_nh_says_what_to_do(self):
+        result = self.run_script(env=dict(self.env, PATH='/usr/bin:/bin'))
+        self.assertEqual(result.returncode, 1)
+        self.assertIn('nh is missing', result.stderr)
 
 
 if __name__ == '__main__':

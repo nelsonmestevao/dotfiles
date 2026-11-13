@@ -24,16 +24,15 @@
 
   boot.tmp.cleanOnBoot = true;
 
-  # Once a month, delete generations older than 31 days, keeping at least the
-  # newest 3 of each profile. nh cleans every profile, the users' home ones
-  # too, which nix.gc left alone. bin/autoclean runs the same cleanup by hand
-  # (tests/test_autoclean.py keeps the two the same).
+  # Once a month, delete old generations in every profile, the users' home
+  # ones too, which nix.gc left alone. config/cleanup.nix says what to keep;
+  # bin/autoclean reads it too.
   programs.nh = {
     enable = true;
     clean = {
       enable = true;
       dates = "monthly";
-      extraArgs = "--keep-since 31d --keep 3";
+      extraArgs = toString (import ../config/cleanup.nix);
     };
   };
 
