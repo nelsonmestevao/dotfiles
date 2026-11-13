@@ -68,10 +68,7 @@ in
           shellcheck
           zsh
           actionlint
-          # To run each xonsh script in bin/ with --help (bin/update calls tput).
           python3Packages.xonsh
-          python3Packages.docopt
-          ncurses
         ];
       }
       ''
@@ -81,35 +78,36 @@ in
         nixfmt --check $(find . -name '*.nix')
 
         # The scripts in bin/ and .github/scripts/, sorted by their first line.
-        # Shell ones go to shellcheck, with the .sh files next to the programs
-        # (but not the Herdr mods, which come from upstream). Each xonsh one
-        # runs with --help, which fails on a syntax error. Anything else is an
-        # error, so a new kind of script can't slip through unchecked.
-        shell=() xonsh=()
+        # Anything that is neither shell nor xonsh is an error, so a new kind
+        # of script can't slip through unchecked.
+        shell=() xonsh=(scripts/*.xsh)
         for script in bin/* .github/scripts/*; do
           case "$(head -n 1 "$script")" in
-            *xonsh*) xonsh+=("$script") ;;
-            '#!'*bash* | '#!'*/sh | '#!'*' sh') shell+=("$script") ;;
+            '#!'*xonsh*) xonsh+=("$script") ;;
+            '#!'*bash* | '#!'*/sh | '#!'*/sh' '* | '#!'*' sh' | '#!'*' sh '*) shell+=("$script") ;;
             *) echo "lint: $script is neither a shell nor a xonsh script" >&2; exit 1 ;;
           esac
         done
+
+        # The shell scripts, and the .sh files next to the programs (not the
+        # Herdr mods, which come from upstream, should one ever ship one).
+        # Each list is read into a variable first, so a failing find stops
+        # the lint instead of quietly checking fewer files.
+        found=$(find home/programs -name '*.sh' -not -path '*/herdr-app/mods/*')
         while IFS= read -r file; do
-          shell+=("$file")
-        done < <(find home/programs -name '*.sh' -not -path '*/herdr-app/mods/*')
-        if [ ''${#shell[@]} -eq 0 ]; then
-          echo "lint: found no shell scripts to check" >&2; exit 1
-        fi
+          [ -n "$file" ] && shell+=("$file")
+        done <<< "$found"
         shellcheck "''${shell[@]}"
 
-        export HOME=$TMPDIR TERM=xterm
-        for script in "''${xonsh[@]}"; do
-          xonsh --no-rc "$script" --help > /dev/null
-        done
+        # The xonsh scripts, only parsed: their own code doesn't run here.
+        HOME=$TMPDIR python3 ${./xonsh-syntax.py} "''${xonsh[@]}"
 
         # The zsh files, only read: a typo there would break every new shell.
-        for file in $(find home/programs/zsh -name '*.zsh') home/programs/zsh/zshrc; do
-          zsh -n "$file"
-        done
+        found=$(find home/programs/zsh -name '*.zsh')
+        while IFS= read -r file; do
+          [ -n "$file" ] && zsh -n "$file"
+        done <<< "$found"
+        zsh -n home/programs/zsh/zshrc
 
         # The workflow, with the shell in its steps checked by shellcheck too.
         actionlint .github/workflows/*.yml
