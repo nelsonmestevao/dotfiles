@@ -35,9 +35,8 @@
   # ── Users ───────────────────────────────────────────────────────────────
   programs.zsh.enable = true;
 
-  # Don't emit a bare `compinit` into /etc/zshrc. It runs before ~/.zshrc,
-  # where oh-my-zsh runs `compinit -i` anyway, so it would only set up
-  # completion twice and slow every shell start.
+  # Leave completion setup (compinit) out of /etc/zshrc. oh-my-zsh does it
+  # anyway from ~/.zshrc, so a second run would only slow every shell start.
   programs.zsh.enableGlobalCompInit = false;
 
   programs.nix-ld.enable = true;
