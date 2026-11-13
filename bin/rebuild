@@ -23,14 +23,11 @@ import os
 import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
-from common import COMMAND_ERRORS, fail, failed, run, with_flakes
-
-with_flakes()
+from common import COMMAND_ERRORS, fail, failed, need, run
 
 
 def switch_system(action):
     if sys.platform == 'darwin':
-        # nix-darwin has no `boot`: it always switches now.
         nh darwin switch .
     else:
         nh os @(action) .
@@ -41,6 +38,9 @@ def switch_home():
 
 
 def main(args):
+    if args['--boot'] and sys.platform == 'darwin':
+        fail("nix-darwin has no --boot: it can only switch now. Run bin/rebuild without it.")
+    need('nh')
     action = 'boot' if args['--boot'] else 'switch'
     # Each step: what it switches, and how.
     steps = {

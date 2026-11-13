@@ -18,13 +18,12 @@ Options:
 """
 import os
 import shutil
+import subprocess
 import sys
 import tempfile
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
-from common import COMMAND_ERRORS, GREEN, error, interrupted, paint, run, with_flakes
-
-with_flakes()
+from common import COMMAND_ERRORS, GREEN, error, failed, interrupted, need, paint, run
 
 
 def build(kind):
@@ -43,7 +42,11 @@ def build(kind):
         # Ctrl-C stops everything; it isn't a build that failed.
         if interrupted(problem):
             raise KeyboardInterrupt from problem
-        error(f"nh {kind} build failed")
+        # The nh command line holds a throwaway path, so say it short.
+        if isinstance(problem, subprocess.CalledProcessError):
+            error(f"nh {kind} build failed")
+        else:
+            error(failed(problem))
         return False
     finally:
         shutil.rmtree(tmp)
@@ -57,6 +60,7 @@ KINDS = {
 
 
 def main(args):
+    need('nh')
     chosen = [task for task in KINDS if args[task]] or list(KINDS)
 
     # Build every one even when one fails, so one run reports every error.

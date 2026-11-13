@@ -4,11 +4,13 @@ like, and colours that only show in a terminal.
 A helper imports this before anything else:
 
     sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
-    from common import fail, paint, run, with_flakes, GREEN
+    from common import fail, need, paint, run, GREEN
 
-and ends with `run(main, __doc__, __file__)`.
+and ends with `run(main, __doc__, __file__)`. Importing it also turns on
+flakes for every nix and nh call the helper makes.
 """
 import os
+import shutil
 import subprocess
 import sys
 
@@ -60,6 +62,18 @@ def with_flakes():
     $NIX_CONFIG = (before + '\n' if before else '') + 'extra-experimental-features = nix-command flakes'
 
 
+with_flakes()
+
+
+def need(*commands):
+    """Stops with one plain line when a command the helper calls is missing,
+    before xonsh prints its own longer "command not found" message."""
+    missing = [command for command in commands if shutil.which(command) is None]
+    if missing:
+        fail(f"{' and '.join(missing)} {'is' if len(missing) == 1 else 'are'} missing. "
+             "Run this from the repo, so it starts in the dev shell.")
+
+
 # What a failed command can raise: a non-zero exit, or a command xonsh
 # couldn't start, like one missing from PATH.
 COMMAND_ERRORS = (subprocess.CalledProcessError, XonshError)
@@ -72,14 +86,16 @@ def failed(problem):
         return "Interrupted"
     if isinstance(problem, subprocess.CalledProcessError):
         return f"{' '.join(map(str, problem.cmd))} failed"
-    return str(problem).strip().splitlines()[0]
+    lines = str(problem).strip().splitlines()
+    return lines[0] if lines else "A command failed"
 
 
 def interrupted(problem):
-    """True when a command ended because of Ctrl-C (exit status 130, or
-    killed by a signal), so it isn't taken for an ordinary failure."""
+    """True when a command ended because of Ctrl-C: exit status 130, or
+    stopped by SIGINT. Any other signal (an out-of-memory kill, say) is an
+    ordinary failure."""
     code = getattr(problem, 'returncode', 0)
-    return code == 130 or code < 0
+    return code in (130, -2)
 
 
 def run(main, doc, file):

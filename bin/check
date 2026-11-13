@@ -43,7 +43,7 @@ import sys
 from urllib.parse import quote
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
-from common import GREEN, RED, YELLOW, fail, paint, run, warn
+from common import GREEN, RED, YELLOW, fail, need, paint, run, warn
 
 # Every configuration's derivation, by system and name. Lint and the lib tests
 # are left out: neither is a configuration, and lint changes with any edit.
@@ -86,26 +86,26 @@ def evaluate(flake):
                           capture_output=True, text=True)
 
 
-def show_messages(label, run):
+def show_messages(label, result):
     """What Nix said while it evaluated one side: warnings from the configs
     when it passed, the error when it failed. Nothing is hidden. A warning that
     repeats is shown once, with a count."""
-    lines = [line for line in run.stderr.splitlines() if line.strip()]
+    lines = [line for line in result.stderr.splitlines() if line.strip()]
     if not lines:
         return
     print(f"Messages from {label}:", file=sys.stderr)
-    if run.returncode != 0:
+    if result.returncode != 0:
         # An error trace reads top to bottom: keep every line where it is.
-        print(run.stderr.rstrip(), file=sys.stderr)
+        print(result.stderr.rstrip(), file=sys.stderr)
         return
     for line, count in Counter(lines).items():
         print(f"  {line}" + (f"  (×{count})" if count > 1 else ""), file=sys.stderr)
 
 
-def by_check(run):
+def by_check(result):
     """{(system, name): drvPath} from what `evaluate` printed."""
     return {(system, name): drv
-            for system, checks in json.loads(run.stdout).items()
+            for system, checks in json.loads(result.stdout).items()
             for name, drv in checks.items()}
 
 
@@ -151,16 +151,16 @@ def same(rev, why):
     with ThreadPoolExecutor(max_workers=2) as pool:
         runs = dict(zip([label, 'the working tree'], pool.map(evaluate, [committed, '.'])))
 
-    for side, run in runs.items():
-        show_messages(side, run)
-    for side, run in runs.items():
-        if run.returncode != 0:
+    for side, result in runs.items():
+        show_messages(side, result)
+    for side, result in runs.items():
+        if result.returncode != 0:
             hint = ""
             if shallow and side == label:
                 hint = " This clone is shallow, so that commit may be out of reach: run `git fetch --unshallow`."
             fail(f"Could not evaluate {side}.{hint}")
 
-    before, after = (by_check(run) for run in runs.values())
+    before, after = (by_check(result) for result in runs.values())
 
     status = {}
     for key in sorted(before.keys() | after.keys()):
@@ -204,14 +204,15 @@ def print_list():
     """The working tree's derivations as JSON on stdout. Everything else goes
     to stderr, so `bin/check --list > file` gets JSON and nothing more."""
     print("Evaluating the working tree…", file=sys.stderr)
-    run = evaluate('.')
-    show_messages('the working tree', run)
-    if run.returncode != 0:
+    result = evaluate('.')
+    show_messages('the working tree', result)
+    if result.returncode != 0:
         fail("Could not evaluate the working tree.")
-    print(json.dumps(json.loads(run.stdout), indent=2, sort_keys=True))
+    print(json.dumps(json.loads(result.stdout), indent=2, sort_keys=True))
 
 
 def main(args):
+    need('nix')
     match args:
         case {'--same': True}:
             same(args['<rev>'], args['--why'])

@@ -25,6 +25,7 @@ NH = '''#!/bin/sh
 echo "$*" >> "$LOG"
 printf '%s\\n---\\n' "$NIX_CONFIG" >> "$LOG.config"
 [ "$1" = "$INTERRUPT" ] && kill -INT $$
+[ "$1" = "$KILL" ] && kill -KILL $$
 case " $FAIL " in *" $1 "*) echo "nh $1 broke" >&2; exit 1 ;; esac
 '''
 
@@ -49,11 +50,11 @@ class HelperTests(unittest.TestCase):
         self.log = self.dir / 'nh.log'
         self.xonsh = shutil.which('xonsh')
         self.env = dict(os.environ, PATH=f'{bin_dir}{os.pathsep}{os.environ["PATH"]}',
-                        LOG=str(self.log), FAIL='', INTERRUPT='')
+                        LOG=str(self.log), FAIL='', INTERRUPT='', KILL='')
         self.env.pop('NIX_CONFIG', None)
 
-    def helper(self, name, *args, fail='', interrupt='', nix_config=None, without_nh=False):
-        env = dict(self.env, FAIL=fail, INTERRUPT=interrupt)
+    def helper(self, name, *args, fail='', interrupt='', kill='', nix_config=None, without_nh=False):
+        env = dict(self.env, FAIL=fail, INTERRUPT=interrupt, KILL=kill)
         if nix_config is not None:
             env['NIX_CONFIG'] = nix_config
         if without_nh:
@@ -99,11 +100,20 @@ class RebuildTests(HelperTests):
         self.assertEqual(self.calls(), [f'{OS} switch .'])
         self.assertIn('Interrupted; home not switched.', result.stderr)
 
-    def test_a_missing_nh_says_what_was_left(self):
+    def test_a_missing_nh_is_one_plain_line(self):
         result = self.helper('rebuild', without_nh=True)
         self.assertEqual(result.returncode, 1)
-        self.assertIn('home not switched.', result.stderr)
-        self.assertNotIn('Traceback', result.stderr)
+        self.assertEqual(result.stderr.strip().splitlines(),
+                         ['✗ nh is missing. Run this from the repo, so it starts in the dev shell.'])
+        self.assertEqual(self.calls(), [])
+
+    def test_boot_on_a_mac_is_refused(self):
+        if OS != 'darwin':
+            self.skipTest('nix-darwin only runs on a Mac')
+        result = self.helper('rebuild', '--boot')
+        self.assertEqual(result.returncode, 1)
+        self.assertIn('nix-darwin has no --boot', result.stderr)
+        self.assertEqual(self.calls(), [], 'nothing may be switched')
 
 
 class BuildTests(HelperTests):
@@ -113,6 +123,12 @@ class BuildTests(HelperTests):
         self.assertEqual([call.split()[:2] for call in self.calls()], [[OS, 'build'], ['home', 'build']])
         self.assertIn(f'✗ nh {OS} build failed', result.stderr)
         self.assertNotIn('Built.', result.stdout)
+
+    def test_a_killed_build_is_a_failure_not_ctrl_c(self):
+        result = self.helper('build', kill=OS)
+        self.assertEqual(result.returncode, 1)
+        self.assertEqual([call.split()[0] for call in self.calls()], [OS, 'home'], 'the home build must still run')
+        self.assertNotIn('Interrupted', result.stderr)
 
     def test_ctrl_c_stops_every_build(self):
         result = self.helper('build', interrupt=OS)
