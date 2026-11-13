@@ -204,6 +204,16 @@ Each of these is small and safe. Do them first. The first row needs no code.
 
 ### [ ] CLI-001 Propagate command failures explicitly — P1 · M
 
+**Progress:** `scripts/common.xsh` holds the failure policy for `bin/build`,
+`bin/check` and `bin/rebuild`: it sets `$XONSH_SUBPROC_RAISE_ERROR`, hides
+tracebacks, and ends a failed run with one plain line. `bin/rebuild` says what
+it left undone ("home not switched"). `bin/build` builds both even when one
+fails, which its comment promised but xonsh 0.23 didn't do. `NIX_CONFIG` is
+added to, not replaced. Every xonsh shebang has `--no-rc`.
+`tests/test_rebuild.py` checks each case with a stand-in `nh`. Still open:
+`bin/new`, `bin/setup` and `bin/update` keep their own colours and error
+handling (`bin/update` moves with CLI-002).
+
 **Evidence:** [bin/check](bin/check), [bin/rebuild](bin/rebuild),
 [bin/setup](bin/setup), and [bin/update](bin/update) run commands without
 saying what happens when one fails. [bin/build](bin/build) checks `returncode`

@@ -1,4 +1,4 @@
-#!/usr/bin/env -S nix --extra-experimental-features nix-command --extra-experimental-features flakes develop --command xonsh
+#!/usr/bin/env -S nix --extra-experimental-features nix-command --extra-experimental-features flakes develop --command xonsh --no-rc
 """
 Checks the flake: evaluates every configuration, builds this machine's checks,
 or proves that a change still builds the same derivations.
@@ -42,22 +42,8 @@ import subprocess
 import sys
 from urllib.parse import quote
 
-from docopt import docopt
-
-os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-# A failed command raises and stops the script; the last lines of this file
-# turn that into one plain message. Raising is xonsh's default today. Saying
-# so keeps it true if the default changes. Commands captured with !() don't
-# raise, so those check their own return code.
-$XONSH_SUBPROC_RAISE_ERROR = True
-$XONSH_SHOW_TRACEBACK = False
-
-# Without a terminal Python holds its output back, and the commands' output
-# would overtake it. Writing each line at once keeps a log in order.
-sys.stdout.reconfigure(line_buffering=True)
-
-RED, GREEN, YELLOW = 31, 32, 33
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
+from common import GREEN, RED, YELLOW, fail, need, paint, run, warn
 
 # Every configuration's derivation, by system and name. Lint and the lib tests
 # are left out: neither is a configuration, and lint changes with any edit.
@@ -65,23 +51,6 @@ DERIVATIONS = 'c: builtins.mapAttrs (_: s: builtins.mapAttrs (_: d: d.drvPath) (
 
 # How many untracked files to name before "and N more".
 UNTRACKED_SHOWN = 10
-
-
-def paint(text, color, stream=sys.stdout):
-    """`text` in `color` when `stream` is a terminal, plain when it's a file
-    or a pipe. Each stream decides for itself, so `2> err.log` stays clean."""
-    return f"\033[1;{color}m{text}\033[0m" if stream.isatty() else text
-
-
-def fail(message):
-    cross = paint('✗', RED, sys.stderr)
-    print(f"{cross} {message}", file=sys.stderr)
-    sys.exit(1)
-
-
-def warn(message):
-    mark = paint('!', YELLOW, sys.stderr)
-    print(f"{mark} {message}", file=sys.stderr)
 
 
 def resolve(rev):
@@ -117,26 +86,26 @@ def evaluate(flake):
                           capture_output=True, text=True)
 
 
-def show_messages(label, run):
+def show_messages(label, result):
     """What Nix said while it evaluated one side: warnings from the configs
     when it passed, the error when it failed. Nothing is hidden. A warning that
     repeats is shown once, with a count."""
-    lines = [line for line in run.stderr.splitlines() if line.strip()]
+    lines = [line for line in result.stderr.splitlines() if line.strip()]
     if not lines:
         return
     print(f"Messages from {label}:", file=sys.stderr)
-    if run.returncode != 0:
+    if result.returncode != 0:
         # An error trace reads top to bottom: keep every line where it is.
-        print(run.stderr.rstrip(), file=sys.stderr)
+        print(result.stderr.rstrip(), file=sys.stderr)
         return
     for line, count in Counter(lines).items():
         print(f"  {line}" + (f"  (×{count})" if count > 1 else ""), file=sys.stderr)
 
 
-def by_check(run):
+def by_check(result):
     """{(system, name): drvPath} from what `evaluate` printed."""
     return {(system, name): drv
-            for system, checks in json.loads(run.stdout).items()
+            for system, checks in json.loads(result.stdout).items()
             for name, drv in checks.items()}
 
 
@@ -182,16 +151,16 @@ def same(rev, why):
     with ThreadPoolExecutor(max_workers=2) as pool:
         runs = dict(zip([label, 'the working tree'], pool.map(evaluate, [committed, '.'])))
 
-    for side, run in runs.items():
-        show_messages(side, run)
-    for side, run in runs.items():
-        if run.returncode != 0:
+    for side, result in runs.items():
+        show_messages(side, result)
+    for side, result in runs.items():
+        if result.returncode != 0:
             hint = ""
             if shallow and side == label:
                 hint = " This clone is shallow, so that commit may be out of reach: run `git fetch --unshallow`."
             fail(f"Could not evaluate {side}.{hint}")
 
-    before, after = (by_check(run) for run in runs.values())
+    before, after = (by_check(result) for result in runs.values())
 
     status = {}
     for key in sorted(before.keys() | after.keys()):
@@ -235,14 +204,15 @@ def print_list():
     """The working tree's derivations as JSON on stdout. Everything else goes
     to stderr, so `bin/check --list > file` gets JSON and nothing more."""
     print("Evaluating the working tree…", file=sys.stderr)
-    run = evaluate('.')
-    show_messages('the working tree', run)
-    if run.returncode != 0:
+    result = evaluate('.')
+    show_messages('the working tree', result)
+    if result.returncode != 0:
         fail("Could not evaluate the working tree.")
-    print(json.dumps(json.loads(run.stdout), indent=2, sort_keys=True))
+    print(json.dumps(json.loads(result.stdout), indent=2, sort_keys=True))
 
 
 def main(args):
+    need('nix')
     match args:
         case {'--same': True}:
             same(args['<rev>'], args['--why'])
@@ -260,12 +230,6 @@ def main(args):
 
 
 if __name__ == '__main__':
-    arguments = docopt(__doc__.format(program=__file__), version=f'{os.path.basename(__file__)} script version 1.0')
-    try:
-        main(arguments)
-    except subprocess.CalledProcessError as error:
-        fail(f"{' '.join(map(str, error.cmd))} failed")
-    except KeyboardInterrupt:
-        fail("Interrupted.")
+    run(main, __doc__, __file__)
 
 # vim: ft=xonsh
