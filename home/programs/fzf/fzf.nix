@@ -16,8 +16,9 @@
     FZF_DEFAULT_OPTS = "--height 50% --bind=ctrl-j:preview-down,ctrl-k:preview-up --reverse --inline-info --preview-window=right:60%";
   };
 
-  # fzf's two zsh files, each at the one spot where it works. They are the
-  # same files `fzf --zsh` prints, read from the store with no extra process.
+  # fzf's two zsh files, each loaded at the one point where it works. They are
+  # what `fzf --zsh` prints, read straight from the package, so opening a
+  # shell doesn't have to run fzf to get them.
   programs.zsh.initContent = lib.mkMerge [
     # Tab: before oh-my-zsh, so fzf-tab loads after it and takes over Tab.
     (lib.mkBefore ''
