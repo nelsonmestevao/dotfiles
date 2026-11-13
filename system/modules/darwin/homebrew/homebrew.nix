@@ -17,13 +17,10 @@
     # HOMEBREW_*, MANPATH, and completions).
     enableZshIntegration = true;
 
-    # This Mac is managed by Workbrew, which forces every `brew` call through
-    # its wrapper at /opt/workbrew/bin/brew (HOMEBREW_FORCE_BREW_WRAPPER).
-    # Point nix-darwin at that prefix so it invokes the wrapper instead of the
-    # raw /opt/homebrew/bin/brew. NOTE: Workbrew also rejects brew run via sudo,
-    # and nix-darwin runs `brew bundle` inside the sudo activation — so this may
-    # still fail with "invoked by /usr/bin/sudo". If it does, disable this
-    # module and manage casks through a Workbrew Brewfile instead.
+    # This Mac is managed by Workbrew, which sends every `brew` call through
+    # its own /opt/workbrew/bin/brew. Point nix-darwin there so it uses that
+    # one. `brew bundle` runs through it under sudo during a switch, and that
+    # works.
     prefix = "/opt/workbrew";
 
     onActivation = {
@@ -32,12 +29,55 @@
       cleanup = "uninstall";
     };
 
-    taps = [ "remoteoss/kasa" ];
+    taps = [
+      "nikitabobko/tap"
+      "remoteoss/kasa"
+    ];
 
-    # CLI formulae. Prefer nixpkgs via home.packages; list here only what nix
-    # lacks or what must come from Homebrew.
+    # Every Homebrew formula installed on this Mac. With `cleanup = "uninstall"`,
+    # a switch removes any formula that isn't listed here, so the list has to
+    # be complete, even where Nix installs the same tool. New CLI tools belong
+    # in home.packages; add one here only when it has to come from Homebrew.
+    # `brew bundle dump --file=-` prints what is installed, to compare.
     brews = [
+      # Tools
+      "awscli"
+      "colima"
+      "coreutils"
+      "curl"
+      "docker"
+      "docker-compose"
+      "ffmpeg"
+      "gdal"
+      "ghostscript"
       "git-kasa"
+      "git-lfs"
+      "gum"
+      "pdftk-java"
+      "pgformatter"
+      "weasyprint"
+      "yq"
+
+      # What git-kasa needs. During a switch Homebrew can't see git-kasa's
+      # needs (it comes from another tap), so without these lines it tries to
+      # remove them and then refuses, because git-kasa needs them.
+      "gettext"
+      "git"
+      "json-c"
+      "libunistring"
+      "pcre2"
+
+      # Libraries that were installed on purpose. Other formulae above need
+      # most of them; listing them keeps a switch from depending on Homebrew
+      # to get that right.
+      "libpq"
+      "lz4"
+      "openssl@3"
+      "ossp-uuid"
+      "pkgconf"
+      "poppler"
+      "readline"
+      "zlib"
     ];
 
     # GUI apps / casks.
