@@ -5,15 +5,12 @@
   ...
 }:
 let
-  cfg = config.dotfiles.packages;
   scripts = import ./scripts.nix { inherit pkgs; };
 in
 {
-  options.dotfiles.packages = {
-    enable = lib.mkEnableOption "Enable packages.";
-  };
+  options.dotfiles.packages.enable = lib.mkEnableOption "the packages and scripts listed here";
 
-  config = lib.mkIf cfg.enable {
+  config = lib.mkIf config.dotfiles.packages.enable {
     home.packages =
       with pkgs;
       [
@@ -43,7 +40,6 @@ in
         pkg-config
 
         # development tools
-        # age
         bc
 
         eva

@@ -4,7 +4,18 @@
   pkgs,
   ...
 }:
-with lib.hm.gvariant;
+let
+  inherit (lib.hm.gvariant) mkTuple mkUint32;
+
+  # Sets the keys of `<action>-1` to `<action>-<count>`: `keys n` for number n.
+  numbered =
+    action: count: keys:
+    lib.genAttrs' (lib.range 1 count) (n: lib.nameValuePair "${action}-${toString n}" (keys n));
+
+  # The number keys in the order they sit on the keyboard, so workspace 10 is
+  # on 0. There are only ten, so a count over 10 fails here.
+  workspaceKey = n: lib.elemAt (lib.stringToCharacters "1234567890") (n - 1);
+in
 {
   platforms = [ "linux" ];
 
@@ -32,14 +43,14 @@ with lib.hm.gvariant;
     adwaita-icon-theme
   ];
 
-  # dconf write /org/gnome/desktop/input-sources/xkb-options "['caps:ctrl_modifier']"
-  # gsettings get org.gnome.desktop.interface color-scheme
-  # gsettings set org.gnome.desktop.background picture-uri-dark file:///home/nelson/Pictures/desktop.jpg
-  # gsettings set org.gnome.desktop.background picture-uri file:///home/nelson/Pictures/login.jpg
+  # Commands for settings this file leaves alone:
+  #
+  #   dconf write /org/gnome/desktop/input-sources/xkb-options "['caps:ctrl_modifier']"
+  #   gsettings get org.gnome.desktop.interface color-scheme
+  #   gsettings set org.gnome.desktop.background picture-uri-dark file:///home/nelson/Pictures/desktop.jpg
+  #   gsettings set org.gnome.desktop.background picture-uri file:///home/nelson/Pictures/login.jpg
 
-  home.sessionVariables = {
-    GSETTINGS_SCHEMA_DIR = builtins.concatStringsSep ":" config.dotfiles.programs.gnome.extensionSchemaDirs;
-  };
+  home.sessionVariables.GSETTINGS_SCHEMA_DIR = lib.concatStringsSep ":" config.dotfiles.programs.gnome.extensionSchemaDirs;
 
   dconf.settings = {
     "org/gnome/shell" = {
@@ -99,17 +110,7 @@ with lib.hm.gvariant;
       focus-mode = "sloppy";
     };
 
-    "org/gnome/shell/keybindings" = {
-      switch-to-application-1 = [ ];
-      switch-to-application-2 = [ ];
-      switch-to-application-3 = [ ];
-      switch-to-application-4 = [ ];
-      switch-to-application-5 = [ ];
-      switch-to-application-6 = [ ];
-      switch-to-application-7 = [ ];
-      switch-to-application-8 = [ ];
-      switch-to-application-9 = [ ];
-      switch-to-application-10 = [ ];
+    "org/gnome/shell/keybindings" = numbered "switch-to-application" 10 (_: [ ]) // {
       toggle-overview = [ ];
       toggle-application-view = [ "<Super>a" ];
       toggle-message-tray = [ "<Super>m" ];
@@ -148,26 +149,6 @@ with lib.hm.gvariant;
       show-desktop = [ ];
       switch-windows = [ ];
       switch-windows-backward = [ ];
-      move-to-workspace-1 = [ "<Super><Shift>1" ];
-      move-to-workspace-2 = [ "<Super><Shift>2" ];
-      move-to-workspace-3 = [ "<Super><Shift>3" ];
-      move-to-workspace-4 = [ "<Super><Shift>4" ];
-      move-to-workspace-5 = [ "<Super><Shift>5" ];
-      move-to-workspace-6 = [ "<Super><Shift>6" ];
-      move-to-workspace-7 = [ "<Super><Shift>7" ];
-      move-to-workspace-8 = [ "<Super><Shift>8" ];
-      move-to-workspace-9 = [ "<Super><Shift>9" ];
-      move-to-workspace-10 = [ "<Super><Shift>0" ];
-      switch-to-workspace-1 = [ "<Super>1" ];
-      switch-to-workspace-2 = [ "<Super>2" ];
-      switch-to-workspace-3 = [ "<Super>3" ];
-      switch-to-workspace-4 = [ "<Super>4" ];
-      switch-to-workspace-5 = [ "<Super>5" ];
-      switch-to-workspace-6 = [ "<Super>6" ];
-      switch-to-workspace-7 = [ "<Super>7" ];
-      switch-to-workspace-8 = [ "<Super>8" ];
-      switch-to-workspace-9 = [ "<Super>9" ];
-      switch-to-workspace-10 = [ "<Super>0" ];
       switch-to-workspace-11 = [ ];
       switch-to-workspace-12 = [ ];
       toggle-above = [ ];
@@ -175,23 +156,14 @@ with lib.hm.gvariant;
       toggle-on-all-workspaces = [ ];
       toggle-maximized = [ "<Super>f" ];
       unmaximize = [ ];
-    };
+    }
+    // numbered "move-to-workspace" 10 (n: [ "<Super><Shift>${workspaceKey n}" ])
+    // numbered "switch-to-workspace" 10 (n: [ "<Super>${workspaceKey n}" ]);
 
     "org/gnome/mutter/wayland/keybindings" = {
       restore-shortcuts = [ ];
-      switch-to-session-1 = [ "<Primary><Alt>F1" ];
-      switch-to-session-2 = [ "<Primary><Alt>F2" ];
-      switch-to-session-3 = [ "<Primary><Alt>F3" ];
-      switch-to-session-4 = [ "<Primary><Alt>F4" ];
-      switch-to-session-5 = [ "<Primary><Alt>F5" ];
-      switch-to-session-6 = [ "<Primary><Alt>F6" ];
-      switch-to-session-7 = [ "<Primary><Alt>F7" ];
-      switch-to-session-8 = [ "<Primary><Alt>F8" ];
-      switch-to-session-9 = [ "<Primary><Alt>F9" ];
-      switch-to-session-10 = [ "<Primary><Alt>F10" ];
-      switch-to-session-11 = [ "<Primary><Alt>F11" ];
-      switch-to-session-12 = [ "<Primary><Alt>F12" ];
-    };
+    }
+    // numbered "switch-to-session" 12 (n: [ "<Primary><Alt>F${toString n}" ]);
 
     "org/gnome/desktop/screensaver" = {
       picture-uri = "file://${config.home.homeDirectory}/Pictures/Wallpapers/lockscreen.jpg";
