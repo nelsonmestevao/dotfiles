@@ -575,8 +575,10 @@ NixOS:
   flakes, `nix-command`, and garbage collection.
 - **Homebrew is driven declaratively** through the
   `dotfiles.modules.homebrew.enable` module, which reconciles casks/formulae via
-  `brew bundle` on activation. nix-darwin does **not** install Homebrew itself —
-  install it once, manually, first.
+  `brew bundle` on activation. A switch removes any Homebrew formula the module
+  doesn't list, so it lists every one installed on this Mac. Run
+  `brew bundle dump --file=-` to compare. nix-darwin does **not** install
+  Homebrew itself — install it once, manually, first.
 - **Home Manager runs the same modules** as on Linux; Linux/Wayland-only ones
   (GNOME, Hyprland, Vicinae) stay disabled and evaluate cleanly.
 
