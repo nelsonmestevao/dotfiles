@@ -391,7 +391,7 @@ that shell for you (`direnv allow` once).
 | `bin/check --eval`             | Evaluates every config without building anything (about a minute).  |
 | `bin/check --all-systems`      | Builds every system's checks. Needs a builder for the other OS.      |
 | `bin/check --same [<rev>]`     | Shows which configs build a different derivation than `<rev>` did.   |
-| `bin/check --list`             | Prints the derivation of every check as JSON, the list CI keys on.   |
+| `bin/check --list`             | Prints what every config builds, as JSON. CI decides from this list. |
 | `bin/lint`                     | Runs deadnix, statix and nixfmt, like CI does before it builds.      |
 | `bin/format`                   | Formats every Nix file (`nix fmt`).                                  |
 | `bin/test`                     | Runs the tests for the helper scripts, like CI does.                 |
@@ -437,10 +437,10 @@ and CI's planning script. They work in throwaway folders and touch nothing
 else. Pass it unittest's arguments to narrow the run, like
 `bin/test -k hardware`.
 
-CI runs in two steps. A quick job lints, runs `bin/test`, and evaluates every
-config with `bin/check --list`. Then a build job builds each system's home
-configs. A system whose home derivations were built before gets no build job,
-and the quick job's summary says "Already built". A weekly run builds
+CI runs in two steps. A quick job lints, runs `bin/test`, and reads through
+every config with `bin/check --list`. Then a build job builds each system's
+home configs. A system whose home configs built before, unchanged, gets no
+build job, and the quick job's summary says "Already built". A weekly run builds
 everything anyway. [`.github/scripts/plan-builds`](.github/scripts/plan-builds)
 makes that choice, and you can run it by hand on a saved list; its first lines
 say how.
