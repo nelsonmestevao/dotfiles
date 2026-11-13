@@ -3,8 +3,7 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-# The regression tests for the helpers in bin/. They run in throwaway
-# repositories and need the dev shell's tools (xonsh, nixfmt, deadnix, statix).
-# CI runs them in its first job. Extra arguments go to unittest, like
-# `bin/test -k hardware`.
+# The tests for the scripts in bin/ and .github/scripts/. They run in
+# throwaway repos and need the dev shell's tools. CI runs them in its first
+# job. Extra arguments go to Python's unittest, like `bin/test -k hardware`.
 nix --extra-experimental-features 'nix-command flakes' develop --command python3 -B -m unittest discover -s tests -v "$@"

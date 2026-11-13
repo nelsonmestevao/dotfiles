@@ -1,23 +1,23 @@
 #!/usr/bin/env bash
-# Plans CI's build job: the key of what it builds on each system, and which
-# systems need a build at all. It reads the list that `bin/check --list`
-# prints. Run it by hand the way CI does:
+# Decides what CI's build job does: a key for what it would build on each
+# system, and which systems need a build at all. It reads the list that
+# `bin/check --list` prints. Run it by hand the way CI does:
 #
 #   bin/check --list > /tmp/derivations.json
 #   .github/scripts/plan-builds keys /tmp/derivations.json
 #   .github/scripts/plan-builds matrix /tmp/derivations.json false [<found key>...]
 #
 # keys    prints `<system>=<key>` for each system.
-# matrix  prints `systems=<JSON>`, the build job's matrix: every system whose
-#         key is not among the found keys, or every system when the second
-#         argument is `true`.
+# matrix  prints `systems=<JSON>`: the systems to build. That is every system
+#         whose key is not among the found keys, or every system when the
+#         second argument is `true`.
 #
-# Both print lines that GitHub reads from $GITHUB_OUTPUT. Notes for the run's
-# summary go to $GITHUB_STEP_SUMMARY, or to stderr when it is not set.
+# GitHub reads both outputs from $GITHUB_OUTPUT. Notes for the run's summary
+# go to $GITHUB_STEP_SUMMARY, or to the terminal when it is not set.
 set -euo pipefail
 
-# The systems CI builds, and the runner each one builds on. A new system also
-# needs its own marker lookup in ci.yml.
+# The systems CI builds, and the GitHub machine each one builds on. A new
+# system also needs its own marker lookup in ci.yml.
 RUNNERS='{"x86_64-linux": "ubuntu-latest", "aarch64-darwin": "macos-latest"}'
 
 WORKFLOW="$(dirname "$0")/../workflows/ci.yml"
@@ -42,11 +42,11 @@ systems() {
 
 # Sets $key for the system $2, from the list in $1.
 #
-# It hashes the home configurations (`user@host`), which is what the build job
-# builds. The other checks are left out: the nixos-* and darwin-* ones are only
-# evaluated, and the quick job already did that. So a change to a system
-# configuration alone starts no build. The workflow is in the hash too, so that a change to the
-# build steps gets one real build.
+# The key is a hash of the home configurations (`user@host`), which is what
+# the build job builds. The nixos-* and darwin-* checks are left out: they are
+# only read through, and the quick job did that already. So a change to a
+# system configuration alone starts no build. ci.yml is in the hash too, so a
+# change to the build steps gets one real build.
 make_key() {
   local homes hash
   homes=$(jq -cS --arg system "$2" \
@@ -68,7 +68,8 @@ is_found() {
 
 keys() {
   local list=$1 system unknown
-  # A system the list has but RUNNERS lacks would never be built, unnoticed.
+  # Without this, a system missing from RUNNERS would never be built, and
+  # nothing would say so.
   unknown=$(jq -r --argjson runners "$RUNNERS" 'keys - ($runners | keys) | join(", ")' "$list")
   [ -z "$unknown" ] || fail "the list has $unknown, which RUNNERS above doesn't know"
   for system in $(systems); do

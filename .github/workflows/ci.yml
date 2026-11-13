@@ -1,12 +1,12 @@
 name: CI
 
 on:
-  # Other branches get their one run from their pull request.
+  # Other branches run CI once, from their pull request.
   push:
     branches: [main, wip]
   pull_request:
-  # Mondays: build every system, markers or not, to catch a source that
-  # vanished or a cache that went stale. Runs from the default branch only.
+  # Every Monday, build everything, even what built before, to catch a
+  # download that went away. GitHub runs this from the default branch only.
   schedule:
     - cron: "0 5 * * 1"
   workflow_dispatch:
@@ -16,22 +16,22 @@ on:
         type: boolean
         default: false
 
-# A newer run for the same branch or pull request makes the older one useless.
+# A new push stops the run still going for the same branch or pull request.
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
-# bash -e -o pipefail: a step stops at its first failed command.
+# A step stops at its first failed command, a failed pipe included.
 defaults:
   run:
     shell: bash
 
 jobs:
-  # Lint, tests, and the evaluation of every configuration, with no disk
-  # cleanup and no store cache. It also picks the systems the build job builds.
+  # The fast checks: lint, the tests, and every configuration read through
+  # without building it. Then it decides which systems the build job builds.
   quick:
-    # A pull request from main or wip of this repository gets no run: the
-    # push to that branch had one.
+    # A pull request from this repo's main or wip gets no run of its own: the
+    # push to that branch already had one.
     if: >-
       github.event_name != 'pull_request' ||
       github.event.pull_request.head.repo.full_name != github.repository ||
@@ -48,11 +48,11 @@ jobs:
         run: nix build -L .#checks.x86_64-linux.lint
       - name: Test the helper scripts
         run: bin/test
-      # Every check on every system: all seven configurations.
+      # All seven configurations, on both systems.
       - name: Evaluate every configuration
         run: bin/check --list > "$RUNNER_TEMP/derivations.json"
-      # The rest of what `bin/check --eval` covers. Every helper in bin/ runs
-      # in the dev shell, so a broken Mac shell breaks them all on the Mac.
+      # The rest of what `bin/check --eval` covers. Every bin/ script runs in
+      # the dev shell, so a broken Mac dev shell breaks them all on the Mac.
       - name: Evaluate the dev shells and formatters
         run: >-
           nix path-info --derivation
@@ -62,18 +62,18 @@ jobs:
       - name: Make a key per system
         id: keys
         run: .github/scripts/plan-builds keys "$RUNNER_TEMP/derivations.json" >> "$GITHUB_OUTPUT"
-      # A marker is a tiny cache entry that a passing build job saved under its
-      # key. These only ask whether it exists, from this runner, so no Mac
-      # boots for nothing. GitHub limits who sees an entry:
+      # A marker is a tiny file that a passing build saved in GitHub's cache,
+      # named by the key above. Looking here first means a Mac machine starts
+      # only when there is something to build. Not every run can see every
+      # marker:
       #
-      # - saved on wip: wip, and pull requests into wip;
-      # - saved in a pull request: that pull request only;
-      # - saved on main: every branch, but main never sees wip's;
-      # - filed by path and packing: if the Mac packs differently, its marker
-      #   is missed here;
-      # - unread for seven days: dropped.
+      # - one saved on wip is seen on wip and in pull requests into wip;
+      # - one saved in a pull request is seen in that pull request only;
+      # - one saved on main is seen everywhere, but main can't see wip's;
+      # - GitHub deletes one that nobody read for seven days.
       #
-      # A missed marker costs one build, never a wrong pass.
+      # A marker that can't be seen only costs one more build. It never lets
+      # a broken configuration pass.
       - name: Look for the Linux marker
         id: linux
         uses: actions/cache/restore@v6
@@ -98,9 +98,9 @@ jobs:
 
   # Builds the home configurations of each system that quick picked.
   #
-  # A run that builds nothing doesn't touch the store cache below. After a week
-  # of those, GitHub may drop it, and the next build compiles herdr-app and
-  # vicinae from source again. Our own binary cache ends this (CI-002).
+  # A run that builds nothing leaves the saved Nix store below unread. After a
+  # week of that, GitHub may delete it, and the next build compiles herdr-app
+  # and vicinae again. Our own Cachix cache (CI-002) will end this.
   build:
     name: build (${{ matrix.system }})
     needs: quick
@@ -108,32 +108,32 @@ jobs:
     runs-on: ${{ matrix.os }}
     permissions:
       contents: read
-      # The store cache step deletes this branch's older caches after saving.
+      # The step that saves the Nix store deletes this branch's older copies.
       actions: write
     strategy:
       fail-fast: false
       matrix:
         include: ${{ fromJSON(needs.quick.outputs.systems) }}
     steps:
-      # First, so that its closing step runs last: it saves the marker after
-      # the store cache, and only when the whole job passed. A forced run that
-      # finds the marker has nothing to save. The path must be the same string
-      # as in quick's lookups, or they never find it.
+      # This step is first so that its cleanup step runs last: the marker is
+      # saved after everything else, and only when the whole job passed. The
+      # path must be written exactly as in quick's lookups, or they never find
+      # the marker.
       - name: Save the marker when this job passes
         uses: actions/cache@v6
         with:
           path: .ci-marker
           key: ${{ matrix.key }}
       - uses: actions/checkout@v7
-      # The Linux closure is large; this frees ~20-30 GB so the build isn't
-      # killed for lack of disk.
+      # The Linux build needs a lot of disk. This frees 20 to 30 GB first.
       - name: Free disk space
         if: runner.os == 'Linux'
         uses: jlumbroso/free-disk-space@main
       - uses: cachix/install-nix-action@v31
-      # The Linux closure is about 50 GiB, far over the 10 GB cache limit. So
-      # before saving, it deletes everything that "Keep the slow builds" does
-      # not keep. The Mac build takes about six minutes without a cache.
+      # Saves the Nix store in GitHub's cache for the next run. The whole Linux
+      # build is about 50 GB, over the 10 GB limit, so only what "Keep the
+      # slow builds" names is saved. The Mac build takes about six minutes, so
+      # it needs no cache.
       - name: Restore and save the Nix store
         if: runner.os == 'Linux'
         uses: nix-community/cache-nix-action@v7
@@ -145,11 +145,11 @@ jobs:
           purge-prefixes: nix-${{ runner.os }}-
           purge-created: 0
           purge-primary-key: never
-      # Builds this runner's system only.
+      # Builds only the system of the GitHub machine it runs on.
       - name: Build
         run: nix flake check
-      # vicinae (about an hour) and herdr-app (about 35 minutes) build from
-      # source. As GC roots they stay in the saved cache.
+      # vicinae (about an hour) and herdr-app (about 35 minutes) have to be
+      # compiled. Naming them here keeps them in the saved store.
       - name: Keep the slow builds
         if: runner.os == 'Linux'
         run: >-
