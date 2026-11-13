@@ -553,7 +553,7 @@ nix build --no-link ".#checks.$(nix config show system).lib-tests"
 Coding agents get their rules from [`AGENTS.md`](AGENTS.md). For Claude Code,
 [`.claude/settings.json`](.claude/settings.json) also makes it ask before it
 runs `bin/rebuild`, `bin/autoclean`, `bin/update`, `sudo` or `git push`, and
-lets it lint, check and build without asking.
+lets it lint, test, check and build without asking.
 
 To stay up to date:
 

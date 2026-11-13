@@ -25,6 +25,8 @@
     "allow": [
       "Bash(bin/lint)",
       "Bash(bin/format)",
+      "Bash(bin/test)",
+      "Bash(bin/test *)",
       "Bash(bin/check *)",
       "Bash(bin/build *)",
       "Bash(nix eval *)",
