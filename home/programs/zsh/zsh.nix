@@ -22,10 +22,10 @@
   };
 
   programs.zsh.enable = true;
-  # oh-my-zsh sets up completion (compinit, see theme.zsh). Home Manager would
-  # run it once more before that, and so would /etc/zshrc, which
-  # system/nixos.nix and system/darwin.nix turn off. Each run only makes the
-  # shell start slower.
+  # oh-my-zsh sets up completion with compinit (see theme.zsh). Home Manager
+  # and /etc/zshrc would each run compinit too, before it, which only slows
+  # the shell down. This turns Home Manager's run off; system/nixos.nix and
+  # system/darwin.nix turn off the one in /etc/zshrc.
   programs.zsh.enableCompletion = false;
   # Saved to ~/.zsh_history, as before.
   programs.zsh.history.size = 100000;

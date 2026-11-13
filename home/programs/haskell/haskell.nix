@@ -33,8 +33,9 @@
   ];
 
   # The OpenGL libraries, for programs built with freeglut. Set once per
-  # session, so it doesn't grow in nested shells, and with no empty entry
-  # when it was unset: the linker reads one as the current folder.
+  # session, not by every shell, so it doesn't grow in nested shells. It has no empty entry when it was
+  # unset, since that would make programs look for libraries in the current
+  # folder.
   home.sessionVariables.LD_LIBRARY_PATH = "${pkgs.freeglut}/lib:${pkgs.libGL}/lib\${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}";
 
   # ghcup's paths, when ghcup is installed. In the file every zsh reads, so

@@ -93,15 +93,14 @@
     masApps = { };
   };
 
-  # brew shellenv above prepends Workbrew-owned /opt/homebrew/share/zsh/
-  # site-functions to fpath. compaudit only trusts dirs owned by root or the
-  # current user, so a bare compinit after that prompts "insecure directories"
-  # on each shell start. This strips those dirs right after shellenv; the rest
-  # of shellenv (PATH, HOMEBREW_*) stays.
-  #
-  # Home Manager's bare compinit is now off (home/programs/zsh), but keep this:
-  # oh-my-zsh's `compinit -i` skips these dirs and then prints an "insecure
-  # completion-dependent directories" warning on every shell start.
+  # `brew shellenv` above adds Workbrew's /opt/homebrew/share/zsh folders to
+  # the places zsh looks for completions. zsh's completion setup (compinit)
+  # only trusts folders that root or you own and that nobody else can write
+  # to. Workbrew's are group-writable, so oh-my-zsh warns about "insecure
+  # completion-dependent directories" on every shell start. This takes those
+  # folders out again; everything else `brew shellenv` sets (PATH, HOMEBREW_*)
+  # stays. It is still needed with Home Manager's compinit off: oh-my-zsh's
+  # own run is the one that warns.
   programs.zsh.interactiveShellInit = lib.mkAfter ''
     fpath=(''${fpath:#/opt/homebrew/share/zsh*})
   '';
