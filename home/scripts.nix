@@ -4,9 +4,13 @@
 let
   # Pick two generations with fzf and diff them with nvd. Home-manager and
   # NixOS generations differ only in their profile folder and link prefix, so
-  # hm-diff and nixos-diff share this one script.
+  # hm-diff and nixos-diff share this one script. Its stat and date are GNU's,
+  # from nixpkgs, since a Mac's take other flags.
   mkGenerationDiff =
     name: dir: prefix:
+    let
+      inherit (pkgs) coreutils;
+    in
     pkgs.writeShellScriptBin name ''
       dir="${dir}"
       picks=$(
@@ -15,7 +19,7 @@ let
           gen=''${name#${prefix}}
           gen=''${gen%-link}
           printf '%s  gen %s\t%s\n' \
-            "$(date -d "@$(stat -c '%Y' "$f")" '+%Y-%m-%d %H:%M')" \
+            "$(${coreutils}/bin/date -d "@$(${coreutils}/bin/stat -c '%Y' "$f")" '+%Y-%m-%d %H:%M')" \
             "$gen" "$f"
         done | sort -r \
           | ${pkgs.fzf}/bin/fzf --multi --delimiter=$'\t' --with-nth=1 \
@@ -27,7 +31,7 @@ let
       fi
       a=$(echo "$picks" | head -1)
       b=$(echo "$picks" | tail -1)
-      if [ "$(stat -c '%Y' "$a")" -lt "$(stat -c '%Y' "$b")" ]; then
+      if [ "$(${coreutils}/bin/stat -c '%Y' "$a")" -lt "$(${coreutils}/bin/stat -c '%Y' "$b")" ]; then
         older="$a"; newer="$b"
       else
         older="$b"; newer="$a"

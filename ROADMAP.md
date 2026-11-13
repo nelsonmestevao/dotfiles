@@ -1623,7 +1623,8 @@ real home.
 README and a comment in `flake.nix` promise automatic direnv loading.
 **Verified:** commit `f6bf77f6` added `.envrc`, and the next commit,
 `c15fee8c` ("[herdr-app]: add mods"), deleted it. [home/scripts.nix](home/scripts.nix)
-also assumes GNU `stat`/`date` and particular generation directories.
+assumes particular generation directories. (Its GNU `stat` and `date` now come
+from nixpkgs, so they work on a Mac too.)
 
 **Plan:**
 
