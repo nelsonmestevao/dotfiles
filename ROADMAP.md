@@ -1849,6 +1849,11 @@ The module also documents a possible Workbrew/sudo conflict.
 
 **Decided:** the owner reports that the Homebrew step works on the work Mac.
 
+**Progress:** `cleanup` is now `"none"`. With `"uninstall"`, `bin/rebuild os`
+failed: every switch tried to remove all the formulae installed outside this
+repo, and Homebrew refused, because `git-kasa` needs `git`. A switch now only
+installs what the module lists. The rest of the plan is still open.
+
 **Plan:**
 
 1. Set `autoUpdate` and `upgrade` to `false`. A switch then only installs and

@@ -573,10 +573,12 @@ NixOS:
 - **Nix is managed by [Determinate Nix]**, so nix-darwin's own Nix management is
   turned off (`nix.enable = false`) to avoid conflicts — Determinate owns
   flakes, `nix-command`, and garbage collection.
-- **Homebrew is driven declaratively** through the
-  `dotfiles.modules.homebrew.enable` module, which reconciles casks/formulae via
-  `brew bundle` on activation. nix-darwin does **not** install Homebrew itself —
-  install it once, manually, first.
+- **Homebrew apps are listed in this repo** in the
+  `dotfiles.modules.homebrew.enable` module. Each switch installs what the list
+  names with `brew bundle`, and leaves other Homebrew apps alone, so an app
+  taken off the list stays installed until you `brew uninstall` it.
+  nix-darwin does **not** install Homebrew itself — install it once, by hand,
+  first.
 - **Home Manager runs the same modules** as on Linux; Linux/Wayland-only ones
   (GNOME, Hyprland, Vicinae) stay disabled and evaluate cleanly.
 

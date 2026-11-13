@@ -17,19 +17,21 @@
     # HOMEBREW_*, MANPATH, and completions).
     enableZshIntegration = true;
 
-    # This Mac is managed by Workbrew, which forces every `brew` call through
-    # its wrapper at /opt/workbrew/bin/brew (HOMEBREW_FORCE_BREW_WRAPPER).
-    # Point nix-darwin at that prefix so it invokes the wrapper instead of the
-    # raw /opt/homebrew/bin/brew. NOTE: Workbrew also rejects brew run via sudo,
-    # and nix-darwin runs `brew bundle` inside the sudo activation — so this may
-    # still fail with "invoked by /usr/bin/sudo". If it does, disable this
-    # module and manage casks through a Workbrew Brewfile instead.
+    # This Mac is managed by Workbrew, which sends every `brew` call through
+    # its own /opt/workbrew/bin/brew. Point nix-darwin there so it uses that
+    # one. `brew bundle` runs through it under sudo during a switch, and that
+    # works.
     prefix = "/opt/workbrew";
 
     onActivation = {
       autoUpdate = true;
       upgrade = true;
-      cleanup = "uninstall";
+      # Leave alone what this file doesn't list. With "uninstall", every switch
+      # tried to remove all the formulae installed outside this repo (awscli,
+      # colima, docker and many more) and failed, because git-kasa needs some
+      # of them. The cost: an app taken out of the lists below stays installed
+      # until you `brew uninstall` it.
+      cleanup = "none";
     };
 
     taps = [ "remoteoss/kasa" ];
