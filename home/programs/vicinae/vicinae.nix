@@ -53,9 +53,13 @@ let
     meta.mainProgram = "vicinae";
   };
 
-  # vicinae was 0.30.0 before this change. The warning stops by itself once
-  # nixpkgs has that version; then delete it.
-  previousVersion = "0.30.0";
+  # vicinae was 0.30.0 before this change, so the warning below says to back up
+  # first. Once nixpkgs has that version, it stops, and pkgs.expiry says to
+  # delete it.
+  previousVersion =
+    pkgs.expiry.expiresWhen (lib.versionAtLeast pkgs.vicinae.version "0.30.0")
+      "nixpkgs has vicinae 0.30.0 now. Delete the downgrade warning in home/programs/vicinae/vicinae.nix."
+      "0.30.0";
 in
 {
   # Runs as a systemd user service under Wayland.

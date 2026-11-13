@@ -100,7 +100,7 @@ jobs:
   #
   # A run that builds nothing leaves the saved Nix store below unread. After a
   # week of that, GitHub may delete it, and the next build compiles herdr-app
-  # and vicinae again. Our own Cachix cache (CI-002) will end this.
+  # again. Our own Cachix cache (CI-002) will end this.
   build:
     name: build (${{ matrix.system }})
     needs: quick
@@ -148,13 +148,12 @@ jobs:
       # Builds only the system of the GitHub machine it runs on.
       - name: Build
         run: nix flake check
-      # vicinae (about an hour) and herdr-app (about 35 minutes) have to be
-      # compiled. Naming them here keeps them in the saved store.
+      # herdr-app (about 35 minutes) has to be compiled. Naming it here keeps it
+      # in the saved store.
       - name: Keep the slow builds
         if: runner.os == 'Linux'
         run: >-
           nix build --out-link "$RUNNER_TEMP/keep"
-          '.#homeConfigurations."nelson@framework".config.programs.vicinae.package'
           '.#homeConfigurations."nelson@framework".pkgs.herdr-app'
       - name: Write the marker
         env:

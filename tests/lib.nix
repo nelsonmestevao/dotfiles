@@ -67,7 +67,6 @@ let
         overlays = [ ];
         home-manager.lib.homeManagerConfiguration = lib.id;
         nix-darwin = { };
-        vicinae = { };
       }
     );
 
