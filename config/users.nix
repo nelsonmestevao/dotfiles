@@ -1,5 +1,3 @@
-# ── Users (home-manager) ───────────────────────────────────────────────────
-#
 # Overlays are shared by every host and user; see ./overlays.nix.
 #
 # A user's git identity is home/programs/git/profiles/<username>.ini.
