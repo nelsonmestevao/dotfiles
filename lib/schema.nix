@@ -6,9 +6,9 @@
 # stops the evaluation and names the host or user and the field. The check has
 # two steps:
 #
-# 1. Types. Every field is an option below, so the module system rejects a
-#    field that doesn't exist, a missing one, and a value of the wrong kind.
-#    It stops at the first one.
+# 1. Types. Every field is an option below, so Nix rejects a field that
+#    doesn't exist, a missing one, and a value of the wrong kind. It stops at
+#    the first one.
 # 2. Rules, for what a type can't say: how fields, entries and files fit
 #    together. Every broken rule is listed, in one message.
 #
@@ -81,10 +81,10 @@ let
 
   entriesWith = fields: mkOption { type = types.attrsOf (types.submodule { options = fields; }); };
 
-  # Both files through the module system, with every field read: a type is
-  # only checked when its value is read, so a mistake in a field nothing uses
-  # yet still stops the build. The values of `extraSpecialArgs` are left
-  # alone, since they can be anything, even a whole package set.
+  # Both files, read through the options above. Every field is read here,
+  # because Nix checks a type only when the value is used: so a mistake in a
+  # field nothing uses yet still stops the build. `extraSpecialArgs` values
+  # are left unread, since they can be anything, even a whole package set.
   typed =
     { hosts, users }:
     let
@@ -175,7 +175,8 @@ let
       ) (lib.intersectLists taken (lib.attrNames user.extraSpecialArgs))
     );
 
-  # Without these files the build fails later, on a bare import.
+  # Without these files, the build fails later with an error that doesn't say
+  # why.
   missingFiles =
     {
       hosts,
@@ -224,7 +225,8 @@ in
     in
     lib.throwIf (found != [ ]) (lib.concatStringsSep "\n" found) checked;
 
-  # What the rules say, for the tests: the text of an error can't be read back.
+  # The rules' messages as a list, for the tests: Nix can't read an error's
+  # text back.
   problems =
     {
       hosts,

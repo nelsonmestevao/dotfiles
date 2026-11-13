@@ -1,5 +1,5 @@
-# What a host's roles are. The data check (./schema.nix) and the assembly
-# (./default.nix) both read hosts through this, so they can't disagree.
+# What a host's roles are. ./schema.nix and ./default.nix both read hosts
+# through this, so they can't disagree.
 { lib }:
 rec {
   # The OS a system runs, like "linux" for "x86_64-linux".
