@@ -96,10 +96,10 @@ in
   # take them away. Every bin/ script starts in the dev shell.
   inherit toolSystems;
 
-  # The systems the checks are made for: the ones the hosts run. With a
-  # mistake in the data, all four above, so the check that reports the
-  # mistake shows up on every machine.
-  checkSystems =
+  # The systems the hosts run, for the checks and the packages. With a mistake
+  # in the data, all four above, so the check that reports the mistake shows
+  # up on every machine.
+  hostSystems =
     if dataIsRight then
       lib.unique (lib.mapAttrsToList (_: host: host.system) checked.hosts)
     else
