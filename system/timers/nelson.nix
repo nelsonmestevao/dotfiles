@@ -11,7 +11,7 @@ let
     inherit pkgs username;
   };
 
-  home = config.users.users.${username}.home;
+  inherit (config.users.users.${username}) home;
 
   # The same backup goes to each repo, one repo per host. Every entry gets its
   # own restic-backups-<name> service and timer, plus a restic-<name> wrapper.

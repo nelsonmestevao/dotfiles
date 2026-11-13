@@ -5,7 +5,5 @@
 {
   services.fprintd.enable = true;
 
-  environment.systemPackages = [
-    pkgs.fprintd
-  ];
+  environment.systemPackages = [ pkgs.fprintd ];
 }

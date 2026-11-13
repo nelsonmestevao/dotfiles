@@ -2,7 +2,6 @@
   pkgs,
   ...
 }:
-
 {
   # ── System ───────────────────────────────────────────────────────────
   dotfiles.modules.boot.enable = true;

@@ -3,10 +3,5 @@
 }:
 {
   virtualisation.docker.enable = true;
-
-  virtualisation.docker.daemon.settings = {
-    features = {
-      buildkit = true;
-    };
-  };
+  virtualisation.docker.daemon.settings.features.buildkit = true;
 }
