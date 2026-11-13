@@ -75,6 +75,7 @@
             ;
         })
         allSystems
+        checkedData
         nixosConfigs
         darwinConfigs
         homeConfigs
@@ -120,6 +121,7 @@
             nixpkgs
             home-manager
             self
+            checkedData
             nixosConfigs
             darwinConfigs
             homeConfigs

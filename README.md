@@ -370,8 +370,8 @@ mistake stops every configuration with the host or user and the field in the
 message. The dev shell still opens, so `bin/` keeps working while you fix it.
 
 First, each field must exist, be there when required, and hold the right kind
-of value. A misspelled field, a missing `stateVersion` or `platform = "nixoss"`
-fails here, one mistake per run:
+of value. A misspelled field, a missing `stateVersion`, `platform = "nixoss"`,
+or a user or role listed twice fails here, one mistake per run:
 
 ```
 error: The option `hosts.framework.rolse' does not exist. …
@@ -380,12 +380,12 @@ Did you mean `hosts.framework.roles', …?
 
 Then the entries must fit together, and every broken rule is listed at once:
 
-- every user a host lists is in `config/users.nix`, and no user or role is
-  listed twice;
+- every user a host lists is in `config/users.nix`;
 - the `platform` fits the `system`, and a Mac has `darwinStateVersion`;
 - no role has the same name as a host;
-- a user's `extraSpecialArgs` don't take a name the modules already get
-  (`lib/homeArguments.nix`);
+- a user's `extraSpecialArgs` don't take a name the modules already get:
+  those in `lib/homeArguments.nix`, and `lib`, `pkgs`, `config`, `options`,
+  `modulesPath` and `osConfig`;
 - the files exist: `home/users/<username>.nix`, and for a host with a
   `platform`, `system/hosts/<hostname>.nix` (plus `hardware.nix` on NixOS).
 

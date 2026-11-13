@@ -4,16 +4,37 @@
   nixpkgs,
   home-manager,
   self,
+  checkedData,
   nixosConfigs,
   darwinConfigs,
   homeConfigs,
 }:
-system:
 let
   inherit (nixpkgs) lib;
-  pkgs = nixpkgs.legacyPackages.${system};
 
-  runsHere = _: cfg: cfg.pkgs.stdenv.hostPlatform.system == system;
+  # The lib tests (tests/lib.nix) run while this is evaluated, so
+  # `bin/check --eval` runs them, and a failure names its cases. They are the
+  # same on every system, so they run once.
+  failedLibTests = import ../tests/lib.nix { inherit nixpkgs home-manager; };
+  show = lib.generators.toPretty { };
+  libTestsReport = lib.concatMapStringsSep "\n" (
+    case: "  ${case.name}: expected ${show case.expected}, got ${show case.result}"
+  ) failedLibTests;
+
+  # Only a mistake in the host or user data keeps the configurations from
+  # being listed. Any other error fails the check of the configuration it is in.
+  dataIsRight = (builtins.tryEval checkedData).success;
+
+  # The system each configuration runs, from the checked host data. Asking
+  # the configuration would evaluate its modules, and a broken Mac module
+  # would then hide the Linux checks too.
+  systemOfHost = hostname: checkedData.hosts.${hostname}.system;
+  systemOfHome = home: systemOfHost (lib.last (lib.splitString "@" home));
+in
+system:
+let
+  pkgs = nixpkgs.legacyPackages.${system};
+  runningHere = systemOf: lib.filterAttrs (name: _: systemOf name == system);
 
   # A check that evaluates a system configuration without building it.
   # Working out the top-level derivation's path evaluates every module,
@@ -31,19 +52,12 @@ let
     prefix: toplevelOf: configs:
     lib.mapAttrs' (
       name: cfg: lib.nameValuePair "${prefix}-${name}" (evalOnly "${prefix}-${name}" (toplevelOf cfg))
-    ) (lib.filterAttrs runsHere configs);
+    ) (runningHere systemOfHost configs);
 
   configurations =
-    lib.mapAttrs (_: cfg: cfg.activationPackage) (lib.filterAttrs runsHere homeConfigs)
+    lib.mapAttrs (_: cfg: cfg.activationPackage) (runningHere systemOfHome homeConfigs)
     // systemChecks "nixos" (cfg: cfg.config.system.build.toplevel) nixosConfigs
     // systemChecks "darwin" (cfg: cfg.system) darwinConfigs;
-
-  # The lib tests (tests/lib.nix) run while this is evaluated, so
-  # `bin/check --eval` runs them, and a failure names its cases.
-  failed = import ../tests/lib.nix { inherit nixpkgs home-manager; };
-  describe =
-    case:
-    "  ${case.name}: expected ${builtins.toJSON case.expected}, got ${builtins.toJSON case.result}";
 in
 {
   # deadnix, statix and nixfmt over every .nix file. CI runs it before the
@@ -66,17 +80,12 @@ in
       '';
 
   lib-tests = pkgs.runCommand "lib-tests" { } (
-    lib.throwIf (failed != [ ]) "these cases in tests/lib.nix failed:\n${
-      lib.concatMapStringsSep "\n" describe failed
-    }" ''touch "$out"''
+    lib.throwIf (
+      failedLibTests != [ ]
+    ) "these cases in tests/lib.nix failed:\n${libTestsReport}" ''touch "$out"''
   );
 }
-# With a mistake in the host or user data, not even the names of the
-# configurations can be listed. They become one check that fails with the
-# data's message, so lint and the lib tests still run.
-// (
-  if (builtins.tryEval (lib.attrNames configurations)).success then
-    configurations
-  else
-    { inherit configurations; }
-)
+# With a mistake in the host or user data, one check, `data`, fails with the
+# data's message in place of the configurations. Lint and the lib tests still
+# run.
+// (if dataIsRight then configurations else { data = checkedData; })

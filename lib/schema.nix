@@ -21,6 +21,10 @@ let
 
   # ── Types ──────────────────────────────────────────────────────────────────
 
+  # The systems nixpkgs supports in flakes. A host's `system` must be one of
+  # them, and `systemsIn` below skips any other.
+  systems = lib.systems.flakeExposed;
+
   # The OS each platform's system has to run.
   osFor = {
     nixos = "linux";
@@ -34,7 +38,7 @@ let
 
   hostFields = {
     system = mkOption {
-      type = types.enum lib.systems.flakeExposed;
+      type = types.enum systems;
       description = "The Nix system the host runs, like \"x86_64-linux\".";
     };
     platform = mkOption {
@@ -149,15 +153,26 @@ let
     ) (lib.intersectLists (rolesAcross hosts) (lib.attrNames hosts));
 
   # A user's own argument by one of these names would replace it, and break
-  # modules far from the mistake.
+  # modules far from the mistake. The module system and Home Manager pass the
+  # last few on their own.
   argumentsTheModulesAlreadyGet =
     { users, ... }:
+    let
+      taken = import ./homeArguments.nix ++ [
+        "lib"
+        "pkgs"
+        "config"
+        "options"
+        "modulesPath"
+        "osConfig"
+      ];
+    in
     inEach users (
       name: user:
       map (
         argument:
         "config/users.nix: ${name}.extraSpecialArgs can't use \"${argument}\": the home modules already get an argument by that name"
-      ) (lib.intersectLists (import ./homeArguments.nix) (lib.attrNames user.extraSpecialArgs))
+      ) (lib.intersectLists taken (lib.attrNames user.extraSpecialArgs))
     );
 
   # Without these files the build fails later, on a bare import.
@@ -217,4 +232,14 @@ in
       root,
     }:
     problemsIn (typed { inherit hosts users; }) root;
+
+  # The systems the hosts run, read without checking anything else, for the
+  # outputs that have to work while the data is wrong.
+  systemsIn =
+    hosts:
+    lib.unique (
+      lib.filter (system: lib.elem system systems) (
+        map (host: host.system or null) (lib.filter lib.isAttrs (lib.attrValues hosts))
+      )
+    );
 }
