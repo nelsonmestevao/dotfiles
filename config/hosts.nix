@@ -1,5 +1,3 @@
-# ── Hosts ──────────────────────────────────────────────────────────────────
-#
 # `platform` selects the system builder ("nixos" or "darwin"); omit it for
 # hosts that only get a home-manager configuration.
 #
