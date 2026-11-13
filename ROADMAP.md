@@ -55,7 +55,7 @@ The owner took these on 2026-11-12. Don't reopen one without a new reason.
 | Program settings | Any program may declare settings beside `enable`. | [CONFIG-006](#config-006) |
 | Git signing key | A setting of the git program, set in the user file. It leaves `config/hosts.nix`. | [CONFIG-006](#config-006) |
 | User files | Two full lists. No shared profile file. | [CONFIG-004](#config-004) |
-| `home/packages.nix` | One program per package. | [CONFIG-003](#config-003) |
+| `home/packages.nix` | One program per package, each one line in `home/programs/plain.nix` (decided again 2026-11-13). | [CONFIG-003](#config-003) |
 | Programs that are off everywhere | Keep all 13 as alternatives. | [PLATFORM-003](#platform-003) |
 | temis | A remote dev box, reached over Tailscale only. | [CONFIG-003](#config-003), [OPS-005](#ops-005) |
 | thinkpad | Rarely used. It keeps building; its tasks are P3. | [PLATFORM-004](#platform-004) |
@@ -613,18 +613,35 @@ sandbox it needs its own eval store and an override for each input. Start with
 
 ### [ ] CONFIG-003 Reduce the server and base-home package sets — P2 · M
 
-**Evidence:** [nelson.nix](home/users/nelson.nix) enables Flutter, Haskell, media
+**Progress (2026-11-13):** steps 2–5 are done, in a simpler way than planned.
+Each of the 37 packages and 5 scripts is a program, but as one line in
+[home/programs/plain.nix](home/programs/plain.nix) instead of a folder.
+[home/lib/plainPrograms.nix](home/lib/plainPrograms.nix) makes a module for
+each one with `mkHomeModule`, so it gets `dotfiles.programs.<name>.enable`
+like any program. One that nixpkgs doesn't build for the host's OS (only
+`impression` on the Mac today) stops the build with the host's name, as
+`platforms` does. `wake-hades` keeps its address and `nixos-diff` stays a
+home program, turned on by host name if wanted: neither is worth a setting or
+a system module. `nelson.nix` turns all 42 on, so every home gets the same
+packages as before (checked: the sorted package list of each of the four
+homes is the same). `hm-diff` uses GNU `stat` and `date` from nixpkgs, so it
+works on the Mac too.
+
+Left: steps 6 and 7 are choices for the owner. Turn on in the Mac user file
+the ones wanted there, and trim temis.
+
+**Evidence** (how it was before): [nelson.nix](home/users/nelson.nix) enables Flutter, Haskell, media
 tools, and many language modules everywhere. **Measured:** temis, a server,
 gets 59 programs and 146 packages, among them Flutter, GHC, ffmpeg,
 ImageMagick, and unoconv.
 
-[home/packages.nix](home/packages.nix) puts 37 packages behind one flag,
+`home/packages.nix` put 37 packages behind one flag,
 `dotfiles.packages.enable`. It is the one place where a program is not an
 option. Some of them are Linux-only, such as `gvfs`, `fuse`, `appimage-run`,
 and `impression`. The Mac user file has the flag commented out, so the Mac
 gets none of the 37.
 
-[home/scripts.nix](home/scripts.nix) rides the same flag. `hm-diff` uses GNU
+[home/scripts.nix](home/scripts.nix) rode the same flag. `hm-diff` used GNU
 `stat` and `date`, `nixos-diff` is installed on hosts that are not NixOS, and
 `wake-hades` has one machine's MAC address in it.
 
@@ -1606,7 +1623,8 @@ real home.
 README and a comment in `flake.nix` promise automatic direnv loading.
 **Verified:** commit `f6bf77f6` added `.envrc`, and the next commit,
 `c15fee8c` ("[herdr-app]: add mods"), deleted it. [home/scripts.nix](home/scripts.nix)
-also assumes GNU `stat`/`date` and particular generation directories.
+assumes particular generation directories. (Its GNU `stat` and `date` now come
+from nixpkgs, so they work on a Mac too.)
 
 **Plan:**
 
@@ -2189,12 +2207,14 @@ repo is `wimpysworld/nix-config`: a data registry builds every NixOS, Mac, and
 | A hook framework | lovesegfault, ryan4yin | **Skip:** a five-line hook is enough. |
 | sops-nix or agenix | split about evenly | **Skip for now:** a checklist ([OPS-004](#ops-004)). |
 
-One more idea was weighed and set aside. Of the 109 program modules, 82 are
-12 lines or fewer and mostly just install a package. A table of one-line
-programs would save about 700 lines. It would also create a second way to add
-a program, and `bin/new` makes the folder for free. Keep the folders. The
-owner went further that way on purpose: every package in `home/packages.nix`
-gets its own folder too ([CONFIG-003](#config-003)).
+One more idea was weighed and set aside on 2026-11-12, then taken up for new
+programs on 2026-11-13. Of the 109 program modules, 82 are 12 lines or fewer
+and mostly just install a package. A table of one-line programs would save
+about 700 lines, at the cost of a second way to add a program. The owner first
+kept the folders. When the 37 packages of `home/packages.nix` needed a home
+([CONFIG-003](#config-003)), 42 more folders of one line each seemed too much,
+so they became [home/programs/plain.nix](home/programs/plain.nix) instead. The
+existing folders stay as they are: moving them would only be churn.
 
 ## Suggested delivery order
 

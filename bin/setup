@@ -131,8 +131,6 @@ USER_TEMPLATE = """\
   # dotfiles.programs.docker.enable = true;
   # Add enableFor to the arguments before using role selectors:
   # dotfiles.programs.vscode.enable = enableFor [ "desktop" ];
-
-  dotfiles.packages.enable = true;
 }
 """
 
