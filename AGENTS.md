@@ -95,7 +95,7 @@ run Mac-only commands and paste the output back.
 Run these before you say a change works:
 
 ```shell
-bin/lint          # Nix, shell, zsh and workflow checks (CI runs it first)
+bin/lint          # Nix, shell, xonsh, zsh and workflow checks (CI first)
 bin/format        # fixes nixfmt errors
 bin/test          # the helper scripts' tests (CI runs them too)
 bin/check --eval  # evaluates every config, Mac ones too; builds nothing

@@ -1661,11 +1661,13 @@ Home Manager, and the managed Mac; diagnosis works without a successful switch.
 
 ### [ ] CI-001 Add fast checks for the files that actually change — P2 · M
 
-**Progress:** the lint check now runs shellcheck on the shell scripts, `zsh -n`
-on the zsh files and actionlint on the workflow, so `bin/lint` and CI's first
-job catch a mistake in any of them. Each was checked by breaking a file of its
-kind. `bin/test` runs in CI since #34. Still open: one formatter for every file
-kind (step 1), Lua and the Herdr JS test, and a pre-push hook.
+**Progress:** the lint check now runs shellcheck on the shell scripts, each
+xonsh script in `bin/` with `--help` (which fails on a syntax error), `zsh -n`
+on the zsh files, and actionlint on the workflow. A file in `bin/` that is
+neither kind fails it. Each was checked by breaking a file of its kind.
+`bin/test` runs in CI since #34. Still open: one formatter for every file kind
+(step 1), zsh code written inside Nix strings, Lua and the Herdr JS test, and
+a pre-push hook.
 
 **Evidence:** [flake.nix](flake.nix) lints Nix, but the repository also holds
 178 Nix files, 33 files with no extension (scripts and configs), 19 JSON, 10

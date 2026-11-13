@@ -3,5 +3,6 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-# deadnix, statix and nixfmt over every .nix file: the check CI runs first.
+# The Nix files, the shell and xonsh scripts, the zsh files and the workflow:
+# the check CI runs first. See `lint` in lib/checks.nix.
 nix build --no-link -L ".#checks.$(nix config show system).lint"
