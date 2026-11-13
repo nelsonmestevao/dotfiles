@@ -18,12 +18,11 @@ Options:
 """
 import os
 import shutil
-import subprocess
 import sys
 import tempfile
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
-from common import GREEN, failed, paint, run, warn, with_flakes
+from common import COMMAND_ERRORS, GREEN, error, interrupted, paint, run, with_flakes
 
 with_flakes()
 
@@ -40,8 +39,11 @@ def build(kind):
     try:
         nh @(kind) build . --out-link @(tmp + '/result') @(nom)
         return True
-    except subprocess.CalledProcessError as error:
-        warn(f"{failed(error)} failed")
+    except COMMAND_ERRORS as problem:
+        # Ctrl-C stops everything; it isn't a build that failed.
+        if interrupted(problem):
+            raise KeyboardInterrupt from problem
+        error(f"nh {kind} build failed")
         return False
     finally:
         shutil.rmtree(tmp)

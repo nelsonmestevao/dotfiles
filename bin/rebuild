@@ -20,45 +20,43 @@ Options:
                     for nix-darwin and home.
 """
 import os
-import subprocess
 import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
-from common import fail, failed, run, with_flakes
+from common import COMMAND_ERRORS, fail, failed, run, with_flakes
 
 with_flakes()
 
 
-def rebuild_system(action):
+def switch_system(action):
     if sys.platform == 'darwin':
+        # nix-darwin has no `boot`: it always switches now.
         nh darwin switch .
     else:
         nh os @(action) .
 
 
-def rebuild_home(action):
+def switch_home():
     nh home switch .
-
-
-TASKS = {
-    'os': ('system', rebuild_system),
-    'home': ('home', rebuild_home),
-}
 
 
 def main(args):
     action = 'boot' if args['--boot'] else 'switch'
-    chosen = [task for task in TASKS if args[task]] or list(TASKS)
+    # Each step: what it switches, and how.
+    steps = {
+        'os': ('system', lambda: switch_system(action)),
+        'home': ('home', switch_home),
+    }
+    chosen = [step for step in steps if args[step]] or list(steps)
 
-    for done, task in enumerate(chosen):
-        name, rebuild = TASKS[task]
+    for done, step in enumerate(chosen):
         try:
-            rebuild(action)
-        except subprocess.CalledProcessError as error:
+            steps[step][1]()
+        except (*COMMAND_ERRORS, KeyboardInterrupt) as problem:
             # Say what was left undone, so nobody thinks the rest went through.
-            skipped = [TASKS[t][0] for t in chosen[done + 1:]]
+            skipped = [steps[s][0] for s in chosen[done + 1:]]
             note = f"; {' and '.join(skipped)} not switched" if skipped else ""
-            fail(f"{failed(error)} failed{note}.")
+            fail(f"{failed(problem)}{note}.")
 
 
 if __name__ == '__main__':

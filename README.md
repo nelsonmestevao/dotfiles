@@ -531,12 +531,12 @@ system derivations, since those checks only evaluate the system.
 Flakes only see tracked files, so `git add` a new file first. The command
 lists the untracked files it found, whatever their type.
 
-`bin/test` runs the tests for `bin/new`, `bin/setup`, `bin/check` and CI's
-planning script, which work in throwaway folders and touch nothing else. It
-also checks the docs: every link in README.md, AGENTS.md and ROADMAP.md
-points to something, every `bin/` script is in the table above, and both
-hosts tables match `config/hosts.nix`. Pass it unittest's arguments to narrow
-the run, like `bin/test -k hardware`.
+`bin/test` runs the tests for `bin/new`, `bin/setup`, `bin/check`,
+`bin/build`, `bin/rebuild` and CI's planning script, which work in throwaway
+folders and touch nothing else. It also checks the docs: every link in
+README.md, AGENTS.md and ROADMAP.md points to something, every `bin/` script
+is in the table above, and both hosts tables match `config/hosts.nix`. Pass
+it unittest's arguments to narrow the run, like `bin/test -k hardware`.
 
 CI runs in two steps. A quick job lints, runs `bin/test`, and reads through
 every config with `bin/check --list`. Then a build job builds each system's

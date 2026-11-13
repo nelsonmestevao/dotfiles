@@ -13,6 +13,7 @@ import subprocess
 import sys
 
 from docopt import docopt
+from xonsh.tools import XonshError
 
 # Every helper runs from the repo root, wherever it was called from.
 os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -37,9 +38,14 @@ def paint(text, color, stream=sys.stdout):
     return f"\033[1;{color}m{text}\033[0m" if stream.isatty() else text
 
 
+def error(message):
+    """Says what went wrong, in one line, and goes on."""
+    print(f"{paint('✗', RED, sys.stderr)} {message}", file=sys.stderr)
+
+
 def fail(message):
     """Says what went wrong, in one line, and stops with exit status 1."""
-    print(f"{paint('✗', RED, sys.stderr)} {message}", file=sys.stderr)
+    error(message)
     sys.exit(1)
 
 
@@ -54,9 +60,26 @@ def with_flakes():
     $NIX_CONFIG = (before + '\n' if before else '') + 'extra-experimental-features = nix-command flakes'
 
 
-def failed(error):
-    """The command a CalledProcessError was raised for, as you'd type it."""
-    return ' '.join(map(str, error.cmd))
+# What a failed command can raise: a non-zero exit, or a command xonsh
+# couldn't start, like one missing from PATH.
+COMMAND_ERRORS = (subprocess.CalledProcessError, XonshError)
+
+
+def failed(problem):
+    """One line for what stopped a step: the command and that it failed, or
+    "Interrupted" for Ctrl-C."""
+    if isinstance(problem, KeyboardInterrupt) or interrupted(problem):
+        return "Interrupted"
+    if isinstance(problem, subprocess.CalledProcessError):
+        return f"{' '.join(map(str, problem.cmd))} failed"
+    return str(problem).strip().splitlines()[0]
+
+
+def interrupted(problem):
+    """True when a command ended because of Ctrl-C (exit status 130, or
+    killed by a signal), so it isn't taken for an ordinary failure."""
+    code = getattr(problem, 'returncode', 0)
+    return code == 130 or code < 0
 
 
 def run(main, doc, file):
@@ -65,9 +88,7 @@ def run(main, doc, file):
     arguments = docopt(doc.format(program=file), version=f'{os.path.basename(file)} script version 1.0')
     try:
         main(arguments)
-    except subprocess.CalledProcessError as error:
-        fail(f"{failed(error)} failed")
-    except KeyboardInterrupt:
-        fail("Interrupted.")
+    except (*COMMAND_ERRORS, KeyboardInterrupt) as problem:
+        fail(f"{failed(problem)}.")
 
 # vim: ft=xonsh
