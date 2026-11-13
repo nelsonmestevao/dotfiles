@@ -298,9 +298,33 @@ commit. Existing approval rules for updates and commits remain in force.
 
 <a id="cli-003"></a>
 
-### [ ] CLI-003 Resolve targets from host data — P2 · M
+### [x] CLI-003 Resolve targets from host data — P2 · M
 
-**Evidence:** [bin/build](bin/build) and [bin/rebuild](bin/rebuild) choose the OS
+**Implemented:** `targets()` in [scripts/common.xsh](scripts/common.xsh)
+reads `config/hosts.nix` with `nix eval --json --file`, finds the machine by
+`hostname -s`, and returns its system (when the host has a `platform`) and
+the home of the user running it. `bin/rebuild` and `bin/build` pass each one
+to nh by name (`-H <host>`, `-c <user>@<host>`), so nh no longer guesses.
+Each helper says first what it switches or builds. Plain `bin/rebuild` on a
+host with only a home switches the home. `bin/rebuild os` there, an unknown
+host, or a user with no home on the host stops with one plain line before nh
+runs. `--boot` is refused unless a NixOS system is switched, so
+`bin/rebuild home --boot` is an error now.
+
+Left out on purpose: `--host` and `--user` for `bin/build` (step 4). nh
+can't build the other OS's configs on this machine (tried on the Mac with
+temis), and `bin/check --eval` already reads every config. A host of the
+same OS can still be built with `nh os build . -H <host>`.
+
+Checked: [tests/test_rebuild.py](tests/test_rebuild.py) switches every host
+in `config/hosts.nix` with stub `nh` and `hostname` and checks the nh calls,
+and covers `os` on a host with only a home, `--boot` with a home or a Mac,
+an unknown host and a user with no home. On the Mac, `bin/build` printed
+"Building darwinConfigurations.Remote-Nelson-Estevao and
+nelson.estevao@Remote-Nelson-Estevao" and built both, and
+`bin/rebuild os --boot` stopped before nh ran.
+
+**Original evidence:** [bin/build](bin/build) and [bin/rebuild](bin/rebuild) choose the OS
 command from `sys.platform` and default to both OS and home. The README already
 documents that the default rebuild fails on a Home Manager-only host.
 
