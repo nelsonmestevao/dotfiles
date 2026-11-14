@@ -17,8 +17,12 @@ If you're writing a CLI script for automation of some task, unless a different l
   scripts run from the repo root. This rule wins over the `nix-shell` one
   below; copy the shebang from a script already in the repo:
   ```
-  #!/usr/bin/env -S nix --extra-experimental-features nix-command --extra-experimental-features flakes develop --command xonsh
+  #!/usr/bin/env -S nix --extra-experimental-features nix-command --extra-experimental-features flakes develop --command xonsh --no-rc
   ```
+  `--no-rc` keeps a personal xonsh rc file from changing how the script
+  behaves. Import `scripts/common.xsh` first and end with
+  `run(main, __doc__, __file__)`, so a failed command stops the script with
+  one plain line (see `bin/rebuild`).
 - **Other project scripts** (e.g. `bin/` in repos without a dev shell): use
   `nix-shell` directly:
   ```

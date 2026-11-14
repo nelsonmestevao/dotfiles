@@ -1,4 +1,4 @@
-#!/usr/bin/env -S nix --extra-experimental-features nix-command --extra-experimental-features flakes develop --command xonsh
+#!/usr/bin/env -S nix --extra-experimental-features nix-command --extra-experimental-features flakes develop --command xonsh --no-rc
 """
 Rebuilds the system and home configuration.
 
@@ -22,41 +22,44 @@ Options:
 import os
 import sys
 
-from docopt import docopt
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
+from common import COMMAND_ERRORS, fail, failed, need, run
 
-os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# Enable flake features for the `nh`/`nix` calls below.
-$NIX_CONFIG = 'experimental-features = nix-command flakes'
+def switch_system(action):
+    if sys.platform == 'darwin':
+        nh darwin switch .
+    else:
+        nh os @(action) .
 
-def rebuild_system(action='switch'):
-  if sys.platform == 'darwin':
-    nh darwin switch .
-  else:
-    #nixos-rebuild switch --use-remote-sudo --flake '.'
-    nh os @(action) .
 
-def rebuild_home(action='switch'):
-  # home-manager switch --flake '.'
-  # home-manager switch --flake .#nelson@framework
-  nh home switch .
+def switch_home():
+    nh home switch .
+
 
 def main(args):
+    if args['--boot'] and sys.platform == 'darwin':
+        fail("nix-darwin has no --boot: it can only switch now. Run bin/rebuild without it.")
+    need('nh')
     action = 'boot' if args['--boot'] else 'switch'
-
-    tasks = {
-        'os': rebuild_system,
-        'home': rebuild_home,
+    # Each step: what it switches, and how.
+    steps = {
+        'os': ('system', lambda: switch_system(action)),
+        'home': ('home', switch_home),
     }
+    chosen = [step for step in steps if args[step]] or list(steps)
 
-    run_all = not any(args[task] for task in tasks)
+    for done, step in enumerate(chosen):
+        try:
+            steps[step][1]()
+        except (*COMMAND_ERRORS, KeyboardInterrupt) as problem:
+            # Say what was left undone, so nobody thinks the rest went through.
+            skipped = [steps[s][0] for s in chosen[done + 1:]]
+            note = f"; {' and '.join(skipped)} not switched" if skipped else ""
+            fail(f"{failed(problem)}{note}.")
 
-    for task, func in tasks.items():
-        if args[task] or run_all:
-            func(action)
 
 if __name__ == '__main__':
-    arguments = docopt(__doc__.format(program=__file__), version=f'{os.path.basename(__file__)} script version 1.0')
-    main(arguments)
+    run(main, __doc__, __file__)
 
 # vim: ft=xonsh
