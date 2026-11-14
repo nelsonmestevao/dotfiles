@@ -312,6 +312,28 @@ To see what would change first, run `bin/build`. It takes the same `os` and
 `home` arguments, builds the configs, and prints the package diff. It doesn't
 switch, so it needs no `sudo`.
 
+### Rolling back
+
+Each switch keeps the one before it, so you can go back:
+
+- **NixOS:** `nh os rollback`, or pick an older entry in the boot menu. The
+  menu keeps the last 10.
+- **Mac:** `sudo darwin-rebuild --rollback`.
+- **Home:** `home-manager generations` lists them. Run the `activate` script
+  inside the one you want, like `/nix/store/…-home-manager-generation/activate`.
+
+Config files are live links into this checkout, so an old generation alone
+doesn't bring back old app settings. Check out the matching commit too.
+
+Old generations are deleted after 31 days, keeping at least the newest 3 of
+each profile (`config/cleanup.nix`): once a month on NixOS, and whenever you
+run `bin/autoclean`. Both clean every profile, the system's and each user's,
+and leave the `result` links and direnv dev shells in your projects alone.
+`bin/autoclean --dry-run` lists what it would delete first. On the Mac and on
+a Home Manager–only machine, nothing deletes old generations on its own
+(Determinate Nix only removes what no generation uses), so run
+`bin/autoclean` there now and then.
+
 ### What goes into a host entry
 
 Each host in `config/hosts.nix` has these fields:
@@ -491,7 +513,7 @@ that shell for you (`direnv allow` once).
 | `bin/lint`                     | Checks the Nix, shell, xonsh and zsh files and the workflow, like CI. |
 | `bin/format`                   | Formats every Nix file (`nix fmt`).                                  |
 | `bin/test`                     | Tests the helper scripts and checks the docs, like CI does.          |
-| `bin/autoclean`                | Deletes generations older than 7 days and frees space (uses `sudo`). |
+| `bin/autoclean [--dry-run]`    | Deletes old generations and frees space (asks for your password).    |
 | `bin/setup user\|host <name>`  | Adds a user or host (see [Installing](#-installing)).                |
 | `bin/new program <name>`       | Creates a Home Manager program in `home/programs/<name>/`.           |
 | `bin/new module <name>`        | Creates a NixOS module in `system/modules/nixos/<name>/`.            |

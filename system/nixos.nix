@@ -24,10 +24,16 @@
 
   boot.tmp.cleanOnBoot = true;
 
-  nix.gc = {
-    automatic = true;
-    dates = "monthly";
-    options = "--delete-older-than 31d";
+  # Once a month, delete old generations in every profile, the users' home
+  # ones too, which nix.gc left alone. config/cleanup.nix says what to keep;
+  # bin/autoclean reads it too.
+  # Only the cleanup: nh itself comes with every home (home/default.nix).
+  programs.nh = {
+    clean = {
+      enable = true;
+      dates = "monthly";
+      extraArgs = toString (import ../config/cleanup.nix);
+    };
   };
 
   nixpkgs.config.allowUnfree = true;

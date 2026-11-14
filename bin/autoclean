@@ -1,7 +1,47 @@
 #!/usr/bin/env bash
+# Deletes old generations in every profile on this machine, the system's and
+# every user's, and frees the space they held. config/cleanup.nix says what it
+# keeps; NixOS's monthly cleanup keeps the same.
+#
+# With --dry-run it lists what it would delete and deletes nothing. Both ask
+# for your password: nh needs root to read the system's profiles.
 set -euo pipefail
 
-# System profiles (NixOS/nix-darwin generations) are owned by root, while
-# standalone home-manager generations live in the user profile.
-sudo nix-collect-garbage -d --delete-older-than 7d
-nix-collect-garbage -d --delete-older-than 7d
+USAGE="Usage: bin/autoclean [--dry-run]"
+
+if [ $# -eq 0 ]; then
+  dry=()
+elif [ $# -eq 1 ] && [ "$1" = --dry-run ]; then
+  dry=(--dry)
+elif [ $# -eq 1 ] && { [ "$1" = -h ] || [ "$1" = --help ]; }; then
+  echo "$USAGE"
+  exit 0
+else
+  echo "$USAGE" >&2
+  exit 1
+fi
+
+cd "$(dirname "$0")/.."
+
+# nh comes with every home (programs.nh). The script calls it directly, not
+# through the dev shell: a cleanup is often run because the disk is full, when
+# fetching the dev shell could fail.
+if ! command -v nh > /dev/null; then
+  echo "bin/autoclean: nh is missing. Run bin/rebuild home first." >&2
+  exit 1
+fi
+
+# Read the rule into a variable first: a failed `nix eval` then stops the
+# script here. Without the rule, nh would fall back to its own defaults, which
+# keep far less and delete the project gcroots too.
+rule=$(nix --extra-experimental-features nix-command eval --raw --file config/cleanup.nix --apply toString)
+read -ra keep <<< "$rule"
+case " ${keep[*]} " in
+  *" --keep-since "*" --no-gcroots "*) ;;
+  *)
+    echo "bin/autoclean: config/cleanup.nix gave no usable rule ('$rule'), so nothing was cleaned." >&2
+    exit 1
+    ;;
+esac
+
+exec nh clean all "${keep[@]}" ${dry[@]+"${dry[@]}"}

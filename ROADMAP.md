@@ -1371,9 +1371,18 @@ identified. Do not assume Tailscale alone defines the host's exposure.
 
 ### [ ] OPS-006 Align rollback and garbage-collection policy — P1 · S
 
-**Evidence:** [bin/autoclean](bin/autoclean) uses seven-day deletion while
-[system/nixos.nix](system/nixos.nix) configures monthly collection with 31-day
-retention. The README explains build and switch but has no recovery procedure.
+**Progress:** one rule everywhere: keep 31 days, and at least the newest 3 of
+each profile. `bin/autoclean` and NixOS's monthly job both run `nh clean all`,
+which also cleans the users' home profiles that `nix.gc` left alone, and
+leaves project gcroots (`result` links, direnv shells) alone. Both read the
+rule from `config/cleanup.nix`. `bin/autoclean --dry-run` lists what it would
+delete and deletes nothing. The README has a
+"Rolling back" section. Still open: following the walkthrough once on
+framework.
+
+**Evidence (before this task):** `bin/autoclean` used seven-day deletion while
+`system/nixos.nix` set up monthly collection with 31-day retention. The README
+explained build and switch but had no recovery procedure.
 
 **Plan:**
 

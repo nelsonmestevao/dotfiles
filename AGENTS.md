@@ -136,7 +136,8 @@ never switches and needs no `sudo`, so you don't need to ask first.
 ## Ask first
 
 - `bin/rebuild`: switches my live system or home and may need `sudo`.
-- `bin/autoclean`: deletes old generations with `sudo`.
+- `bin/autoclean`: deletes old generations; nh asks for root. (`--dry-run`
+  deletes nothing, but asks too.)
 - `bin/update`: moves every flake input.
 - Anything with `sudo`.
 - Any `git push`, and any commit unless I asked for one.
@@ -151,8 +152,9 @@ Change this list and that file together.
   and `repeated_keys` on purpose. Don't "fix" those.
 - Comments say why, in plain words. Section breaks look like
   `# ── Name ─────`.
-- New scripts in `bin/` are xonsh with docopt. (`autoclean`, `format`,
-  `lint` and `test` are short bash wrappers.) Copy the shebang, the `Usage:` block, and
+- New scripts in `bin/` are xonsh with docopt. (`format`, `lint` and
+  `test` are short bash wrappers, and `autoclean` is bash because it must run
+  without the dev shell, on a full disk.) Copy the shebang, the `Usage:` block, and
   the `# vim: ft=xonsh` modeline from a xonsh script like `bin/check`. Tools a
   script needs go in the dev shell in `flake.nix`. Full rules:
   `home/programs/claude/skills/scripting-conventions/SKILL.md`.
