@@ -1,7 +1,8 @@
 #!/usr/bin/env -S nix --extra-experimental-features nix-command --extra-experimental-features flakes develop --command xonsh --no-rc
 """
-Builds the system and home configuration and shows what would change, without
-switching to it. It needs no sudo and changes nothing on the machine.
+Builds this machine's configs and shows what would change, without switching
+to them: its system, when config/hosts.nix gives it one, and your home. It
+needs no sudo and changes nothing on the machine.
 
 Usage:
   {program} [os | home]
@@ -9,8 +10,8 @@ Usage:
   {program} (-v | --version)
 
 Commands:
-  os                Build only the system configuration (NixOS or nix-darwin).
-  home              Build only the home-manager configuration.
+  os                Build only the system (NixOS or nix-darwin).
+  home              Build only your home.
 
 Options:
   -h --help         Show this screen.
@@ -23,10 +24,10 @@ import sys
 import tempfile
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
-from common import COMMAND_ERRORS, GREEN, error, failed, interrupted, need, paint, run
+from common import COMMAND_ERRORS, GREEN, error, failed, interrupted, need, paint, run, targets
 
 
-def build(kind):
+def build(kind, pick):
     """`nh <kind> build`, which prints the package diff against the running
     generation and, unlike `switch`, never activates. True when it built."""
     # Left alone, `nh os build` drops a `result` link in the repo, which keeps
@@ -36,7 +37,7 @@ def build(kind):
     # that only floods logs and agent output.
     nom = [] if sys.stdout.isatty() else ['--no-nom']
     try:
-        nh @(kind) build . --out-link @(tmp + '/result') @(nom)
+        nh @(kind) build . @(pick) --out-link @(tmp + '/result') @(nom)
         return True
     except COMMAND_ERRORS as problem:
         # Ctrl-C stops everything; it isn't a build that failed.
@@ -52,19 +53,13 @@ def build(kind):
         shutil.rmtree(tmp)
 
 
-# Each command, and what nh calls it on this machine.
-KINDS = {
-    'os': 'darwin' if sys.platform == 'darwin' else 'os',
-    'home': 'home',
-}
-
-
 def main(args):
     need('nh')
-    chosen = [task for task in KINDS if args[task]] or list(KINDS)
+    chosen = targets('os' if args['os'] else 'home' if args['home'] else None)
+    print(f"Building {' and '.join(name for name, _, _ in chosen)}")
 
     # Build every one even when one fails, so one run reports every error.
-    results = [build(KINDS[task]) for task in chosen]
+    results = [build(kind, pick) for _, kind, pick in chosen]
 
     if not all(results):
         sys.exit(1)

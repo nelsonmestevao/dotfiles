@@ -2,3 +2,5 @@
 .direnv/
 # nix build's output link
 result
+# Python's compiled files, from running a test by hand
+__pycache__/
