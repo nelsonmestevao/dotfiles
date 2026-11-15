@@ -165,6 +165,7 @@
   dotfiles.programs.ffmpeg.enable = disableFor [ "server" ];
   dotfiles.programs.fop.enable = true;
   dotfiles.programs.imagemagick.enable = disableFor [ "server" ];
+  dotfiles.programs.libjxl.enable = disableFor [ "server" ];
   dotfiles.programs.pandoc.enable = disableFor [ "server" ];
   dotfiles.programs.poppler-utils.enable = true;
   dotfiles.programs.unoconv.enable = disableFor [ "server" ];

@@ -56,6 +56,7 @@ with pkgs;
     kamal
     lazysql
     lftp
+    libjxl
     libreoffice
     libsecret
     localsend
