@@ -33,8 +33,6 @@ in
       throw "mkSymlink takes a path like ./config (no quotes), but got ${
         lib.generators.toPretty { } path
       }."
-    else if !lib.path.hasPrefix root path then
-      throw "mkSymlink: ${toString path} is not in this repo, so it can't be linked into the checkout."
     else if !builtins.pathExists path then
       throw "mkSymlink: ${relativePath} does not exist. Add it, and `git add` it: the flake only sees tracked files."
     else

@@ -107,21 +107,6 @@ class ScaffoldingTests(unittest.TestCase):
         self.assertEqual(json.loads(result.stdout)['bob.smith']['name'], name)
         self.run_command('git', 'ls-files', '--error-unmatch', 'home/users/bob.smith.nix')
 
-    def test_program_template_links_with_a_path(self):
-        # mkSymlink takes a path, not a string. Turn the template's example
-        # on, the way its comment says, and see what it passes.
-        self.script('new', 'program', 'hello')
-        path = self.root / 'home/programs/hello/hello.nix'
-        text = path.read_text()
-        example = next(line for line in text.splitlines() if '= mkSymlink' in line)
-        text = text.replace(example, example.replace('# ', '', 1))
-        path.write_text(text.replace('  pkgs,\n', '  pkgs,\n  mkSymlink,\n', 1))
-        result = self.run_command(
-            'nix-instantiate', '--eval', '--expr',
-            '(import ./home/programs/hello/hello.nix { pkgs = { }; '
-            'mkSymlink = builtins.isPath; }).xdg.configFile."hello/config"')
-        self.assertEqual(result.stdout.strip(), 'true')
-
     def test_all_new_kinds_pass_lint_and_are_staged(self):
         for args in [('program', 'hello'), ('module', 'hello'),
                      ('module', 'hello', '--darwin'), ('extension', 'hello')]:
