@@ -327,6 +327,27 @@ let
         copied = false;
       };
     };
+    # ~/.zshrc loads in the order the shell needs: the instant prompt first,
+    # zshrc before oh-my-zsh so its plugins wrap the handlers there, fzf-tab
+    # after compinit and before the plugins that wrap widgets, and syntax
+    # highlighting last.
+    zshLoadsInOrder =
+      let
+        zshrc = zshHome.home.file."./.zshrc".text;
+        at = step: lib.stringLength (lib.head (lib.splitString step zshrc));
+        steps = [
+          "p10k-instant-prompt"
+          "source /home/alice/.dotfiles/home/programs/zsh/zshrc"
+          "source $ZSH/oh-my-zsh.sh"
+          "fzf-tab/fzf-tab.plugin.zsh"
+          "zsh-autosuggestions/zsh-autosuggestions.plugin.zsh"
+          "zsh-syntax-highlighting.zsh"
+        ];
+      in
+      {
+        expr = lib.sort (a: b: at a < at b) (lib.filter (step: lib.hasInfix step zshrc) steps);
+        expected = steps;
+      };
     aProgramAppliesOnlyWhereItIsOn = {
       expr = {
         enabled = boxHome.home.sessionVariables.DEMO or null;

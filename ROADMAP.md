@@ -1475,8 +1475,9 @@ and `compinit` is at the top of `zprof`.
   whole checkout, `.git` included, on every start.
 - [zshrc](home/programs/zsh/zshrc) loads its modules with `ls | sort` and
   unquoted loops, which break when the checkout path has a space.
-- [plugins.zsh](home/programs/zsh/plugins.zsh) turns on fzf, direnv, mise, and
-  zoxide whether or not those programs are enabled. fzf is set up twice.
+- The oh-my-zsh plugin list, now in [zsh.nix](home/programs/zsh/zsh.nix),
+  turns on fzf, direnv, mise, and zoxide whether or not those programs are
+  enabled. fzf is set up twice.
 
 **Plan:**
 
