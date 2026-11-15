@@ -5,28 +5,22 @@
 #    _ / /\__ \ | | | | | (__
 #   (_)___|___/_| |_|_|  \___|
 #
-# The interactive shell, top to bottom. Home Manager writes its own part
-# around this file: history, aliases, and what other programs add.
+# The interactive shell, before oh-my-zsh and its plugins (see zsh.nix).
+# ~/.zshrc sources this file from the checkout, so an edit takes effect in a
+# new shell. Home Manager writes its own part around it: history, aliases, and
+# what other programs add.
 
 export DOTFILES="${DOTFILES:-$HOME/.dotfiles}"
 export SPELLS="$HOME/.spells"
-
-# Powerlevel10k's instant prompt draws the prompt at once, while the rest
-# loads. It must stay near the top: anything that asks for input (a password,
-# a yes or no) goes above it.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
 
 # Spells are optional (https://github.com/nelsonmestevao/spells).
 if [[ -r "$SPELLS/spells.init" ]]; then
   source "$SPELLS/spells.init"
 fi
 
-# The zsh files next to this one, in name order: plugins.zsh before theme.zsh,
-# which starts oh-my-zsh. The quotes keep a checkout path with a space in one
-# piece, and (N) lets the loop do nothing if none is found, where a bare glob
-# would stop zsh from reading the rest of this file.
+# The zsh files next to this one, in name order. The quotes keep a checkout
+# path with a space in one piece, and (N) lets the loop do nothing if none is
+# found, where a bare glob would stop zsh from reading the rest of this file.
 for module in "$DOTFILES"/home/programs/zsh/*.zsh(N); do
   source "$module"
 done

@@ -22,14 +22,70 @@
   };
 
   programs.zsh.enable = true;
-  # oh-my-zsh sets up completion with compinit (see theme.zsh). Home Manager
-  # and /etc/zshrc would each run compinit too, before it, which only slows
-  # the shell down. This turns Home Manager's run off; system/nixos.nix and
-  # system/darwin.nix turn off the one in /etc/zshrc.
+  # oh-my-zsh sets up completion with compinit. Home Manager and /etc/zshrc
+  # would each run compinit too, before it, which only slows the shell down.
+  # This turns Home Manager's run off; system/nixos.nix and system/darwin.nix
+  # turn off the one in /etc/zshrc.
   programs.zsh.enableCompletion = false;
   # Saved to ~/.zsh_history, as before.
   programs.zsh.history.size = 100000;
-  programs.zsh.initContent = builtins.readFile ./zshrc;
+
+  # oh-my-zsh and every plugin come from nixpkgs, so bin/update moves them.
+  # ~/.zshrc runs in this order: the instant prompt, zshrc from the checkout,
+  # oh-my-zsh (which runs compinit), the plugins below in list order, and
+  # syntax highlighting last, after every widget exists.
+  programs.zsh.oh-my-zsh = {
+    enable = true;
+    # fzf is not here: its program sets up its own key bindings (see fzf.nix).
+    plugins = [
+      "colored-man-pages"
+      "command-not-found"
+      "direnv"
+      "docker-compose"
+      "extract"
+      "git"
+      "gitignore"
+      "mise"
+      "mix"
+      "zoxide"
+    ];
+  };
+  # fzf-tab must come after compinit and before the plugins that wrap widgets.
+  programs.zsh.plugins = [
+    {
+      name = "fzf-tab";
+      src = "${pkgs.zsh-fzf-tab}/share/fzf-tab";
+    }
+    {
+      name = "zsh-autopair";
+      src = "${pkgs.zsh-autopair}/share/zsh/zsh-autopair";
+      file = "autopair.zsh";
+    }
+    {
+      name = "zsh-autosuggestions";
+      src = "${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions";
+    }
+    {
+      name = "powerlevel10k";
+      src = "${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k";
+      file = "powerlevel10k.zsh-theme";
+    }
+  ];
+  programs.zsh.syntaxHighlighting.enable = true;
+
+  programs.zsh.initContent = lib.mkMerge [
+    # Powerlevel10k's instant prompt draws the prompt at once while the rest
+    # loads, so it goes first. Anything that asks for input goes above it.
+    (lib.mkBefore ''
+      if [[ -r "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
+        source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
+      fi
+    '')
+    # zshrc is sourced from the checkout, so an edit takes effect in a new
+    # shell. It runs before oh-my-zsh (800), as it always has, so the mise
+    # plugin wraps the command-not-found handler in handlers.zsh.
+    (lib.mkOrder 790 "source ${lib.escapeShellArg "${config.dotfiles.directory}/home/programs/zsh/zshrc"}")
+  ];
   programs.zsh.envExtra = ''
     export DOTFILES="${config.dotfiles.directory}"
 
@@ -39,61 +95,5 @@
   home.file."./.zshenv" = {
     target = ".zshenv";
     force = true;
-  };
-
-  home.activation.cloneOhMyZsh = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    if [ ! -d "$HOME/.oh-my-zsh" ]; then
-      ${pkgs.git}/bin/git clone https://github.com/ohmyzsh/ohmyzsh.git "$HOME/.oh-my-zsh"
-    fi
-  '';
-
-  home.file = {
-    # Plugins
-    ".oh-my-zsh/custom/plugins/zsh-autosuggestions" = {
-      source = pkgs.fetchFromGitHub {
-        owner = "zsh-users";
-        repo = "zsh-autosuggestions";
-        rev = "v0.7.1";
-        sha256 = "sha256-vpTyYq9ZgfgdDsWzjxVAE7FZH4MALMNZIFyEOBLm5Qo=";
-      };
-    };
-
-    ".oh-my-zsh/custom/plugins/zsh-syntax-highlighting" = {
-      source = pkgs.fetchFromGitHub {
-        owner = "zsh-users";
-        repo = "zsh-syntax-highlighting";
-        rev = "0.8.0";
-        sha256 = "sha256-iJdWopZwHpSyYl5/FQXEW7gl/SrKaYDEtTH9cGP7iPo=";
-      };
-    };
-
-    ".oh-my-zsh/custom/plugins/zsh-autopair" = {
-      source = pkgs.fetchFromGitHub {
-        owner = "hlissner";
-        repo = "zsh-autopair";
-        rev = "v1.0";
-        sha256 = "sha256-wd/6x2p5QOSFqWYgQ1BTYBUGNR06Pr2viGjV/JqoG8A=";
-      };
-    };
-
-    ".oh-my-zsh/custom/plugins/fzf-tab" = {
-      source = pkgs.fetchFromGitHub {
-        owner = "Aloxaf";
-        repo = "fzf-tab";
-        rev = "v1.3.0";
-        sha256 = "sha256-8atbysoOyCBW2OYKmdc91x9V/Mk3eyg3hvzvhJpQ32w=";
-      };
-    };
-
-    # Themes
-
-    ".oh-my-zsh/custom/themes/powerlevel10k" = {
-      source = pkgs.fetchFromGitHub {
-        owner = "romkatv";
-        repo = "powerlevel10k";
-        rev = "v1.20.0";
-        sha256 = "sha256-ES5vJXHjAKw/VHjWs8Au/3R+/aotSbY7PWnWAMzCR8E=";
-      };
-    };
   };
 }

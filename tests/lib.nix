@@ -152,6 +152,10 @@ let
       lib.filter (assertion: !assertion.assertion) wrapped.config.assertions
     );
 
+  # The real zsh program (a fixture that imports it), and a home without it.
+  zshHome = homeOn "box" [ "zsh" ];
+  noZshHome = homeOn "box" [ ];
+
   # A system module that sets one value, turned on or off.
   systemWith =
     enabled:
@@ -304,8 +308,46 @@ let
         "idle"
         "links"
         "mac-only"
+        "zsh"
       ];
     };
+    # ~/.zshrc sources zshrc from the checkout instead of copying it in, so an
+    # edit takes effect in a new shell with no rebuild.
+    zshrcIsSourcedFromTheCheckout = {
+      expr =
+        let
+          zshrc = zshHome.home.file."./.zshrc".text;
+        in
+        {
+          sourced = lib.hasInfix "source /home/alice/.dotfiles/home/programs/zsh/zshrc\n" zshrc;
+          copied = lib.hasInfix (builtins.readFile ../home/programs/zsh/zshrc) zshrc;
+        };
+      expected = {
+        sourced = true;
+        copied = false;
+      };
+    };
+    # ~/.zshrc loads in the order the shell needs: the instant prompt first,
+    # zshrc before oh-my-zsh so its plugins wrap the handlers there, fzf-tab
+    # after compinit and before the plugins that wrap widgets, and syntax
+    # highlighting last.
+    zshLoadsInOrder =
+      let
+        zshrc = zshHome.home.file."./.zshrc".text;
+        at = step: lib.stringLength (lib.head (lib.splitString step zshrc));
+        steps = [
+          "p10k-instant-prompt"
+          "source /home/alice/.dotfiles/home/programs/zsh/zshrc"
+          "source $ZSH/oh-my-zsh.sh"
+          "fzf-tab/fzf-tab.plugin.zsh"
+          "zsh-autosuggestions/zsh-autosuggestions.plugin.zsh"
+          "zsh-syntax-highlighting.zsh"
+        ];
+      in
+      {
+        expr = lib.sort (a: b: at a < at b) (lib.filter (step: lib.hasInfix step zshrc) steps);
+        expected = steps;
+      };
     aProgramAppliesOnlyWhereItIsOn = {
       expr = {
         enabled = boxHome.home.sessionVariables.DEMO or null;
@@ -350,6 +392,13 @@ let
       system = "riscv64-linux";
     })) users;
     aHomeOnlyHostNeedsNoSystemFiles = problems (hosts // { loft = hosts.shed; }) users == [ ];
+
+    # Turning zsh on adds no activation step, so a switch fetches nothing.
+    zshAddsNoActivationStep =
+      lib.attrNames zshHome.home.activation == lib.attrNames noZshHome.home.activation;
+    # oh-my-zsh and its plugins come from the store, not a ~/.oh-my-zsh folder.
+    zshLeavesTheOldOhMyZshFolderAlone =
+      !lib.any (file: lib.hasPrefix ".oh-my-zsh" file.target) (lib.attrValues zshHome.home.file);
 
     anUnknownUserIsNamed = mentions [ "config/hosts.nix: shed.users has \"alicia\"" ] (
       hostProblems "shed" (set {
