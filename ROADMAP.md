@@ -1654,12 +1654,17 @@ Home Manager, and the managed Mac; diagnosis works without a successful switch.
 ### [x] DX-007 Keep the docs and the repo in step — P2 · S
 
 **Implemented:** `.envrc` is back, and AGENTS.md says an agent may run on any
-host and should run `hostname -s` first. `tests/test_docs.py` fails when
-README.md, AGENTS.md or ROADMAP.md links to a file git doesn't track (HTML
-`src` and `href` included) or to a heading that is gone, when the README's
-scripts table and `bin/` disagree, or when a hosts table disagrees with
-`config/hosts.nix` (names, system, build, roles). `bin/test` and CI run it.
-Each rule was checked by breaking the doc it guards.
+host and should run `hostname -s` first. [tests/docs.nix](tests/docs.nix)
+fails when README.md, AGENTS.md or ROADMAP.md links to a file git doesn't
+track (HTML `src` and `href` included, names in the same case) or to a heading
+that is gone, when the README's scripts table and `bin/` disagree, or when a
+hosts table disagrees with `config/hosts.nix` (names, system, build, roles).
+Each rule was checked by breaking the doc it guards. It began as
+`tests/test_docs.py` in `bin/test`; since
+[#58](https://github.com/nelsonmestevao/dotfiles/pull/58) its checks are
+nix-unit cases, so `bin/check --eval` runs them, and CI's build job does in
+`lib-tests`. A change that builds nothing new gets no build job, so CI doesn't
+check the docs then.
 
 **Evidence:** the docs drift, and nothing notices:
 

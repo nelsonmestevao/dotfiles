@@ -527,13 +527,13 @@ that shell for you (`direnv allow` once).
 | `bin/update`                   | Updates the flake inputs and lists what changed.                     |
 | `bin/update --save`            | Same, then commits `flake.lock` with a note for each input.          |
 | `bin/check`                    | Evaluates every config, then builds this machine's checks.           |
-| `bin/check --eval`             | Evaluates every config and runs the lib tests (about a minute).     |
+| `bin/check --eval`             | Evaluates every config and runs the Nix tests (about a minute).      |
 | `bin/check --all-systems`      | Builds every system's checks. Needs a builder for the other OS.      |
 | `bin/check --same [<rev>]`     | Shows which configs build a different derivation than `<rev>` did.   |
 | `bin/check --list`             | Prints what every config builds, as JSON. CI decides from this list. |
 | `bin/lint`                     | Checks the Nix, shell, xonsh and zsh files and the workflow, like CI. |
 | `bin/format`                   | Formats every Nix file (`nix fmt`).                                  |
-| `bin/test`                     | Tests the helper scripts and checks the docs, like CI does.          |
+| `bin/test`                     | Tests the helper scripts, like CI does.                              |
 | `bin/autoclean [--dry-run]`    | Deletes old generations and frees space (asks for your password).    |
 | `bin/setup user\|host <name>`  | Adds a user or host (see [Installing](#-installing)).                |
 | `bin/new program <name>`       | Creates a Home Manager program in `home/programs/<name>/`.           |
@@ -546,12 +546,12 @@ flake sees them right away. Existing configuration files retain their staged
 contents; their new entries are left in the working tree for review.
 
 `bin/check` has three depths. `bin/check --eval` evaluates every config on
-every system and runs the tests in `tests/lib.nix`. The one thing it builds is
-this machine's `lib-tests` check, which runs those tests. It reads the Mac
-config on Linux and the Linux ones on a Mac, but it does not test that a
-config activates on the other OS. Plain `bin/check` does that evaluation
-first, then builds the checks of this machine's system, which is what each CI
-runner builds.
+every system and runs the Nix tests, in `tests/lib.nix` and `tests/docs.nix`.
+The one thing it builds is this machine's `lib-tests` check, which runs those
+tests. It reads the Mac config on Linux and the Linux ones on a Mac, but it
+does not test that a config activates on the other OS. Plain `bin/check` does
+that evaluation first, then builds the checks of this machine's system, which
+is what each CI runner builds.
 `bin/check --all-systems` builds the checks of every system and needs a
 builder for the other OS.
 
@@ -580,10 +580,8 @@ of neither kind stops `bin/lint` and `bin/check --eval` with its name.
 
 `bin/test` runs the tests for `bin/new`, `bin/setup`, `bin/check`,
 `bin/build`, `bin/rebuild` and CI's planning script, which work in throwaway
-folders and touch nothing else. It also checks the docs: every link in
-README.md, AGENTS.md and ROADMAP.md points to something, every `bin/` script
-is in the table above, and both hosts tables match `config/hosts.nix`. Pass
-it unittest's arguments to narrow the run, like `bin/test -k hardware`.
+folders and touch nothing else. Pass it unittest's arguments to narrow the
+run, like `bin/test -k hardware`.
 
 CI runs in two steps. A quick job lints, runs `bin/test`, and reads through
 every config with `bin/check --list`. Then a build job builds each system's
@@ -604,6 +602,13 @@ alone:
 ```shell
 nix build --no-link ".#checks.$(nix config show system).lib-tests"
 ```
+
+`tests/docs.nix` checks the docs, as cases of the same run. Every link in
+README.md, AGENTS.md and ROADMAP.md must point to a file or folder git tracks,
+with its name in the same case, and to a heading or `id` that exists. Every
+`bin/` script must be in the table above, both hosts tables must match
+`config/hosts.nix`, and `.envrc` must load the dev shell. A failure lists what
+is wrong, like the link and the doc it is in.
 
 Coding agents get their rules from [`AGENTS.md`](AGENTS.md). For Claude Code,
 [`.claude/settings.json`](.claude/settings.json) also makes it ask before it

@@ -108,13 +108,13 @@ in
         touch "$out"
       '';
 
-  # tests/lib.nix, run by nix-unit, which names each failed case and shows how
-  # it differs. --quiet leaves out the cases that pass, so a failed build's
-  # last log lines show the ones that failed. The sandbox has no network, so
-  # nix-unit gets a store of its own and the inputs the tests read, already in
-  # the Nix store. A test that reads another input needs an --override-input
-  # here too. They don't depend on the system, but each system runs them, like
-  # its CI runner.
+  # tests/lib.nix and tests/docs.nix, run by nix-unit, which names each failed
+  # case and shows how it differs. --quiet leaves out the cases that pass, so
+  # a failed build's last log lines show the ones that failed. The sandbox has
+  # no network, so nix-unit gets a store of its own and the inputs the tests
+  # read, already in the Nix store. A test that reads another input needs an
+  # --override-input here too. They don't depend on the system, but each
+  # system runs them, like its CI runner.
   lib-tests = pkgs.runCommand "lib-tests" { nativeBuildInputs = [ pkgs.nix-unit ]; } ''
     export HOME=$TMPDIR
     nix-unit --quiet --eval-store "$HOME" \

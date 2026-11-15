@@ -538,3 +538,8 @@ casesOf "values" lib.id values
   expected = true;
 }) holds
 // casesOf "stops" lib.id stops
+# The docs checks in ./docs.nix, each a list of problems that must be empty.
+// casesOf "docs" (problems: {
+  expr = problems;
+  expected = [ ];
+}) (import ./docs.nix { inherit lib; })

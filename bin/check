@@ -18,9 +18,10 @@ Options:
   -h --help         Show this screen.
   -v --version      Show version.
   --eval            Only evaluate every configuration, the Mac ones too, and
-                    run the tests in tests/lib.nix: the one thing it builds
-                    is this machine's lib-tests check. This catches option
-                    and assertion errors in about a minute.
+                    run the tests in tests/lib.nix and tests/docs.nix: the
+                    one thing it builds is this machine's lib-tests check.
+                    This catches option and assertion errors in about a
+                    minute.
   --all-systems     Build the checks of every system, not only this machine's.
                     This needs a builder for the other OS: a Linux builder on
                     a Mac, a Mac builder on Linux.
