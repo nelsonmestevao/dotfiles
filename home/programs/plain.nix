@@ -112,4 +112,4 @@ with pkgs;
   speedtest = speedtest-cli;
   zen = zen-browser; # about:config zen.view.experimental-no-window-controls
 }
-// import ../scripts.nix { inherit pkgs; }
+// import ./scripts.nix { inherit pkgs; }

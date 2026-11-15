@@ -1,5 +1,5 @@
-# Small shell commands of my own, by name. home/programs/plain.nix adds them
-# to its list, so each one is a program that a user file turns on.
+# Small shell commands of my own, by name. plain.nix, next to this file, adds
+# them to its list, so each one is a program that a user file turns on.
 { pkgs }:
 let
   # Pick two generations with fzf and diff them with nvd. Home-manager and
@@ -43,7 +43,7 @@ in
     REVISION="$2"
 
     [[ -z "$PACKAGE" ]] && echo "Package name is required" && exit 1
-    [[ -z "$REVISION" ]] && REVISION=$(${pkgs.jq}/bin/jq -r '.nodes.nixpkgs.original.ref' ${../flake.lock})
+    [[ -z "$REVISION" ]] && REVISION=$(${pkgs.jq}/bin/jq -r '.nodes.nixpkgs.original.ref' ${../../flake.lock})
 
     echo $(nix eval --raw "github:NixOS/nixpkgs/$REVISION#$PACKAGE.version")
   '';

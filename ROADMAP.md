@@ -639,7 +639,7 @@ option. Some of them are Linux-only, such as `gvfs`, `fuse`, `appimage-run`,
 and `impression`. The Mac user file has the flag commented out, so the Mac
 gets none of the 37.
 
-[home/scripts.nix](home/scripts.nix) rides the same flag. `hm-diff` uses GNU
+[home/programs/scripts.nix](home/programs/scripts.nix) rides the same flag. `hm-diff` uses GNU
 `stat` and `date`, `nixos-diff` is installed on hosts that are not NixOS, and
 `wake-hades` has one machine's MAC address in it.
 
@@ -1629,7 +1629,7 @@ real home.
 **Evidence:** useful diagnostics are spread across the README and helpers. The
 README and a comment in `flake.nix` promise automatic direnv loading.
 **Verified:** commit `f6bf77f6` added `.envrc`, and the next commit,
-`c15fee8c` ("[herdr-app]: add mods"), deleted it. [home/scripts.nix](home/scripts.nix)
+`c15fee8c` ("[herdr-app]: add mods"), deleted it. [home/programs/scripts.nix](home/programs/scripts.nix)
 also assumes particular generation directories.
 
 **Plan:**
