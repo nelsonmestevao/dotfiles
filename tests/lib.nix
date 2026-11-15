@@ -123,18 +123,17 @@ let
   wrongOsHome = homeOn "box" [ "mac-only" ];
   brokenLinkHome = homeOn "box" [ "broken-link" ];
   plainHome = homeOn "box" [ "tokei" ];
-  installs = home: package: lib.elem package.outPath (map (p: p.outPath) home.home.packages);
 
-  # What the wrapped modules complain about on a host, with `name` turned on.
-  # Home Manager turns a failed assertion into an error, whose text can't be
-  # read back, so this evaluates the modules on their own.
-  complaintsAbout =
-    hostname: name: modules:
+  # What a program's wrapper complains about on a host. Home Manager turns a
+  # failed assertion into an error, whose text can't be read back, so this
+  # evaluates the wrapped program on its own.
+  complaintsOf =
+    hostname: name:
     let
       wrapped = lib.evalModules {
         specialArgs = {
           inherit hostname;
-          pkgs = nixpkgs.legacyPackages.${hosts.${hostname}.system};
+          pkgs.stdenv.hostPlatform.isDarwin = isMac hosts.${hostname}.system;
         };
         modules = [
           {
@@ -142,32 +141,15 @@ let
             options.home = lib.mkOption { type = lib.types.attrs; };
             config.dotfiles.programs.${name}.enable = true;
           }
-        ]
-        ++ modules;
+          (mkHomeModule {
+            inherit name;
+            folder = "${programs}/${name}";
+          } (import (./fixtures/programs + "/${name}/${name}.nix")))
+        ];
       };
     in
     map (assertion: assertion.message) (
       lib.filter (assertion: !assertion.assertion) wrapped.config.assertions
-    );
-
-  # The same, for a fixture program.
-  complaintsOf =
-    hostname: name:
-    complaintsAbout hostname name [
-      (mkHomeModule {
-        inherit name;
-        folder = "${programs}/${name}";
-      } (import (./fixtures/programs + "/${name}/${name}.nix")))
-    ];
-
-  # The same, for a program in home/programs/plain.nix.
-  plainComplaintsOf =
-    hostname: name:
-    complaintsAbout hostname name (
-      import ../home/lib/plainPrograms.nix {
-        inherit lib;
-        pkgs = nixpkgs.legacyPackages.${hosts.${hostname}.system};
-      }
     );
 
   # A system module that sets one value, turned on or off.
@@ -336,16 +318,12 @@ let
     };
     aPlainProgramIsAProgramToo = {
       expr = {
-        on = installs plainHome nixpkgs.legacyPackages.x86_64-linux.tokei;
-        off = installs plainHome nixpkgs.legacyPackages.x86_64-linux.gvfs;
-        onTheWrongOs = plainComplaintsOf "mac" "impression";
+        on = lib.elem nixpkgs.legacyPackages.x86_64-linux.tokei plainHome.home.packages;
+        off = lib.elem nixpkgs.legacyPackages.x86_64-linux.gvfs plainHome.home.packages;
       };
       expected = {
         on = true;
         off = false;
-        onTheWrongOs = [
-          "dotfiles.programs.impression only runs on linux, but it's enabled on mac (darwin)."
-        ];
       };
     };
     aSystemModuleAppliesOnlyWhenItIsOn = {

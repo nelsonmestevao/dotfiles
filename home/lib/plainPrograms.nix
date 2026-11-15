@@ -11,26 +11,10 @@ let
 
   plainProgram =
     name:
-    mkHomeModule
-      {
-        inherit name;
-        folder = "home/programs";
-        file = "home/programs/plain.nix";
-      }
-      (
-        { pkgs, ... }:
-        let
-          package = (programsIn pkgs).${name};
-          inherit (pkgs.stdenv) hostPlatform;
-        in
-        {
-          home.packages = [ package ];
-          platforms =
-            if lib.meta.availableOn hostPlatform package then
-              null
-            else
-              [ (if hostPlatform.isDarwin then "linux" else "darwin") ];
-        }
-      );
+    mkHomeModule {
+      inherit name;
+      folder = "home/programs";
+      file = "home/programs/plain.nix";
+    } ({ pkgs, ... }: { home.packages = [ (programsIn pkgs).${name} ]; });
 in
 map plainProgram (lib.attrNames (programsIn pkgs))
