@@ -3,7 +3,7 @@
   ...
 }:
 let
-  wallpapers = "${config.home.homeDirectory}/Pictures/Bing Wallpapers";
+  wallpapers = "${config.home.homeDirectory}/Pictures/Bing";
 in
 {
   # ── dconf Settings ───────────────────────────────────────────────────
@@ -13,7 +13,7 @@ in
     slideshow-show-quick-settings-entry = true;
     bing-download-directory = wallpapers;
     bing-wallpaper-download = true;
-    bing-wallpaper-download-count = 0;
+    bing-wallpaper-download-count = 1;
     bing-wallpaper-notify-on-error = false;
     bing-wallpaper-resolution = "UHD";
   };
