@@ -13,7 +13,7 @@ in
     slideshow-show-quick-settings-entry = true;
     bing-download-directory = wallpapers;
     bing-wallpaper-download = true;
-    bing-wallpaper-download-count = 8;
+    bing-wallpaper-download-count = 0;
     bing-wallpaper-notify-on-error = false;
     bing-wallpaper-resolution = "UHD";
   };
