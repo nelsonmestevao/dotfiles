@@ -279,10 +279,20 @@ let
       expr = {
         hostSystem = onBox.host.system;
         userName = onBox.user.name;
+        names = lib.attrNames onBox;
       };
       expected = {
         hostSystem = "x86_64-linux";
         userName = "Alice";
+        names = [
+          "disableFor"
+          "enableFor"
+          "host"
+          "hostname"
+          "user"
+          "username"
+          "valueFor"
+        ];
       };
     };
     # The stray notes.md and the `_draft` folder are left out.
@@ -408,7 +418,8 @@ let
         "desktop"
       ];
     });
-    # Like the old `extraSpecialArgs`: a user file sets `_module.args` now.
+    # A field the schema doesn't know, in a user entry: a typo, or one it has
+    # dropped.
     anUnknownUserField = {
       sound = theFixture;
       broken = check hosts (

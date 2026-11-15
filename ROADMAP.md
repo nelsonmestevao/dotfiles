@@ -478,8 +478,8 @@ changed" with one command.
    run. A `system` may be any that nixpkgs supports in flakes, and no user or
    role may be listed twice.
 2. Rules, listed together: unknown users, a platform on the wrong OS, a Mac
-   without `darwinStateVersion`, a role named like a host, `extraSpecialArgs`
-   that take a module argument's name, and missing user or host files.
+   without `darwinStateVersion`, a role named like a host, and missing user or
+   host files.
 
 A new field needs one option, and a rule only if it must agree with something
 else. `normalizePlatform` and `checkHost` are gone. Modules get the checked
