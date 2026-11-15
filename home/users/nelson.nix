@@ -17,6 +17,7 @@
     glocalsend.enable = true;
     just-perfection.enable = true;
     pop-shell.enable = true;
+    printers.enable = true;
     smart-home.enable = true;
     space-bar.enable = true;
     top-bar-organizer.enable = true;
