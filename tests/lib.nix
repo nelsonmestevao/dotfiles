@@ -230,14 +230,13 @@ let
     leftOutFieldsGetTheirDefaults = {
       expr = {
         inherit ((check hosts users).hosts.shed) platform roles darwinStateVersion;
-        inherit ((check hosts users).users.bob) extraGroups extraSpecialArgs;
+        inherit ((check hosts users).users.bob) extraGroups;
       };
       expected = {
         platform = null;
         roles = [ ];
         darwinStateVersion = null;
         extraGroups = [ ];
-        extraSpecialArgs = { };
       };
     };
     theRulesListEverythingTheyFind = {
@@ -287,21 +286,14 @@ let
         broken.hostSystems == broken.toolSystems && !broken.dataIsRight;
       expected = true;
     };
-    aHomeGetsItsEntriesAndArguments = {
+    aHomeGetsItsEntries = {
       expr = {
         hostSystem = onBox.host.system;
         userName = onBox.user.name;
-        ownArgument =
-          (argsOf "alice@box" hosts (
-            edit users "alice" (set {
-              extraSpecialArgs.tea = "yes";
-            })
-          )).tea;
       };
       expected = {
         hostSystem = "x86_64-linux";
         userName = "Alice";
-        ownArgument = "yes";
       };
     };
     # The stray notes.md and the `_draft` folder are left out.
@@ -385,13 +377,6 @@ let
     aHostCannotBeNamedLikeAnOsRole = mentions [ "\"linux\" is both a host and a role" ] (
       problems (hosts // { linux = hosts.shed; }) users
     );
-    aUserCannotTakeAModuleArgument = mentions [ "alice.extraSpecialArgs can't use \"host\"" ] (
-      problems hosts (
-        edit users "alice" (set {
-          extraSpecialArgs.host = "mine";
-        })
-      )
-    );
     aUserNeedsAHomeFile = mentions [ "config/users.nix: carol needs home/users/carol.nix" ] (
       problems hosts (users // { carol.name = "Carol"; })
     );
@@ -441,6 +426,15 @@ let
         "desktop"
       ];
     });
+    # Like the old `extraSpecialArgs`: a user file sets `_module.args` now.
+    anUnknownUserField = {
+      sound = theFixture;
+      broken = check hosts (
+        edit users "alice" (set {
+          extraSpecialArgs.tea = "yes";
+        })
+      );
+    };
     brokenDataStopsTheHomes = {
       sound = lib.attrNames (assemble hosts users).homeConfigs;
       broken =

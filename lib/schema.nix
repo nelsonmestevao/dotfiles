@@ -72,19 +72,13 @@ let
       default = [ ];
       description = "Groups for the account on NixOS, like \"wheel\".";
     };
-    extraSpecialArgs = mkOption {
-      type = types.lazyAttrsOf types.raw;
-      default = { };
-      description = "Extra arguments for the user's home modules.";
-    };
   };
 
   entriesWith = fields: mkOption { type = types.attrsOf (types.submodule { options = fields; }); };
 
   # Both files, read through the options above. Every field is read here,
   # because Nix checks a type only when the value is used: so a mistake in a
-  # field nothing uses yet still stops the build. `extraSpecialArgs` values
-  # are left unread, since they can be anything, even a whole package set.
+  # field nothing uses yet still stops the build.
   typed =
     { hosts, users }:
     let
@@ -105,9 +99,8 @@ let
         ];
       };
       data = { inherit (evaluated.config) hosts users; };
-      argumentNames = user: user // { extraSpecialArgs = lib.attrNames user.extraSpecialArgs; };
     in
-    builtins.deepSeq (data // { users = lib.mapAttrs (_: argumentNames) data.users; }) data;
+    builtins.deepSeq data data;
 
   # ── Rules ──────────────────────────────────────────────────────────────────
   # Each rule gives one sentence for every place the data breaks it.
@@ -148,33 +141,6 @@ let
       "config/hosts.nix: \"${name}\" is both a host and a role, so `enableFor` could not tell them apart"
     ) (lib.intersectLists (rolesAcross hosts) (lib.attrNames hosts));
 
-  # A user's own argument by one of these names would replace it, and break
-  # modules far from the mistake. The module system and Home Manager pass the
-  # rest on their own.
-  argumentsTheModulesAlreadyGet =
-    { users, ... }:
-    let
-      taken = import ./homeArguments.nix ++ [
-        "lib"
-        "pkgs"
-        "config"
-        "options"
-        "modulesPath"
-        "osConfig"
-        "specialArgs"
-        "extendModules"
-        "moduleType"
-        "_class"
-      ];
-    in
-    inEach users (
-      name: user:
-      map (
-        argument:
-        "config/users.nix: ${name}.extraSpecialArgs can't use \"${argument}\": the home modules already get an argument by that name"
-      ) (lib.intersectLists taken (lib.attrNames user.extraSpecialArgs))
-    );
-
   # Without these files, the build fails later with an error that doesn't say
   # why.
   missingFiles =
@@ -203,7 +169,6 @@ let
     platformsOnTheWrongOs
     macsWithoutAStateVersion
     rolesNamedLikeAHost
-    argumentsTheModulesAlreadyGet
     missingFiles
   ];
 
