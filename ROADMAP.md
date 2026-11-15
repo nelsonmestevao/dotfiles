@@ -55,7 +55,7 @@ The owner took these on 2026-11-12. Don't reopen one without a new reason.
 | Program settings | Any program may declare settings beside `enable`. | [CONFIG-006](#config-006) |
 | Git signing key | A setting of the git program, set in the user file. It leaves `config/hosts.nix`. | [CONFIG-006](#config-006) |
 | User files | Two full lists. No shared profile file. | [CONFIG-004](#config-004) |
-| `home/packages.nix` | One program per package, each one line in `home/programs/plain.nix` (decided again 2026-11-13). | [CONFIG-003](#config-003) |
+| `home/packages.nix` | One program per package. | [CONFIG-003](#config-003) |
 | Programs that are off everywhere | Keep all 13 as alternatives. | [PLATFORM-003](#platform-003) |
 | temis | A remote dev box, reached over Tailscale only. | [CONFIG-003](#config-003), [OPS-005](#ops-005) |
 | thinkpad | Rarely used. It keeps building; its tasks are P3. | [PLATFORM-004](#platform-004) |
@@ -203,6 +203,16 @@ Each of these is small and safe. Do them first. The first row needs no code.
 <a id="cli-001"></a>
 
 ### [ ] CLI-001 Propagate command failures explicitly — P1 · M
+
+**Progress:** `scripts/common.xsh` holds the failure policy for `bin/build`,
+`bin/check` and `bin/rebuild`: it sets `$XONSH_SUBPROC_RAISE_ERROR`, hides
+tracebacks, and ends a failed run with one plain line. `bin/rebuild` says what
+it left undone ("home not switched"). `bin/build` builds both even when one
+fails, which its comment promised but xonsh 0.23 didn't do. `NIX_CONFIG` is
+added to, not replaced. Every xonsh shebang has `--no-rc`.
+`tests/test_rebuild.py` checks each case with a stand-in `nh`. Still open:
+`bin/new`, `bin/setup` and `bin/update` keep their own colours and error
+handling (`bin/update` moves with CLI-002).
 
 **Evidence:** [bin/check](bin/check), [bin/rebuild](bin/rebuild),
 [bin/setup](bin/setup), and [bin/update](bin/update) run commands without
@@ -613,35 +623,22 @@ sandbox it needs its own eval store and an override for each input. Start with
 
 ### [ ] CONFIG-003 Reduce the server and base-home package sets — P2 · M
 
-**Progress (2026-11-13):** steps 2–5 are done, in a simpler way than planned.
-Each of the 37 packages and 5 scripts is a program, but as one line in
-[home/programs/plain.nix](home/programs/plain.nix) instead of a folder.
-[home/lib/plainPrograms.nix](home/lib/plainPrograms.nix) makes a module for
-each one with `mkHomeModule`, so it gets `dotfiles.programs.<name>.enable`
-like any program. One that nixpkgs doesn't build for the host's OS (only
-`impression` on the Mac today) stops the build with the host's name, as
-`platforms` does. `wake-hades` keeps its address and `nixos-diff` stays a
-home program, turned on by host name if wanted: neither is worth a setting or
-a system module. `nelson.nix` turns all 42 on, so every home gets the same
-packages as before (checked: the sorted package list of each of the four
-homes is the same). `hm-diff` uses GNU `stat` and `date` from nixpkgs, so it
-works on the Mac too.
+**Steps 2–5 done** in [#48](https://github.com/nelsonmestevao/dotfiles/pull/48),
+as one line per program in [home/programs/plain.nix](home/programs/plain.nix)
+instead of a folder each.
 
-Left: steps 6 and 7 are choices for the owner. Turn on in the Mac user file
-the ones wanted there, and trim temis.
-
-**Evidence** (how it was before): [nelson.nix](home/users/nelson.nix) enables Flutter, Haskell, media
+**Evidence:** [nelson.nix](home/users/nelson.nix) enables Flutter, Haskell, media
 tools, and many language modules everywhere. **Measured:** temis, a server,
 gets 59 programs and 146 packages, among them Flutter, GHC, ffmpeg,
 ImageMagick, and unoconv.
 
 `home/packages.nix` put 37 packages behind one flag,
-`dotfiles.packages.enable`. It is the one place where a program is not an
+`dotfiles.packages.enable`. It was the one place where a program was not an
 option. Some of them are Linux-only, such as `gvfs`, `fuse`, `appimage-run`,
 and `impression`. The Mac user file has the flag commented out, so the Mac
 gets none of the 37.
 
-[home/scripts.nix](home/scripts.nix) rode the same flag. `hm-diff` used GNU
+[home/scripts.nix](home/scripts.nix) rides the same flag. `hm-diff` uses GNU
 `stat` and `date`, `nixos-diff` is installed on hosts that are not NixOS, and
 `wake-hades` has one machine's MAC address in it.
 
@@ -1388,9 +1385,18 @@ identified. Do not assume Tailscale alone defines the host's exposure.
 
 ### [ ] OPS-006 Align rollback and garbage-collection policy — P1 · S
 
-**Evidence:** [bin/autoclean](bin/autoclean) uses seven-day deletion while
-[system/nixos.nix](system/nixos.nix) configures monthly collection with 31-day
-retention. The README explains build and switch but has no recovery procedure.
+**Progress:** one rule everywhere: keep 31 days, and at least the newest 3 of
+each profile. `bin/autoclean` and NixOS's monthly job both run `nh clean all`,
+which also cleans the users' home profiles that `nix.gc` left alone, and
+leaves project gcroots (`result` links, direnv shells) alone. Both read the
+rule from `config/cleanup.nix`. `bin/autoclean --dry-run` lists what it would
+delete and deletes nothing. The README has a
+"Rolling back" section. Still open: following the walkthrough once on
+framework.
+
+**Evidence (before this task):** `bin/autoclean` used seven-day deletion while
+`system/nixos.nix` set up monthly collection with 31-day retention. The README
+explained build and switch but had no recovery procedure.
 
 **Plan:**
 
@@ -1623,8 +1629,7 @@ real home.
 README and a comment in `flake.nix` promise automatic direnv loading.
 **Verified:** commit `f6bf77f6` added `.envrc`, and the next commit,
 `c15fee8c` ("[herdr-app]: add mods"), deleted it. [home/scripts.nix](home/scripts.nix)
-assumes particular generation directories. (Its GNU `stat` and `date` now come
-from nixpkgs, so they work on a Mac too.)
+also assumes particular generation directories.
 
 **Plan:**
 
@@ -2207,14 +2212,10 @@ repo is `wimpysworld/nix-config`: a data registry builds every NixOS, Mac, and
 | A hook framework | lovesegfault, ryan4yin | **Skip:** a five-line hook is enough. |
 | sops-nix or agenix | split about evenly | **Skip for now:** a checklist ([OPS-004](#ops-004)). |
 
-One more idea was weighed and set aside on 2026-11-12, then taken up for new
-programs on 2026-11-13. Of the 109 program modules, 82 are 12 lines or fewer
-and mostly just install a package. A table of one-line programs would save
-about 700 lines, at the cost of a second way to add a program. The owner first
-kept the folders. When the 37 packages of `home/packages.nix` needed a home
-([CONFIG-003](#config-003)), 42 more folders of one line each seemed too much,
-so they became [home/programs/plain.nix](home/programs/plain.nix) instead. The
-existing folders stay as they are: moving them would only be churn.
+One more idea was weighed: of the 109 program modules, 82 are 12 lines or
+fewer and mostly just install a package. It was first set aside, then taken
+up in [CONFIG-003](#config-003): a program that is only a package is one line
+in [home/programs/plain.nix](home/programs/plain.nix).
 
 ## Suggested delivery order
 
