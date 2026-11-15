@@ -15,6 +15,7 @@
     color-picker.enable = true;
     draw-on-gnome.enable = true;
     glocalsend.enable = true;
+    just-perfection.enable = true;
     pop-shell.enable = true;
     smart-home.enable = true;
     space-bar.enable = true;
