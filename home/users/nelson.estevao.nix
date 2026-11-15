@@ -26,6 +26,7 @@
 
   # Dev Tools
   dotfiles.programs.bat.enable = true;
+  dotfiles.programs.bc.enable = true;
   dotfiles.programs.btop.enable = true;
   dotfiles.programs.claude.enable = true;
   dotfiles.programs.codex.enable = true;
@@ -34,8 +35,11 @@
   dotfiles.programs.ctop.enable = true;
   dotfiles.programs.curl.enable = true;
   dotfiles.programs.cursor.enable = true;
+  dotfiles.programs.dig.enable = true;
   dotfiles.programs.direnv.enable = true;
   dotfiles.programs.docker.enable = true;
+  dotfiles.programs.dust.enable = true;
+  dotfiles.programs.eva.enable = true;
   dotfiles.programs.eza.enable = true;
   dotfiles.programs.fastfetch.enable = true;
   dotfiles.programs.fd.enable = true;
@@ -52,6 +56,9 @@
     "Remote-Nelson-Estevao" = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
   };
   dotfiles.programs.glab.enable = true;
+  dotfiles.programs.glow.enable = true;
+  dotfiles.programs.gping.enable = true;
+  dotfiles.programs.grex.enable = true;
   dotfiles.programs.herdr-app.enable = enableFor [ "desktop" ];
   dotfiles.programs.httpie.enable = true;
   dotfiles.programs.hyperfine.enable = true;
@@ -59,12 +66,18 @@
   dotfiles.programs.jq.enable = true;
   dotfiles.programs.mise.enable = true;
   dotfiles.programs.onefetch.enable = true;
+  dotfiles.programs.ouch.enable = true;
   dotfiles.programs.projectionist.enable = true;
   dotfiles.programs.ripgrep.enable = true;
+  dotfiles.programs.scc.enable = true;
   dotfiles.programs.shellcheck.enable = true;
   dotfiles.programs.shfmt.enable = true;
   dotfiles.programs.speedtest.enable = true;
+  dotfiles.programs.tldr.enable = true;
+  dotfiles.programs.tokei.enable = true;
   dotfiles.programs.unzip.enable = true;
   dotfiles.programs.wget.enable = true;
+  dotfiles.programs.yazi.enable = true;
+  dotfiles.programs.yq.enable = true;
   dotfiles.programs.zoxide.enable = true;
 }

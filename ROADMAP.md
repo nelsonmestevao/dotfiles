@@ -621,11 +621,12 @@ sandbox it needs its own eval store and an override for each input. Start with
 
 <a id="config-003"></a>
 
-### [ ] CONFIG-003 Reduce the server and base-home package sets — P2 · M
+### [x] CONFIG-003 Reduce the server and base-home package sets — P2 · M
 
-**Steps 2–5 done** in [#48](https://github.com/nelsonmestevao/dotfiles/pull/48),
-as one line per program in [home/programs/plain.nix](home/programs/plain.nix)
-instead of a folder each.
+**Done** in [#48](https://github.com/nelsonmestevao/dotfiles/pull/48), with
+one line per program in [home/programs/plain.nix](home/programs/plain.nix)
+instead of a folder each. temis now gets 132 packages (146 before), and the
+Mac 85 (72 before).
 
 **Evidence:** [nelson.nix](home/users/nelson.nix) enables Flutter, Haskell, media
 tools, and many language modules everywhere. **Measured:** temis, a server,
