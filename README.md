@@ -113,6 +113,15 @@ A module that only runs on one OS says so with `platforms = [ "linux" ]` or
 stops the build with a message that names the host, instead of failing deep
 inside a package build. Most modules run everywhere and leave it out.
 
+Programs can run jobs on a schedule too, with Home Manager's
+`systemd.user.services` and `systemd.user.timers`. The `backups` program
+([`backups.nix`](home/programs/backups/backups.nix)) runs my restic backups
+and two syncs this way, and the user file turns it on for framework only.
+These are user units, so they run only while your systemd user instance runs:
+from login to logout, or always once `loginctl enable-linger` is on. Start
+one by hand with `systemctl --user start <name>`, and read its log with
+`journalctl --user -u <name>`.
+
 A program can also offer **settings** beside `enable`. It declares each one
 with `options.<setting>`, next to its config, and reads it from
 `config.dotfiles.programs.<name>.<setting>`. A user file sets it, with

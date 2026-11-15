@@ -10,8 +10,6 @@
   imports = [
     ./hosts/${hostname}/hardware.nix
     ./hosts/${hostname}.nix
-    # Off unless the host turns it on for some of its users.
-    ./timers
   ];
 
   # ── Nix ─────────────────────────────────────────────────────────────────

@@ -1182,10 +1182,10 @@ Nothing in this section was run. The plans come from the source.
 
 ### [ ] OPS-001 Define backup retention, verification, and restore drills — P1 · M
 
-**Evidence:** [system/timers/nelson.nix](system/timers/nelson.nix) defines three
+**Evidence:** [backups.nix](home/programs/backups/backups.nix) defines three
 Restic repositories and backup paths, but no explicit retention policy,
 repository checks, restore drill, or failure notification. Only framework
-enables these timers in the current host files.
+turns these timers on.
 
 **Plan:**
 
@@ -1251,7 +1251,7 @@ are verified with a dry run and restore.
 
 ### [ ] OPS-003 Run backups and syncs as home programs — P1 · M
 
-**Evidence:** [mkSystemTimer](system/lib/mkSystemTimer.nix) names units only by
+**Evidence:** `mkSystemTimer` named units only by
 job name, so multiple users would collide. The database-client backup exits on
 `git diff --quiet`, which misses untracked-only work, and obtains its commit
 message from a network service. Shell backup aliases also hardcode framework's
@@ -1283,7 +1283,7 @@ runs on Linux only, which is all that is needed.
 5. Turn all three on in `nelson.nix` with `enableFor [ "framework" ]`.
 6. Run the new backup against a test repository for a week, beside the old
    one. Then delete `system/timers/`,
-   [mkSystemTimer](system/lib/mkSystemTimer.nix), the `timers` lines in
+   `mkSystemTimer`, the `timers` lines in
    `framework.nix`, and the three restic aliases.
 7. Note the cost in the program's comment: user timers run only while you are
    logged in. On the laptop that is fine. A server would need lingering.

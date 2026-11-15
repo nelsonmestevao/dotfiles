@@ -160,6 +160,9 @@
   dotfiles.programs.pkgversion.enable = true;
   dotfiles.programs.wake-hades.enable = true;
 
+  # Backups & Syncs
+  dotfiles.programs.backups.enable = enableFor [ "framework" ];
+
   # Media & Documents
   dotfiles.programs.exiftool.enable = disableFor [ "server" ];
   dotfiles.programs.ffmpeg.enable = disableFor [ "server" ];
