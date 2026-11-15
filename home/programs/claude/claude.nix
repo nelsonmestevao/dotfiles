@@ -18,7 +18,7 @@
   ];
 
   # ── Symlinked Config Files ───────────────────────────────────────────
-  home.file.".claude/skills" = lib.mkIf config.dotfiles.programs.claude.skills (mkSymlink "skills");
+  home.file.".claude/skills" = lib.mkIf config.dotfiles.programs.claude.skills (mkSymlink ./skills);
 
   # Claude Code saves settings.json atomically, writing a tmp file next to the
   # symlink target after resolving only one level. A home.file symlink resolves

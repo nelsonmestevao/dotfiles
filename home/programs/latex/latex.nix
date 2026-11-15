@@ -8,5 +8,5 @@
     texliveFull
   ];
 
-  home.file.".latexmkrc" = mkSymlink "latexmkrc";
+  home.file.".latexmkrc" = mkSymlink ./latexmkrc;
 }

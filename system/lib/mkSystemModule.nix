@@ -1,4 +1,5 @@
-{ name, folder }:
+# `file` is where the module is, from the repo root, for messages.
+{ name, file }:
 body:
 {
   config,
@@ -9,8 +10,6 @@ body:
   ...
 }@args:
 let
-  file = "${folder}/${name}.nix";
-
   # A module returns its system config and its `options`, the settings a host
   # file can set beside `enable` (see lib/moduleResult.nix).
   module = import ../../lib/moduleResult.nix { inherit lib; } {

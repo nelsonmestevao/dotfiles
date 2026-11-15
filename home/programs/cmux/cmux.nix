@@ -13,5 +13,5 @@
 
   # Terminal settings come from ghostty's config; cmux.json holds cmux-owned
   # settings such as keyboard shortcuts.
-  xdg.configFile."cmux/cmux.json" = mkSymlink "cmux.json";
+  xdg.configFile."cmux/cmux.json" = mkSymlink ./cmux.json;
 }
