@@ -500,7 +500,7 @@ version and the hash in place:
 | git-sim | `nix-update --flake git-sim` | The skia-python wheels and git-dummy are pinned inside the file. |
 | cmux | `nix-update --flake cmux --version=<version>` | Nothing. Give the version yourself: its release feed has other tags too. |
 | projectionist | `nix-update --flake projectionist --version=branch=globs-ordering-global-config --src-only` | Regenerate `Cargo.lock` with `cargo generate-lockfile` in a checkout of the new commit. |
-| glocalsend, rudra | `nix-update --flake <name> --version=branch`, on a Linux machine | glocalsend has a second hash, for its dependencies. |
+| glocalsend | `nix-update --flake glocalsend --version=branch`, on a Linux machine | It has a second hash, for its dependencies. |
 | wiggle | Edit `rev` and `hash` in `config/overlays.nix`. | |
 | herdr-app | It comes from a flake input, so `bin/update` moves it. | |
 
