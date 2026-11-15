@@ -9,59 +9,107 @@ pkgs:
 with pkgs;
 {
   inherit
-    # core utils
+    appimage-run
+    autoconf
+    automake
+    bc
+    btop
+    cached-nix-shell
+    calibre
+    cloudflared
+    codex
+    colima
+    cpufetch
+    ctop
+    curl
+    dconf2nix
+    devcontainer
     dig
+    digikam
+    discord
     dust
+    eva
+    exiftool
+    eza
+    fastfetch
+    fd
+    figlet
+    flutter
     fop
+    fuse
+    gcc
+    gimp
+    glab
+    glow
+    gnumake
     gnupg
     gping
     grex
     gvfs
-    libsecret
-    lftp
-    mpv
-    nushell
-    ouch
-    poppler-utils # pdftotext, pdftohtml, etc
-    tldr
-    yazi
-
-    # build tools
-    autoconf
-    automake
-    gcc
-    gnumake
-    pkg-config
-
-    # development tools
-    bc
-    eva
-    k6
-    silicon
-    stripe-cli
-
-    # containers & cloud
-    cloudflared
-
-    # ISO tools
+    httpie
+    hyperfine
+    imagemagick
     impression
-
-    # performance & benchmarking
-    scc
-    tokei
-
-    # TUIs
+    inkscape
+    jq
+    k6
+    kamal
     lazysql
-
-    # misc
+    lftp
+    libreoffice
+    libsecret
+    localsend
+    mpv
+    ngrok
     nix-search-tv
-    dconf2nix
-    cached-nix-shell
-    fuse
-    appimage-run
+    nushell
+    obsidian
+    onefetch
+    ouch
+    pandoc
+    pdfmixtool
+    pinta
+    pkg-config
+    poppler-utils # pdftotext, pdftohtml, etc
+    rclone
+    ripgrep
+    scc
+    shellcheck
+    shfmt
+    shotcut
+    silicon
+    slack
+    spotify
+    stripe-cli
     terminaltexteffects
+    terraform
+    thunderbird
+    tldr
+    tokei
+    typora
+    typst
+    unoconv
+    unzip
+    vivaldi
+    vlc
+    watchman
+    wget
+    yazi
+    yq
+    zeal
     ;
 
+  inherit (kdePackages) kdenlive;
   inherit (llvmPackages_20) clang-tools;
+  inherit (unstable) beeper;
+
+  # Named after the program, not the package.
+  chrome = google-chrome;
+  copilot = github-copilot-cli;
+  ffmpeg = ffmpeg-full;
+  mysql = mysql84;
+  rust = rustup;
+  speedtest = speedtest-cli;
+  zen = zen-browser; # about:config zen.view.experimental-no-window-controls
 }
 // import ../scripts.nix { inherit pkgs; }
