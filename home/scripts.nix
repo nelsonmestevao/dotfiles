@@ -8,10 +8,8 @@ let
   # from nixpkgs, since a Mac's take other flags.
   mkGenerationDiff =
     name: dir: prefix:
-    let
-      inherit (pkgs) coreutils;
-    in
     pkgs.writeShellScriptBin name ''
+      PATH=${pkgs.coreutils}/bin:$PATH
       dir="${dir}"
       picks=$(
         for f in "$dir"/${prefix}*-link; do
@@ -19,7 +17,7 @@ let
           gen=''${name#${prefix}}
           gen=''${gen%-link}
           printf '%s  gen %s\t%s\n' \
-            "$(${coreutils}/bin/date -d "@$(${coreutils}/bin/stat -c '%Y' "$f")" '+%Y-%m-%d %H:%M')" \
+            "$(date -d "@$(stat -c '%Y' "$f")" '+%Y-%m-%d %H:%M')" \
             "$gen" "$f"
         done | sort -r \
           | ${pkgs.fzf}/bin/fzf --multi --delimiter=$'\t' --with-nth=1 \
@@ -31,7 +29,7 @@ let
       fi
       a=$(echo "$picks" | head -1)
       b=$(echo "$picks" | tail -1)
-      if [ "$(${coreutils}/bin/stat -c '%Y' "$a")" -lt "$(${coreutils}/bin/stat -c '%Y' "$b")" ]; then
+      if [ "$(stat -c '%Y' "$a")" -lt "$(stat -c '%Y' "$b")" ]; then
         older="$a"; newer="$b"
       else
         older="$b"; newer="$a"
