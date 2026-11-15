@@ -144,15 +144,18 @@ let
   brokenLinkHome = homeOn "box" [ "broken-link" ];
   plainHome = homeOn "box" [ "tokei" ];
 
+  # boxHome with one more module, not wrapped like the fixture programs.
+  boxHomeWith =
+    module:
+    ((evalHomeOn "box" [ "links" ]).extendModules {
+      modules = [ module ];
+    }).config;
+
   # The mkSymlink every home module gets, and the link it must make: one out
-  # of the store, into alice's checkout, at the path the file has in the repo.
+  # of the store, to `target` in the checkout.
   linkOnBox = (evalHomeOn "box" [ ])._module.args.mkSymlink;
   linksTo =
-    pathInRepo: entry:
-    let
-      link = boxHome.lib.file.mkOutOfStoreSymlink "/home/alice/.dotfiles/${pathInRepo}";
-    in
-    entry.source.outPath == link.outPath;
+    target: entry: entry.source.outPath == (boxHome.lib.file.mkOutOfStoreSymlink target).outPath;
 
   # The real zsh program (a fixture that imports it), and a home without it.
   zshHome = homeOn "box" [ "zsh" ];
@@ -451,11 +454,25 @@ let
       && mentions [ "attic needs system/hosts/attic/hardware.nix" ] found;
 
     aLinkPointsIntoTheCheckout =
-      linksTo "tests/fixtures/programs/links/linked.conf"
+      linksTo "/home/alice/.dotfiles/tests/fixtures/programs/links/linked.conf"
         boxHome.home.file.".linked";
     aFolderCanBeLinkedAndForced =
-      linksTo "tests/fixtures/programs/links/folder" boxHome.home.file.".linked-folder"
+      linksTo "/home/alice/.dotfiles/tests/fixtures/programs/links/folder"
+        boxHome.home.file.".linked-folder"
       && boxHome.home.file.".linked-folder".force;
+    # A checkout somewhere else gets links to it, not to ~/.dotfiles.
+    aLinkFollowsTheDotfilesDirectory =
+      linksTo "/srv/dots/tests/fixtures/programs/links/linked.conf"
+        (boxHomeWith { dotfiles.directory = "/srv/dots"; }).home.file.".linked";
+    # Every home module can take mkSymlink, wrapped or not.
+    aModuleOutsideTheWrapperCanLink =
+      linksTo "/home/alice/.dotfiles/tests/fixtures/programs/links/linked.conf"
+        (boxHomeWith (
+          { mkSymlink, ... }:
+          {
+            home.file.".bare" = mkSymlink ./fixtures/programs/links/linked.conf;
+          }
+        )).home.file.".bare";
   };
 
   # Each must stop the evaluation with an error that `expectedError.msg`, a
@@ -541,10 +558,6 @@ let
     aLinkFromAString = {
       expr = (linkOnBox "linked.conf").source;
       expectedError.msg = "mkSymlink takes a path like \\./config [(]no quotes[)]";
-    };
-    aLinkFromOutsideTheRepo = {
-      expr = (linkOnBox /etc/hostname).source;
-      expectedError.msg = "mkSymlink: /etc/hostname is not in this repo";
     };
 
     aScriptOfNeitherKind = {

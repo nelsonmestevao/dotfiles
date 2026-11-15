@@ -777,8 +777,8 @@ to the host. Evaluate fixtures on Linux and test activation on the actual Mac.
 **Progress (2026-11-12):** steps 1–8 are done.
 
 - The three wrappers take `options` and the option text is fixed. One helper,
-  `mkSymlinkIn` in [home/lib](home/lib/default.nix), serves the home and
-  GNOME wrappers.
+  `mkSymlink` in [home/lib/default.nix](home/lib/default.nix), is an argument
+  every home module can take.
 - Converted: zsh `showHost`, claude `skills`, the two GNOME lists (now in
   `gnome.nix`, marked internal), and the git signing key, which left
   `config/hosts.nix`. Each user file names the hosts that sign, so a new
@@ -1589,7 +1589,7 @@ errors. Test first launch separately from a mature local installation.
 
 ### [ ] DX-005 Formalize live, generated, and app-owned files — P2 · M
 
-**Evidence:** [mkSymlink](home/lib/mkHomeModule.nix) validates repository source
+**Evidence:** [mkSymlink](home/lib/default.nix) validates repository source
 existence, but live targets still depend on the checkout remaining in place.
 Claude has a custom direct-link activation with unquoted paths, and
 `ln -sfn` replaces a real `settings.json` without a backup. Herdr copies mods
