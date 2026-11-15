@@ -1,25 +1,21 @@
-{
-  name,
-  folder,
-  # Where the module is, for messages. Only plainPrograms.nix sets it.
-  file ? "${folder}/${name}.nix",
-}:
+# `file` is where the module is, from the repo root, for messages.
+{ name, file }:
 body:
 {
   config,
   lib,
-  # The module system only passes args a module names, and body needs pkgs.
-  # deadnix: skip
+  # The module system only passes args a module names, and body needs pkgs
+  # and mkSymlink (see home/lib/default.nix).
   pkgs,
+  # deadnix: skip
+  mkSymlink,
   hostname,
   ...
 }@args:
 let
   owner = "dotfiles.programs.${name}";
 
-  mkSymlink = config.lib.dotfiles.mkSymlinkIn { inherit owner folder; };
-
-  result = body (args // { inherit mkSymlink; });
+  result = body args;
 
   # Besides its Home Manager config and its `options` (see
   # lib/moduleResult.nix), a module can return `platforms`, when it only runs

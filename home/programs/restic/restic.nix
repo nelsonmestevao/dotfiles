@@ -8,5 +8,5 @@
     restic
   ];
 
-  xdg.configFile."restic/exclude.txt" = mkSymlink "exclude.txt";
+  xdg.configFile."restic/exclude.txt" = mkSymlink ./exclude.txt;
 }

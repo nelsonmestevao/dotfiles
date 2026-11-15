@@ -1,7 +1,7 @@
 { lib, mkSymlink, ... }:
 with lib.hm.gvariant;
 {
-  xdg.configFile."pop-shell/config.json" = mkSymlink "config.json";
+  xdg.configFile."pop-shell/config.json" = mkSymlink ./config.json;
 
   dconf.settings."org/gnome/shell/extensions/pop-shell" = {
     activate-launcher = [ ];

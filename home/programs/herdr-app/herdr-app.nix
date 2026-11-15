@@ -59,11 +59,11 @@ in
   # by hand, `touch -h ~/.config/herdr-app/<file>` reloads it. Herdr owns
   # everything else in the folder.
   xdg.configFile = {
-    "herdr-app/keys.json" = mkSymlink (if isDarwin then "keys/macos.json" else "keys/linux.json");
-    "herdr-app/settings.json" = mkSymlink "settings.json";
+    "herdr-app/keys.json" = mkSymlink (if isDarwin then ./keys/macos.json else ./keys/linux.json);
+    "herdr-app/settings.json" = mkSymlink ./settings.json;
   }
   // lib.genAttrs' layouts (
-    l: lib.nameValuePair "herdr-app/layouts/${l}.json" (mkSymlink "layouts/${l}.json")
+    l: lib.nameValuePair "herdr-app/layouts/${l}.json" (mkSymlink ./layouts/${l}.json)
   );
 
   # Mods are copies, not links: Herdr refuses to follow a link out of

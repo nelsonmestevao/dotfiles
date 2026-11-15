@@ -10,6 +10,6 @@
     espanso-wayland
   ];
 
-  xdg.configFile."espanso/config" = mkSymlink "config";
-  xdg.configFile."espanso/match" = mkSymlink "match";
+  xdg.configFile."espanso/config" = mkSymlink ./config;
+  xdg.configFile."espanso/match" = mkSymlink ./match;
 }

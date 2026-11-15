@@ -1,5 +1,10 @@
 { config, lib, ... }:
 
+let
+  # The repo as the flake sees it. A path literal in any module of this repo,
+  # like ./config, is a path inside it.
+  root = ../..;
+in
 {
   options.dotfiles.directory = lib.mkOption {
     type = lib.types.str;
@@ -7,23 +12,33 @@
     description = "Path to the dotfiles repository.";
   };
 
-  config.lib.dotfiles = {
-    # `mkSymlinkIn { owner; folder; } "file"` links a file that a module keeps
-    # in `folder` (a path from the repo root, like "home/programs/zsh"). It is
-    # a true link into the checkout, so an edit takes effect with no rebuild.
-    # The module wrappers turn it into the `mkSymlink` each module gets.
-    #
-    # A link to a file that isn't in the repo would dangle, and the program
-    # would run with no config and no error. So a missing file fails the
-    # build, with `owner` (the module's option) in the message.
-    mkSymlinkIn =
-      { owner, folder }:
-      relativePath:
-      let
-        path = "${folder}/${relativePath}";
-        targetPath = "${config.dotfiles.directory}/${path}";
-      in
-      lib.throwIfNot (builtins.pathExists (../.. + "/${path}")) "${owner}: ${path} does not exist" {
+  # `mkSymlink ./config` links a file or folder next to the module. Every home
+  # module can take it as an argument. The link points into the checkout at
+  # config.dotfiles.directory, not into the store, so an edit takes effect
+  # with no rebuild.
+  #
+  # The path is in the flake's copy of the repo. The part after `root`, like
+  # home/programs/zsh/config, is where the file is in the checkout too.
+  #
+  # A link to a file that isn't in the repo would dangle, and the program
+  # would run with no config and no error. So a missing file fails the build,
+  # with its path in the message.
+  config._module.args.mkSymlink =
+    path:
+    let
+      relativePath = lib.removePrefix "./" (lib.path.removePrefix root path);
+      targetPath = "${config.dotfiles.directory}/${relativePath}";
+    in
+    if !builtins.isPath path then
+      throw "mkSymlink takes a path like ./config (no quotes), but got ${
+        lib.generators.toPretty { } path
+      }."
+    else if !lib.path.hasPrefix root path then
+      throw "mkSymlink: ${toString path} is not in this repo, so it can't be linked into the checkout."
+    else if !builtins.pathExists path then
+      throw "mkSymlink: ${relativePath} does not exist. Add it, and `git add` it: the flake only sees tracked files."
+    else
+      {
         source = config.lib.file.mkOutOfStoreSymlink targetPath;
         onChange = ''
           RED="\033[1;31m"
@@ -36,5 +51,4 @@
           fi
         '';
       };
-  };
 }

@@ -60,8 +60,9 @@ PROGRAM_TEMPLATE = """\
   ];
 
   # Config files are links into this folder (add mkSymlink to the arguments).
-  # A file that isn't in the repo fails the build.
-  # xdg.configFile."__NAME__/config" = mkSymlink "config";
+  # Name the file with a path, not a string. A file that isn't in the repo
+  # fails the build.
+  # xdg.configFile."__NAME__/config" = mkSymlink ./config;
 
   # Shell aliases: home.shellAliases, see bat.nix.
   # GNOME keybindings: dconf.settings, see ghostty.nix.

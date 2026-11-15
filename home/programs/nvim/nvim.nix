@@ -30,5 +30,5 @@
     MANPAGER = "nvim +Man!";
   };
 
-  xdg.configFile."nvim/init.lua" = mkSymlink "init.lua";
+  xdg.configFile."nvim/init.lua" = mkSymlink ./init.lua;
 }

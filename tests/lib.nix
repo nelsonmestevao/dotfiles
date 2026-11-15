@@ -90,14 +90,14 @@ let
   namesIn = folder: builtins.deepSeq (importModules ({ name, ... }: _: name) folder) true;
 
   # A tiny home on a fixture host, with the fixture programs in the real
-  # wrapper and the named ones turned on.
-  homeOn =
+  # wrapper and the named ones turned on. homeOn gives its config.
+  evalHomeOn =
     hostname: enabled:
     let
       host = hosts.${hostname};
       pkgs = nixpkgs.legacyPackages.${host.system};
     in
-    (home-manager.lib.homeManagerConfiguration {
+    home-manager.lib.homeManagerConfiguration {
       inherit pkgs;
       extraSpecialArgs = { inherit hostname; };
       modules = [
@@ -113,7 +113,8 @@ let
       ]
       ++ importModules mkHomeModule programs
       ++ import ../home/lib/plainPrograms.nix { inherit lib pkgs; };
-    }).config;
+    };
+  homeOn = hostname: enabled: (evalHomeOn hostname enabled).config;
 
   boxHome = homeOn "box" [
     "demo"
@@ -123,6 +124,16 @@ let
   wrongOsHome = homeOn "box" [ "mac-only" ];
   brokenLinkHome = homeOn "box" [ "broken-link" ];
   plainHome = homeOn "box" [ "tokei" ];
+
+  # The mkSymlink every home module gets, and the link it must make: one out
+  # of the store, into alice's checkout, at the path the file has in the repo.
+  linkOnBox = (evalHomeOn "box" [ ])._module.args.mkSymlink;
+  linksTo =
+    pathInRepo: entry:
+    let
+      link = boxHome.lib.file.mkOutOfStoreSymlink "/home/alice/.dotfiles/${pathInRepo}";
+    in
+    entry.source.outPath == link.outPath;
 
   # What a program's wrapper complains about on a host. Home Manager turns a
   # failed assertion into an error, whose text can't be read back, so this
@@ -143,7 +154,7 @@ let
           }
           (mkHomeModule {
             inherit name;
-            folder = "${programs}/${name}";
+            file = "${programs}/${name}/${name}.nix";
           } (import (./fixtures/programs + "/${name}/${name}.nix")))
         ];
       };
@@ -164,7 +175,7 @@ let
         (mkSystemModule
           {
             name = "demo";
-            folder = "tests/fixtures";
+            file = "tests/fixtures/demo.nix";
           }
           (_: {
             environment.DEMO = "on";
@@ -391,6 +402,13 @@ let
       mentions [ "attic needs system/hosts/attic.nix" ] found
       && mentions [ "attic needs system/hosts/attic/hardware.nix" ] found;
 
+    aLinkPointsIntoTheCheckout =
+      linksTo "tests/fixtures/programs/links/linked.conf"
+        boxHome.home.file.".linked";
+    aFolderCanBeLinkedAndForced =
+      linksTo "tests/fixtures/programs/links/folder" boxHome.home.file.".linked-folder"
+      && boxHome.home.file.".linked-folder".force;
+
     aWrongOsProgramNamesItselfAndTheHost = mentions [
       "dotfiles.programs.mac-only only runs on darwin, but it's enabled on box (linux)"
     ] (complaintsOf "box" "mac-only");
@@ -452,6 +470,15 @@ let
     aLinkToAMissingFile = {
       sound = boxHome.home.file.".linked".source;
       broken = brokenLinkHome.home.file.".missing".source;
+    };
+    # The old way, `mkSymlink "file"`, must stop the build.
+    aLinkFromAString = {
+      sound = (linkOnBox ./fixtures/programs/links/linked.conf).source;
+      broken = (linkOnBox "linked.conf").source;
+    };
+    aLinkFromOutsideTheRepo = {
+      sound = (linkOnBox ./fixtures/programs/links/linked.conf).source;
+      broken = (linkOnBox /etc/hostname).source;
     };
   };
 

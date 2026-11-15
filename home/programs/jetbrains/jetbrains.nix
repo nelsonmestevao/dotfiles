@@ -8,5 +8,5 @@
     jetbrains.datagrip
   ];
 
-  home.file.".ideavimrc" = mkSymlink "ideavimrc";
+  home.file.".ideavimrc" = mkSymlink ./ideavimrc;
 }
