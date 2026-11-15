@@ -141,7 +141,7 @@ let
         }
         (mkHomeModule {
           inherit name;
-          folder = "home/programs/${name}";
+          file = "home/programs/${name}/${name}.nix";
         } (import (../home/programs + "/${name}/${name}.nix")))
       ];
     }).config;
