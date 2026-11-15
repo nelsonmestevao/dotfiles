@@ -12,119 +12,151 @@ Options:
   -v --version      Show version.
   --save            Commit the lockfile changes describing the updated inputs.
 """
+from datetime import datetime, timezone
+import json
 import os
-import re
+import subprocess
 import sys
 
-from docopt import docopt
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
+from common import GREEN, RED, YELLOW, fail, interrupted, need, paint, run
 
-os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# The summary's other colours, next to common's red, green and yellow.
+BLUE, CYAN, GREY = 34, 36, 90
 
-# These are easy to use in bash commands.
-$BLACK=$(tput setaf 0).strip()
-$RED=$(tput setaf 1).strip()
-$GREEN=$(tput setaf 2).strip()
-$YELLOW=$(tput setaf 3).strip()
-$BLUE=$(tput setaf 4).strip()
-$MAGENTA=$(tput setaf 5).strip()
-$CYAN=$(tput setaf 6).strip()
-$WHITE=$(tput setaf 7).strip()
-$PINK=$(tput setaf 13).strip()
-$RESET=$(tput sgr0).strip()
+# The kinds of change, in the order the summary counts them.
+KINDS = ('updated', 'added', 'removed')
 
-# These are easy to use in python commands.
-BLACK=$(tput setaf 0).strip()
-RED=$(tput setaf 1).strip()
-GREEN=$(tput setaf 2).strip()
-YELLOW=$(tput setaf 3).strip()
-BLUE=$(tput setaf 4).strip()
-MAGENTA=$(tput setaf 5).strip()
-CYAN=$(tput setaf 6).strip()
-WHITE=$(tput setaf 7).strip()
-PINK=$(tput setaf 13).strip()
-RESET=$(tput sgr0).strip()
 
-UPDATED_RE = re.compile(r"^• Updated input '([^']+)':$")
-FLAKE_LINE_RE = re.compile(r"'([^']+)'\s*\(([^)]+)\)")
-GITHUB_RE = re.compile(r"^github:([^/]+)/([^/?]+)/([0-9a-f]+)")
-GITLAB_RE = re.compile(r"^gitlab:([^/]+)/([^/?]+)/([0-9a-f]+)")
-SOURCEHUT_RE = re.compile(r"^sourcehut:([^/]+)/([^/?]+)/([0-9a-f]+)")
+# ── Reading flake.lock ─────
 
-def parse_flake_line(line):
-    match = FLAKE_LINE_RE.search(line)
-    if not match:
-        return None
-    return {'ref': match.group(1), 'date': match.group(2)}
+def read_inputs(path='flake.lock'):
+    """Every input in the lock file, keyed by its path from the flake, like
+    ('vicinae',) or ('vicinae', 'numen'). An input with a pin of its own maps
+    to its `locked` attributes. One that follows another maps to that input's
+    path, as text. The walk is the one nix makes when it prints what an update
+    changed."""
+    if not os.path.exists(path):
+        return {}
+    with open(path) as file:
+        lock = json.load(file)
+    nodes, inputs, seen = lock['nodes'], {}, set()
 
-def parse_ref(ref):
-    if match := GITHUB_RE.match(ref):
-        owner, repo, rev = match.groups()
-        return {
-            'rev': rev,
-            'repo_url': f'https://github.com/{owner}/{repo}',
-            'compare_url': f'https://github.com/{owner}/{repo}/compare/{{old}}...{{new}}',
-        }
-    if match := GITLAB_RE.match(ref):
-        owner, repo, rev = match.groups()
-        return {
-            'rev': rev,
-            'repo_url': f'https://gitlab.com/{owner}/{repo}',
-            'compare_url': f'https://gitlab.com/{owner}/{repo}/-/compare/{{old}}...{{new}}',
-        }
-    if match := SOURCEHUT_RE.match(ref):
-        owner, repo, rev = match.groups()
-        return {
-            'rev': rev,
-            'repo_url': f'https://git.sr.ht/{owner}/{repo}',
-            'compare_url': None,
-        }
-    return None
+    def walk(node, prefix):
+        # Like nix, walk a node two inputs share only once. It also ends a loop.
+        if node in seen:
+            return
+        seen.add(node)
+        for name, target in sorted(nodes[node].get('inputs', {}).items()):
+            # A list is the path of the input this one follows.
+            if isinstance(target, list):
+                inputs[(*prefix, name)] = '/'.join(target)
+            else:
+                inputs[(*prefix, name)] = nodes[target]['locked']
+                walk(target, (*prefix, name))
 
-def build_update(name, old_line, new_line):
-    update = {'name': name, 'old_raw': old_line, 'new_raw': new_line}
-    old_parsed = parse_flake_line(old_line)
-    new_parsed = parse_flake_line(new_line)
-    if not (old_parsed and new_parsed):
-        return update
+    walk(lock['root'], ())
+    return inputs
 
-    update['old_date'] = old_parsed['date']
-    update['new_date'] = new_parsed['date']
-    update['old_ref'] = old_parsed['ref']
-    update['new_ref'] = new_parsed['ref']
 
-    old_info = parse_ref(old_parsed['ref'])
-    new_info = parse_ref(new_parsed['ref'])
-    if new_info:
-        update['repo_url'] = new_info['repo_url']
-        update['new_rev'] = new_info['rev']
-        update['new_rev_short'] = new_info['rev'][:7]
-    if old_info:
-        update['old_rev'] = old_info['rev']
-        update['old_rev_short'] = old_info['rev'][:7]
-    if old_info and new_info and new_info['compare_url']:
-        update['compare_url'] = new_info['compare_url'].format(
-            old=old_info['rev'], new=new_info['rev']
-        )
-    return update
+def forge(locked):
+    """The repo's web page, and a compare link with {old} and {new} to fill,
+    for an input on GitHub, GitLab or sourcehut. sourcehut has no compare
+    page. An input anywhere else has neither."""
+    owner, repo, host = locked.get('owner'), locked.get('repo'), locked.get('host')
+    match locked['type']:
+        case 'github':
+            page = f'https://{host or "github.com"}/{owner}/{repo}'
+            return page, page + '/compare/{old}...{new}'
+        case 'gitlab':
+            page = f'https://{host or "gitlab.com"}/{owner}/{repo}'
+            return page, page + '/-/compare/{old}...{new}'
+        case 'sourcehut':
+            return f'https://{host or "git.sr.ht"}/{owner}/{repo}', None
+    return None, None
 
-def update_inputs():
-    # gum spin draws the spinner on the TTY while gum's captured stdout
-    # carries the wrapped command's combined output (stderr→stdout via bash).
-    output = $(gum spin --spinner=dot --title='Updating flake inputs...' --show-output -- bash -c 'nix flake update 2>&1')
-    updates = []
-    lines = output.splitlines()
-    i = 0
-    while i < len(lines):
-        match = UPDATED_RE.match(lines[i])
-        if match and i + 2 < len(lines):
-            updates.append(build_update(match.group(1), lines[i + 1].strip(), lines[i + 2].strip()))
-            i += 3
-        else:
-            i += 1
-    return updates
 
-def format_title(updates):
-    names = [u['name'] for u in updates]
+def flake_ref(locked):
+    """The locked input as a flake reference, close to how nix writes it."""
+    kind = locked['type']
+    if kind in ('github', 'gitlab', 'sourcehut'):
+        return f"{kind}:{locked['owner']}/{locked['repo']}/{locked['rev']}"
+    if kind == 'path':
+        return f"path:{locked['path']}"
+    url = f"{kind}+{locked['url']}" if kind in ('git', 'hg') else locked.get('url', kind)
+    query = '&'.join(f'{key}={locked[key]}' for key in ('ref', 'rev') if key in locked)
+    return f'{url}?{query}' if query else url
+
+
+def pin(locked):
+    """What the summary and the commit show of one locked input."""
+    if isinstance(locked, str):
+        # It follows another input, so it has no pin of its own to show.
+        return {'rev': None, 'ref': f"follows '{locked}'", 'date': None, 'page': None, 'compare': None}
+    page, compare = forge(locked)
+    stamp = locked.get('lastModified')
+    return {
+        'rev': locked.get('rev'),
+        'ref': flake_ref(locked),
+        # Nix gives the day in UTC.
+        'date': datetime.fromtimestamp(stamp, timezone.utc).strftime('%Y-%m-%d') if stamp else None,
+        'page': page,
+        'compare': compare,
+    }
+
+
+def changes(before, after):
+    """The inputs that differ between two reads of flake.lock, in the order
+    nix lists them. A path sorts as a list of names, so vicinae/numen comes
+    right after vicinae."""
+    found = []
+    for path in sorted(before.keys() | after.keys()):
+        old, new = before.get(path), after.get(path)
+        if old == new:
+            continue
+        # An input that only follows another pins nothing, so there's nothing
+        # to say when it comes or goes. It shows when it gains or drops a pin
+        # of its own.
+        if (old is None and isinstance(new, str)) or (new is None and isinstance(old, str)):
+            continue
+        old = None if old is None else pin(old)
+        new = None if new is None else pin(new)
+        compare = None
+        if old and new and old['rev'] and new['compare']:
+            compare = new['compare'].format(old=old['rev'], new=new['rev'])
+        found.append({
+            'name': '/'.join(path),
+            'kind': 'added' if old is None else 'removed' if new is None else 'updated',
+            'old': old,
+            'new': new,
+            'page': (new or old)['page'],
+            'compare': compare,
+        })
+    return found
+
+
+def shown(change, side):
+    """One side of a change: its short commit when the input is on a forge,
+    or else its whole flake reference."""
+    pinned = change[side]
+    return pinned['rev'][:7] if change['page'] and pinned['rev'] else pinned['ref']
+
+
+def update():
+    """Runs `nix flake update`, and returns what flake.lock pinned before and
+    after it."""
+    before = read_inputs()
+    try:
+        gum spin --spinner=dot --title 'Updating flake inputs...' --show-error -- nix flake update
+    except subprocess.CalledProcessError as problem:
+        fail('Interrupted.' if interrupted(problem) else 'nix flake update failed.')
+    return before, read_inputs()
+
+
+# ── The commit ─────
+
+def format_title(changes):
+    names = [c['name'] for c in changes]
     suffix = 'input' if len(names) == 1 else 'inputs'
     if len(names) == 1:
         listing = names[0]
@@ -134,81 +166,108 @@ def format_title(updates):
         listing = f"{', '.join(names[:-1])} and {names[-1]}"
     return f'chore: upgrade {listing} {suffix}'
 
-def format_body(updates):
-    sections = []
-    for u in updates:
-        lines = [f"### {u['name']}", '']
-        if 'repo_url' in u:
-            lines.append(f"- **Source:** {u['repo_url']}")
-            lines.append(
-                f"- **Update:** `{u.get('old_rev_short', '???????')}` ({u['old_date']}) "
-                f"→ `{u['new_rev_short']}` ({u['new_date']})"
-            )
-            if 'compare_url' in u:
-                lines.append(f"- **Compare:** {u['compare_url']}")
-        elif 'old_ref' in u:
-            lines.append(f"- `{u['old_ref']}` ({u['old_date']})")
-            lines.append(f"- → `{u['new_ref']}` ({u['new_date']})")
-        else:
-            lines.append(f"  {u['old_raw']}")
-            lines.append(f"  → {u['new_raw']}")
-        sections.append('\n'.join(lines))
-    return '\n\n'.join(sections) + '\n'
 
-def print_summary(updates):
-    if not updates:
-        print(f'{YELLOW}• No inputs changed.{RESET}')
+def in_code(change, side):
+    date = change[side]['date']
+    text = f'`{shown(change, side)}`'
+    return f'{text} ({date})' if date else text
+
+
+def format_section(change):
+    lines = [f"### {change['name']}", '']
+    if change['page']:
+        lines.append(f"- **Source:** {change['page']}")
+    match change['kind']:
+        case 'updated' if change['page']:
+            lines.append(f"- **Update:** {in_code(change, 'old')} → {in_code(change, 'new')}")
+        case 'updated':
+            lines.append(f"- {in_code(change, 'old')}")
+            lines.append(f"- → {in_code(change, 'new')}")
+        case 'added':
+            lines.append(f"- **Added:** {in_code(change, 'new')}")
+        case 'removed':
+            lines.append(f"- **Removed:** {in_code(change, 'old')}")
+    if change['compare']:
+        lines.append(f"- **Compare:** {change['compare']}")
+    return '\n'.join(lines)
+
+
+def format_body(changes):
+    return '\n\n'.join(format_section(c) for c in changes) + '\n'
+
+
+def save_commit(changes):
+    if not changes:
+        print(paint('✗ No inputs were updated; nothing to commit.', YELLOW))
         return
 
-    count = len(updates)
-    word = 'input' if count == 1 else 'inputs'
-    print(f'\n{GREEN}✓{RESET} {count} {word} updated\n')
-
-    for u in updates:
-        print(f'  {CYAN}{u["name"]}{RESET}')
-        if 'new_rev_short' in u:
-            old_short = u.get('old_rev_short', '???????')
-            print(
-                f'    {RED}{old_short}{RESET} {BLACK}({u["old_date"]}){RESET} '
-                f'{GREEN}→{RESET} {GREEN}{u["new_rev_short"]}{RESET} '
-                f'{BLACK}({u["new_date"]}){RESET}'
-            )
-            if 'compare_url' in u:
-                print(f'    {BLUE}{u["compare_url"]}{RESET}')
-        elif 'old_ref' in u:
-            print(f'    {u["old_ref"]} {BLACK}({u["old_date"]}){RESET}')
-            print(f'    {GREEN}→{RESET} {u["new_ref"]} {BLACK}({u["new_date"]}){RESET}')
-        else:
-            print(f'    {u["old_raw"]}')
-            print(f'    {GREEN}→{RESET} {u["new_raw"]}')
-        print()
-
-def save_commit(updates):
-    if not updates:
-        print(f'{YELLOW}✗ No inputs were updated; nothing to commit.{RESET}')
-        return
-
-    status = $(git status --porcelain flake.lock).strip()
-    if not status:
-        print(f'{YELLOW}✗ flake.lock is unchanged; nothing to commit.{RESET}')
-        return
-
-    title = format_title(updates)
-    body = format_body(updates)
-
+    title = format_title(changes)
     git add flake.lock
-    git commit -m @(title) -m @(body)
-    print(f'{GREEN}✓ Committed:{RESET} {title}')
+    git commit -m @(title) -m @(format_body(changes))
+    print(f"{paint('✓ Committed:', GREEN)} {title}")
+
+
+# ── The summary ─────
+
+def headline(changes):
+    """Like "3 inputs updated", or "3 inputs changed: 2 updated, 1 added"
+    when there is more than one kind of change."""
+    counts = {kind: sum(c['kind'] == kind for c in changes) for kind in KINDS}
+    kinds = [kind for kind in KINDS if counts[kind]]
+    word = 'input' if len(changes) == 1 else 'inputs'
+    if len(kinds) == 1:
+        return f'{len(changes)} {word} {kinds[0]}'
+    return f"{len(changes)} {word} changed: {', '.join(f'{counts[k]} {k}' for k in kinds)}"
+
+
+def dated(change, side, color=None):
+    date = change[side]['date']
+    text = shown(change, side)
+    text = paint(text, color) if color else text
+    return f"{text} {paint('(' + date + ')', GREY)}" if date else text
+
+
+def print_change(change):
+    print(f"  {paint(change['name'], CYAN)}")
+    match change['kind']:
+        case 'updated' if change['page']:
+            print(f"    {dated(change, 'old', RED)} {paint('→', GREEN)} {dated(change, 'new', GREEN)}")
+        case 'updated':
+            print(f"    {dated(change, 'old')}")
+            print(f"    {paint('→', GREEN)} {dated(change, 'new')}")
+        case 'added':
+            print(f"    {paint('added', GREEN)} {dated(change, 'new', GREEN)}")
+        case 'removed':
+            print(f"    {paint('removed', RED)} {dated(change, 'old', RED)}")
+    # An update links to its commits. A new or removed input has nothing to
+    # compare, so it links to its repo.
+    if change['compare']:
+        print(f"    {paint(change['compare'], BLUE)}")
+    elif change['kind'] != 'updated' and change['page']:
+        print(f"    {paint(change['page'], BLUE)}")
+    print()
+
+
+def print_summary(changes):
+    if not changes:
+        print(paint('• No inputs changed.', YELLOW))
+        return
+
+    print(f"\n{paint('✓', GREEN)} {headline(changes)}\n")
+    for change in changes:
+        print_change(change)
+
 
 def main(args):
-    updates = update_inputs()
-    print_summary(updates)
+    need('gum', 'nix')
+    found = changes(*update())
+    print_summary(found)
     match args:
         case {'--save': True}:
-            save_commit(updates)
+            save_commit(found)
+
 
 if __name__ == '__main__':
-    arguments = docopt(__doc__.format(program=__file__), version=f'{os.path.basename(__file__)} script version 1.0')
-    main(arguments)
+    run(main, __doc__, __file__)
 
 # vim: ft=xonsh

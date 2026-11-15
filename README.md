@@ -509,9 +509,10 @@ Then run `bin/check --eval` and `nix build .#<name>`.
 ## 🧰 Scripts
 
 Runnable helpers live in `bin/`; shared code lives in `scripts/`.
-`scripts/common.xsh` gives `bin/build`, `bin/check` and `bin/rebuild` the same
-failure handling: a failed command ends the helper with one plain line that
-says what failed and what was left undone. `scripts/scaffold.xsh` provides
+`scripts/common.xsh` gives `bin/build`, `bin/check`, `bin/rebuild` and
+`bin/update` the same failure handling: a failed command ends the helper with
+one plain line that says what failed and what was left undone.
+`scripts/scaffold.xsh` provides
 validation and file transactions for `bin/new`
 and `bin/setup`. Run any helper with `--help` for details. Run
 them from inside the repo: each one starts in the flake's dev shell, so the
@@ -522,7 +523,7 @@ that shell for you (`direnv allow` once).
 | ------------------------------ | -------------------------------------------------------------------- |
 | `bin/rebuild [os\|home]`       | Builds the config and switches to it.                                |
 | `bin/build [os\|home]`         | Builds the config and shows what would change, without switching.   |
-| `bin/update`                   | Updates the flake inputs and lists what changed.                     |
+| `bin/update`                   | Updates the flake inputs and lists what changed in `flake.lock`.     |
 | `bin/update --save`            | Same, then commits `flake.lock` with a note for each input.          |
 | `bin/check`                    | Evaluates every config, then builds this machine's checks.           |
 | `bin/check --eval`             | Evaluates every config without building anything (about a minute).  |
