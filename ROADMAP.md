@@ -1662,9 +1662,8 @@ hosts table disagrees with `config/hosts.nix` (names, system, build, roles).
 Each rule was checked by breaking the doc it guards. It began as
 `tests/test_docs.py` in `bin/test`; since
 [#58](https://github.com/nelsonmestevao/dotfiles/pull/58) its checks are
-nix-unit cases, so `bin/check --eval` runs them, and CI's build job does in
-`lib-tests`. A change that builds nothing new gets no build job, so CI doesn't
-check the docs then.
+nix-unit cases in `lib-tests`, so `bin/check --eval` and CI's quick job run
+them.
 
 **Evidence:** the docs drift, and nothing notices:
 

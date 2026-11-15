@@ -48,6 +48,11 @@ jobs:
         run: nix build -L .#checks.x86_64-linux.lint
       - name: Test the helper scripts
         run: bin/test
+      # The cases in tests/lib.nix and tests/docs.nix. The build job runs them
+      # too, but a change that builds nothing new, like a docs-only one, gets
+      # no build job.
+      - name: Test lib/ and the docs
+        run: nix build -L .#checks.x86_64-linux.lib-tests
       # All seven configurations, on both systems.
       - name: Evaluate every configuration
         run: bin/check --list > "$RUNNER_TEMP/derivations.json"

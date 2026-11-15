@@ -583,11 +583,11 @@ of neither kind stops `bin/lint` and `bin/check --eval` with its name.
 folders and touch nothing else. Pass it unittest's arguments to narrow the
 run, like `bin/test -k hardware`.
 
-CI runs in two steps. A quick job lints, runs `bin/test`, and reads through
-every config with `bin/check --list`. Then a build job builds each system's
-home configs. A system whose home configs built before, unchanged, gets no
-build job, and the quick job's summary says "Already built". A weekly run builds
-everything anyway. [`.github/scripts/plan-builds`](.github/scripts/plan-builds)
+CI runs in two steps. A quick job lints, runs `bin/test` and the `lib-tests`
+check, and reads through every config with `bin/check --list`. Then a build
+job builds each system's home configs. A system whose home configs built
+before, unchanged, gets no build job, and the quick job's summary says
+"Already built". A weekly run builds everything anyway. [`.github/scripts/plan-builds`](.github/scripts/plan-builds)
 makes that choice, and you can run it by hand on a saved list; its first lines
 say how.
 
