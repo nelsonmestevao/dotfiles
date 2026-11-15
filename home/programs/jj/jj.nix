@@ -8,5 +8,5 @@
     jujutsu
   ];
 
-  xdg.configFile."jj/config.toml" = mkSymlink "config.toml";
+  xdg.configFile."jj/config.toml" = mkSymlink ./config.toml;
 }

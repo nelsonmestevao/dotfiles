@@ -1,18 +1,20 @@
-{ name, folder }:
+# `file` is where the module is, from the repo root, for messages.
+{ name, file }:
 body:
 {
   config,
   lib,
   pkgs,
+  # The module system only passes args a module names, and body needs this
+  # one (see home/lib/default.nix).
+  # deadnix: skip
+  mkSymlink,
   ...
 }@args:
 let
   owner = "dotfiles.programs.gnome.extensions.${name}";
-  file = "${folder}/${name}.nix";
 
-  mkSymlink = config.lib.dotfiles.mkSymlinkIn { inherit owner folder; };
-
-  result = body (args // { inherit mkSymlink; });
+  result = body args;
 
   # Besides its config and its `options` (see lib/moduleResult.nix), an
   # extension can return `package`, when it isn't pkgs.gnomeExtensions.<name>.

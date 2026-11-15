@@ -11,8 +11,8 @@
     rubyfmt
   ];
 
-  home.file.".irbrc" = mkSymlink "irbrc";
+  home.file.".irbrc" = mkSymlink ./irbrc;
   home.file.".default-gems" = lib.mkIf config.dotfiles.programs.mise.enable (
-    mkSymlink "default-gems"
+    mkSymlink ./default-gems
   );
 }

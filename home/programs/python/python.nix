@@ -11,6 +11,6 @@
   ];
 
   home.file.".default-python-packages" = lib.mkIf config.dotfiles.programs.mise.enable (
-    mkSymlink "default-python-packages"
+    mkSymlink ./default-python-packages
   );
 }

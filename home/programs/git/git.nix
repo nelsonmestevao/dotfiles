@@ -72,15 +72,15 @@ in
     # that differs per host. Everything it includes is still a link you can
     # edit in place.
     "git/config".text = lib.generators.toGitINI gitConfig;
-    "git/common.ini" = mkSymlink "common.ini";
-    "git/allowed_signers" = mkSymlink "allowed_signers";
-    "git/commit-template" = mkSymlink "commit-template";
-    "git/ignore" = mkSymlink "ignore";
-    "git/attributes" = mkSymlink "attributes";
+    "git/common.ini" = mkSymlink ./common.ini;
+    "git/allowed_signers" = mkSymlink ./allowed_signers;
+    "git/commit-template" = mkSymlink ./commit-template;
+    "git/ignore" = mkSymlink ./ignore;
+    "git/attributes" = mkSymlink ./attributes;
     # The whole folder, so a profile may include another and a new one needs
     # no rebuild. `force` lets the link replace the folder of per-file links
     # that earlier generations made.
-    "git/profiles" = mkSymlink "profiles" // {
+    "git/profiles" = mkSymlink ./profiles // {
       force = true;
     };
   };
