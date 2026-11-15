@@ -16,6 +16,7 @@
     draw-on-gnome.enable = true;
     glocalsend.enable = true;
     pop-shell.enable = true;
+    printers.enable = true;
     rudra.enable = false;
     smart-home.enable = true;
     space-bar.enable = true;
