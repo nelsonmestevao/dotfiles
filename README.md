@@ -378,13 +378,12 @@ Each user in `config/users.nix` has these fields:
 - **`extraGroups`** — groups for the account on NixOS, like `wheel` or
   `docker`.
 
-Modules get the whole entry as `user`. To give them an argument of your own,
-set `_module.args` in your user file. A program module reads it as
-`config._module.args.<name>`, since its wrapper only passes the arguments it
-names.
+Modules get the whole entry as `user`. For a value of your own, add a setting
+to the program (see [How modules work](#how-modules-work)).
 
 Your git identity is not in the entry: it's the file
-`home/programs/git/profiles/<username>.ini`, included when it exists. Without it, git refuses to commit until you set an email.
+`home/programs/git/profiles/<username>.ini`, included when it exists. Without
+it, git refuses to commit until you set an email.
 
 The SSH key that signs your commits is a setting of the git program. Set it in
 your user file with `valueFor`, as the public key or the path of its file. A
