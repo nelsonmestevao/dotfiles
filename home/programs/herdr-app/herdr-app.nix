@@ -9,7 +9,6 @@ let
   isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
 
   mods = [
-    "better-tabs"
     "file-icons"
     "filetree"
     "git-graph"
@@ -18,6 +17,7 @@ let
     "servers"
     "tab-notes"
     "tabbed-changes"
+    "tabs-mods"
   ]
   # The extra layouts' mods (herdrdev/herdr-layout-examples, Apache-2.0).
   ++ [
