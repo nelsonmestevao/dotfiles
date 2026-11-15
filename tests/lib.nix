@@ -152,6 +152,10 @@ let
       lib.filter (assertion: !assertion.assertion) wrapped.config.assertions
     );
 
+  # The real zsh program (a fixture that imports it), and a home without it.
+  zshHome = homeOn "box" [ "zsh" ];
+  noZshHome = homeOn "box" [ ];
+
   # A system module that sets one value, turned on or off.
   systemWith =
     enabled:
@@ -304,7 +308,24 @@ let
         "idle"
         "links"
         "mac-only"
+        "zsh"
       ];
+    };
+    # ~/.zshrc sources zshrc from the checkout instead of copying it in, so an
+    # edit takes effect in a new shell with no rebuild.
+    zshrcIsSourcedFromTheCheckout = {
+      expr =
+        let
+          zshrc = zshHome.home.file."./.zshrc".text;
+        in
+        {
+          sourced = lib.hasInfix "source /home/alice/.dotfiles/home/programs/zsh/zshrc\n" zshrc;
+          copied = lib.hasInfix (builtins.readFile ../home/programs/zsh/zshrc) zshrc;
+        };
+      expected = {
+        sourced = true;
+        copied = false;
+      };
     };
     aProgramAppliesOnlyWhereItIsOn = {
       expr = {
@@ -350,6 +371,13 @@ let
       system = "riscv64-linux";
     })) users;
     aHomeOnlyHostNeedsNoSystemFiles = problems (hosts // { loft = hosts.shed; }) users == [ ];
+
+    # Turning zsh on adds no activation step, so a switch fetches nothing.
+    zshAddsNoActivationStep =
+      lib.attrNames zshHome.home.activation == lib.attrNames noZshHome.home.activation;
+    # oh-my-zsh and its plugins come from the store, not a ~/.oh-my-zsh folder.
+    zshLeavesTheOldOhMyZshFolderAlone =
+      !lib.any (file: lib.hasPrefix ".oh-my-zsh" file.target) (lib.attrValues zshHome.home.file);
 
     anUnknownUserIsNamed = mentions [ "config/hosts.nix: shed.users has \"alicia\"" ] (
       hostProblems "shed" (set {

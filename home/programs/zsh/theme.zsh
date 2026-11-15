@@ -1,5 +1,7 @@
 # THEME
-export ZSH=~/.oh-my-zsh
+#
+# ZSH points at oh-my-zsh in the Nix store (see zsh.nix), so it can't update
+# itself: bin/update moves it with nixpkgs.
 
 ZSH_THEME="powerlevel10k/powerlevel10k"
 

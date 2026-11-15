@@ -5,10 +5,10 @@
 #    _ / /\__ \ | | | | | (__
 #   (_)___|___/_| |_|_|  \___|
 #
-# The interactive shell, top to bottom. Home Manager writes its own part
-# around this file: history, aliases, and what other programs add.
+# The interactive shell, top to bottom. ~/.zshrc sources this file from the
+# checkout, so an edit takes effect in a new shell. Home Manager writes its own
+# part around it: history, aliases, and what other programs add.
 
-export DOTFILES="${DOTFILES:-$HOME/.dotfiles}"
 export SPELLS="$HOME/.spells"
 
 # Powerlevel10k's instant prompt draws the prompt at once, while the rest
