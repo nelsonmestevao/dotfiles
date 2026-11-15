@@ -1,6 +1,7 @@
 # Tests for the helpers in lib/ and home/lib/, against the small made-up
-# repository in ./fixtures. They only evaluate: nothing is built, and no real
-# home is touched.
+# repository in ./fixtures. A few load one real program into a fixture home,
+# to pin what it sets. They only evaluate: nothing is built, and no real home
+# is touched.
 #
 # lib/checks.nix runs them as the check `lib-tests`, so `bin/check --eval`
 # does too. This returns the failed cases; an empty list means all passed.
@@ -114,6 +115,41 @@ let
       ++ importModules mkHomeModule programs
       ++ import ../home/lib/plainPrograms.nix { inherit lib pkgs; };
     }).config;
+
+  # One real program from home/programs/<name>, on with `settings`, in a
+  # fixture home on box. Only that program is loaded, so a case reads what it
+  # alone sets.
+  realProgramHome =
+    name: settings:
+    let
+      host = hosts.box;
+      pkgs = nixpkgs.legacyPackages.${host.system};
+    in
+    (home-manager.lib.homeManagerConfiguration {
+      inherit pkgs;
+      extraSpecialArgs.hostname = "box";
+      modules = [
+        ../home/lib
+        {
+          home.username = "alice";
+          home.homeDirectory = "/home/alice";
+          home.stateVersion = host.stateVersion;
+          dotfiles.programs.${name} = settings // {
+            enable = true;
+          };
+        }
+        (mkHomeModule {
+          inherit name;
+          folder = "home/programs/${name}";
+        } (import (../home/programs + "/${name}/${name}.nix")))
+      ];
+    }).config;
+
+  # The restic units of the backups program.
+  backups = realProgramHome "backups" { };
+  resticUnits = lib.filterAttrs (
+    name: _: lib.hasPrefix "restic-backups-" name
+  ) backups.systemd.user.services;
 
   boxHome = homeOn "box" [
     "demo"
@@ -318,6 +354,24 @@ let
         off = false;
       };
     };
+    # The same schedules the old system timers had.
+    theBackupTimersKeepTheirSchedule = {
+      expr = lib.mapAttrs (_: timer: timer.Timer) backups.systemd.user.timers;
+      expected =
+        let
+          at = OnCalendar: {
+            inherit OnCalendar;
+            Persistent = true;
+          };
+        in
+        {
+          restic-backups-mega = at "Mon..Fri 17:00";
+          restic-backups-mdrive = at "Mon..Fri 17:00";
+          restic-backups-tpshare = at "Mon..Fri 17:00";
+          sync-books = at "Mon..Fri 18:00";
+          backup-dbclient = at "hourly";
+        };
+    };
     aSystemModuleAppliesOnlyWhenItIsOn = {
       expr = {
         on = systemWith true;
@@ -379,6 +433,25 @@ let
     aWrongOsProgramNamesItselfAndTheHost = mentions [
       "dotfiles.programs.mac-only only runs on darwin, but it's enabled on box (linux)"
     ] (complaintsOf "box" "mac-only");
+
+    # The backups read the checkout's exclude file, never a store copy of it.
+    theBackupReadsTheLiveExcludeFile =
+      resticUnits != { }
+      && lib.all (
+        unit:
+        let
+          commands = unit.Service.ExecStart;
+        in
+        mentions [ "--exclude-file=/home/alice/.dotfiles/home/programs/restic/exclude.txt" ] commands
+        && !lib.any (
+          command:
+          builtins.match ".*--exclude-file=${builtins.storeDir}/[^ ']*exclude\\.txt.*" command != null
+        ) commands
+      ) (lib.attrValues resticUnits);
+    # Like NixOS: a rebuild doesn't restart a backup that is running.
+    aRunningBackupIsNotRestarted =
+      resticUnits != { }
+      && lib.all (unit: unit.Service.X-RestartIfChanged == false) (lib.attrValues resticUnits);
   };
 
   # Each `broken` must stop the evaluation while `sound`, the same thing

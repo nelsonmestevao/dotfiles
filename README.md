@@ -592,9 +592,10 @@ makes that choice, and you can run it by hand on a saved list; its first lines
 say how.
 
 `tests/lib.nix` tests the helpers in `lib/` and `home/lib/` against the
-made-up repository in `tests/fixtures/`. It is the flake check `lib-tests`, so
-`bin/check --eval` runs it, and a failure names its case, even one that
-throws. To run it alone:
+made-up repository in `tests/fixtures/`. A few cases load one real program,
+like `backups`, into a fixture home to pin what it sets. It is the flake check
+`lib-tests`, so `bin/check --eval` runs it, and a failure names its case, even
+one that throws. To run it alone:
 
 ```shell
 nix build --no-link ".#checks.$(nix config show system).lib-tests"

@@ -1272,23 +1272,27 @@ runs on Linux only, which is all that is needed.
 
 1. Store the second copy of the password ([OPS-004](#ops-004)) and run the
    restore drill ([OPS-001](#ops-001)) before touching working backups.
-2. Add a `backups` program with `bin/new program`. Its settings
-   ([CONFIG-006](#config-006)) are the repositories and the paths. It fills
-   `services.restic.backups` from them.
-3. Add `sync-books` and `backup-dbclient` as programs with user services and
-   timers. Fix the dbclient script on the way: `git status --porcelain` sees
-   untracked files, the commit message is the host and date, and it pushes
-   even when there is nothing new to commit, so a failed push is tried again.
+2. Done in [#56](https://github.com/nelsonmestevao/dotfiles/pull/56): one
+   `backups` program fills `services.restic.backups`. The repositories and
+   paths stay in the program, since only framework uses them.
+3. Done in [#56](https://github.com/nelsonmestevao/dotfiles/pull/56):
+   `sync-books` and `backup-dbclient` are user services and timers in the
+   `backups` program. Still open: fix the dbclient script.
+   `git status --porcelain` sees untracked files, the commit message is the
+   host and date, and it pushes even when there is nothing new to commit, so a
+   failed push is tried again.
 4. Give each service a working directory, a timeout, and a restart limit.
-5. Turn all three on in `nelson.nix` with `enableFor [ "framework" ]`.
-6. Run the new backup against a test repository for a week, beside the old
-   one. Then delete `system/timers/`,
-   `mkSystemTimer`, the `timers` lines in
-   `framework.nix`, and the three restic aliases.
-7. Note the cost in the program's comment: user timers run only while you are
-   logged in. On the laptop that is fine. A server would need lingering.
-8. Say in the `sync-books` program that `rclone sync` mirrors deletions and is
-   not a versioned backup.
+5. Done in [#56](https://github.com/nelsonmestevao/dotfiles/pull/56):
+   `enableFor [ "framework" ]` in `nelson.nix`.
+6. Done in [#56](https://github.com/nelsonmestevao/dotfiles/pull/56):
+   `system/timers/`, `mkSystemTimer` and the `timers` lines in `framework.nix`
+   are gone. The week beside the old backup was skipped. Still open: delete
+   the three restic aliases.
+7. Done in [#56](https://github.com/nelsonmestevao/dotfiles/pull/56): the
+   program's comment and the README say that user timers run only while you
+   are logged in. A server would need lingering.
+8. Done in [#56](https://github.com/nelsonmestevao/dotfiles/pull/56): the
+   `sync-books` comment says it mirrors deletions.
 
 **Verify:**
 
@@ -1822,9 +1826,9 @@ activation.
 
 1. In the weekly run ([CI-006](#ci-006)), build both NixOS systems:
    `nix build .#nixosConfigurations.<host>.config.system.build.toplevel`.
-2. Add one small VM test with `pkgs.testers.runNixOSTest` for the timers: the
-   units exist, start, and run as the right user. GitHub's Linux runners have
-   KVM.
+2. Add one small VM test with `pkgs.testers.runNixOSTest` for the backup
+   user units: activate a home with `backups` on, then check that the timers
+   are listed and a unit starts. GitHub's Linux runners have KVM.
 3. Test the custom activation steps (Herdr mods, the Claude link) in a
    temporary home ([DX-005](#dx-005)).
 4. Keep a short Mac checklist in the README: the shell starts, apps are on

@@ -17,11 +17,7 @@ let
   };
 in
 {
-  # These are systemd user units. They run only while my systemd user
-  # instance does: from login to logout, or always with
-  # `loginctl enable-linger`. A run missed in between starts at the next
-  # login (Persistent). Start one by hand with `systemctl --user start <name>`
-  # and read its log with `journalctl --user -u <name>`.
+  # User units: they run only while I'm logged in (see the README).
   platforms = [ "linux" ];
 
   # ── Restic ────────────────────────────────────────────────────────────
@@ -42,9 +38,12 @@ in
     ];
     extraBackupArgs = [
       "--compression=max"
-      "--exclude-file=${../restic/exclude.txt}"
+      # The checkout's file, so an edit counts on the next run.
+      "--exclude-file=${config.dotfiles.directory}/home/programs/restic/exclude.txt"
       "--verbose"
     ];
+    # A user unit can't wait for network-online.target, so wait for it here.
+    backupPrepareCommand = "${lib.getExe' pkgs.networkmanager "nm-online"} -q -t 60 || true";
     timerConfig = {
       OnCalendar = "Mon..Fri 17:00";
       Persistent = true;
@@ -52,69 +51,61 @@ in
   }) resticRepos;
 
   # ── Jobs ──────────────────────────────────────────────────────────────
-  # Each job puts the tools it needs on its PATH, so the script names them
-  # plainly.
-  systemd.user.services = {
-    # A mirror, not a versioned backup: rclone sync deletes on the remote
-    # what is gone from ~/Books.
-    sync-books = {
-      Unit.Description = "Mirror ~/Books to Google Drive";
-      Service = {
-        Type = "oneshot";
-        Environment = [ "PATH=${lib.makeBinPath [ pkgs.rclone ]}" ];
-        ExecStart = toString (
-          pkgs.writeShellScript "sync-books" ''
-            set -e
-            rclone sync ~/Books gdrive:Backups/Calibre -v
-          ''
+  systemd.user.services =
+    # Like NixOS: a rebuild doesn't restart a backup that is running.
+    lib.mapAttrs' (
+      name: _:
+      lib.nameValuePair "restic-backups-${name}" { Service.X-RestartIfChanged = lib.mkForce false; }
+    ) resticRepos
+    // {
+      # A mirror, not a versioned backup: rclone sync deletes on the remote
+      # what is gone from ~/Books.
+      sync-books = {
+        Unit.Description = "Mirror ~/Books to Google Drive";
+        Service.Type = "oneshot";
+        Service.ExecStart = lib.getExe (
+          pkgs.writeShellApplication {
+            name = "sync-books";
+            runtimeInputs = [ pkgs.rclone ];
+            text = "rclone sync ~/Books gdrive:Backups/Calibre -v";
+          }
         );
       };
-    };
 
-    backup-dbclient = {
-      Unit.Description = "Commit and push the dbclient queries";
-      Service = {
-        Type = "oneshot";
-        Environment = [
-          "PATH=${
-            lib.makeBinPath [
+      backup-dbclient = {
+        Unit.Description = "Commit and push the dbclient queries";
+        Service.Type = "oneshot";
+        Service.ExecStart = lib.getExe (
+          pkgs.writeShellApplication {
+            name = "backup-dbclient";
+            runtimeInputs = [
               pkgs.curl
               pkgs.git
               pkgs.openssh
-            ]
-          }"
-        ];
-        ExecStart = toString (
-          pkgs.writeShellScript "backup-dbclient" ''
-            set -e
-            cd "$HOME/.dbclient/query" || exit 1
-            git diff --quiet && exit 0
-            git add --all
-            git commit --no-verify --no-gpg-sign --message "$(curl -s https://whatthecommit.com/index.txt)"
-            GIT_SSH_COMMAND="ssh -i $HOME/.ssh/id_ed25519" git push
-          ''
+            ];
+            text = ''
+              cd "$HOME/.dbclient/query" || exit 1
+              git diff --quiet && exit 0
+              git add --all
+              git commit --no-verify --no-gpg-sign --message "$(curl -s https://whatthecommit.com/index.txt)"
+              GIT_SSH_COMMAND="ssh -i $HOME/.ssh/id_ed25519" git push
+            '';
+          }
         );
       };
     };
-  };
 
-  systemd.user.timers = {
-    sync-books = {
-      Unit.Description = "Mirror ~/Books to Google Drive";
-      Timer = {
-        OnCalendar = "Mon..Fri 18:00";
-        Persistent = true;
+  systemd.user.timers =
+    lib.mapAttrs
+      (_: OnCalendar: {
+        Timer = {
+          inherit OnCalendar;
+          Persistent = true;
+        };
+        Install.WantedBy = [ "timers.target" ];
+      })
+      {
+        sync-books = "Mon..Fri 18:00";
+        backup-dbclient = "hourly";
       };
-      Install.WantedBy = [ "timers.target" ];
-    };
-
-    backup-dbclient = {
-      Unit.Description = "Commit and push the dbclient queries";
-      Timer = {
-        OnCalendar = "hourly";
-        Persistent = true;
-      };
-      Install.WantedBy = [ "timers.target" ];
-    };
-  };
 }
