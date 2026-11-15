@@ -2,8 +2,10 @@
 # repository in ./fixtures. They only evaluate: nothing is built, and no real
 # home is touched.
 #
-# lib/checks.nix runs them as the check `lib-tests`, so `bin/check --eval`
-# does too. This returns the failed cases; an empty list means all passed.
+# This returns the cases in nix-unit's shape. The flake gives them as
+# `lib.tests`, and nix-unit runs them in the check `lib-tests`, which
+# `bin/check --eval` builds. It names each case that fails, even one that
+# throws.
 { nixpkgs, home-manager }:
 let
   inherit (nixpkgs) lib;
@@ -23,8 +25,6 @@ let
   set = fields: entry: entry // fields;
   drop = field: entry: removeAttrs entry [ field ];
 
-  succeeds = value: (builtins.tryEval value).success;
-
   # True when one sentence holds every word.
   mentions =
     words: sentences: lib.any (sentence: lib.all (word: lib.hasInfix word sentence) words) sentences;
@@ -39,15 +39,14 @@ let
   };
   check = hosts: users: schema.check (dataOf hosts users);
   problems = hosts: users: schema.problems (dataOf hosts users);
-  passes = hosts: users: succeeds (check hosts users);
+  # The check hands the data back when it passes, and throws when it doesn't.
+  passes = hosts: users: check hosts users ? hosts;
   hostProblems = name: change: problems (edit hosts name change) users;
 
-  # The fixture as written, and one host entry with one change.
-  theFixture = check hosts users;
-  inHost = name: change: {
-    sound = theFixture;
-    broken = check (edit hosts name change) users;
-  };
+  # The fixture with one mistake.
+  brokenHosts = edit hosts "box" (set {
+    platform = "nixoss";
+  });
 
   # ── Building the configurations ────────────────────────────────────────────
 
@@ -71,6 +70,26 @@ let
       }
     );
 
+  # The checks lib/checks.nix makes for a system, by name.
+  checksOn =
+    hosts: system:
+    let
+      assembly = assemble hosts users;
+    in
+    lib.attrNames (
+      import ../lib/checks.nix {
+        inherit nixpkgs home-manager;
+        inherit (assembly)
+          checkedData
+          dataIsRight
+          nixosConfigs
+          darwinConfigs
+          homeConfigs
+          ;
+        self = repo;
+      } system
+    );
+
   # What the modules of a home, like "alice@box", get.
   argsOf =
     home: hosts: users:
@@ -87,7 +106,7 @@ let
 
   # The fixture programs, by the folder importModules finds them in.
   programs = "tests/fixtures/programs";
-  namesIn = folder: builtins.deepSeq (importModules ({ name, ... }: _: name) folder) true;
+  namesIn = importModules ({ name, ... }: _: name);
 
   # A tiny home on a fixture host, with the fixture programs in the real
   # wrapper and the named ones turned on.
@@ -124,34 +143,6 @@ let
   brokenLinkHome = homeOn "box" [ "broken-link" ];
   plainHome = homeOn "box" [ "tokei" ];
 
-  # What a program's wrapper complains about on a host. Home Manager turns a
-  # failed assertion into an error, whose text can't be read back, so this
-  # evaluates the wrapped program on its own.
-  complaintsOf =
-    hostname: name:
-    let
-      wrapped = lib.evalModules {
-        specialArgs = {
-          inherit hostname;
-          pkgs.stdenv.hostPlatform.isDarwin = isMac hosts.${hostname}.system;
-        };
-        modules = [
-          {
-            options.assertions = lib.mkOption { type = lib.types.listOf lib.types.attrs; };
-            options.home = lib.mkOption { type = lib.types.attrs; };
-            config.dotfiles.programs.${name}.enable = true;
-          }
-          (mkHomeModule {
-            inherit name;
-            folder = "${programs}/${name}";
-          } (import (./fixtures/programs + "/${name}/${name}.nix")))
-        ];
-      };
-    in
-    map (assertion: assertion.message) (
-      lib.filter (assertion: !assertion.assertion) wrapped.config.assertions
-    );
-
   # The real zsh program (a fixture that imports it), and a home without it.
   zshHome = homeOn "box" [ "zsh" ];
   noZshHome = homeOn "box" [ ];
@@ -176,6 +167,12 @@ let
         )
       ];
     }).config.environment;
+
+  # ── Scripts ────────────────────────────────────────────────────────────────
+
+  # The kind of a script in ./fixtures/scripts: one of each kind, and a Python
+  # one, which is neither.
+  scriptKind = import ../lib/scriptKind.nix { inherit lib; } ./fixtures/scripts;
 
   # ── Cases ──────────────────────────────────────────────────────────────────
 
@@ -272,9 +269,7 @@ let
     theChecksSurviveBrokenData = {
       expr =
         let
-          broken = assemble (edit hosts "box" (set {
-            platform = "nixoss";
-          })) users;
+          broken = assemble brokenHosts users;
         in
         broken.hostSystems == broken.toolSystems && !broken.dataIsRight;
       expected = true;
@@ -289,9 +284,36 @@ let
         userName = "Alice";
       };
     };
+    eachSystemGetsItsChecks = {
+      expr = {
+        linux = checksOn hosts "x86_64-linux";
+        mac = checksOn hosts "aarch64-darwin";
+        brokenDataOnIntelMac = checksOn brokenHosts "x86_64-darwin";
+      };
+      expected = {
+        linux = [
+          "alice@box"
+          "alice@shed"
+          "lib-tests"
+          "lint"
+          "nixos-box"
+        ];
+        mac = [
+          "bob@mac"
+          "darwin-mac"
+          "lib-tests"
+          "lint"
+        ];
+        brokenDataOnIntelMac = [
+          "data"
+          "lib-tests"
+          "lint"
+        ];
+      };
+    };
     # The stray notes.md and the `_draft` folder are left out.
     modulesAreFoundByFolder = {
-      expr = importModules ({ name, ... }: _: name) programs;
+      expr = namesIn programs;
       expected = [
         "broken-link"
         "demo"
@@ -360,6 +382,14 @@ let
         off.ALWAYS = "on";
       };
     };
+    aShellScript = {
+      expr = scriptKind "shell";
+      expected = "shell";
+    };
+    aXonshScript = {
+      expr = scriptKind "xonsh";
+      expected = "xonsh";
+    };
   };
 
   # Each must be true. Most read the sentence a rule of the schema writes.
@@ -408,117 +438,103 @@ let
       in
       mentions [ "attic needs system/hosts/attic.nix" ] found
       && mentions [ "attic needs system/hosts/attic/hardware.nix" ] found;
-
-    aWrongOsProgramNamesItselfAndTheHost = mentions [
-      "dotfiles.programs.mac-only only runs on darwin, but it's enabled on box (linux)"
-    ] (complaintsOf "box" "mac-only");
   };
 
-  # Each `broken` must stop the evaluation while `sound`, the same thing
-  # without the mistake, goes through. An error's text can't be read back, so
-  # the pair is what keeps a broken fixture from passing as a caught mistake.
+  # Each must stop the evaluation with an error that `expectedError.msg`, a
+  # regular expression, finds. The text keeps a fixture that breaks for some
+  # other reason from passing as a caught mistake.
   stops = {
     # The four typos that used to pass in silence, and others like them.
-    aMisspelledPlatform = inHost "box" (set {
-      platform = "nixoss";
-    });
-    aMisspelledField = inHost "box" (set {
-      rolse = [ "desktop" ];
-    });
-    aMisspelledSystem = inHost "shed" (set {
-      system = "x86-64-linux";
-    });
-    aMissingStateVersion = inHost "shed" (drop "stateVersion");
-    aUserListedTwice = inHost "shed" (set {
-      users = [
-        "alice"
-        "alice"
-      ];
-    });
-    aRoleListedTwice = inHost "box" (set {
-      roles = [
-        "desktop"
-        "desktop"
-      ];
-    });
+    aMisspelledPlatform = {
+      expr = check brokenHosts users;
+      expectedError.msg = "hosts\\.box\\.platform' is not of type";
+    };
+    aMisspelledField = {
+      expr = check (edit hosts "box" (set {
+        rolse = [ "desktop" ];
+      })) users;
+      expectedError.msg = "hosts\\.box\\.rolse' does not exist";
+    };
+    aMisspelledSystem = {
+      expr = check (edit hosts "shed" (set {
+        system = "x86-64-linux";
+      })) users;
+      expectedError.msg = "hosts\\.shed\\.system' is not of type";
+    };
+    aMissingStateVersion = {
+      expr = check (edit hosts "shed" (drop "stateVersion")) users;
+      expectedError.msg = "hosts\\.shed\\.stateVersion' was accessed but has no value";
+    };
+    aUserListedTwice = {
+      expr = check (edit hosts "shed" (set {
+        users = [
+          "alice"
+          "alice"
+        ];
+      })) users;
+      expectedError.msg = "hosts\\.shed\\.users' is not of type .*each listed once";
+    };
+    aRoleListedTwice = {
+      expr = check (edit hosts "box" (set {
+        roles = [
+          "desktop"
+          "desktop"
+        ];
+      })) users;
+      expectedError.msg = "hosts\\.box\\.roles' is not of type .*each listed once";
+    };
     # A field the schema doesn't know, in a user entry: a typo, or one it has
     # dropped.
     anUnknownUserField = {
-      sound = theFixture;
-      broken = check hosts (
+      expr = check hosts (
         edit users "alice" (set {
           extraSpecialArgs.tea = "yes";
         })
       );
+      expectedError.msg = "users\\.alice\\.extraSpecialArgs' does not exist";
     };
     brokenDataStopsTheHomes = {
-      sound = lib.attrNames (assemble hosts users).homeConfigs;
-      broken =
-        lib.attrNames
-          (assemble (edit hosts "box" (set {
-            platform = "nixoss";
-          })) users).homeConfigs;
+      expr = lib.attrNames (assemble brokenHosts users).homeConfigs;
+      expectedError.msg = "hosts\\.box\\.platform' is not of type";
     };
 
     anUnknownNameInEnableFor = {
-      sound = onBox.enableFor [ "desktop" ];
-      broken = onBox.enableFor [ "dekstop" ];
+      expr = onBox.enableFor [ "dekstop" ];
+      expectedError.msg = "unknown host or role dekstop";
     };
     aHostWhereTheUserHasNoHome = {
-      sound = onBox.enableFor [ "shed" ];
-      broken = onBox.enableFor [ "mac" ];
+      expr = onBox.enableFor [ "mac" ];
+      expectedError.msg = "mac is a host where alice has no home";
     };
 
     aFolderWithoutItsModule = {
-      sound = namesIn programs;
-      broken = namesIn "tests/fixtures/broken-modules";
+      expr = namesIn "tests/fixtures/broken-modules";
+      expectedError.msg = "broken-modules/half-made has no half-made\\.nix";
     };
-    aProgramOnTheWrongOs = {
-      sound = boxHome.home.sessionVariables;
-      broken = wrongOsHome.home.sessionVariables;
+    aWrongOsProgramNamesItselfAndTheHost = {
+      expr = wrongOsHome.home.sessionVariables;
+      expectedError.msg = "dotfiles.programs.mac-only only runs on darwin, but it's enabled on box [(]linux[)]";
     };
     aLinkToAMissingFile = {
-      sound = boxHome.home.file.".linked".source;
-      broken = brokenLinkHome.home.file.".missing".source;
+      expr = brokenLinkHome.home.file.".missing".source;
+      expectedError.msg = "broken-link/not-here\\.conf does not exist";
+    };
+
+    aScriptOfNeitherKind = {
+      expr = scriptKind "python";
+      expectedError.msg = "python is neither a shell nor a xonsh script";
     };
   };
 
+  # Every case under the name nix-unit reports it by, like
+  # "test values: enableForPicksByHostOrRole". nix-unit runs only the
+  # attributes whose name starts with "test".
   casesOf =
     kind: toCase: lib.mapAttrs' (name: case: lib.nameValuePair "test ${kind}: ${name}" (toCase case));
-
-  # Like lib.runTests, but a test that fails with an error is reported by name,
-  # instead of stopping every test. (A missing attribute still stops them
-  # all: Nix can only catch errors raised with `throw`.)
-  failedCases =
-    cases:
-    lib.concatLists (
-      lib.mapAttrsToList (
-        name: case:
-        let
-          got = builtins.tryEval (builtins.deepSeq case.expr case.expr);
-        in
-        lib.optional (!got.success || got.value != case.expected) {
-          inherit name;
-          inherit (case) expected;
-          result = if got.success then got.value else "an error";
-        }
-      ) cases
-    );
 in
-failedCases (
-  casesOf "values" lib.id values
-  // casesOf "holds" (expr: {
-    inherit expr;
-    expected = true;
-  }) holds
-  // casesOf "stops" (case: {
-    expr = {
-      sound = succeeds case.sound;
-      broken = !succeeds case.broken;
-    };
-    expected = {
-      sound = true;
-      broken = true;
-    };
-  }) stops
-)
+casesOf "values" lib.id values
+// casesOf "holds" (expr: {
+  inherit expr;
+  expected = true;
+}) holds
+// casesOf "stops" lib.id stops

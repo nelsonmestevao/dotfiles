@@ -102,7 +102,7 @@ Run these before you say a change works:
 bin/lint          # Nix, shell, xonsh, zsh and workflow checks (CI first)
 bin/format        # fixes nixfmt errors
 bin/test          # the helper scripts' tests and the docs check (CI too)
-bin/check --eval  # evaluates every config, Mac ones too; builds nothing
+bin/check --eval  # evaluates every config, Mac ones too; runs the lib tests
 bin/check --same  # shows which configs your change builds differently
 ```
 

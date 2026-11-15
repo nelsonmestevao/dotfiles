@@ -567,21 +567,22 @@ unchanged.
 
 ### [x] CONFIG-002 Add focused regression tests for the shared helpers — P1 · M
 
-**Implemented:** [tests/lib.nix](tests/lib.nix) holds 34 cases, run with
-`lib.runTests` against a made-up repository in `tests/fixtures/`. They cover
-`enableFor` and `disableFor`, the data check, the assembly, module discovery,
-and the program and system wrappers. There are three kinds:
+**Implemented:** [tests/lib.nix](tests/lib.nix) holds 42 cases, run with
+nix-unit against a made-up repository in `tests/fixtures/`. They cover
+`enableFor` and `disableFor`, the data check, the assembly, the checks each
+system gets, module discovery, the program and system wrappers, and how the
+lint sorts scripts. There are three kinds:
 
 - `values`: an expression and the value it must have.
 - `holds`: must be true. Most read the sentence a rule of the schema writes.
-- `stops`: a mistake must stop the evaluation while the same thing without it
-  goes through, so a broken fixture can't pass as a caught mistake.
+- `stops`: a mistake must stop the evaluation with an error whose text names
+  it, so a fixture that breaks for another reason can't pass as a caught
+  mistake.
 
-[lib/checks.nix](lib/checks.nix) runs them as `checks.<system>.lib-tests`,
-which fails while it is evaluated and names the failed cases, so
-`bin/check --eval` runs them. [importModules](lib/importModules.nix) now
-leaves out a folder that starts with `_`, and names a folder that has no
-`<name>.nix`. Breaking `enableFor` on purpose failed the check by case name.
+[lib/checks.nix](lib/checks.nix) runs them as `checks.<system>.lib-tests`, a
+small build that runs nix-unit and names the failed cases. `bin/check --eval`
+builds this machine's. [importModules](lib/importModules.nix) now leaves out a
+folder that starts with `_`, and names a folder that has no `<name>.nix`. Breaking `enableFor` on purpose failed the check by case name.
 No case builds a package or touches a real home.
 
 **Original evidence:** the flake evaluated real configurations, but did not
@@ -618,9 +619,11 @@ combinations that happen to exist.
 desktop closure or touching the real home. Avoid snapshotting entire generated
 configurations or testing trivial package declarations.
 
-**Note:** `nix-unit` reports failures better and is in nixpkgs. Inside the Nix
-sandbox it needs its own eval store and an override for each input. Start with
-`lib.runTests`; move if the output is not good enough.
+**Note:** the tests started with `lib.runTests` and moved to nix-unit, from
+nixpkgs, in [#58](https://github.com/nelsonmestevao/dotfiles/pull/58). It
+shows how a value differs, and it reads an error's text, which `tryEval`
+can't. Inside the Nix sandbox it needs its own eval store and an override for
+each input the tests read.
 
 <a id="config-003"></a>
 
@@ -1692,8 +1695,13 @@ Each rule was checked by breaking the doc it guards.
 
 **Progress:** the lint check now runs shellcheck on the shell scripts, parses
 each xonsh script in `bin/` and `scripts/` without running it, runs `zsh -n` on
-the zsh files, and actionlint on the workflow. A file in `bin/` that is
-neither kind fails it. Each was checked by breaking a file of its kind.
+the zsh files, and actionlint on the workflow. A script in `bin/` or
+`.github/scripts/` that is neither kind stops the evaluation with its name
+([lib/scriptKind.nix](lib/scriptKind.nix)), and a case in `tests/lib.nix`
+covers that. Each was checked by breaking a file of its kind.
+[#58](https://github.com/nelsonmestevao/dotfiles/pull/58) tried git-hooks.nix
+for the lint and dropped it: it added an input, a layer and more code for the
+same coverage.
 `bin/test` runs in CI since #34. Still open: one formatter for every file kind
 (step 1), zsh code written inside Nix strings, Lua and the Herdr JS test, and
 a pre-push hook.

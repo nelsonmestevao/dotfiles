@@ -133,6 +133,11 @@
         }
       );
 
+      # The cases in tests/lib.nix, for nix-unit, which the check `lib-tests`
+      # runs. They sit under `lib` because `nix flake check` warns about an
+      # output it doesn't know, like `tests`.
+      lib.tests = import ./tests/lib.nix { inherit nixpkgs home-manager; };
+
       nixosConfigurations = nixosConfigs;
       darwinConfigurations = darwinConfigs;
       homeConfigurations = homeConfigs;

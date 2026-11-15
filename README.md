@@ -527,7 +527,7 @@ that shell for you (`direnv allow` once).
 | `bin/update`                   | Updates the flake inputs and lists what changed.                     |
 | `bin/update --save`            | Same, then commits `flake.lock` with a note for each input.          |
 | `bin/check`                    | Evaluates every config, then builds this machine's checks.           |
-| `bin/check --eval`             | Evaluates every config without building anything (about a minute).  |
+| `bin/check --eval`             | Evaluates every config and runs the lib tests (about a minute).     |
 | `bin/check --all-systems`      | Builds every system's checks. Needs a builder for the other OS.      |
 | `bin/check --same [<rev>]`     | Shows which configs build a different derivation than `<rev>` did.   |
 | `bin/check --list`             | Prints what every config builds, as JSON. CI decides from this list. |
@@ -546,10 +546,12 @@ flake sees them right away. Existing configuration files retain their staged
 contents; their new entries are left in the working tree for review.
 
 `bin/check` has three depths. `bin/check --eval` evaluates every config on
-every system and builds nothing. It reads the Mac config on Linux and the
-Linux ones on a Mac, but it does not test that a config activates on the
-other OS. Plain `bin/check` does that evaluation first, then builds the checks
-of this machine's system, which is what each CI runner builds.
+every system and runs the tests in `tests/lib.nix`. The one thing it builds is
+this machine's `lib-tests` check, which runs those tests. It reads the Mac
+config on Linux and the Linux ones on a Mac, but it does not test that a
+config activates on the other OS. Plain `bin/check` does that evaluation
+first, then builds the checks of this machine's system, which is what each CI
+runner builds.
 `bin/check --all-systems` builds the checks of every system and needs a
 builder for the other OS.
 
@@ -571,6 +573,11 @@ system derivations, since those checks only evaluate the system.
 Flakes only see tracked files, so `git add` a new file first. The command
 lists the untracked files it found, whatever their type.
 
+`bin/lint` builds the flake check `lint`. A script in `bin/` or
+`.github/scripts/` must be shell or xonsh:
+[`lib/scriptKind.nix`](lib/scriptKind.nix) reads its first line, and a script
+of neither kind stops `bin/lint` and `bin/check --eval` with its name.
+
 `bin/test` runs the tests for `bin/new`, `bin/setup`, `bin/check`,
 `bin/build`, `bin/rebuild` and CI's planning script, which work in throwaway
 folders and touch nothing else. It also checks the docs: every link in
@@ -587,9 +594,12 @@ makes that choice, and you can run it by hand on a saved list; its first lines
 say how.
 
 `tests/lib.nix` tests the helpers in `lib/` and `home/lib/` against the
-made-up repository in `tests/fixtures/`. It is the flake check `lib-tests`, so
-`bin/check --eval` runs it, and a failure names its case, even one that
-throws. To run it alone:
+made-up repository in `tests/fixtures/`.
+[nix-unit](https://github.com/nix-community/nix-unit) runs its cases, which
+the flake gives as `lib.tests`, in the flake check `lib-tests`, so
+`bin/check --eval` runs them. A failure names its case and shows how the value
+differs, and a case that expects an error checks the error's text. To run them
+alone:
 
 ```shell
 nix build --no-link ".#checks.$(nix config show system).lib-tests"
