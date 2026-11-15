@@ -10,8 +10,9 @@ to work here safely.
   Hosts, users, and the overlays every config shares.
 - `lib/`: turns `config/` into the flake outputs. `lib/schema.nix` checks the
   data first; a new host or user field needs an option there. `lib/checks.nix`
-  holds the checks. `flake.nix` only declares inputs, checks, and the dev
-  shell.
+  holds the checks. `lib/lockChanges.nix` compares two versions of
+  `flake.lock` for `bin/update`. `flake.nix` only declares inputs, checks, and
+  the dev shell.
 - `home/programs/plain.nix`: programs that are only a package, one line
   each. Each one gets `dotfiles.programs.<name>.enable` like a folder does.
 - `home/programs/<name>/<name>.nix`: one Home Manager program per folder,

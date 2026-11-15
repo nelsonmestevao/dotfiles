@@ -1,0 +1,39 @@
+{
+  "nodes": {
+    "hare": {
+      "locked": {"lastModified": 1793534400, "owner": "~sircmpwn", "repo": "hare", "rev": "3333333333333333333333333333333333333333", "type": "sourcehut"}
+    },
+    "home-manager": {
+      "inputs": {"nixpkgs": ["nixpkgs"]},
+      "locked": {"lastModified": 1793534400, "owner": "nix-community", "repo": "home-manager", "rev": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "type": "github"}
+    },
+    "inkscape": {
+      "locked": {"lastModified": 1793620800, "owner": "inkscape", "repo": "inkscape", "rev": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "type": "gitlab"}
+    },
+    "nixpkgs": {
+      "locked": {"lastModified": 1794139200, "owner": "NixOS", "repo": "nixpkgs", "rev": "ac588ef1c914865dad517b337ea0eb9694a4021c", "type": "github"}
+    },
+    "nixpkgs_2": {
+      "locked": {"lastModified": 1778846400, "owner": "NixOS", "repo": "nixpkgs", "rev": "9999999999999999999999999999999999999999", "type": "github"}
+    },
+    "numen": {
+      "locked": {"lastModified": 1794225600, "owner": "vicinaehq", "repo": "numen", "rev": "1111111111111111111111111111111111111111", "type": "github"}
+    },
+    "root": {
+      "inputs": {"hare": "hare", "home-manager": "home-manager", "inkscape": "inkscape", "nixpkgs": "nixpkgs", "tool": "tool", "vicinae": "vicinae", "zen-browser": "zen-browser"}
+    },
+    "tool": {
+      "locked": {"lastModified": 1793620800, "ref": "refs/heads/main", "rev": "5555555555555555555555555555555555555555", "type": "git", "url": "https://codeberg.org/someone/tool"}
+    },
+    "vicinae": {
+      "inputs": {"nixpkgs": "nixpkgs_2", "numen": "numen"},
+      "locked": {"lastModified": 1794312000, "owner": "vicinaehq", "repo": "vicinae", "rev": "7777777777777777777777777777777777777777", "type": "github"}
+    },
+    "zen-browser": {
+      "inputs": {"nixpkgs": ["nixpkgs"]},
+      "locked": {"lastModified": 1794052800, "owner": "youwen5", "repo": "zen-browser-flake", "rev": "dddddddddddddddddddddddddddddddddddddddd", "type": "github"}
+    }
+  },
+  "root": "root",
+  "version": 7
+}

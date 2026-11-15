@@ -510,12 +510,12 @@ Runnable helpers live in `bin/`; shared code lives in `scripts/`.
 `scripts/common.xsh` gives `bin/build`, `bin/check`, `bin/rebuild` and
 `bin/update` the same failure handling: a failed command ends the helper with
 one plain line that says what failed and what was left undone.
-`scripts/scaffold.xsh` provides
-validation and file transactions for `bin/new`
-and `bin/setup`. Run any helper with `--help` for details. Run
-them from inside the repo: each one starts in the flake's dev shell, so the
-tools it needs come from `flake.lock`. With direnv, `cd` into the repo loads
-that shell for you (`direnv allow` once).
+`scripts/scaffold.xsh` provides validation and file transactions for `bin/new`
+and `bin/setup`. `lib/lockChanges.nix` works out what `bin/update` lists, from
+`flake.lock` before and after the update. Run any helper with `--help` for
+details. Run them from inside the repo: each one starts in the flake's dev
+shell, so the tools it needs come from `flake.lock`. With direnv, `cd` into
+the repo loads that shell for you (`direnv allow` once).
 
 | Script                         | What it does                                                         |
 | ------------------------------ | -------------------------------------------------------------------- |

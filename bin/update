@@ -28,129 +28,44 @@ BLUE, CYAN, GREY = 34, 36, 90
 KINDS = ('updated', 'added', 'removed')
 
 
-# ── Reading flake.lock ─────
+# ── What changed ─────
 
-def read_inputs(path='flake.lock'):
-    """Every input in the lock file, keyed by its path from the flake, like
-    ('vicinae',) or ('vicinae', 'numen'). An input with a pin of its own maps
-    to its `locked` attributes. One that follows another maps to that input's
-    path, as text. The walk is the one nix makes when it prints what an update
-    changed."""
-    if not os.path.exists(path):
-        return {}
-    with open(path) as file:
-        lock = json.load(file)
-    nodes, inputs, seen = lock['nodes'], {}, set()
-
-    def walk(node, prefix):
-        # Like nix, walk a node two inputs share only once. It also ends a loop.
-        if node in seen:
-            return
-        seen.add(node)
-        for name, target in sorted(nodes[node].get('inputs', {}).items()):
-            # A list is the path of the input this one follows.
-            if isinstance(target, list):
-                inputs[(*prefix, name)] = '/'.join(target)
-            else:
-                inputs[(*prefix, name)] = nodes[target]['locked']
-                walk(target, (*prefix, name))
-
-    walk(lock['root'], ())
-    return inputs
-
-
-def forge(locked):
-    """The repo's web page, and a compare link with {old} and {new} to fill,
-    for an input on GitHub, GitLab or sourcehut. sourcehut has no compare
-    page. An input anywhere else has neither."""
-    owner, repo, host = locked.get('owner'), locked.get('repo'), locked.get('host')
-    match locked['type']:
-        case 'github':
-            page = f'https://{host or "github.com"}/{owner}/{repo}'
-            return page, page + '/compare/{old}...{new}'
-        case 'gitlab':
-            page = f'https://{host or "gitlab.com"}/{owner}/{repo}'
-            return page, page + '/-/compare/{old}...{new}'
-        case 'sourcehut':
-            return f'https://{host or "git.sr.ht"}/{owner}/{repo}', None
-    return None, None
-
-
-def flake_ref(locked):
-    """The locked input as a flake reference, close to how nix writes it."""
-    kind = locked['type']
-    if kind in ('github', 'gitlab', 'sourcehut'):
-        return f"{kind}:{locked['owner']}/{locked['repo']}/{locked['rev']}"
-    if kind == 'path':
-        return f"path:{locked['path']}"
-    url = f"{kind}+{locked['url']}" if kind in ('git', 'hg') else locked.get('url', kind)
-    query = '&'.join(f'{key}={locked[key]}' for key in ('ref', 'rev') if key in locked)
-    return f'{url}?{query}' if query else url
-
-
-def pin(locked):
-    """What the summary and the commit show of one locked input."""
-    if isinstance(locked, str):
-        # It follows another input, so it has no pin of its own to show.
-        return {'rev': None, 'ref': f"follows '{locked}'", 'date': None, 'page': None, 'compare': None}
-    page, compare = forge(locked)
-    stamp = locked.get('lastModified')
-    return {
-        'rev': locked.get('rev'),
-        'ref': flake_ref(locked),
-        # Nix gives the day in UTC.
-        'date': datetime.fromtimestamp(stamp, timezone.utc).strftime('%Y-%m-%d') if stamp else None,
-        'page': page,
-        'compare': compare,
-    }
-
-
-def changes(before, after):
-    """The inputs that differ between two reads of flake.lock, in the order
-    nix lists them. A path sorts as a list of names, so vicinae/numen comes
-    right after vicinae."""
-    found = []
-    for path in sorted(before.keys() | after.keys()):
-        old, new = before.get(path), after.get(path)
-        if old == new:
-            continue
-        # An input that only follows another pins nothing, so there's nothing
-        # to say when it comes or goes. It shows when it gains or drops a pin
-        # of its own.
-        if (old is None and isinstance(new, str)) or (new is None and isinstance(old, str)):
-            continue
-        old = None if old is None else pin(old)
-        new = None if new is None else pin(new)
-        compare = None
-        if old and new and old['rev'] and new['compare']:
-            compare = new['compare'].format(old=old['rev'], new=new['rev'])
-        found.append({
-            'name': '/'.join(path),
-            'kind': 'added' if old is None else 'removed' if new is None else 'updated',
-            'old': old,
-            'new': new,
-            'page': (new or old)['page'],
-            'compare': compare,
-        })
-    return found
-
-
-def shown(change, side):
-    """One side of a change: its short commit when the input is on a forge,
-    or else its whole flake reference."""
-    pinned = change[side]
-    return pinned['rev'][:7] if change['page'] and pinned['rev'] else pinned['ref']
+def read_lock():
+    with open('flake.lock') as file:
+        return file.read()
 
 
 def update():
-    """Runs `nix flake update`, and returns what flake.lock pinned before and
+    """Runs `nix flake update`, and returns flake.lock's text from before and
     after it."""
-    before = read_inputs()
+    before = read_lock()
     try:
         gum spin --spinner=dot --title 'Updating flake inputs...' --show-error -- nix flake update
     except subprocess.CalledProcessError as problem:
         fail('Interrupted.' if interrupted(problem) else 'nix flake update failed.')
-    return before, read_inputs()
+    return before, read_lock()
+
+
+def changes(before, after):
+    """The inputs that differ between two versions of flake.lock, in nix's
+    order. lib/lockChanges.nix works them out and says what each holds."""
+    try:
+        found = $(nix-instantiate --eval --strict --json lib/lockChanges.nix --argstr before @(before) --argstr after @(after))
+    except subprocess.CalledProcessError:
+        fail('lib/lockChanges.nix could not compare the lock files. flake.lock is updated, not committed.')
+    return json.loads(found)
+
+
+def shown(change, side):
+    """One side of a change: its short commit, or else what it follows."""
+    pinned = change[side]
+    return pinned['rev'][:7] if pinned['rev'] else pinned['ref']
+
+
+def day(change, side):
+    """The day of one side's commit, or None. Nix gives it in UTC."""
+    stamp = change[side]['lastModified']
+    return datetime.fromtimestamp(stamp, timezone.utc).strftime('%Y-%m-%d') if stamp else None
 
 
 # ── The commit ─────
@@ -168,8 +83,7 @@ def format_title(changes):
 
 
 def in_code(change, side):
-    date = change[side]['date']
-    text = f'`{shown(change, side)}`'
+    text, date = f'`{shown(change, side)}`', day(change, side)
     return f'{text} ({date})' if date else text
 
 
@@ -178,11 +92,8 @@ def format_section(change):
     if change['page']:
         lines.append(f"- **Source:** {change['page']}")
     match change['kind']:
-        case 'updated' if change['page']:
-            lines.append(f"- **Update:** {in_code(change, 'old')} → {in_code(change, 'new')}")
         case 'updated':
-            lines.append(f"- {in_code(change, 'old')}")
-            lines.append(f"- → {in_code(change, 'new')}")
+            lines.append(f"- **Update:** {in_code(change, 'old')} → {in_code(change, 'new')}")
         case 'added':
             lines.append(f"- **Added:** {in_code(change, 'new')}")
         case 'removed':
@@ -201,9 +112,13 @@ def save_commit(changes):
         print(paint('✗ No inputs were updated; nothing to commit.', YELLOW))
         return
 
-    title = format_title(changes)
+    # The title names only the inputs that moved. The body lists the rest.
+    title = format_title([c for c in changes if c['kind'] == 'updated'] or changes)
     git add flake.lock
-    git commit -m @(title) -m @(format_body(changes))
+    try:
+        git commit -m @(title) -m @(format_body(changes))
+    except subprocess.CalledProcessError:
+        fail('git commit failed. flake.lock is updated and staged.')
     print(f"{paint('✓ Committed:', GREEN)} {title}")
 
 
@@ -220,21 +135,16 @@ def headline(changes):
     return f"{len(changes)} {word} changed: {', '.join(f'{counts[k]} {k}' for k in kinds)}"
 
 
-def dated(change, side, color=None):
-    date = change[side]['date']
-    text = shown(change, side)
-    text = paint(text, color) if color else text
+def dated(change, side, color):
+    text, date = paint(shown(change, side), color), day(change, side)
     return f"{text} {paint('(' + date + ')', GREY)}" if date else text
 
 
 def print_change(change):
     print(f"  {paint(change['name'], CYAN)}")
     match change['kind']:
-        case 'updated' if change['page']:
-            print(f"    {dated(change, 'old', RED)} {paint('→', GREEN)} {dated(change, 'new', GREEN)}")
         case 'updated':
-            print(f"    {dated(change, 'old')}")
-            print(f"    {paint('→', GREEN)} {dated(change, 'new')}")
+            print(f"    {dated(change, 'old', RED)} {paint('→', GREEN)} {dated(change, 'new', GREEN)}")
         case 'added':
             print(f"    {paint('added', GREEN)} {dated(change, 'new', GREEN)}")
         case 'removed':

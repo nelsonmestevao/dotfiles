@@ -173,6 +173,20 @@ let
       ];
     }).config.environment;
 
+  # ── Lock file changes ──────────────────────────────────────────────────────
+
+  # What bin/update reads from two lock files in ./fixtures/locks.
+  # before.lock and after.lock are made up. The 87b99c60 pair is the real lock
+  # from before and after that upgrade commit.
+  lockChanges =
+    before: after:
+    import ../lib/lockChanges.nix {
+      before = builtins.readFile ./fixtures/locks/${before}.lock;
+      after = builtins.readFile ./fixtures/locks/${after}.lock;
+    };
+  madeUpChanges = lockChanges "before" "after";
+  changeTo = name: lib.findFirst (change: change.name == name) null madeUpChanges;
+
   # ── Cases ──────────────────────────────────────────────────────────────────
 
   # An expression and the value it must have.
@@ -330,6 +344,96 @@ let
         };
         off.ALWAYS = "on";
       };
+    };
+    # vicinae/numen is an input of vicinae, and nix lists it before
+    # vicinae-extensions. Left out: home-manager, which stays put, and the
+    # nixpkgs inputs of vicinae-extensions and zen-browser, which only follow
+    # ours and come and go with them.
+    lockChangesNameInputsByPathInNixOrder = {
+      expr = map (change: change.name) madeUpChanges;
+      expected = [
+        "hare"
+        "inkscape"
+        "nixpkgs"
+        "tool"
+        "vicinae"
+        "vicinae/nixpkgs"
+        "vicinae/numen"
+        "vicinae-extensions"
+        "zen-browser"
+      ];
+    };
+    lockChangesSkipUnchangedInputs = {
+      expr = lockChanges "before" "before";
+      expected = [ ];
+    };
+    # vicinae's nixpkgs had a pin of its own, and now follows ours.
+    lockChangesShowAStartToFollow = {
+      expr = {
+        inherit (changeTo "vicinae/nixpkgs") kind page compare;
+        old = (changeTo "vicinae/nixpkgs").old.rev;
+        new = (changeTo "vicinae/nixpkgs").new.ref;
+      };
+      expected = {
+        kind = "updated";
+        page = "https://github.com/NixOS/nixpkgs";
+        compare = null;
+        old = "9999999999999999999999999999999999999999";
+        new = "follows 'nixpkgs'";
+      };
+    };
+    lockChangesListAddedAndRemoved = {
+      expr = map (name: { inherit (changeTo name) kind page compare; }) [
+        "vicinae-extensions"
+        "zen-browser"
+      ];
+      expected = [
+        {
+          kind = "added";
+          page = "https://github.com/vicinaehq/extensions";
+          compare = null;
+        }
+        {
+          kind = "removed";
+          page = "https://github.com/youwen5/zen-browser-flake";
+          compare = null;
+        }
+      ];
+    };
+    # sourcehut has no compare page, and a plain git input has no page at all.
+    lockChangesCompareLinkOnlyOnGithubAndGitlab = {
+      expr = lib.genAttrs [ "nixpkgs" "inkscape" "hare" "tool" ] (name: {
+        inherit (changeTo name) page compare;
+      });
+      expected = {
+        nixpkgs = {
+          page = "https://github.com/NixOS/nixpkgs";
+          compare = "https://github.com/NixOS/nixpkgs/compare/ac588ef1c914865dad517b337ea0eb9694a4021c...f1e5c356f35d07e7b71a6b5e6c9338e0b029e0c0";
+        };
+        inkscape = {
+          page = "https://gitlab.com/inkscape/inkscape";
+          compare = "https://gitlab.com/inkscape/inkscape/-/compare/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
+        };
+        hare = {
+          page = "https://git.sr.ht/~sircmpwn/hare";
+          compare = null;
+        };
+        tool = {
+          page = null;
+          compare = null;
+        };
+      };
+    };
+    # The inputs that commit names, in its order.
+    lockChangesReplay87b99c60 = {
+      expr = map (change: change.name) (lockChanges "87b99c60-before" "87b99c60-after");
+      expected = [
+        "claude-code"
+        "nixpkgs"
+        "nixpkgs-unstable"
+        "orca"
+        "vicinae"
+      ];
     };
   };
 

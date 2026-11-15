@@ -1,0 +1,36 @@
+{
+  "nodes": {
+    "hare": {
+      "locked": {"lastModified": 1794312000, "owner": "~sircmpwn", "repo": "hare", "rev": "4444444444444444444444444444444444444444", "type": "sourcehut"}
+    },
+    "home-manager": {
+      "inputs": {"nixpkgs": ["nixpkgs"]},
+      "locked": {"lastModified": 1793534400, "owner": "nix-community", "repo": "home-manager", "rev": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "type": "github"}
+    },
+    "inkscape": {
+      "locked": {"lastModified": 1794484800, "owner": "inkscape", "repo": "inkscape", "rev": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "type": "gitlab"}
+    },
+    "nixpkgs": {
+      "locked": {"lastModified": 1794571200, "owner": "NixOS", "repo": "nixpkgs", "rev": "f1e5c356f35d07e7b71a6b5e6c9338e0b029e0c0", "type": "github"}
+    },
+    "numen": {
+      "locked": {"lastModified": 1794398400, "owner": "vicinaehq", "repo": "numen", "rev": "2222222222222222222222222222222222222222", "type": "github"}
+    },
+    "root": {
+      "inputs": {"hare": "hare", "home-manager": "home-manager", "inkscape": "inkscape", "nixpkgs": "nixpkgs", "tool": "tool", "vicinae": "vicinae", "vicinae-extensions": "vicinae-extensions"}
+    },
+    "tool": {
+      "locked": {"lastModified": 1794398400, "ref": "refs/heads/main", "rev": "6666666666666666666666666666666666666666", "type": "git", "url": "https://codeberg.org/someone/tool"}
+    },
+    "vicinae": {
+      "inputs": {"nixpkgs": ["nixpkgs"], "numen": "numen"},
+      "locked": {"lastModified": 1794571200, "owner": "vicinaehq", "repo": "vicinae", "rev": "cccccccccccccccccccccccccccccccccccccccc", "type": "github"}
+    },
+    "vicinae-extensions": {
+      "inputs": {"nixpkgs": ["nixpkgs"]},
+      "locked": {"lastModified": 1794657600, "owner": "vicinaehq", "repo": "extensions", "rev": "8888888888888888888888888888888888888888", "type": "github"}
+    }
+  },
+  "root": "root",
+  "version": 7
+}

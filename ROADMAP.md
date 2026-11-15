@@ -210,9 +210,9 @@ tracebacks, and ends a failed run with one plain line. `bin/rebuild` says what
 it left undone ("home not switched"). `bin/build` builds both even when one
 fails, which its comment promised but xonsh 0.23 didn't do. `NIX_CONFIG` is
 added to, not replaced. Every xonsh shebang has `--no-rc`.
-`tests/test_rebuild.py` checks each case with a stand-in `nh`. Still open:
-`bin/new`, `bin/setup` and `bin/update` keep their own colours and error
-handling (`bin/update` moves with CLI-002).
+`tests/test_rebuild.py` checks each case with a stand-in `nh`. `bin/update`
+uses it too (see CLI-002). Still open: `bin/new` and `bin/setup` keep their
+own colours and error handling.
 
 **Evidence:** [bin/check](bin/check), [bin/rebuild](bin/rebuild),
 [bin/setup](bin/setup), and [bin/update](bin/update) run commands without
@@ -262,6 +262,16 @@ in `bin/build` that attempts both builds and reports aggregate failure.
 <a id="cli-002"></a>
 
 ### [ ] CLI-002 Make updates selective and commits isolated — P1 · M
+
+**Progress:** steps 2 and 6 are done. `lib/lockChanges.nix` compares
+`flake.lock` from before and after the update: revisions, dates, added and
+removed inputs, and changed `follows`. `bin/update` makes its summary and
+commit from that, and the regular expressions are gone. It uses
+`scripts/common.xsh`, so colours show only in a terminal and a failed update
+or commit ends with one plain line. `tests/lib.nix` tests the comparison
+against fixture locks, the real ones of 87b99c60 among them.
+`tests/test_update.py` covers a commit, nothing to commit, and a failed
+update. Still open: steps 1, 3, 4 and 5.
 
 **Evidence:** [bin/update](bin/update) always updates all inputs, parses Nix's
 human-readable output with five regular expressions, then runs an unrestricted
