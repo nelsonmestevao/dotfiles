@@ -386,12 +386,14 @@ Each user in `config/users.nix` has these fields:
 - **`name`** — your full name. On NixOS it becomes the account's description.
 - **`extraGroups`** — groups for the account on NixOS, like `wheel` or
   `docker`.
-- **`extraSpecialArgs`** — extra arguments for your Home Manager modules.
-  Optional.
 
-Modules get the whole entry as `user`. Your git identity is not in the entry:
-it's the file `home/programs/git/profiles/<username>.ini`, included when it
-exists. Without it, git refuses to commit until you set an email.
+Modules get the whole entry as `user`. To give them an argument of your own,
+set `_module.args` in your user file. A program module reads it as
+`config._module.args.<name>`, since its wrapper only passes the arguments it
+names.
+
+Your git identity is not in the entry: it's the file
+`home/programs/git/profiles/<username>.ini`, included when it exists. Without it, git refuses to commit until you set an email.
 
 The SSH key that signs your commits is a setting of the git program. Set it in
 your user file with `valueFor`, as the public key or the path of its file. A
@@ -432,10 +434,6 @@ Then the entries must fit together, and every broken rule is listed at once:
 - every user a host lists is in `config/users.nix`;
 - the `platform` fits the `system`, and a Mac has `darwinStateVersion`;
 - no role has the same name as a host;
-- a user's `extraSpecialArgs` don't take a name the modules already get:
-  those in `lib/homeArguments.nix`, and the ones the module system and Home
-  Manager pass, like `lib`, `pkgs` and `config` (the full list is in
-  `lib/schema.nix`);
 - the files exist: `home/users/<username>.nix`, and for a host with a
   `platform`, `system/hosts/<hostname>.nix` (plus `hardware.nix` on NixOS).
 

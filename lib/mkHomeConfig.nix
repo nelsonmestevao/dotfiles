@@ -50,21 +50,10 @@ let
     disableFor = import ../home/lib/disableFor.nix hostInfo;
     valueFor = import ../home/lib/valueFor.nix hostInfo;
   };
-
-  # The schema keeps a user's own `extraSpecialArgs` off the names in
-  # ./homeArguments.nix, so that list must be exactly these arguments.
-  listed = import ./homeArguments.nix;
-  passed = lib.attrNames arguments;
-  notListed = lib.subtractLists listed passed;
-  notPassed = lib.subtractLists passed listed;
-  sameAsListed =
-    lib.throwIf (notListed ++ notPassed != [ ])
-      "lib/homeArguments.nix must list the arguments lib/mkHomeConfig.nix passes. Not listed: ${toString notListed}. Listed but not passed: ${toString notPassed}."
-      arguments;
 in
 home-manager.lib.homeManagerConfiguration {
   inherit pkgs;
-  extraSpecialArgs = sameAsListed // user.extraSpecialArgs;
+  extraSpecialArgs = arguments;
   modules = [
     { nixpkgs.overlays = overlays; }
     ../home
