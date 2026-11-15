@@ -621,20 +621,25 @@ sandbox it needs its own eval store and an override for each input. Start with
 
 <a id="config-003"></a>
 
-### [ ] CONFIG-003 Reduce the server and base-home package sets — P2 · M
+### [x] CONFIG-003 Reduce the server and base-home package sets — P2 · M
+
+**Done** in [#48](https://github.com/nelsonmestevao/dotfiles/pull/48), with
+one line per program in [home/programs/plain.nix](home/programs/plain.nix)
+instead of a folder each. temis now gets 132 packages (146 before), and the
+Mac 85 (72 before).
 
 **Evidence:** [nelson.nix](home/users/nelson.nix) enables Flutter, Haskell, media
 tools, and many language modules everywhere. **Measured:** temis, a server,
 gets 59 programs and 146 packages, among them Flutter, GHC, ffmpeg,
 ImageMagick, and unoconv.
 
-[home/packages.nix](home/packages.nix) puts 37 packages behind one flag,
-`dotfiles.packages.enable`. It is the one place where a program is not an
+`home/packages.nix` put 37 packages behind one flag,
+`dotfiles.packages.enable`. It was the one place where a program was not an
 option. Some of them are Linux-only, such as `gvfs`, `fuse`, `appimage-run`,
 and `impression`. The Mac user file has the flag commented out, so the Mac
 gets none of the 37.
 
-[home/scripts.nix](home/scripts.nix) rides the same flag. `hm-diff` uses GNU
+[home/programs/scripts.nix](home/programs/scripts.nix) rides the same flag. `hm-diff` uses GNU
 `stat` and `date`, `nixos-diff` is installed on hosts that are not NixOS, and
 `wake-hades` has one machine's MAC address in it.
 
@@ -1624,8 +1629,8 @@ real home.
 **Evidence:** useful diagnostics are spread across the README and helpers. The
 README and a comment in `flake.nix` promise automatic direnv loading.
 **Verified:** commit `f6bf77f6` added `.envrc`, and the next commit,
-`c15fee8c` ("[herdr-app]: add mods"), deleted it. [home/scripts.nix](home/scripts.nix)
-also assumes GNU `stat`/`date` and particular generation directories.
+`c15fee8c` ("[herdr-app]: add mods"), deleted it. [home/programs/scripts.nix](home/programs/scripts.nix)
+also assumes particular generation directories.
 
 **Plan:**
 
@@ -2208,12 +2213,10 @@ repo is `wimpysworld/nix-config`: a data registry builds every NixOS, Mac, and
 | A hook framework | lovesegfault, ryan4yin | **Skip:** a five-line hook is enough. |
 | sops-nix or agenix | split about evenly | **Skip for now:** a checklist ([OPS-004](#ops-004)). |
 
-One more idea was weighed and set aside. Of the 109 program modules, 82 are
-12 lines or fewer and mostly just install a package. A table of one-line
-programs would save about 700 lines. It would also create a second way to add
-a program, and `bin/new` makes the folder for free. Keep the folders. The
-owner went further that way on purpose: every package in `home/packages.nix`
-gets its own folder too ([CONFIG-003](#config-003)).
+One more idea was weighed: of the 109 program modules, 82 are 12 lines or
+fewer and mostly just install a package. It was first set aside, then taken
+up in [CONFIG-003](#config-003): a program that is only a package is one line
+in [home/programs/plain.nix](home/programs/plain.nix).
 
 ## Suggested delivery order
 

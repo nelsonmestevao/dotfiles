@@ -20,6 +20,7 @@ let
   importModules = import ./importModules.nix { inherit lib; };
   mkHomeModule = import ../home/lib/mkHomeModule.nix;
   mkGnomeExtensionModule = import ../home/lib/mkGnomeExtensionModule.nix;
+  plainPrograms = import ../home/lib/plainPrograms.nix { inherit lib pkgs; };
 
   # What enableFor, disableFor and valueFor need to know about this host and
   # this user.
@@ -79,5 +80,6 @@ home-manager.lib.homeManagerConfiguration {
     vicinae.homeManagerModules.default
   ]
   ++ importModules mkHomeModule "home/programs"
+  ++ plainPrograms
   ++ importModules mkGnomeExtensionModule "home/programs/gnome/extensions";
 }

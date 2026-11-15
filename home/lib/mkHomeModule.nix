@@ -1,4 +1,9 @@
-{ name, folder }:
+{
+  name,
+  folder,
+  # Where the module is, for messages. Only plainPrograms.nix sets it.
+  file ? "${folder}/${name}.nix",
+}:
 body:
 {
   config,
@@ -11,7 +16,6 @@ body:
 }@args:
 let
   owner = "dotfiles.programs.${name}";
-  file = "${folder}/${name}.nix";
 
   mkSymlink = config.lib.dotfiles.mkSymlinkIn { inherit owner folder; };
 

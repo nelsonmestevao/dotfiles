@@ -12,6 +12,8 @@ to work here safely.
   data first; a new host or user field needs an option there. `lib/checks.nix`
   holds the checks. `flake.nix` only declares inputs, checks, and the dev
   shell.
+- `home/programs/plain.nix`: programs that are only a package, one line
+  each. Each one gets `dotfiles.programs.<name>.enable` like a folder does.
 - `home/programs/<name>/<name>.nix`: one Home Manager program per folder,
   wrapped by `home/lib/mkHomeModule.nix`. It adds the
   `dotfiles.programs.<name>.enable` option and the `mkSymlink` helper. A
@@ -87,9 +89,10 @@ Mac) can't run there: ask me to run it and paste the output back.
   patched in `config/overlays.nix` is also listed in `lib/packages.nix`.
 - **Never change `stateVersion` or `darwinStateVersion`** on an existing host.
 - **New program, module, user, or host:** use `bin/new` or `bin/setup`. Don't
-  write the files by hand. `bin/new module <name> --darwin` makes a nix-darwin
-  module. `bin/setup` prompts in a terminal; pass its answers as flags
-  instead (see `bin/setup --help`).
+  write the files by hand. A program that is only a package is one line in
+  `home/programs/plain.nix` instead. `bin/new module <name> --darwin` makes a
+  nix-darwin module. `bin/setup` prompts in a terminal; pass its answers as
+  flags instead (see `bin/setup --help`).
 
 ## Check your work
 

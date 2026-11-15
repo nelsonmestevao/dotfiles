@@ -95,9 +95,10 @@ let
     hostname: enabled:
     let
       host = hosts.${hostname};
+      pkgs = nixpkgs.legacyPackages.${host.system};
     in
     (home-manager.lib.homeManagerConfiguration {
-      pkgs = nixpkgs.legacyPackages.${host.system};
+      inherit pkgs;
       extraSpecialArgs = { inherit hostname; };
       modules = [
         ../home/lib
@@ -110,7 +111,8 @@ let
           });
         }
       ]
-      ++ importModules mkHomeModule programs;
+      ++ importModules mkHomeModule programs
+      ++ import ../home/lib/plainPrograms.nix { inherit lib pkgs; };
     }).config;
 
   boxHome = homeOn "box" [
@@ -120,6 +122,7 @@ let
   macHome = homeOn "mac" [ "mac-only" ];
   wrongOsHome = homeOn "box" [ "mac-only" ];
   brokenLinkHome = homeOn "box" [ "broken-link" ];
+  plainHome = homeOn "box" [ "tokei" ];
 
   # What a program's wrapper complains about on a host. Home Manager turns a
   # failed assertion into an error, whose text can't be read back, so this
@@ -311,6 +314,16 @@ let
         enabled = "on";
         disabled = false;
         onItsOwnOs = "on";
+      };
+    };
+    aPlainProgramIsAProgramToo = {
+      expr = {
+        on = lib.elem nixpkgs.legacyPackages.x86_64-linux.tokei plainHome.home.packages;
+        off = lib.elem nixpkgs.legacyPackages.x86_64-linux.gvfs plainHome.home.packages;
+      };
+      expected = {
+        on = true;
+        off = false;
       };
     };
     aSystemModuleAppliesOnlyWhenItIsOn = {

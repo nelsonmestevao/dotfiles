@@ -1,0 +1,115 @@
+# Programs that are only a package. Each name here is a program like one in
+# its own folder: it gets dotfiles.programs.<name>.enable, and a user file
+# turns it on. Give a program its own folder once it needs more than its
+# package, like a config file or a setting.
+#
+# There's no `platforms` here: nixpkgs itself refuses to evaluate a package
+# that doesn't build for the host's OS.
+pkgs:
+with pkgs;
+{
+  inherit
+    appimage-run
+    autoconf
+    automake
+    bc
+    btop
+    cached-nix-shell
+    calibre
+    cloudflared
+    codex
+    colima
+    cpufetch
+    ctop
+    curl
+    dconf2nix
+    devcontainer
+    dig
+    digikam
+    discord
+    dust
+    eva
+    exiftool
+    eza
+    fastfetch
+    fd
+    figlet
+    flutter
+    fop
+    fuse
+    gcc
+    gimp
+    glab
+    glow
+    gnumake
+    gnupg
+    gping
+    grex
+    gvfs
+    httpie
+    hyperfine
+    imagemagick
+    impression
+    inkscape
+    jq
+    k6
+    kamal
+    lazysql
+    lftp
+    libreoffice
+    libsecret
+    localsend
+    mpv
+    ngrok
+    nix-search-tv
+    nushell
+    obsidian
+    onefetch
+    ouch
+    pandoc
+    pdfmixtool
+    pinta
+    pkg-config
+    poppler-utils # pdftotext, pdftohtml, etc
+    rclone
+    ripgrep
+    scc
+    shellcheck
+    shfmt
+    shotcut
+    silicon
+    slack
+    spotify
+    stripe-cli
+    terminaltexteffects
+    terraform
+    thunderbird
+    tldr
+    tokei
+    typora
+    typst
+    unoconv
+    unzip
+    vivaldi
+    vlc
+    watchman
+    wget
+    yazi
+    yq
+    zeal
+    ;
+
+  inherit (kdePackages) kdenlive;
+  inherit (llvmPackages_20) clang-tools;
+  inherit (unstable) beeper;
+
+  # Named after the program, not the package.
+  chrome = google-chrome;
+  copilot = github-copilot-cli;
+  ffmpeg = ffmpeg-full;
+  mysql = mysql84;
+  rust = rustup;
+  speedtest = speedtest-cli;
+  zen = zen-browser; # about:config zen.view.experimental-no-window-controls
+}
+// import ./scripts.nix { inherit pkgs; }

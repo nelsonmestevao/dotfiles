@@ -74,6 +74,22 @@ module. A helper called `mkHomeModule` wraps each one, providing a
 `dotfiles.programs.<name>.enable` option and a `mkSymlink` function for
 linking config files back to this repo.
 
+A program that is only a package needs no folder. It is one line in
+[`home/programs/plain.nix`](home/programs/plain.nix), and it gets the same
+`enable` option. Give it a folder once it needs more, like a config file or
+a setting:
+
+```nix
+# home/programs/plain.nix
+inherit
+  dig
+  tokei
+  ;
+
+# home/users/nelson.nix
+dotfiles.programs.tokei.enable = true;
+```
+
 > [!NOTE]
 > `mkSymlink` creates **true symlinks** (on Linux and macOS alike) pointing
 > directly from your home directory into this repo, so you can edit config files

@@ -6,7 +6,6 @@
 }:
 {
   imports = [
-    ./packages.nix
     ./users/${username}.nix
   ];
 
