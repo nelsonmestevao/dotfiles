@@ -12,6 +12,29 @@ let
   # The user's identity is profiles/<username>.ini, included when it exists.
   profile = "profiles/${username}.ini";
 
+  # A diff driver runs its tool on each diff of a matching file (see
+  # `attributes`). If the tool is missing, `git show`, `git diff` and
+  # `git log -p` die. So these drivers live here, set only where their tool's
+  # program is on, and not in the linked common.ini. Where a driver isn't set,
+  # git says "Binary files differ". The cost: changing a driver needs a
+  # rebuild. But they differ per host, like the signing key. The pdf driver
+  # stays in common.ini, because every machine has pdftotext (the Mac from
+  # Homebrew). `attributes` still names odf, but no machine defines it: no
+  # package gives a working odt2txt.
+  driver =
+    program: textconv:
+    lib.optionalAttrs config.dotfiles.programs.${program}.enable {
+      inherit textconv;
+      cachetextconv = true;
+    };
+
+  diffDrivers = lib.filterAttrs (_: d: d != { }) {
+    exif = driver "exiftool" "exiftool";
+    word = driver "pandoc" "pandoc --to plain";
+    xls = driver "unoconv" "sh -c 'unoconv --stdout --format csv \"$0\"'";
+    ppt = driver "unoconv" "sh -c 'unoconv --stdout --format txt \"$0\"'";
+  };
+
   gitConfig = {
     include.path = [
       "~/.config/git/common.ini"
@@ -25,6 +48,9 @@ let
   }
   // lib.optionalAttrs (signingProgram != null) {
     gpg.ssh.program = signingProgram;
+  }
+  // lib.optionalAttrs (diffDrivers != { }) {
+    diff = diffDrivers;
   };
 in
 {
