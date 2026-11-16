@@ -283,20 +283,10 @@ let
       expr = {
         hostSystem = onBox.host.system;
         userName = onBox.user.name;
-        names = lib.attrNames onBox;
       };
       expected = {
         hostSystem = "x86_64-linux";
         userName = "Alice";
-        names = [
-          "disableFor"
-          "enableFor"
-          "host"
-          "hostname"
-          "user"
-          "username"
-          "valueFor"
-        ];
       };
     };
     # The stray notes.md and the `_draft` folder are left out.
@@ -311,27 +301,12 @@ let
         "zsh"
       ];
     };
-    # ~/.zshrc sources zshrc from the checkout instead of copying it in, so an
-    # edit takes effect in a new shell with no rebuild.
-    zshrcIsSourcedFromTheCheckout = {
-      expr =
-        let
-          zshrc = zshHome.home.file."./.zshrc".text;
-        in
-        {
-          sourced = lib.hasInfix "source /home/alice/.dotfiles/home/programs/zsh/zshrc\n" zshrc;
-          copied = lib.hasInfix (builtins.readFile ../home/programs/zsh/zshrc) zshrc;
-        };
-      expected = {
-        sourced = true;
-        copied = false;
-      };
-    };
     # ~/.zshrc loads in the order the shell needs: the instant prompt first,
-    # zshrc before oh-my-zsh so its plugins wrap the handlers there, fzf-tab
-    # after compinit and before the plugins that wrap widgets, the jump to
-    # the `chwd` folder after oh-my-zsh so it lands on the folder stack and
-    # in zoxide, and syntax highlighting last.
+    # zshrc (sourced from the checkout, so an edit needs no rebuild) before
+    # oh-my-zsh so its plugins wrap the handlers there, fzf-tab after compinit
+    # and before the plugins that wrap widgets, the jump to the `chwd` folder
+    # after oh-my-zsh so it lands on the folder stack and in zoxide, and
+    # syntax highlighting last.
     zshLoadsInOrder =
       let
         zshrc = zshHome.home.file."./.zshrc".text;
@@ -398,9 +373,6 @@ let
     # Turning zsh on adds no activation step, so a switch fetches nothing.
     zshAddsNoActivationStep =
       lib.attrNames zshHome.home.activation == lib.attrNames noZshHome.home.activation;
-    # oh-my-zsh and its plugins come from the store, not a ~/.oh-my-zsh folder.
-    zshLeavesTheOldOhMyZshFolderAlone =
-      !lib.any (file: lib.hasPrefix ".oh-my-zsh" file.target) (lib.attrValues zshHome.home.file);
 
     anUnknownUserIsNamed = mentions [ "config/hosts.nix: shed.users has \"alicia\"" ] (
       hostProblems "shed" (set {

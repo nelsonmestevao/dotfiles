@@ -1425,22 +1425,17 @@ revision needed, and cleanup preserves the intended recovery window.
 
 <a id="dx-001"></a>
 
-### [ ] DX-001 Remove network cloning from shell activation — P1 · M
+### [x] DX-001 Remove network cloning from shell activation — P1 · M
 
-**Evidence:** [zsh.nix](home/programs/zsh/zsh.nix) pins plugins but clones Oh My
-Zsh from its current Git branch during activation. The clone skips Home
-Manager's `run` wrapper, so a dry run clones too, and a first activation with
-no network fails. The runtime shell then sources that mutable checkout. Six
-plugins are pinned by hand; `zsh-vi-mode` is fetched and never loaded.
-
-Home Manager's `programs.zsh.oh-my-zsh` takes its copy from `pkgs.oh-my-zsh`,
-which `flake.lock` pins.
+**Implemented** in [#55](https://github.com/nelsonmestevao/dotfiles/pull/55):
+`programs.zsh.oh-my-zsh` and `programs.zsh.plugins` load everything from
+nixpkgs, and activation fetches nothing. Delete `~/.oh-my-zsh` and
+`~/.cache/gitstatus` by hand after each machine's first switch.
 
 **Plan:**
 
 1. Point `ZSH` at `${pkgs.oh-my-zsh}/share/oh-my-zsh` with a session variable.
-   Make [theme.zsh](home/programs/zsh/theme.zsh) read it instead of setting
-   `~/.oh-my-zsh`.
+   Make `theme.zsh` read it instead of setting `~/.oh-my-zsh`.
 2. Point `ZSH_CUSTOM` at a folder Home Manager owns, and link the plugins and
    the theme there. Keep the pins, or use the nixpkgs packages
    (`zsh-autosuggestions`, `zsh-syntax-highlighting`, `zsh-fzf-tab`,
@@ -1478,8 +1473,8 @@ and `compinit` is at the top of `zprof`.
 - [zshrc](home/programs/zsh/zshrc) loads its modules with `ls | sort` and
   unquoted loops, which break when the checkout path has a space.
 - The oh-my-zsh plugin list, now in [zsh.nix](home/programs/zsh/zsh.nix),
-  turns on fzf, direnv, mise, and zoxide whether or not those programs are
-  enabled. fzf is set up twice.
+  turns on direnv, mise, and zoxide whether or not those programs are
+  enabled.
 
 **Plan:**
 
