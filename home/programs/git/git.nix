@@ -86,7 +86,6 @@ in
     git-lfs
     git-who
     gitleaks
-    glab
     lazygit
   ];
 

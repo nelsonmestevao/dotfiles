@@ -30,6 +30,7 @@
   dotfiles.programs.hyprland.enable = false;
 
   # Shells
+  dotfiles.programs.nushell.enable = true;
   dotfiles.programs.zsh.enable = true;
   dotfiles.programs.zsh.showHost = enableFor [ "server" ];
 
@@ -124,7 +125,6 @@
   dotfiles.programs.mysql.enable = false;
   dotfiles.programs.ngrok.enable = true;
   dotfiles.programs.nix-search-tv.enable = true;
-  dotfiles.programs.nushell.enable = true;
   dotfiles.programs.onefetch.enable = true;
   dotfiles.programs.opencode.enable = false;
   dotfiles.programs.orca.enable = enableFor [ "desktop" ];
@@ -157,7 +157,9 @@
   # My Scripts
   dotfiles.programs.gensecret.enable = true;
   dotfiles.programs.hm-diff.enable = true;
-  dotfiles.programs.nixos-diff.enable = true;
+  # thinkpad isn't NixOS, so it has no system generations. No role means
+  # "NixOS", so the host is named.
+  dotfiles.programs.nixos-diff.enable = disableFor [ "thinkpad" ];
   dotfiles.programs.pkgversion.enable = true;
   dotfiles.programs.wake-hades.enable = true;
 

@@ -626,7 +626,9 @@ sandbox it needs its own eval store and an override for each input. Start with
 **Done** in [#48](https://github.com/nelsonmestevao/dotfiles/pull/48), with
 one line per program in [home/programs/plain.nix](home/programs/plain.nix)
 instead of a folder each. temis now gets 132 packages (146 before), and the
-Mac 85 (72 before).
+Mac 85 (72 before). `nixos-diff` is off on thinkpad, which has no NixOS
+generations. Left as is: `wake-hades` keeps its address (one user, one
+machine).
 
 **Evidence:** [nelson.nix](home/users/nelson.nix) enables Flutter, Haskell, media
 tools, and many language modules everywhere. **Measured:** temis, a server,
@@ -639,7 +641,7 @@ option. Some of them are Linux-only, such as `gvfs`, `fuse`, `appimage-run`,
 and `impression`. The Mac user file has the flag commented out, so the Mac
 gets none of the 37.
 
-[home/programs/scripts.nix](home/programs/scripts.nix) rides the same flag. `hm-diff` uses GNU
+In [home/programs/scripts.nix](home/programs/scripts.nix), `hm-diff` uses GNU
 `stat` and `date`, `nixos-diff` is installed on hosts that are not NixOS, and
 `wake-hades` has one machine's MAC address in it.
 
