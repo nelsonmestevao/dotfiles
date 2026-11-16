@@ -21,14 +21,14 @@ Options:
                     NixOS only.
 """
 import os
+import subprocess
 import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
-from common import COMMAND_ERRORS, fail, failed, need, run, targets
+from common import fail, failed, run, targets
 
 
 def main(args):
-    need('nh')
     chosen = targets('os' if args['os'] else 'home' if args['home'] else None)
     if args['--boot'] and not any(kind == 'os' for _, kind, _ in chosen):
         fail("--boot is for a NixOS system only. A home or a Mac switches now. Run it without --boot.")
@@ -38,7 +38,7 @@ def main(args):
         action = 'boot' if args['--boot'] and kind == 'os' else 'switch'
         try:
             nh @(kind) @(action) . @(pick)
-        except (*COMMAND_ERRORS, KeyboardInterrupt) as problem:
+        except (subprocess.CalledProcessError, KeyboardInterrupt) as problem:
             # Say what was left undone, so nobody thinks the rest went through.
             skipped = [later for later, _, _ in chosen[done + 1:]]
             note = f"; {' and '.join(skipped)} not switched" if skipped else ""

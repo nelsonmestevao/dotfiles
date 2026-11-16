@@ -18,43 +18,34 @@ Options:
   -v --version      Show version.
 """
 import os
-import shutil
 import subprocess
 import sys
 import tempfile
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
-from common import COMMAND_ERRORS, GREEN, error, failed, interrupted, need, paint, run, targets
+from common import GREEN, error, paint, run, targets
 
 
 def build(kind, pick):
     """`nh <kind> build`, which prints the package diff against the running
     generation and, unlike `switch`, never activates. True when it built."""
-    # Left alone, `nh os build` drops a `result` link in the repo, which keeps
-    # the build from garbage collection. A throwaway folder avoids that.
-    tmp = tempfile.mkdtemp(prefix='bin-build-')
     # nom redraws a timer many times a second. Without a terminal to draw on,
     # that only floods logs and agent output.
     nom = [] if sys.stdout.isatty() else ['--no-nom']
-    try:
-        nh @(kind) build . @(pick) --out-link @(tmp + '/result') @(nom)
-        return True
-    except COMMAND_ERRORS as problem:
-        # Ctrl-C stops everything; it isn't a build that failed.
-        if interrupted(problem):
-            raise KeyboardInterrupt from problem
-        # The nh command line holds a throwaway path, so say it short.
-        if isinstance(problem, subprocess.CalledProcessError):
+    # Left alone, `nh os build` drops a `result` link in the repo, which keeps
+    # the build from garbage collection. A throwaway folder avoids that.
+    with tempfile.TemporaryDirectory(prefix='bin-build-') as tmp:
+        try:
+            nh @(kind) build . @(pick) --out-link @(tmp + '/result') @(nom)
+            return True
+        except subprocess.CalledProcessError:
+            # The nh command line holds a throwaway path, so say it short.
+            # Ctrl-C isn't caught here, so it stops every build.
             error(f"nh {kind} build failed")
-        else:
-            error(failed(problem))
-        return False
-    finally:
-        shutil.rmtree(tmp)
+            return False
 
 
 def main(args):
-    need('nh')
     chosen = targets('os' if args['os'] else 'home' if args['home'] else None)
     print(f"Building {' and '.join(name for name, _, _ in chosen)}")
 

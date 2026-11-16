@@ -34,12 +34,12 @@ HOME = f'{USER}@{HOST}'
 SYSTEM = f'nixosConfigurations.{HOST}'
 
 # Records `nh <args>` and NIX_CONFIG. It fails when its first argument is in
-# $FAIL (like "os home"), and acts as if Ctrl-C hit it when it is $INTERRUPT.
+# $FAIL (like "os home"). When it is $INTERRUPT, it acts like Ctrl-C in a
+# terminal: SIGINT goes to its whole process group, the helper included.
 NH = '''#!/bin/sh
 echo "$*" >> "$LOG"
 printf '%s\\n---\\n' "$NIX_CONFIG" >> "$LOG.config"
-[ "$1" = "$INTERRUPT" ] && kill -INT $$
-[ "$1" = "$KILL" ] && kill -KILL $$
+[ "$1" = "$INTERRUPT" ] && kill -INT 0
 case " $FAIL " in *" $1 "*) echo "nh $1 broke" >&2; exit 1 ;; esac
 '''
 
@@ -65,18 +65,17 @@ class HelperTests(unittest.TestCase):
         self.log = self.dir / 'nh.log'
         self.xonsh = shutil.which('xonsh')
         self.env = dict(os.environ, PATH=f'{bin_dir}{os.pathsep}{os.environ["PATH"]}',
-                        LOG=str(self.log), FAIL='', INTERRUPT='', KILL='')
+                        LOG=str(self.log), FAIL='', INTERRUPT='')
         self.env.pop('NIX_CONFIG', None)
 
-    def helper(self, name, *args, host=HOST, user=USER, fail='', interrupt='', kill='',
-               nix_config=None, without_nh=False):
-        env = dict(self.env, HOST=host, USER=user, LOGNAME=user, FAIL=fail, INTERRUPT=interrupt, KILL=kill)
+    def helper(self, name, *args, host=HOST, user=USER, fail='', interrupt='', nix_config=None):
+        env = dict(self.env, HOST=host, USER=user, LOGNAME=user, FAIL=fail, INTERRUPT=interrupt)
         if nix_config is not None:
             env['NIX_CONFIG'] = nix_config
-        if without_nh:
-            env['PATH'] = '/usr/bin:/bin'
+        # Its own session gives the helper its own process group, so the
+        # stand-in's Ctrl-C reaches the helper and not this test runner.
         return subprocess.run([self.xonsh, '--no-rc', f'bin/{name}', *args], cwd=self.repo, env=env,
-                              text=True, capture_output=True)
+                              text=True, capture_output=True, start_new_session=True)
 
     def config(self):
         return (self.dir / 'nh.log.config').read_text()
@@ -126,13 +125,6 @@ class RebuildTests(HelperTests):
         self.assertEqual(result.returncode, 1)
         self.assertEqual(self.calls(), [f'os switch . -H {HOST}'])
         self.assertIn(f'Interrupted; {HOME} not switched.', result.stderr)
-
-    def test_a_missing_nh_is_one_plain_line(self):
-        result = self.helper('rebuild', without_nh=True)
-        self.assertEqual(result.returncode, 1)
-        self.assertEqual(result.stderr.strip().splitlines(),
-                         ['✗ nh is missing. Run this from the repo, so it starts in the dev shell.'])
-        self.assertEqual(self.calls(), [])
 
     def test_boot_starts_the_nixos_system_on_the_next_boot(self):
         result = self.helper('rebuild', '--boot')
@@ -198,12 +190,6 @@ class BuildTests(HelperTests):
         result = self.helper('build', host=host, user=user)
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual([call.split()[:5] for call in self.calls()], [['home', 'build', '.', '-c', f'{user}@{host}']])
-
-    def test_a_killed_build_is_a_failure_not_ctrl_c(self):
-        result = self.helper('build', kill='os')
-        self.assertEqual(result.returncode, 1)
-        self.assertEqual([call.split()[0] for call in self.calls()], ['os', 'home'], 'the home build must still run')
-        self.assertNotIn('Interrupted', result.stderr)
 
     def test_ctrl_c_stops_every_build(self):
         result = self.helper('build', interrupt='os')
