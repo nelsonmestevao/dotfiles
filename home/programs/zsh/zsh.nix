@@ -27,13 +27,19 @@
   # This turns Home Manager's run off; system/nixos.nix and system/darwin.nix
   # turn off the one in /etc/zshrc.
   programs.zsh.enableCompletion = false;
-  # Saved to ~/.zsh_history, as before.
-  programs.zsh.history.size = 100000;
+  # Saved to ~/.zsh_history, as before. Home Manager sets its history options
+  # after oh-my-zsh, so its defaults would turn off the two that oh-my-zsh
+  # turns on. They are set here: each line keeps its time, and duplicates go
+  # first when the file is full.
+  programs.zsh.history = {
+    size = 100000;
+    extended = true;
+    expireDuplicatesFirst = true;
+  };
 
   # oh-my-zsh and every plugin come from nixpkgs, so bin/update moves them.
   # ~/.zshrc runs in this order: the instant prompt, zshrc from the checkout,
-  # oh-my-zsh (which runs compinit), the plugins below in list order, and
-  # syntax highlighting last, after every widget exists.
+  # oh-my-zsh (which runs compinit), and the plugins below in list order.
   programs.zsh.oh-my-zsh = {
     enable = true;
     # fzf is not here: its program sets up its own key bindings (see fzf.nix).
@@ -82,9 +88,13 @@
       fi
     '')
     # zshrc is sourced from the checkout, so an edit takes effect in a new
-    # shell. It runs before oh-my-zsh (800), as it always has, so the mise
-    # plugin wraps the command-not-found handler in handlers.zsh.
+    # shell. It runs before oh-my-zsh (800), so the mise plugin wraps the
+    # command-not-found handler in handlers.zsh.
     (lib.mkOrder 790 "source ${lib.escapeShellArg "${config.dotfiles.directory}/home/programs/zsh/zshrc"}")
+    # Start in the folder set with `chwd`, if there is one. This runs after
+    # oh-my-zsh, so the jump lands on the folder stack and in zoxide. gtwd
+    # comes from functions.zsh, which is missing without the checkout.
+    "(( $+functions[gtwd] )) && gtwd"
   ];
   programs.zsh.envExtra = ''
     export DOTFILES="${config.dotfiles.directory}"
