@@ -5,7 +5,6 @@ import { spaces, panes, focused, run, openOverlay, theme, window, shared, setSha
 // (it read the local .dotfiles while a temis space was shown), so it's only the fallback.
 const shownSpace = () => { const id = focused()?.space; return spaces().find(s => s.id === id) ?? spaces().find(s => s.active); };
 
-
 function find(node, id) {
   if (node?.id === id) return node;
   for (const child of node?.children ?? []) {
@@ -25,8 +24,7 @@ export default class Tabs extends View {
     // The tab bar is always shown, so it hears the keys even before a panel mod ever started.
     cx.spawn(async cx => {
       for (;;) {
-        const command = await nextCommand();
-        const panel = command;
+        const panel = await nextCommand();
         if (!["files", "changes", "graph", "notes"].includes(panel)) continue;
         run("layout.select", { stack: "panel-body", child: panel }); run("layout.show", { id: "panel" });
         if (panel === "notes") setShared("tab-notes.focus", Date.now());
@@ -83,7 +81,7 @@ export default class Tabs extends View {
           if (from !== null && from !== i) run("tab.move", { id: shown[from].id, index: space.tabs.findIndex(x => x.id === c.id) + 1 });
           else run("tab.select", { id: c.id });
         })
-        .on_mouse_down("right", () => openOverlay({ mod: "menu", kind: "popup", width: 200, props: { tab: "tab", target: { id: c.id, space: space.id } } }))
+        .on_mouse_down("right", (_e, cx) => { cx.stop_propagation(); openOverlay({ mod: "menu", kind: "popup", width: 200, props: { tab: "tab", target: { id: c.id, space: space.id } } }); })
         .when(Boolean(program?.icon), el => el.child(program.tint ? svg(program.icon).size(14).text_color(t.muted) : image(program.icon).size(14)))
         .child(div().max_w(170).truncate().child(c.zoomed ? `${name} Z` : name))
         .when(c.status === "working", el => el.child(svg("mods/workspace-chrome/spinner.svg").size(12).flex_none().text_color(t.working).spin(900)))
