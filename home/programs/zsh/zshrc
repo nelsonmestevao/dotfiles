@@ -24,19 +24,3 @@ fi
 for module in "$DOTFILES"/home/programs/zsh/*.zsh(N); do
   source "$module"
 done
-
-# Start in the working directory set with `chwd`, if there is one. gtwd comes
-# from functions.zsh, which the loop above skips when the checkout is missing.
-(( $+functions[gtwd] )) && gtwd
-
-# Up and Down search the history for lines that start like the one typed.
-if [[ -n "${terminfo[kcuu1]}" ]]; then
-  autoload -U up-line-or-beginning-search
-  zle -N up-line-or-beginning-search
-  bindkey "${terminfo[kcuu1]}" up-line-or-beginning-search
-fi
-if [[ -n "${terminfo[kcud1]}" ]]; then
-  autoload -U down-line-or-beginning-search
-  zle -N down-line-or-beginning-search
-  bindkey "${terminfo[kcud1]}" down-line-or-beginning-search
-fi

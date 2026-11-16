@@ -329,8 +329,9 @@ let
     };
     # ~/.zshrc loads in the order the shell needs: the instant prompt first,
     # zshrc before oh-my-zsh so its plugins wrap the handlers there, fzf-tab
-    # after compinit and before the plugins that wrap widgets, and syntax
-    # highlighting last.
+    # after compinit and before the plugins that wrap widgets, the jump to
+    # the `chwd` folder after oh-my-zsh so it lands on the folder stack and
+    # in zoxide, and syntax highlighting last.
     zshLoadsInOrder =
       let
         zshrc = zshHome.home.file."./.zshrc".text;
@@ -341,6 +342,7 @@ let
           "source $ZSH/oh-my-zsh.sh"
           "fzf-tab/fzf-tab.plugin.zsh"
           "zsh-autosuggestions/zsh-autosuggestions.plugin.zsh"
+          "&& gtwd"
           "zsh-syntax-highlighting.zsh"
         ];
       in
