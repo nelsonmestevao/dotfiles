@@ -8,51 +8,18 @@
 let
   isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
 
-  mods = [
-    "file-icons"
-    "filetree"
-    "git-graph"
-    "profile-pictures"
-    "review"
-    "servers"
-    "tab-notes"
-    "tabbed-changes"
-    "tabs-mods"
-  ]
-  # The extra layouts' mods (herdrdev/herdr-layout-examples, Apache-2.0).
-  ++ [
-    "call"
-    "chat"
-    "pasture"
-    "t4-composer"
-    "t4-details"
-    "t4-diff"
-    "t4-files"
-    "t4-head"
-    "t4-new"
-    "t4-panel-head"
-    "t4-threads"
-  ];
-
-  # Layouts linked into ~/.config/herdr-app/layouts. main-mods is mine; the
-  # others come from herdrdev/herdr-layout-examples (ctrl-shift-l cycles).
-  layouts = [
-    "main-mods"
-    "call"
-    "chat"
-    "pasture"
-    "threads"
-  ];
+  # Every folder in mods/ is copied, and every file in layouts/ is linked into
+  # ~/.config/herdr-app/layouts, so deleting one is enough to drop it.
+  # main-mods and most mods are mine. call, chat, pasture, threads and the
+  # t4-* mods come from herdrdev/herdr-layout-examples (Apache-2.0).
+  # ctrl-shift-l cycles the layouts.
+  mods = lib.attrNames (lib.filterAttrs (_: type: type == "directory") (builtins.readDir ./mods));
+  layouts = lib.attrNames (builtins.readDir ./layouts);
 in
 {
   # On macOS, Herdr.app installs and updates itself (herdr-app, hc and
   # herdr-core in ~/.local/bin), so Nix only links the config there.
-  home.packages = lib.optionals (!isDarwin) (
-    with pkgs;
-    [
-      herdr-app
-    ]
-  );
+  home.packages = lib.optional (!isDarwin) pkgs.herdr-app;
 
   # Herdr writes through these links (settings, zoom, theme picks), but it
   # doesn't see edits made through them while running. After changing a file
@@ -62,17 +29,15 @@ in
     "herdr-app/keys.json" = mkSymlink (if isDarwin then "keys/macos.json" else "keys/linux.json");
     "herdr-app/settings.json" = mkSymlink "settings.json";
   }
-  // lib.genAttrs' layouts (
-    l: lib.nameValuePair "herdr-app/layouts/${l}.json" (mkSymlink "layouts/${l}.json")
-  );
+  // lib.genAttrs' layouts (f: lib.nameValuePair "herdr-app/layouts/${f}" (mkSymlink "layouts/${f}"));
 
   # Mods are copies, not links: Herdr refuses to follow a link out of
   # ~/.config/herdr-app for a mod's imports and its images (`svg()`,
   # `image()`), so a linked mod loses its icons and a linked file breaks its
   # imports. Every switch copies the repo's mods over, so edit them in the
   # repo, not in ~/.config/herdr-app/mods: a switch overwrites edits there.
-  # A mod removed from this list is deleted on the next switch; the marker
-  # file says which folders are ours.
+  # A mod whose folder is gone from the repo is deleted on the next switch;
+  # the marker file says which folders are ours.
   home.activation.herdrAppMods = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
     src=${lib.escapeShellArg "${config.dotfiles.directory}/home/programs/herdr-app/mods"}
     dst=${lib.escapeShellArg "${config.xdg.configHome}/herdr-app/mods"}
