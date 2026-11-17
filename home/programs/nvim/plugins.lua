@@ -549,7 +549,20 @@ local plugins = {
     "windwp/nvim-autopairs",
     event = "InsertEnter",
     config = function()
-      require("nvim-autopairs").setup()
+      local autopairs = require("nvim-autopairs")
+      -- Enter is mapped below instead. autopairs maps it per buffer, and
+      -- that map would win over ours.
+      autopairs.setup({ map_cr = false })
+
+      -- Enter accepts the selected completion item, as nvim-cmp did.
+      -- Otherwise it's a plain Enter, with autopairs' indent between
+      -- brackets.
+      vim.keymap.set("i", "<CR>", function()
+        if vim.fn.pumvisible() == 1 then
+          return vim.keycode("<C-y>")
+        end
+        return autopairs.autopairs_cr()
+      end, { expr = true, replace_keycodes = false, desc = "Accept the completion item or start a new line" })
     end,
   },
   {
@@ -574,36 +587,6 @@ local plugins = {
       vim.keymap.set("n", "<leader>M", function()
         treesj.toggle({ split = { recursive = true } })
       end)
-    end,
-  },
-  -- Autocompletion
-  {
-    "hrsh7th/nvim-cmp",
-    dependencies = {
-      "hrsh7th/cmp-nvim-lsp",
-      "hrsh7th/cmp-buffer",
-      "hrsh7th/cmp-path",
-      "hrsh7th/cmp-cmdline",
-      "hrsh7th/cmp-emoji",
-      "hrsh7th/cmp-nvim-lua",
-    },
-    config = function()
-      local cmp = require("cmp")
-      require("cmp").setup({
-        mapping = cmp.mapping.preset.insert({
-          ["<C-p>"] = cmp.mapping.select_prev_item(),
-          ["<C-n>"] = cmp.mapping.select_next_item(),
-          ["<C-d>"] = cmp.mapping.scroll_docs(-4),
-          ["<C-f>"] = cmp.mapping.scroll_docs(4),
-          ["<C-Space>"] = cmp.mapping.complete(),
-          -- ["<C-e>"] = cmp.mapping.close(),
-          ["<CR>"] = cmp.mapping.confirm({ select = true }),
-        }),
-        sources = cmp.config.sources({
-          { name = "nvim_lsp" },
-          { name = "buffer" },
-        }),
-      })
     end,
   },
   -- LSPs
@@ -644,9 +627,18 @@ local plugins = {
       end, vim.tbl_keys(servers))
       table.sort(enabled)
 
-      -- Advertise nvim-cmp completion capabilities to every server.
-      vim.lsp.config("*", {
-        capabilities = require("cmp_nvim_lsp").default_capabilities(),
+      -- ── Completion ─────
+      -- 'autocomplete' (options.lua) opens the menu as you type. This lets an
+      -- accepted item also run its extra edits, like adding an import or
+      -- expanding a snippet.
+      vim.api.nvim_create_autocmd("LspAttach", {
+        group = vim.api.nvim_create_augroup("lsp_completion", { clear = true }),
+        callback = function(event)
+          local client = vim.lsp.get_client_by_id(event.data.client_id)
+          if client and client:supports_method("textDocument/completion") then
+            vim.lsp.completion.enable(true, client.id, event.buf)
+          end
+        end,
       })
 
       -- Teach lua_ls nvim's Lua API, so it stops calling `vim` an undefined
@@ -827,6 +819,7 @@ local plugins = {
         end)
       end, { noremap = true, silent = true })
       vim.keymap.set("n", "gd", vim.lsp.buf.definition)
+      vim.keymap.set("i", "<C-Space>", vim.lsp.completion.get, { desc = "Ask the language server for completions" })
       vim.keymap.set("n", "<leader>gf", format, { desc = "Format the file with its language server" })
       vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action)
     end,

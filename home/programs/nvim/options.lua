@@ -67,3 +67,13 @@ vim.opt.relativenumber = true
 vim.opt.colorcolumn = "120"
 
 vim.opt.clipboard = "unnamedplus"
+
+-- ## Completion
+
+-- Open the completion menu as you type. Language servers come first,
+-- through 'omnifunc', then up to 5 words each from this buffer, other
+-- windows and other buffers.
+vim.opt.autocomplete = true
+vim.opt.complete = "o,.^5,w^5,b^5"
+-- `noinsert` selects the first item without typing it, so Enter accepts it.
+vim.opt.completeopt = "menuone,noinsert,popup,fuzzy"
