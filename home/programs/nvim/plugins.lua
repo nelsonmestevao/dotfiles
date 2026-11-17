@@ -98,23 +98,6 @@ local plugins = {
     end,
   },
   {
-    "folke/tokyonight.nvim",
-    -- lazy = false,
-    -- priority = 1000,
-    -- config = function()
-    --   require("tokyonight").setup({
-    --     transparent = true,
-    --     styles = {
-    --       sidebars = "transparent",
-    --       floats = "transparent",
-    --     },
-    --   })
-    --
-    --   vim.opt.termguicolors = true
-    --   vim.cmd.colorscheme("tokyonight")
-    -- end,
-  },
-  {
     "nvim-lualine/lualine.nvim",
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = function()
@@ -537,7 +520,6 @@ local plugins = {
     dependencies = {
       "nvim-neotest/nvim-nio",
       "nvim-lua/plenary.nvim",
-      "antoinemadec/FixCursorHold.nvim",
       "nvim-treesitter/nvim-treesitter",
       "jfpedroza/neotest-elixir",
     },
@@ -566,7 +548,11 @@ local plugins = {
   {
     "lewis6991/gitsigns.nvim",
     config = function()
-      require("gitsigns").setup()
+      require("gitsigns").setup({
+        -- Blame the cursor's line at its end, in git-blame.nvim's old format.
+        current_line_blame = true,
+        current_line_blame_formatter = "<author> • <author_time:%R> • <summary> • <abbrev_sha>",
+      })
     end,
   },
   {
@@ -581,18 +567,6 @@ local plugins = {
       vim.keymap.set("n", prefix .. "st", ":Git status<CR>")
       vim.keymap.set("n", prefix .. "b", ":Git blame<CR>")
     end,
-  },
-  {
-    "f-person/git-blame.nvim",
-    event = "VeryLazy",
-    config = function()
-      vim.g.gitblame_message_template = '<author> • <date> • <summary> • <sha>'
-      vim.g.gitblame_date_format = "%r"
-      vim.g.gitblame_highlight_group = "Comment"
-      vim.g.gitblame_set_extmark_options = {
-        hl_mode = "combine",
-      }
-    end
   },
   -- Editing
   {
@@ -631,9 +605,6 @@ local plugins = {
         treesj.toggle({ split = { recursive = true } })
       end)
     end,
-  },
-  {
-    "editorconfig/editorconfig-vim",
   },
   -- Autocompletion
   {
