@@ -3,6 +3,7 @@
   lib,
   pkgs,
   mkSymlink,
+  checkoutPath,
   ...
 }:
 let
@@ -39,7 +40,7 @@ in
   # A mod whose folder is gone from the repo is deleted on the next switch;
   # the marker file says which folders are ours.
   home.activation.herdrAppMods = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
-    src=${lib.escapeShellArg "${config.dotfiles.directory}/home/programs/herdr-app/mods"}
+    src=${lib.escapeShellArg (checkoutPath ./mods)}
     dst=${lib.escapeShellArg "${config.xdg.configHome}/herdr-app/mods"}
     mods=(${lib.escapeShellArgs mods})
     marker=.from-dotfiles

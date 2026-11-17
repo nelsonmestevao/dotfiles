@@ -3,6 +3,7 @@
   lib,
   pkgs,
   mkSymlink,
+  checkoutPath,
   ...
 }:
 {
@@ -24,8 +25,7 @@
   # symlink target after resolving only one level. A home.file symlink resolves
   # into the read-only home-manager-files store dir, so link straight to the repo.
   home.activation.claudeSettings = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
-    run mkdir -p $HOME/.claude
-    run ln -sfn ${config.dotfiles.directory}/home/programs/claude/settings.json \
-      $HOME/.claude/settings.json
+    run mkdir -p "$HOME/.claude"
+    run ln -sfn ${lib.escapeShellArg (checkoutPath ./settings.json)} "$HOME/.claude/settings.json"
   '';
 }

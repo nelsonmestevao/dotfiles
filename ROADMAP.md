@@ -777,8 +777,8 @@ to the host. Evaluate fixtures on Linux and test activation on the actual Mac.
 **Progress (2026-11-12):** steps 1–8 are done.
 
 - The three wrappers take `options` and the option text is fixed. One helper,
-  `mkSymlink` in [home/lib/default.nix](home/lib/default.nix), is an argument
-  every home module can take.
+  `mkSymlinkIn` in [home/lib](home/lib/default.nix), serves the home and
+  GNOME wrappers.
 - Converted: zsh `showHost`, claude `skills`, the two GNOME lists (now in
   `gnome.nix`, marked internal), and the git signing key, which left
   `config/hosts.nix`. Each user file names the hosts that sign, so a new
@@ -796,6 +796,14 @@ to the host. Evaluate fixtures on Linux and test activation on the actual Mac.
   exist" and a "Did you mean" hint. A program made by `bin/new` with a setting
   of its own evaluates. The 16 scaffolding tests, `bin/lint`, and
   `bin/check --eval` pass.
+
+**Progress (2026-11-17):** `mkSymlink` takes a path, like
+`mkSymlink ./config`, and replaces `mkSymlinkIn`. It is an argument every home
+module can take, from [home/lib/default.nix](home/lib/default.nix). So is
+`checkoutPath`, for the activation scripts of claude, herdr-app and zsh. The
+wrappers pass a body every module arg it names
+([lib/takesArgsOf.nix](lib/takesArgsOf.nix)), so a new helper needs no wrapper
+edit.
 
 Left: the fixture test (step 9) waits for [CONFIG-002](#config-002). Printing
 and Homebrew wait for [CONFIG-005](#config-005).
@@ -1591,8 +1599,8 @@ errors. Test first launch separately from a mature local installation.
 
 **Evidence:** [mkSymlink](home/lib/default.nix) validates repository source
 existence, but live targets still depend on the checkout remaining in place.
-Claude has a custom direct-link activation with unquoted paths, and
-`ln -sfn` replaces a real `settings.json` without a backup. Herdr copies mods
+Claude has a custom direct-link activation, and `ln -sfn` replaces a real
+`settings.json` without a backup. Herdr copies mods
 and allows apps to write through some configuration links.
 
 **Plan:**
