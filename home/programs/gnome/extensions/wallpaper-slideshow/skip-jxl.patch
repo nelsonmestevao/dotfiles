@@ -1,0 +1,15 @@
+--- a/bingWallpaperDownloader.js
++++ b/bingWallpaperDownloader.js
+@@ -223,8 +223,11 @@
+         const fileName = `${prettyUrlBase}-${resolution}`;
+         const filePath = GLib.build_filenamev([this._bingWallpapersDirectory, `${fileName}.jpg`]);
+         const file = Gio.file_new_for_path(filePath);
++        // The picture may have been converted to JPEG XL since it was saved.
++        const jxlFile = Gio.file_new_for_path(
++            GLib.build_filenamev([this._bingWallpapersDirectory, `${fileName}.jxl`]));
+ 
+-        if (file.query_exists(null))
++        if (file.query_exists(null) || jxlFile.query_exists(null))
+             return {msg: `BING Downloader - "${fileName}" already downloaded!`};
+ 
+         Logger.log(`BING Downloader - Retrieving "${fileName}" from BING`);
