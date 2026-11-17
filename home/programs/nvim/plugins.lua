@@ -339,6 +339,7 @@ local plugins = {
   {
 
     "MeanderingProgrammer/render-markdown.nvim",
+    ft = "markdown",
     opts = {},
     dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
   },
@@ -368,6 +369,7 @@ local plugins = {
   -- Databases
   {
     "kndndrj/nvim-dbee",
+    cmd = "Dbee",
     dependencies = {
       "MunifTanjim/nui.nvim",
     },
@@ -389,6 +391,8 @@ local plugins = {
   {
     'romgrk/barbar.nvim',
     version = '^1.0.0',
+    -- Draw the tab line right after the first screen, not during startup.
+    event = "VeryLazy",
     dependencies = {
       'lewis6991/gitsigns.nvim',
       'nvim-tree/nvim-web-devicons',
@@ -557,6 +561,8 @@ local plugins = {
   {
     "Wansmer/treesj",
     dependencies = { "nvim-treesitter/nvim-treesitter" }, -- if you install parsers with `nvim-treesitter`
+    -- Load on the first press. lazy.nvim then replays the key.
+    keys = { "<leader>m", "<leader>M" },
     config = function()
       local treesj = require("treesj")
 
