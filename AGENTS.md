@@ -175,8 +175,16 @@ Change this list and that file together.
 
 ## Commits
 
-- Subject: `[scope]: lowercase imperative summary`, where the scope is the
-  program or area (`[zed]`, `[lib]`, `[ci]`, `[hosts]`).
+- A commit about one package (a program in `home/programs/`, a system module,
+  or a package built here) starts with its name in brackets:
+  `[zed]: lowercase imperative summary`.
+- Every other commit is about the project itself (`lib/`, `bin/`, `scripts/`,
+  `tests/`, `config/`, hosts, CI, the flake, the docs). It uses
+  [Conventional Commits](https://www.conventionalcommits.org/):
+  `type(scope): lowercase imperative summary`, like
+  `fix(update): commit only flake.lock` or `docs: shorten the roadmap`. Types:
+  `feat`, `fix`, `refactor`, `docs`, `test`, `ci`, `build`, `chore`. The scope
+  is optional.
 - Body: short prose on what changed and why.
 - Input upgrades come from `bin/update --save`, which writes the
   `chore: upgrade ...` commit. Don't write those by hand.
