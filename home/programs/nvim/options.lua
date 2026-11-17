@@ -55,6 +55,10 @@ vim.diagnostic.config({
   }
 })
 
+-- One border for every floating window: hover, signature help, the
+-- completion docs and diagnostics. Without it they blend into the text.
+vim.opt.winborder = "rounded"
+
 -- When a file has been detected to have been changed from the outside, automatically read it again.
 vim.opt.autoread = true
 
