@@ -22,6 +22,9 @@
     shellcheck # bash-language-server shows its warnings
     shfmt # bash-language-server formats with it
     beamPackages.expert
+    # Copilot's suggestions as ghost text, through Neovim's built-in inline
+    # completion. It's unfree, which config/overlays.nix allows.
+    copilot-language-server
     gopls
     lua-language-server
     nixd

@@ -300,18 +300,6 @@ local plugins = {
       }
     end
   },
-  {
-    "supermaven-inc/supermaven-nvim",
-    config = function()
-      require("supermaven-nvim").setup({
-        ignore_filetypes = { haskell = true, c = true },
-        keymaps = {
-          accept_suggestion = "<C-y>",
-          accept_word = "<C-j>",
-        }
-      })
-    end
-  },
   -- Markdown
   {
     -- The community fork: epwalsh/obsidian.nvim is no longer maintained.
@@ -605,6 +593,7 @@ local plugins = {
       local servers = {
         bashls = { "bash-language-server" },
         clangd = { "clangd" },
+        copilot = { "copilot-language-server" },
         expert = { "expert" },
         -- gopls runs `go env` to find the project, and Go comes from mise.
         gopls = { "gopls", "go" },
@@ -676,6 +665,18 @@ local plugins = {
         },
       })
 
+      -- Keep Copilot away from Haskell and C files, as Supermaven was: never
+      -- send them to the server. Everywhere else, use the git root like
+      -- nvim-lspconfig does.
+      vim.lsp.config("copilot", {
+        root_dir = function(bufnr, on_dir)
+          if vim.list_contains({ "haskell", "c" }, vim.bo[bufnr].filetype) then
+            return
+          end
+          on_dir(vim.fs.root(bufnr, ".git"))
+        end,
+      })
+
       -- Expert: the official Elixir language server (successor to lexical /
       -- next-ls / elixir-ls). filetypes/root_dir are spelled out here so this
       -- works even before nvim-lspconfig ships the expert base config.
@@ -726,6 +727,8 @@ local plugins = {
       })
 
       vim.lsp.enable(enabled)
+      -- Show Copilot's suggestions as ghost text.
+      vim.lsp.inline_completion.enable()
 
       -- ── Formatting ─────
       -- nvim starts a buffer's servers when it sets the file type. Note the
@@ -820,6 +823,18 @@ local plugins = {
       end, { noremap = true, silent = true })
       vim.keymap.set("n", "gd", vim.lsp.buf.definition)
       vim.keymap.set("i", "<C-Space>", vim.lsp.completion.get, { desc = "Ask the language server for completions" })
+      -- <C-y> takes Copilot's suggestion first, as it did with Supermaven.
+      -- With none showing, it's the built-in <C-y>, which accepts the menu
+      -- item. Neovim can't accept one word of a suggestion, so <C-j> moves
+      -- to the next suggestion instead.
+      vim.keymap.set("i", "<C-y>", function()
+        if not vim.lsp.inline_completion.get() then
+          return "<C-y>"
+        end
+      end, { expr = true, desc = "Accept the Copilot suggestion or the menu item" })
+      vim.keymap.set("i", "<C-j>", function()
+        vim.lsp.inline_completion.select()
+      end, { desc = "Show the next Copilot suggestion" })
       vim.keymap.set("n", "<leader>gf", format, { desc = "Format the file with its language server" })
       vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action)
     end,
