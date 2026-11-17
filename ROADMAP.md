@@ -298,7 +298,10 @@ commit. Existing approval rules for updates and commits remain in force.
 
 <a id="cli-003"></a>
 
-### [ ] CLI-003 Resolve targets from host data — P2 · M
+### [x] CLI-003 Resolve targets from host data — P2 · M
+
+**Done** in [#60](https://github.com/nelsonmestevao/dotfiles/pull/60), which
+re-lands #47.
 
 **Evidence:** [bin/build](bin/build) and [bin/rebuild](bin/rebuild) choose the OS
 command from `sys.platform` and default to both OS and home. The README already

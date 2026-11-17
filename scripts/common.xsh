@@ -4,18 +4,18 @@ like, and colours that only show in a terminal.
 A helper imports this before anything else:
 
     sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
-    from common import fail, need, paint, run, GREEN
+    from common import fail, paint, run, GREEN
 
 and ends with `run(main, __doc__, __file__)`. Importing it also turns on
 flakes for every nix and nh call the helper makes.
 """
+import getpass
+import json
 import os
-import shutil
 import subprocess
 import sys
 
 from docopt import docopt
-from xonsh.tools import XonshError
 
 # Every helper runs from the repo root, wherever it was called from.
 os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -55,47 +55,45 @@ def warn(message):
     print(f"{paint('!', YELLOW, sys.stderr)} {message}", file=sys.stderr)
 
 
-def with_flakes():
-    """Turns on flakes for the nix and nh calls that follow, keeping whatever
-    NIX_CONFIG already holds, like an access token."""
-    before = ${...}.get('NIX_CONFIG', '')
-    $NIX_CONFIG = (before + '\n' if before else '') + 'extra-experimental-features = nix-command flakes'
-
-
-with_flakes()
-
-
-def need(*commands):
-    """Stops with one plain line when a command the helper calls is missing,
-    before xonsh prints its own longer "command not found" message."""
-    missing = [command for command in commands if shutil.which(command) is None]
-    if missing:
-        fail(f"{' and '.join(missing)} {'is' if len(missing) == 1 else 'are'} missing. "
-             "Run this from the repo, so it starts in the dev shell.")
-
-
-# What a failed command can raise: a non-zero exit, or a command xonsh
-# couldn't start, like one missing from PATH.
-COMMAND_ERRORS = (subprocess.CalledProcessError, XonshError)
+# Flakes for every nix and nh call, keeping what NIX_CONFIG already holds,
+# like an access token. Nix skips the blank first line when it held nothing.
+$NIX_CONFIG = ${...}.get('NIX_CONFIG', '') + '\nextra-experimental-features = nix-command flakes'
 
 
 def failed(problem):
     """One line for what stopped a step: the command and that it failed, or
-    "Interrupted" for Ctrl-C."""
-    if isinstance(problem, KeyboardInterrupt) or interrupted(problem):
+    "Interrupted" for Ctrl-C. xonsh raises CalledProcessError for every
+    failed command, even one missing from PATH."""
+    if isinstance(problem, KeyboardInterrupt):
         return "Interrupted"
-    if isinstance(problem, subprocess.CalledProcessError):
-        return f"{' '.join(map(str, problem.cmd))} failed"
-    lines = str(problem).strip().splitlines()
-    return lines[0] if lines else "A command failed"
+    return f"{' '.join(map(str, problem.cmd))} failed"
 
 
-def interrupted(problem):
-    """True when a command ended because of Ctrl-C: exit status 130, or
-    stopped by SIGINT. Any other signal (an out-of-memory kill, say) is an
-    ordinary failure."""
-    code = getattr(problem, 'returncode', 0)
-    return code in (130, -2)
+def targets(only=None):
+    """This machine's configs, read from config/hosts.nix: its system, when it
+    has one, and the home of whoever runs the helper. `only` is "os" or
+    "home" to pick one. Each config is (its name, the nh command for it, the
+    nh flags that pick it). Stops with one plain line when there is nothing
+    to pick."""
+    hosts = json.loads($(nix eval --json --file config/hosts.nix))
+    host = $(hostname -s).strip()
+    if host not in hosts:
+        fail(f"config/hosts.nix has no host named {host}. It has {', '.join(sorted(hosts))}.")
+    platform = hosts[host].get('platform')
+    user = getpass.getuser()
+    found = []
+    if only != 'home':
+        if platform:
+            kind = {'nixos': 'os', 'darwin': 'darwin'}[platform]
+            found.append((f"{platform}Configurations.{host}", kind, ['-H', host]))
+        elif only == 'os':
+            fail(f"{host} has no system config, only a home.")
+    if only != 'os':
+        if user not in hosts[host].get('users', []):
+            hint = " Pass os for the system only." if platform and only is None else ""
+            fail(f"{host} has no home for {user}. config/hosts.nix lists its users.{hint}")
+        found.append((f"{user}@{host}", 'home', ['-c', f"{user}@{host}"]))
+    return found
 
 
 def run(main, doc, file):
@@ -104,7 +102,7 @@ def run(main, doc, file):
     arguments = docopt(doc.format(program=file), version=f'{os.path.basename(file)} script version 1.0')
     try:
         main(arguments)
-    except (*COMMAND_ERRORS, KeyboardInterrupt) as problem:
+    except (subprocess.CalledProcessError, KeyboardInterrupt) as problem:
         fail(f"{failed(problem)}.")
 
 # vim: ft=xonsh
