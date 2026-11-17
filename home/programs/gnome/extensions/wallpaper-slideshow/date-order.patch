@@ -1,0 +1,15 @@
+--- a/slideshow.js
++++ b/slideshow.js
+@@ -50,10 +50,10 @@
+ 
+         switch (sortType) {
+         case SlideshowSortType.NEWEST:
+-            comparison = wallpaperQueue[mid].date - newWallpaper.date;
++            comparison = newWallpaper.date - wallpaperQueue[mid].date;
+             break;
+         case SlideshowSortType.OLDEST:
+-            comparison = newWallpaper.date - wallpaperQueue[mid].date;
++            comparison = wallpaperQueue[mid].date - newWallpaper.date;
+             break;
+         case SlideshowSortType.A_Z:
+             comparison = COLLATOR.compare(wallpaperQueue[mid].name, newWallpaper.name);
