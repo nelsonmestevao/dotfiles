@@ -39,10 +39,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    vicinae = {
-      url = "github:vicinaehq/vicinae";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
-    };
+    # A vicinae release, until nixpkgs-unstable has it (see
+    # config/overlays.nix). Its nixpkgs is left alone on purpose: the build
+    # then matches the one in vicinae's cache, so nothing compiles it here.
+    vicinae.url = "github:vicinaehq/vicinae/v0.30.1";
   };
   outputs =
     inputs@{
@@ -50,7 +50,6 @@
       nixpkgs,
       home-manager,
       nix-darwin,
-      vicinae,
       ...
     }:
     let
@@ -68,7 +67,6 @@
             nixpkgs
             home-manager
             nix-darwin
-            vicinae
             hosts
             users
             overlays

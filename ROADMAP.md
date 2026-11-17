@@ -65,7 +65,7 @@ The owner took these on 2026-11-12. Don't reopen one without a new reason.
 | Build cache | Cachix, on CI and on all four machines. | [CI-002](#ci-002) |
 | Git flow | Push to `wip`, merge to `main` by hand. No required check. PRs come from agents and the update job, and each gets one CI run. | [CI-006](#ci-006) |
 | Input updates | A weekly PR, merged by hand. | [CI-007](#ci-007) |
-| vicinae | From nixpkgs-unstable, not from its own flake. | [CONFIG-012](#config-012) |
+| vicinae | From nixpkgs-unstable once it has the release this host runs. Until then, its own flake's build, from vicinae's cache. | [CONFIG-012](#config-012) |
 | Herdr mods | Track only the mods written here. Fetch the rest at a pinned revision. | [CI-004](#ci-004) |
 | Backup history | At most a day old; three months back. | [OPS-001](#ops-001) |
 | Backup password | Only on framework today. Store a second copy first. | [OPS-004](#ops-004) |
@@ -1143,7 +1143,7 @@ and wiring in three `lib/` files ([CONFIG-007](#config-007)).
   security wrapper that gives the input server one capability. Clipboard and
   emoji pasting and snippets need it.
 
-**Decided:** use the nixpkgs package.
+**Decided:** use the nixpkgs package, once it has the release this host runs.
 
 **Plan:**
 
@@ -1181,6 +1181,44 @@ and wiring in three `lib/` files ([CONFIG-007](#config-007)).
   capability.
 
 **Done when:** no machine and no CI run builds vicinae from source.
+
+**Progress:** steps 2 and 3 are done, and step 4 for the modules and `lib/`.
+Not switched yet; the checks on framework above are still open.
+
+Step 1 decided the rest. nixpkgs-unstable has 0.29.2, and this host runs
+0.30.1. Going back would also lose two GNOME clipboard fixes from 0.30.0:
+concealed copies, like passwords, stay out of the history, and copied files
+paste as files. (vicinae's data would be fine: both versions have the same
+database migrations.) So until nixpkgs-unstable catches up:
+
+- `flake.nix` keeps the vicinae input for its package only, pinned to the
+  release tag and with its own nixpkgs. That build is the one in
+  `vicinae.cachix.org`, so neither framework nor CI compiles it. The
+  [vicinae system module](system/modules/nixos/vicinae/vicinae.nix) and CI's
+  build job add that cache.
+- `pkgs.vicinae` in [config/overlays.nix](config/overlays.nix) is that build,
+  wrapped in `pkgs.expiry.untilUpstreamHas`. Once nixpkgs-unstable has the
+  same version, it warns. Then set it to `final.unstable.vicinae`, and drop
+  the input and the cache. That ends step 4, and the lock loses the vicinae
+  nodes.
+
+How it differs from the plan:
+
+- `pkgs.vicinae` is one name, set in `config/overlays.nix`. The home program
+  and the system wrapper both use it.
+- The home program wraps the package, as the flake did. Home Manager's module
+  has no option for these, and the service alone would miss a server started
+  by hand. The wrapper sets the repo's settings file (same store path as
+  before; Home Manager's `settings` would make the app's own file read-only),
+  points vicinae at the input-server wrapper (without it, pasting silently
+  fails), and puts `pactl` on `PATH`.
+- `USE_LAYER_SHELL` is gone: vicinae itself never reads it, only the flake's
+  Home Manager module set it. Browser integration needed no port: Home
+  Manager's firefox and chrome programs are off.
+
+Still different: Home Manager refreshes vicinae's app list on each switch (a
+failure is ignored). Once nixpkgs' copy takes over, numen comes from nixpkgs
+too, which had 0.7.0 when the flake had 0.8.1.
 
 ## 3. Make recovery and unattended jobs trustworthy
 
@@ -1802,7 +1840,7 @@ Facts checked on 2026-11-12:
    about 86 GiB free on public runners this month; check before you trust it.
 5. Turn off the Home Manager man page (`manual.manpages.enable = false`) if
    you never read `man home-configuration.nix`.
-6. Take vicinae from nixpkgs ([CONFIG-012](#config-012)). That leaves
+6. Stop compiling vicinae ([CONFIG-012](#config-012)). That leaves
    herdr-app, about 35 minutes, as the one long build for the cache to hold.
 
 **Verify:**

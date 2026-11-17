@@ -105,7 +105,7 @@ jobs:
   #
   # A run that builds nothing leaves the saved Nix store below unread. After a
   # week of that, GitHub may delete it, and the next build compiles herdr-app
-  # and vicinae again. Our own Cachix cache (CI-002) will end this.
+  # again. Our own Cachix cache (CI-002) will end this.
   build:
     name: build (${{ matrix.system }})
     needs: quick
@@ -134,7 +134,14 @@ jobs:
       - name: Free disk space
         if: runner.os == 'Linux'
         uses: jlumbroso/free-disk-space@main
+      # vicinae's cache has the vicinae build framework uses (see
+      # config/overlays.nix), so it isn't compiled here. It goes when that
+      # build does.
       - uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            extra-substituters = https://vicinae.cachix.org
+            extra-trusted-public-keys = vicinae.cachix.org-1:1kDrfienkGHPYbkpNj1mWTr7Fm1+zcenzgTizIcI3oc=
       # Saves the Nix store in GitHub's cache for the next run. The whole Linux
       # build is about 50 GB, over the 10 GB limit, so only what "Keep the
       # slow builds" names is saved. The Mac build takes about six minutes, so
@@ -153,13 +160,12 @@ jobs:
       # Builds only the system of the GitHub machine it runs on.
       - name: Build
         run: nix flake check
-      # vicinae (about an hour) and herdr-app (about 35 minutes) have to be
-      # compiled. Naming them here keeps them in the saved store.
+      # herdr-app (about 35 minutes) has to be compiled. Naming it here keeps it
+      # in the saved store.
       - name: Keep the slow builds
         if: runner.os == 'Linux'
         run: >-
           nix build --out-link "$RUNNER_TEMP/keep"
-          '.#homeConfigurations."nelson@framework".config.programs.vicinae.package'
           '.#homeConfigurations."nelson@framework".pkgs.herdr-app'
       - name: Write the marker
         env:

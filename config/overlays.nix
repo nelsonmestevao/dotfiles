@@ -46,11 +46,20 @@ in
   (_final: prev: {
     zen-browser = inputs.zen-browser.packages.${prev.stdenv.hostPlatform.system}.default;
   })
-  (_final: prev: {
-    # vicinae from its own flake, which is newer than nixpkgs' copy. The
-    # NixOS and home-manager modules use `pkgs.vicinae`, so there's one name
-    # for it (CI also uses it to keep the build in its cache).
-    vicinae = inputs.vicinae.packages.${prev.stdenv.hostPlatform.system}.default;
+  (final: prev: {
+    # vicinae's own build of the release flake.nix pins. It comes from
+    # vicinae's cache, which system/modules/nixos/vicinae adds, so nothing
+    # compiles it. nixpkgs-unstable is behind it, and going back would also
+    # lose GNOME clipboard fixes. Once nixpkgs-unstable catches up, this
+    # warns, and its copy, built by NixOS, can take over. The home program
+    # and the system wrapper both use `pkgs.vicinae`.
+    vicinae =
+      let
+        release = inputs.vicinae.packages.${prev.stdenv.hostPlatform.system}.default;
+      in
+      final.expiry.untilUpstreamHas release.version final.unstable.vicinae
+        "Set vicinae to final.unstable.vicinae in config/overlays.nix. Then drop the vicinae input from flake.nix, and vicinae's cache from system/modules/nixos/vicinae and the build job in .github/workflows/ci.yml."
+        release;
   })
   (final: prev: {
     gnomeExtensions = prev.gnomeExtensions // {
