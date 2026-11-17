@@ -16,8 +16,9 @@ to work here safely.
   each. Each one gets `dotfiles.programs.<name>.enable` like a folder does.
 - `home/programs/<name>/<name>.nix`: one Home Manager program per folder,
   wrapped by `home/lib/mkHomeModule.nix`. It adds the
-  `dotfiles.programs.<name>.enable` option and the `mkSymlink` helper. A
-  module adds its own settings with `options.<setting>`.
+  `dotfiles.programs.<name>.enable` option. A module adds its own settings
+  with `options.<setting>`. Every home module can take the `mkSymlink` and
+  `checkoutPath` arguments, from `home/lib/default.nix`.
 - `home/users/<username>.nix`: which programs a user gets, and where.
 - `system/modules/{nixos,darwin}/<name>/<name>.nix`: system modules, with
   `dotfiles.modules.<name>.enable`.
@@ -69,9 +70,14 @@ Mac) can't run there: ask me to run it and paste the output back.
 - **Mark one-OS modules** with `platforms = [ "linux" ]` or `[ "darwin" ]`
   next to the config. Turning one on for the wrong OS then fails with a clear
   message.
-- **Link config files with `mkSymlink "path"`.** The file must exist in the
-  program's folder, or the build fails. These are real links into this repo,
-  so an edit takes effect on my live machine right away, with no rebuild.
+- **Link config files with `mkSymlink ./path`.** Give it a path, not a
+  string, and keep the file in the program's folder. The file must exist in
+  this repo, or the build fails. These are real links into this repo, so an
+  edit takes effect on my live machine right away, with no rebuild.
+- **An activation script that reads from the repo uses `checkoutPath ./path`**,
+  quoted with `lib.escapeShellArg`. It gives the file's place in the checkout
+  and has the same checks as `mkSymlink`. Don't build the path from
+  `config.dotfiles.directory` by hand.
 - **Some apps write back through the link** (Claude's `settings.json`, Herdr's
   `islands.json`). A diff in those files may come from the app, not from me.
   Ask before you revert it.

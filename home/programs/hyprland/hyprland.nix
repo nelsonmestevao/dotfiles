@@ -21,5 +21,5 @@
     waybar
   ];
 
-  xdg.configFile."hypr/hyprland.conf" = mkSymlink "hyprland.conf";
+  xdg.configFile."hypr/hyprland.conf" = mkSymlink ./hyprland.conf;
 }

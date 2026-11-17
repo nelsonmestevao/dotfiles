@@ -8,5 +8,5 @@
     direnv
   ];
 
-  xdg.configFile."direnv/direnvrc" = mkSymlink "direnvrc";
+  xdg.configFile."direnv/direnvrc" = mkSymlink ./direnvrc;
 }

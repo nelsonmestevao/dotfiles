@@ -8,5 +8,5 @@
     wezterm
   ];
 
-  xdg.configFile."wezterm/wezterm.lua" = mkSymlink "wezterm.lua";
+  xdg.configFile."wezterm/wezterm.lua" = mkSymlink ./wezterm.lua;
 }

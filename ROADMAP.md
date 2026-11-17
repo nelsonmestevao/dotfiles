@@ -797,6 +797,14 @@ to the host. Evaluate fixtures on Linux and test activation on the actual Mac.
   of its own evaluates. The 16 scaffolding tests, `bin/lint`, and
   `bin/check --eval` pass.
 
+**Progress (2026-11-17):** `mkSymlink` takes a path, like
+`mkSymlink ./config`, and replaces `mkSymlinkIn`. It is an argument every home
+module can take, from [home/lib/default.nix](home/lib/default.nix). So is
+`checkoutPath`, for the activation scripts of claude, herdr-app and zsh. The
+wrappers pass a body every module arg it names
+([lib/takesArgsOf.nix](lib/takesArgsOf.nix)), so a new helper needs no wrapper
+edit.
+
 Left: the fixture test (step 9) waits for [CONFIG-002](#config-002). Printing
 and Homebrew wait for [CONFIG-005](#config-005).
 
@@ -1589,10 +1597,10 @@ errors. Test first launch separately from a mature local installation.
 
 ### [ ] DX-005 Formalize live, generated, and app-owned files — P2 · M
 
-**Evidence:** [mkSymlink](home/lib/mkHomeModule.nix) validates repository source
+**Evidence:** [mkSymlink](home/lib/default.nix) validates repository source
 existence, but live targets still depend on the checkout remaining in place.
-Claude has a custom direct-link activation with unquoted paths, and
-`ln -sfn` replaces a real `settings.json` without a backup. Herdr copies mods
+Claude has a custom direct-link activation, and `ln -sfn` replaces a real
+`settings.json` without a backup. Herdr copies mods
 and allows apps to write through some configuration links.
 
 **Plan:**

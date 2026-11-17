@@ -8,5 +8,5 @@
     openssh
   ];
 
-  home.file.".ssh/config" = mkSymlink "config";
+  home.file.".ssh/config" = mkSymlink ./config;
 }

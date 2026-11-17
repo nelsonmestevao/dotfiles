@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  checkoutPath,
   ...
 }:
 {
@@ -90,7 +91,7 @@
     # zshrc is sourced from the checkout, so an edit takes effect in a new
     # shell. It runs before oh-my-zsh (800), so the mise plugin wraps the
     # command-not-found handler in handlers.zsh.
-    (lib.mkOrder 790 "source ${lib.escapeShellArg "${config.dotfiles.directory}/home/programs/zsh/zshrc"}")
+    (lib.mkOrder 790 "source ${lib.escapeShellArg (checkoutPath ./zshrc)}")
     # Start in the folder set with `chwd`, if there is one. This runs after
     # oh-my-zsh, so the jump lands on the folder stack and in zoxide. gtwd
     # comes from functions.zsh, which is missing without the checkout.

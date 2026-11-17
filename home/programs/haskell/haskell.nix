@@ -44,5 +44,5 @@
     [ -f ~/.ghcup/env ] && source ~/.ghcup/env
   '';
 
-  home.file.".ghci" = mkSymlink "ghci";
+  home.file.".ghci" = mkSymlink ./ghci;
 }

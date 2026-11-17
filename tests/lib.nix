@@ -107,16 +107,17 @@ let
   # The fixture programs, by the folder importModules finds them in.
   programs = "tests/fixtures/programs";
   namesIn = importModules ({ name, ... }: _: name);
+  filesIn = importModules ({ file, ... }: _: file);
 
   # A tiny home on a fixture host, with the fixture programs in the real
-  # wrapper and the named ones turned on.
-  homeOn =
+  # wrapper and the named ones turned on. homeOn gives its config.
+  evalHomeOn =
     hostname: enabled:
     let
       host = hosts.${hostname};
       pkgs = nixpkgs.legacyPackages.${host.system};
     in
-    (home-manager.lib.homeManagerConfiguration {
+    home-manager.lib.homeManagerConfiguration {
       inherit pkgs;
       extraSpecialArgs = { inherit hostname; };
       modules = [
@@ -132,16 +133,29 @@ let
       ]
       ++ importModules mkHomeModule programs
       ++ import ../home/lib/plainPrograms.nix { inherit lib pkgs; };
-    }).config;
+    };
+  homeOn = hostname: enabled: (evalHomeOn hostname enabled).config;
 
-  boxHome = homeOn "box" [
+  # Evaluated once: Home Manager checks every assertion of a home it hands
+  # back, so each evaluation costs the same as a whole home.
+  boxEval = evalHomeOn "box" [
     "demo"
     "links"
   ];
+  boxHome = boxEval.config;
   macHome = homeOn "mac" [ "mac-only" ];
   wrongOsHome = homeOn "box" [ "mac-only" ];
   brokenLinkHome = homeOn "box" [ "broken-link" ];
   plainHome = homeOn "box" [ "tokei" ];
+
+  # boxHome with one more module, not wrapped like the fixture programs.
+  boxHomeWith = module: (boxEval.extendModules { modules = [ module ]; }).config;
+
+  # The helpers every home module gets, and the link mkSymlink must make: one
+  # out of the store, to `target` in the checkout.
+  inherit (boxEval._module.args) checkoutPath mkSymlink;
+  linksTo =
+    target: entry: entry.source.outPath == (boxHome.lib.file.mkOutOfStoreSymlink target).outPath;
 
   # The real zsh program (a fixture that imports it), and a home without it.
   zshHome = homeOn "box" [ "zsh" ];
@@ -159,7 +173,7 @@ let
         (mkSystemModule
           {
             name = "demo";
-            folder = "tests/fixtures";
+            file = "tests/fixtures/demo.nix";
           }
           (_: {
             environment.DEMO = "on";
@@ -311,6 +325,27 @@ let
         ];
       };
     };
+    # checkoutPath gives the place in the checkout as a string, for scripts.
+    aCheckoutPathIsInTheCheckout = {
+      expr = checkoutPath ./fixtures/programs/links/folder/inside.conf;
+      expected = "/home/alice/.dotfiles/tests/fixtures/programs/links/folder/inside.conf";
+    };
+    # A wrapped module gets every module arg it names, not only the ones its
+    # wrapper names.
+    aWrappedModuleGetsAnyModuleArg = {
+      expr =
+        (boxHomeWith {
+          imports = [
+            (mkHomeModule {
+              name = "greeter";
+              file = "tests/lib.nix";
+            } ({ greeting, ... }: { home.sessionVariables.GREETING = greeting; }))
+          ];
+          _module.args.greeting = "hello";
+          dotfiles.programs.greeter.enable = true;
+        }).home.sessionVariables.GREETING;
+      expected = "hello";
+    };
     # The stray notes.md and the `_draft` folder are left out.
     modulesAreFoundByFolder = {
       expr = namesIn programs;
@@ -438,6 +473,36 @@ let
       in
       mentions [ "attic needs system/hosts/attic.nix" ] found
       && mentions [ "attic needs system/hosts/attic/hardware.nix" ] found;
+
+    # importModules hands each wrapper the module's file, from the repo root,
+    # for messages. Each one must be there.
+    aModuleKnowsItsFile =
+      let
+        files = filesIn programs;
+      in
+      lib.elem "tests/fixtures/programs/links/links.nix" files
+      && lib.all (file: builtins.readFileType (../. + "/${file}") == "regular") files;
+
+    aLinkPointsIntoTheCheckout =
+      linksTo "/home/alice/.dotfiles/tests/fixtures/programs/links/linked.conf"
+        boxHome.home.file.".linked";
+    aFolderCanBeLinkedAndForced =
+      linksTo "/home/alice/.dotfiles/tests/fixtures/programs/links/folder"
+        boxHome.home.file.".linked-folder"
+      && boxHome.home.file.".linked-folder".force;
+    # A checkout somewhere else gets links to it, not to ~/.dotfiles.
+    aLinkFollowsTheDotfilesDirectory =
+      linksTo "/srv/dots/tests/fixtures/programs/links/linked.conf"
+        (boxHomeWith { dotfiles.directory = "/srv/dots"; }).home.file.".linked";
+    # Every home module can take mkSymlink, wrapped or not.
+    aModuleOutsideTheWrapperCanLink =
+      linksTo "/home/alice/.dotfiles/tests/fixtures/programs/links/linked.conf"
+        (boxHomeWith (
+          { mkSymlink, ... }:
+          {
+            home.file.".bare" = mkSymlink ./fixtures/programs/links/linked.conf;
+          }
+        )).home.file.".bare";
   };
 
   # Each must stop the evaluation with an error that `expectedError.msg`, a
@@ -518,6 +583,21 @@ let
     aLinkToAMissingFile = {
       expr = brokenLinkHome.home.file.".missing".source;
       expectedError.msg = "broken-link/not-here\\.conf does not exist";
+    };
+    # The old way, `mkSymlink "file"`, must stop the build.
+    aLinkFromAString = {
+      expr = (mkSymlink "linked.conf").source;
+      expectedError.msg = "mkSymlink takes a path like \\./config [(]no quotes[)]";
+    };
+    # A path outside the repo has no place in the checkout. The message names
+    # the helper, not lib.path.
+    aLinkFromOutsideTheRepo = {
+      expr = (mkSymlink /nowhere/config).source;
+      expectedError.msg = "mkSymlink: /nowhere/config is not in this repo";
+    };
+    aCheckoutPathToAMissingFile = {
+      expr = checkoutPath ./fixtures/programs/links/not-here;
+      expectedError.msg = "checkoutPath: tests/fixtures/programs/links/not-here does not exist";
     };
 
     aScriptOfNeitherKind = {

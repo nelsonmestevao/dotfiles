@@ -70,9 +70,12 @@ hosts today:
 ### How modules work
 
 Each program lives in its own folder under `home/programs/` as a self-contained
-module. A helper called `mkHomeModule` wraps each one, providing a
-`dotfiles.programs.<name>.enable` option and a `mkSymlink` function for
-linking config files back to this repo.
+module. A helper called `mkHomeModule` wraps each one and gives it a
+`dotfiles.programs.<name>.enable` option. Every home module can also take a
+`mkSymlink` argument, which links a config file back to this repo. It takes a
+path, like `mkSymlink ./config`. A path must be in this repo and must exist,
+or the build fails. A script that needs the file's place in the checkout, like
+the Herdr mods copy, gets it from `checkoutPath ./mods`.
 
 A program that is only a package needs no folder. It is one line in
 [`home/programs/plain.nix`](home/programs/plain.nix), and it gets the same
@@ -99,10 +102,10 @@ dotfiles.programs.tokei.enable = true;
 > By default, Nix/Home Manager copies files into the read-only Nix store,
 > requiring a rebuild for every change. This provides more guarantees like
 > immutability. If you prefer that approach, replace `mkSymlink` calls with the
-> standard `source` attribute:
+> standard `source` attribute. It takes the same path:
 > ```nix
 > # Instead of:
-> xdg.configFile."ghostty/config" = mkSymlink "config";
+> xdg.configFile."ghostty/config" = mkSymlink ./config;
 >
 > # Use the standard Nix way:
 > xdg.configFile."ghostty/config".source = ./config;

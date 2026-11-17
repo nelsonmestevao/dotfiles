@@ -8,5 +8,5 @@
     sqlite
   ];
 
-  home.file.".sqliterc" = mkSymlink "sqliterc";
+  home.file.".sqliterc" = mkSymlink ./sqliterc;
 }

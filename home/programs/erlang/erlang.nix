@@ -14,5 +14,5 @@
     KERL_INSTALL_MANPAGES = "yes";
   };
 
-  xdg.configFile."rebar/rebar.config" = mkSymlink "rebar.config";
+  xdg.configFile."rebar/rebar.config" = mkSymlink ./rebar.config;
 }

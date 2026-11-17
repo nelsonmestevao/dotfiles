@@ -13,7 +13,6 @@ let
     name:
     mkHomeModule {
       inherit name;
-      folder = "home/programs";
       file = "home/programs/plain.nix";
     } ({ pkgs, ... }: { home.packages = [ (programsIn pkgs).${name} ]; });
 in

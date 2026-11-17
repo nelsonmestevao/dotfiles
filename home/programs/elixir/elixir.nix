@@ -72,8 +72,8 @@ in
   # Where `mix escript.install` puts its commands.
   home.sessionPath = [ "$HOME/.mix/escripts" ];
 
-  home.file.".iex.exs" = mkSymlink "iex.exs";
+  home.file.".iex.exs" = mkSymlink ./iex.exs;
   home.file.".default-mix-commands" = lib.mkIf config.dotfiles.programs.mise.enable (
-    mkSymlink "default-mix-commands"
+    mkSymlink ./default-mix-commands
   );
 }
