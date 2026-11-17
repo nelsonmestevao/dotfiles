@@ -21,6 +21,7 @@ with pkgs;
     codex
     colima
     cpufetch
+    crit
     ctop
     curl
     dconf2nix

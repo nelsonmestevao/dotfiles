@@ -42,6 +42,26 @@
         "type": "github"
       }
     },
+    "crit": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1794855548,
+        "narHash": "sha256-olToogHy2PvwK89UhnKYsKEHQCQQDbOrYDowSXfYKiQ=",
+        "owner": "tomasz-tomczyk",
+        "repo": "crit",
+        "rev": "7988e02081b3d8b5de13616c06ab808082e4d695",
+        "type": "github"
+      },
+      "original": {
+        "owner": "tomasz-tomczyk",
+        "repo": "crit",
+        "type": "github"
+      }
+    },
     "flake-utils": {
       "inputs": {
         "systems": "systems_2"
@@ -235,6 +255,7 @@
       "inputs": {
         "claude-code": "claude-code",
         "codex-cli-nix": "codex-cli-nix",
+        "crit": "crit",
         "herdr-app-nix": "herdr-app-nix",
         "home-manager": "home-manager",
         "nix-darwin": "nix-darwin",

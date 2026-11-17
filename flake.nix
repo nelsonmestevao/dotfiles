@@ -43,6 +43,11 @@
       url = "github:vicinaehq/vicinae";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
+
+    crit = {
+      url = "github:tomasz-tomczyk/crit";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs =
     inputs@{

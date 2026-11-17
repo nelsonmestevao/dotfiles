@@ -32,6 +32,7 @@
   dotfiles.programs.codex.enable = true;
   dotfiles.programs.colima.enable = true;
   dotfiles.programs.cpufetch.enable = true;
+  dotfiles.programs.crit.enable = true;
   dotfiles.programs.ctop.enable = true;
   dotfiles.programs.curl.enable = true;
   dotfiles.programs.cursor.enable = true;

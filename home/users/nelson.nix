@@ -81,6 +81,7 @@
   dotfiles.programs.colima.enable = enableFor [ "darwin" ];
   dotfiles.programs.copilot.enable = true;
   dotfiles.programs.cpufetch.enable = true;
+  dotfiles.programs.crit.enable = true;
   dotfiles.programs.ctop.enable = true;
   dotfiles.programs.curl.enable = true;
   dotfiles.programs.cursor.enable = false;
