@@ -1541,7 +1541,7 @@ show whether the change helped. Set a latency target after taking the baseline.
 ### [ ] DX-003 Make runtime ownership explicit — P2 · M
 
 **Evidence:** Python and Ruby come from Nix, Node and Go modules supply mise
-defaults, Rust uses rustup, and Neovim combines Nix language servers with Mason.
+defaults, Rust uses rustup, and Neovim gets every language server from Nix.
 These are reasonable choices but their boundaries are not documented together.
 
 **Plan:**
@@ -1592,6 +1592,12 @@ relative to the caller's working directory.
 **Done when:** a clean temporary home can start the editor, find its config,
 and open representative projects; missing dependencies report actionable
 errors. Test first launch separately from a mature local installation.
+
+**Progress (2026-11-17):** step 2 is done, with no Mason at all. `nvim.nix`
+installs every language server, except HLS, which the haskell program
+installs to match GHC, and clangd, from clang-tools. `plugins.lua` lists
+each server with the commands it needs and turns it on only when they are
+on PATH, so a host without Go or Haskell opens those files with no errors.
 
 <a id="dx-005"></a>
 

@@ -11,6 +11,9 @@
 
     # haskellPackages.lhs2tex
     haskellPackages.cabal-install
+    # HLS formats .cabal files with it (nvim's plugins.lua picks it). Not
+    # cabal-fmt: that turns `license: NONE` into an empty field.
+    haskellPackages.cabal-gild
     # haskellPackages.hindent
     haskellPackages.hlint
 

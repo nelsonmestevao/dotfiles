@@ -20,24 +20,39 @@ vim.api.nvim_create_user_command("EN", function()
 end, {})
 
 -- ## Formatting
---
-vim.api.nvim_create_user_command("FormatDisable", function(args)
+
+-- Format on save is off until you turn it on. A buffer's own setting (the
+-- `!` forms) wins over the global one. The BufWritePre autocmd next to the
+-- LSP setup in plugins.lua reads these flags.
+
+local function clear_buffer_settings()
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    vim.b[buf].autoformat = nil
+  end
+end
+
+vim.api.nvim_create_user_command("FormatEnable", function(args)
   if args.bang then
-    -- FormatDisable! will disable formatting just for this buffer
-    vim.b.disable_autoformat = true
+    vim.b.autoformat = true
   else
-    vim.g.disable_autoformat = true
+    vim.g.autoformat = true
+    clear_buffer_settings()
   end
 end, {
-  desc = "Disable autoformat-on-save",
+  desc = "Format on save (FormatEnable! for this buffer only)",
   bang = true,
 })
 
-vim.api.nvim_create_user_command("FormatEnable", function()
-  vim.b.disable_autoformat = false
-  vim.g.disable_autoformat = false
+vim.api.nvim_create_user_command("FormatDisable", function(args)
+  if args.bang then
+    vim.b.autoformat = false
+  else
+    vim.g.autoformat = false
+    clear_buffer_settings()
+  end
 end, {
-  desc = "Re-enable autoformat-on-save",
+  desc = "Stop formatting on save (FormatDisable! for this buffer only)",
+  bang = true,
 })
 
 -- ## Conveniences

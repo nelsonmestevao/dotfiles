@@ -3,8 +3,6 @@
 ------------------------------------------------------------------------------
 ---
 
-HOME = os.getenv("HOME")
-
 -- Install lazy.nvim if not installed
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
@@ -669,50 +667,85 @@ local plugins = {
   },
   -- LSPs
   {
-    "williamboman/mason.nvim",
-    config = function()
-      require("mason").setup()
-    end,
-  },
-  {
-    "williamboman/mason-lspconfig.nvim",
-    config = function()
-      require("mason-lspconfig").setup({
-        ensure_installed = { "lua_ls" },
-        -- Don't auto-`vim.lsp.enable` every mason-installed server: that would
-        -- start stale servers (e.g. `lexical`, `elixir-ls` from before the
-        -- switch to `expert`), whose burrito-packed mason binaries fail on
-        -- NixOS. The explicit `vim.lsp.enable({...})` list below is the source
-        -- of truth for which servers run.
-        automatic_enable = false,
-      })
-    end,
-  },
-  {
     "neovim/nvim-lspconfig",
     config = function()
       -- nvim 0.11+ API: configure servers with vim.lsp.config and turn them
       -- on with vim.lsp.enable. nvim-lspconfig ships the base configs under
       -- its lsp/ runtime dir; the calls below only layer on our overrides.
 
+      -- ── Servers ─────
+      -- Each server, and the commands it needs on PATH. nvim.nix installs the
+      -- servers, except hls (the haskell program, to match GHC) and clangd
+      -- (clang-tools). A server whose commands are missing stays off, so a
+      -- host without that language opens its files with no errors.
+      local servers = {
+        bashls = { "bash-language-server" },
+        clangd = { "clangd" },
+        expert = { "expert" },
+        -- gopls runs `go env` to find the project, and Go comes from mise.
+        gopls = { "gopls", "go" },
+        hls = { "haskell-language-server-wrapper" },
+        lua_ls = { "lua-language-server" },
+        nixd = { "nixd" },
+        ruff = { "ruff" },
+        rust_analyzer = { "rust-analyzer" },
+        -- Not ruby-lsp: it downloads its own copy from rubygems on every start.
+        solargraph = { "solargraph" },
+        sqls = { "sqls" },
+        tailwindcss = { "tailwindcss-language-server" },
+        ts_ls = { "typescript-language-server" },
+        ty = { "ty" },
+      }
+      local enabled = vim.tbl_filter(function(name)
+        return vim.iter(servers[name]):all(function(command)
+          return vim.fn.executable(command) == 1
+        end)
+      end, vim.tbl_keys(servers))
+      table.sort(enabled)
+
       -- Advertise nvim-cmp completion capabilities to every server.
       vim.lsp.config("*", {
         capabilities = require("cmp_nvim_lsp").default_capabilities(),
       })
 
-      vim.lsp.config("bashls", {
-        cmd = { HOME .. "/.local/share/nvim/mason/bin/bash-language-server", "start" },
+      -- Teach lua_ls nvim's Lua API, so it stops calling `vim` an undefined
+      -- global. A project with its own .luarc.json keeps its own setup. The
+      -- settings change in place: the client reads this same table.
+      vim.lsp.config("lua_ls", {
+        settings = { Lua = {} },
+        before_init = function(_, config)
+          local root = config.root_dir
+          if root and (vim.uv.fs_stat(root .. "/.luarc.json") or vim.uv.fs_stat(root .. "/.luarc.jsonc")) then
+            return
+          end
+          config.settings.Lua = vim.tbl_deep_extend("force", config.settings.Lua, {
+            runtime = { version = "LuaJIT" },
+            workspace = { checkThirdParty = false, library = { vim.env.VIMRUNTIME } },
+          })
+        end,
       })
 
-      vim.lsp.config("sqlls", {
-        cmd = { HOME .. "/.local/share/nvim/mason/bin/sql-language-server", "up", "--method", "stdio" },
+      -- Format Nix like bin/format does.
+      vim.lsp.config("nixd", {
+        settings = { nixd = { formatting = { command = { "nixfmt" } } } },
+      })
+
+      -- sqls formats and completes SQL without a database, but says "no
+      -- database connection" each time it opens a file. Hide that message.
+      vim.lsp.config("sqls", {
+        handlers = {
+          ["window/showMessage"] = function(err, result, ctx)
+            if result and result.message:find("no database connection", 1, true) then
+              return
+            end
+            return vim.lsp.handlers["window/showMessage"](err, result, ctx)
+          end,
+        },
       })
 
       -- Expert: the official Elixir language server (successor to lexical /
-      -- next-ls / elixir-ls). The `expert` binary is provided by nix
-      -- (beamPackages.expert) so it lives on PATH. filetypes/root_dir are
-      -- spelled out here so this works even before nvim-lspconfig ships the
-      -- expert base config.
+      -- next-ls / elixir-ls). filetypes/root_dir are spelled out here so this
+      -- works even before nvim-lspconfig ships the expert base config.
       vim.lsp.config("expert", {
         cmd = { "expert", "--stdio" },
         filetypes = { "elixir", "eelixir", "heex", "surface" },
@@ -726,8 +759,27 @@ local plugins = {
         end,
       })
 
+      -- HLS keeps semantic tokens off unless asked. nvim requests them anyway,
+      -- so turn them on: better highlighting, and no error in lsp.log for
+      -- every Haskell file. HLS formats with ormolu unless a fourmolu.yaml
+      -- sits at or above the project root; fourmolu reads that file, ormolu
+      -- ignores it. The settings change in place: the client reads this table.
+      -- HLS also checks and formats .cabal files, with cabal-gild from the
+      -- haskell program.
       vim.lsp.config("hls", {
-        cmd = { HOME .. "/.local/share/nvim/mason/bin/haskell-language-server-wrapper", "--lsp" },
+        filetypes = { "haskell", "lhaskell", "cabal" },
+        settings = {
+          haskell = {
+            cabalFormattingProvider = "cabal-gild",
+            plugin = { semanticTokens = { globalOn = true } },
+          },
+        },
+        before_init = function(_, config)
+          local found = vim.fs.find("fourmolu.yaml", { upward = true, path = config.root_dir })
+          if #found > 0 then
+            config.settings.haskell.formattingProvider = "fourmolu"
+          end
+        end,
       })
 
       vim.lsp.config("tailwindcss", {
@@ -740,11 +792,77 @@ local plugins = {
         },
       })
 
-      -- ts_ls (typescript-language-server) handles .ts/.tsx (and .js/.jsx). Its
-      -- shipped config finds `typescript-language-server` on PATH, installed via
-      -- nix in nvim.nix.
-      vim.lsp.enable({ "lua_ls", "bashls", "sqlls", "expert", "hls", "tailwindcss", "ts_ls" })
+      vim.lsp.enable(enabled)
 
+      -- ── Formatting ─────
+      -- nvim starts a buffer's servers when it sets the file type. Note the
+      -- time, so format() knows how long a missing server may still take.
+      vim.api.nvim_create_autocmd("FileType", {
+        group = vim.api.nvim_create_augroup("lsp_started_at", { clear = true }),
+        callback = function(event)
+          vim.b[event.buf].lsp_started_at = vim.uv.now()
+        end,
+      })
+
+      -- Formats the buffer. A server that is still starting can't format yet
+      -- (HLS takes a few seconds: it asks cabal for the GHC version first), so
+      -- wait for it instead of failing with "no matching language servers".
+      -- A server that hasn't attached 15 seconds after the file opened isn't
+      -- coming (tailwindcss outside a Tailwind project, say): don't wait.
+      local function format()
+        local bufnr = vim.api.nvim_get_current_buf()
+        local function ready()
+          return #vim.lsp.get_clients({ bufnr = bufnr, method = "textDocument/formatting" }) > 0
+        end
+
+        if not ready() then
+          local filetype = vim.bo[bufnr].filetype
+          local attached = vim.tbl_map(function(client)
+            return client.name
+          end, vim.lsp.get_clients({ bufnr = bufnr }))
+          local starting = vim.tbl_filter(function(name)
+            local filetypes = vim.lsp.config[name].filetypes
+            return filetypes ~= nil
+              and vim.list_contains(filetypes, filetype)
+              and not vim.list_contains(attached, name)
+          end, enabled)
+
+          local wait = 15000 - (vim.uv.now() - (vim.b[bufnr].lsp_started_at or 0))
+          if #starting == 0 or wait <= 0 then
+            vim.notify("No language server formats this file.", vim.log.levels.WARN)
+            return
+          end
+
+          vim.notify("Waiting for " .. table.concat(starting, ", ") .. " to start…")
+          if not vim.wait(wait, ready, 100) then
+            vim.notify("No language server formats this file: " .. table.concat(starting, ", ")
+              .. " didn't attach. See :checkhealth vim.lsp.", vim.log.levels.WARN)
+            return
+          end
+        end
+
+        -- Async: a sync format gives up after 1 second, and a server that is
+        -- still indexing (rust-analyzer, HLS) can take longer than that.
+        vim.lsp.buf.format({ bufnr = bufnr, async = true })
+      end
+
+      -- Format on save, once :FormatEnable turns it on (see commands.lua).
+      -- Saving never waits for a server that is still starting: with none
+      -- ready, the file saves as it is.
+      vim.api.nvim_create_autocmd("BufWritePre", {
+        group = vim.api.nvim_create_augroup("lsp_format_on_save", { clear = true }),
+        callback = function(event)
+          local on = vim.b[event.buf].autoformat
+          if on == nil then
+            on = vim.g.autoformat
+          end
+          if on and #vim.lsp.get_clients({ bufnr = event.buf, method = "textDocument/formatting" }) > 0 then
+            vim.lsp.buf.format({ bufnr = event.buf, timeout_ms = 3000 })
+          end
+        end,
+      })
+
+      -- ── Keymaps ─────
       vim.keymap.set("n", "K", vim.lsp.buf.hover)
       -- Open the documentation in a vertical split
       vim.keymap.set("n", "<leader>K", function()
@@ -768,7 +886,7 @@ local plugins = {
         end)
       end, { noremap = true, silent = true })
       vim.keymap.set("n", "gd", vim.lsp.buf.definition)
-      vim.keymap.set("n", "<leader>gf", vim.lsp.buf.format)
+      vim.keymap.set("n", "<leader>gf", format, { desc = "Format the file with its language server" })
       vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action)
     end,
   }

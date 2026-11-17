@@ -1,4 +1,5 @@
 {
+  lib,
   pkgs,
   mkSymlink,
   ...
@@ -6,23 +7,36 @@
 {
   home.packages = with pkgs; [
     neovim
-    # Elixir language server (used by nvim LSP as `expert`). Installed via nix
-    # rather than mason because mason ships burrito-packed binaries that don't
-    # run on NixOS.
-    beamPackages.expert
     # nvim-treesitter `main` branch compiles parsers locally at runtime, which
     # needs the tree-sitter CLI plus a C compiler on PATH. (macOS uses the
     # Xcode Command Line Tools' clang instead of this gcc.)
     tree-sitter
     gcc
-    # Tailwind CSS language server, enabled in plugins.lua via `vim.lsp.enable`.
-    # Its config uses the default `tailwindcss-language-server` cmd, so the
-    # binary just needs to be on PATH.
+
+    # ── Language servers ─────
+    # plugins.lua turns a server on only when its command is on PATH, so
+    # every server comes from here, not from Mason: Mason's binaries often
+    # don't run on NixOS. HLS is the one exception. It must match GHC, so the
+    # haskell program installs it.
+    bash-language-server
+    shellcheck # bash-language-server shows its warnings
+    shfmt # bash-language-server formats with it
+    beamPackages.expert
+    gopls
+    lua-language-server
+    nixd
+    nixfmt # nixd formats with it, like bin/format
+    ruff
+    solargraph
+    sqls
     tailwindcss-language-server
-    # TypeScript/TSX language server (`ts_ls`), enabled in plugins.lua. Needs
-    # both the server and `typescript` (tsserver) on PATH.
+    # Python types. Not basedpyright: it pulls in 423 MiB of npm packages.
+    ty
     typescript-language-server
-    typescript
+    typescript # typescript-language-server needs tsserver too
+    # rustup puts a rust-analyzer of its own on PATH, which fails until you
+    # add the component by hand. This one wins.
+    (lib.hiPrio rust-analyzer)
   ];
 
   home.sessionVariables = {
