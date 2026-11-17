@@ -40,10 +40,9 @@ in
 {
   pkgversion = pkgs.writeShellScriptBin "pkgversion" ''
     PACKAGE="$1"
-    REVISION="$2"
+    REVISION="''${2:-${(pkgs.lib.importJSON ../../flake.lock).nodes.nixpkgs.original.ref}}"
 
     [[ -z "$PACKAGE" ]] && echo "Package name is required" && exit 1
-    [[ -z "$REVISION" ]] && REVISION=$(${pkgs.jq}/bin/jq -r '.nodes.nixpkgs.original.ref' ${../../flake.lock})
 
     echo $(nix eval --raw "github:NixOS/nixpkgs/$REVISION#$PACKAGE.version")
   '';

@@ -1,17 +1,10 @@
 *.pdf   diff=pdf
 
-*.ods   diff=odf
-*.odt   diff=odf
-*.odp   diff=odf
-
 *.docx  diff=word
 *.doc   diff=word
 
 *.xlsx  diff=xls
 *.xls   diff=xls
-
-*.pptx  diff=ppt
-*.ppt   diff=ppt
 
 *.png  diff=exif
 *.jpg  diff=exif

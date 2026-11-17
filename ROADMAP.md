@@ -629,7 +629,9 @@ sandbox it needs its own eval store and an override for each input. Start with
 **Done** in [#48](https://github.com/nelsonmestevao/dotfiles/pull/48), with
 one line per program in [home/programs/plain.nix](home/programs/plain.nix)
 instead of a folder each. temis now gets 132 packages (146 before), and the
-Mac 85 (72 before).
+Mac 85 (72 before). `nixos-diff` is off on thinkpad, which has no NixOS
+generations. Left as is: `wake-hades` keeps its address (one user, one
+machine).
 
 **Evidence:** [nelson.nix](home/users/nelson.nix) enables Flutter, Haskell, media
 tools, and many language modules everywhere. **Measured:** temis, a server,
@@ -642,7 +644,7 @@ option. Some of them are Linux-only, such as `gvfs`, `fuse`, `appimage-run`,
 and `impression`. The Mac user file has the flag commented out, so the Mac
 gets none of the 37.
 
-[home/programs/scripts.nix](home/programs/scripts.nix) rides the same flag. `hm-diff` uses GNU
+In [home/programs/scripts.nix](home/programs/scripts.nix), `hm-diff` uses GNU
 `stat` and `date`, `nixos-diff` is installed on hosts that are not NixOS, and
 `wake-hades` has one machine's MAC address in it.
 
@@ -1389,14 +1391,8 @@ identified. Do not assume Tailscale alone defines the host's exposure.
 
 ### [ ] OPS-006 Align rollback and garbage-collection policy — P1 · S
 
-**Progress:** one rule everywhere: keep 31 days, and at least the newest 3 of
-each profile. `bin/autoclean` and NixOS's monthly job both run `nh clean all`,
-which also cleans the users' home profiles that `nix.gc` left alone, and
-leaves project gcroots (`result` links, direnv shells) alone. Both read the
-rule from `config/cleanup.nix`. `bin/autoclean --dry-run` lists what it would
-delete and deletes nothing. The README has a
-"Rolling back" section. Still open: following the walkthrough once on
-framework.
+**Progress:** done in [#42](https://github.com/nelsonmestevao/dotfiles/pull/42).
+Still open: follow the walkthrough once on framework.
 
 **Evidence (before this task):** `bin/autoclean` used seven-day deletion while
 `system/nixos.nix` set up monthly collection with 31-day retention. The README
@@ -1426,22 +1422,17 @@ revision needed, and cleanup preserves the intended recovery window.
 
 <a id="dx-001"></a>
 
-### [ ] DX-001 Remove network cloning from shell activation — P1 · M
+### [x] DX-001 Remove network cloning from shell activation — P1 · M
 
-**Evidence:** [zsh.nix](home/programs/zsh/zsh.nix) pins plugins but clones Oh My
-Zsh from its current Git branch during activation. The clone skips Home
-Manager's `run` wrapper, so a dry run clones too, and a first activation with
-no network fails. The runtime shell then sources that mutable checkout. Six
-plugins are pinned by hand; `zsh-vi-mode` is fetched and never loaded.
-
-Home Manager's `programs.zsh.oh-my-zsh` takes its copy from `pkgs.oh-my-zsh`,
-which `flake.lock` pins.
+**Implemented** in [#55](https://github.com/nelsonmestevao/dotfiles/pull/55):
+`programs.zsh.oh-my-zsh` and `programs.zsh.plugins` load everything from
+nixpkgs, and activation fetches nothing. Delete `~/.oh-my-zsh` and
+`~/.cache/gitstatus` by hand after each machine's first switch.
 
 **Plan:**
 
 1. Point `ZSH` at `${pkgs.oh-my-zsh}/share/oh-my-zsh` with a session variable.
-   Make [theme.zsh](home/programs/zsh/theme.zsh) read it instead of setting
-   `~/.oh-my-zsh`.
+   Make `theme.zsh` read it instead of setting `~/.oh-my-zsh`.
 2. Point `ZSH_CUSTOM` at a folder Home Manager owns, and link the plugins and
    the theme there. Keep the pins, or use the nixpkgs packages
    (`zsh-autosuggestions`, `zsh-syntax-highlighting`, `zsh-fzf-tab`,
@@ -1479,8 +1470,8 @@ and `compinit` is at the top of `zprof`.
 - [zshrc](home/programs/zsh/zshrc) loads its modules with `ls | sort` and
   unquoted loops, which break when the checkout path has a space.
 - The oh-my-zsh plugin list, now in [zsh.nix](home/programs/zsh/zsh.nix),
-  turns on fzf, direnv, mise, and zoxide whether or not those programs are
-  enabled. fzf is set up twice.
+  turns on direnv, mise, and zoxide whether or not those programs are
+  enabled.
 
 **Plan:**
 

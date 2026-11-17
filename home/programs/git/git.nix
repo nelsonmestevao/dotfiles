@@ -19,8 +19,9 @@ let
   # git says "Binary files differ". The cost: changing a driver needs a
   # rebuild. But they differ per host, like the signing key. The pdf driver
   # stays in common.ini, because every machine has pdftotext (the Mac from
-  # Homebrew). `attributes` still names odf, but no machine defines it: no
-  # package gives a working odt2txt.
+  # Homebrew). Slides and ODF files get no driver, so git shows them as
+  # binary: LibreOffice can't export slides as text, and no package gives a
+  # working odt2txt.
   driver =
     program: textconv:
     lib.optionalAttrs config.dotfiles.programs.${program}.enable {
@@ -32,7 +33,6 @@ let
     exif = driver "exiftool" "exiftool";
     word = driver "pandoc" "pandoc --to plain";
     xls = driver "unoconv" "sh -c 'unoconv --stdout --format csv \"$0\"'";
-    ppt = driver "unoconv" "sh -c 'unoconv --stdout --format txt \"$0\"'";
   };
 
   gitConfig = {
@@ -86,7 +86,6 @@ in
     git-lfs
     git-who
     gitleaks
-    glab
     lazygit
   ];
 

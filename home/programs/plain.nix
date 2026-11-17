@@ -3,8 +3,9 @@
 # turns it on. Give a program its own folder once it needs more than its
 # package, like a config file or a setting.
 #
-# There's no `platforms` here: nixpkgs itself refuses to evaluate a package
-# that doesn't build for the host's OS.
+# There's no `platforms` here. nixpkgs refuses most packages that don't build
+# for the host's OS, but not all: gvfs and fuse evaluate on a Mac. Run
+# `bin/build home` there before you turn on a Linux tool.
 pkgs:
 with pkgs;
 {
