@@ -314,17 +314,19 @@ local plugins = {
   },
   -- Markdown
   {
-    "epwalsh/obsidian.nvim",
+    -- The community fork: epwalsh/obsidian.nvim is no longer maintained.
+    -- It completes notes through its own language server, so it needs no
+    -- completion plugin.
+    "obsidian-nvim/obsidian.nvim",
     version      = "*",
-    lazy         = true,
     ft           = "markdown",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "hrsh7th/nvim-cmp",
-      "nvim-telescope/telescope.nvim"
-    },
+    -- Telescope is the picker. Load it first.
+    dependencies = { "nvim-telescope/telescope.nvim" },
     config       = function()
       require("obsidian").setup({
+        -- Use `:Obsidian quick_switch`, not the old `:ObsidianQuickSwitch`.
+        legacy_commands = false,
+        picker = { name = "telescope.nvim" },
         workspaces = {
           {
             name = "personal",
