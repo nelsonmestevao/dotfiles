@@ -29,6 +29,8 @@ to work here safely.
   them. They run outside the dev shell, so they need only bash and jq.
 - `tests/lib.nix`: tests for the helpers in `lib/` and `home/lib/`, against
   `tests/fixtures/`. `bin/check --eval` runs them. Change a helper, add a case.
+- `tests/docs.nix`: checks that the links, the scripts table and the hosts
+  tables in the docs match the repo. `bin/check --eval` runs it too.
 
 ## Hosts
 
@@ -101,13 +103,14 @@ Run these before you say a change works:
 ```shell
 bin/lint          # Nix, shell, xonsh, zsh and workflow checks (CI first)
 bin/format        # fixes nixfmt errors
-bin/test          # the helper scripts' tests and the docs check (CI too)
-bin/check --eval  # evaluates every config, Mac ones too; builds nothing
+bin/test          # the helper scripts' tests (CI too)
+bin/check --eval  # evaluates every config, Mac ones too; tests lib/ and the docs
 bin/check --same  # shows which configs your change builds differently
 ```
 
-Run `bin/test` when you touch `bin/`, `scripts/`, `tests/`, `.github/`, the
-docs, or `config/hosts.nix`.
+Run `bin/test` when you touch `bin/`, `scripts/`, `tests/` or `.github/`.
+`bin/check --eval` checks the docs, so run it after you edit them or
+`config/hosts.nix`, too.
 
 `bin/check --eval` takes about a minute. It catches option and assertion
 errors in all seven configs, NixOS, nix-darwin and Home Manager, without a

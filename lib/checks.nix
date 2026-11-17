@@ -13,14 +13,17 @@
 let
   inherit (nixpkgs) lib;
 
-  # The tests in tests/lib.nix run whenever the flake is checked, so
-  # `bin/check --eval` runs them, and a failed test is named. They don't
-  # depend on the system, so they run once.
-  failedLibTests = import ../tests/lib.nix { inherit nixpkgs home-manager; };
-  show = lib.generators.toPretty { };
-  libTestsReport = lib.concatMapStringsSep "\n" (
-    case: "  ${case.name}: expected ${show case.expected}, got ${show case.result}"
-  ) failedLibTests;
+  # The scripts in bin/ and .github/scripts/, sorted by ./scriptKind.nix, like
+  # { shell = [ "bin/lint" … ]; xonsh = [ "bin/check" … ]; }. A script of
+  # neither kind stops the evaluation, so `bin/check --eval` names it too.
+  scripts = lib.groupBy (import ./scriptKind.nix { inherit lib; } "${self}") (
+    lib.concatMap
+      (folder: map (name: "${folder}/${name}") (lib.attrNames (builtins.readDir "${self}/${folder}")))
+      [
+        "bin"
+        ".github/scripts"
+      ]
+  );
 
   # Which system each configuration is for, read from config/hosts.nix.
   # Asking the configuration itself would load its modules, and then a broken
@@ -77,22 +80,11 @@ in
         statix check .
         nixfmt --check $(find . -name '*.nix')
 
-        # The scripts in bin/ and .github/scripts/, sorted by their first line.
-        # Anything that is neither shell nor xonsh is an error, so a new kind
-        # of script can't slip through unchecked.
-        shell=() xonsh=(scripts/*.xsh)
-        for script in bin/* .github/scripts/*; do
-          case "$(head -n 1 "$script")" in
-            '#!'*xonsh*) xonsh+=("$script") ;;
-            '#!'*bash* | '#!'*/sh | '#!'*/sh' '* | '#!'*' sh' | '#!'*' sh '*) shell+=("$script") ;;
-            *) echo "lint: $script is neither a shell nor a xonsh script" >&2; exit 1 ;;
-          esac
-        done
-
         # The shell scripts, and the .sh files next to the programs (not the
         # Herdr mods, which come from upstream, should one ever ship one).
         # Each list is read into a variable first, so a failing find stops
         # the lint instead of quietly checking fewer files.
+        shell=(${lib.escapeShellArgs (scripts.shell or [ ])})
         found=$(find home/programs -name '*.sh' -not -path '*/herdr-app/mods/*')
         while IFS= read -r file; do
           [ -n "$file" ] && shell+=("$file")
@@ -100,6 +92,7 @@ in
         shellcheck "''${shell[@]}"
 
         # The xonsh scripts, only parsed: their own code doesn't run here.
+        xonsh=(${lib.escapeShellArgs (scripts.xonsh or [ ])} scripts/*.xsh)
         HOME=$TMPDIR python3 ${./xonsh-syntax.py} "''${xonsh[@]}"
 
         # The zsh files, only read: a typo there would break every new shell.
@@ -115,11 +108,22 @@ in
         touch "$out"
       '';
 
-  lib-tests = pkgs.runCommand "lib-tests" { } (
-    lib.throwIf (
-      failedLibTests != [ ]
-    ) "these cases in tests/lib.nix failed:\n${libTestsReport}" ''touch "$out"''
-  );
+  # tests/lib.nix and tests/docs.nix, run by nix-unit, which names each failed
+  # case and shows how it differs. --quiet leaves out the cases that pass, so
+  # a failed build's last log lines show the ones that failed. The sandbox has
+  # no network, so nix-unit gets a store of its own and the inputs the tests
+  # read, already in the Nix store. A test that reads another input needs an
+  # --override-input here too. They don't depend on the system, but each
+  # system runs them, like its CI runner.
+  lib-tests = pkgs.runCommand "lib-tests" { nativeBuildInputs = [ pkgs.nix-unit ]; } ''
+    export HOME=$TMPDIR
+    nix-unit --quiet --eval-store "$HOME" \
+      --extra-experimental-features 'nix-command flakes' \
+      --override-input nixpkgs ${nixpkgs} \
+      --override-input home-manager ${home-manager} \
+      --flake ${self}#lib.tests
+    touch "$out"
+  '';
 }
 # With a mistake in config/hosts.nix or config/users.nix, one check, `data`,
 # fails with the message in place of the configuration checks. Lint and the

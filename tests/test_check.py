@@ -11,6 +11,8 @@ SOURCE = Path(__file__).resolve().parents[1]
 
 # A stand-in for nix. It logs each call and answers from files in $FAKE_DIR:
 #   nix flake check      exits with the status in check-status
+#   nix config show      prints x86_64-linux, as if this were a Linux machine
+#   nix build            exits with the status in build-status
 #   nix eval             prints before.json for a commit (a git+file:// flake)
 #                        or after.json for the working tree, and writes
 #                        before.err or after.err to stderr when it exists
@@ -21,6 +23,10 @@ echo "$*" >> "$FAKE_DIR/nix.log"
 case "$1 $2" in
   "flake check")
     exit "$(cat "$FAKE_DIR/check-status" 2>/dev/null || echo 0)" ;;
+  "config show")
+    echo x86_64-linux ;;
+  "build --no-link")
+    exit "$(cat "$FAKE_DIR/build-status" 2>/dev/null || echo 0)" ;;
   "eval --json")
     case "$3" in
       git+file://*) side=before ;;
@@ -111,7 +117,8 @@ class CheckTests(unittest.TestCase):
 
     def test_flags_pick_what_nix_flake_check_runs(self):
         cases = [([], ['flake check --all-systems --no-build', 'flake check']),
-                 (['--eval'], ['flake check --all-systems --no-build']),
+                 (['--eval'], ['flake check --all-systems --no-build', 'config show system',
+                               'build --no-link .#checks.x86_64-linux.lib-tests']),
                  (['--all-systems'], ['flake check --all-systems'])]
         for flags, expected in cases:
             with self.subTest(flags=flags):
@@ -129,6 +136,12 @@ class CheckTests(unittest.TestCase):
                 self.assertEqual(len(result.stderr.strip().splitlines()), 1, result.stderr)
                 # A failed evaluation stops the plain check before it builds.
                 self.assertEqual(len(self.log()), 1)
+
+    def test_failed_lib_test_fails_eval_with_one_plain_line(self):
+        (self.fakes / 'build-status').write_text('1')
+        result = self.check('--eval', success=False)
+        self.assertIn('✗ nix build', result.stderr)
+        self.assertEqual(len(result.stderr.strip().splitlines()), 1, result.stderr)
 
     def test_same_compares_head_with_the_working_tree(self):
         checks = {LINUX: {'nelson@framework': '/nix/store/a.drv', 'nixos-framework': '/nix/store/b.drv'},

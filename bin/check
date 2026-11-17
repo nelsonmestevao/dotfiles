@@ -18,8 +18,10 @@ Options:
   -h --help         Show this screen.
   -v --version      Show version.
   --eval            Only evaluate every configuration, the Mac ones too, and
-                    build nothing. This catches option and assertion errors in
-                    about a minute.
+                    run the tests in tests/lib.nix and tests/docs.nix: the
+                    one thing it builds is this machine's lib-tests check.
+                    This catches option and assertion errors in about a
+                    minute.
   --all-systems     Build the checks of every system, not only this machine's.
                     This needs a builder for the other OS: a Linux builder on
                     a Mac, a Mac builder on Linux.
@@ -219,6 +221,10 @@ def main(args):
             print_list()
         case {'--eval': True}:
             nix flake check --all-systems --no-build
+            # --no-build skips the lib tests, as nix-unit runs them in a
+            # build. That build is small, so build this machine's.
+            system = $(nix config show system).strip()
+            nix build --no-link @(f'.#checks.{system}.lib-tests')
         case {'--all-systems': True}:
             nix flake check --all-systems
         case _:
