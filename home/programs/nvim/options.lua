@@ -75,5 +75,6 @@ vim.opt.clipboard = "unnamedplus"
 -- windows and other buffers.
 vim.opt.autocomplete = true
 vim.opt.complete = "o,.^5,w^5,b^5"
--- `noinsert` selects the first item without typing it, so Enter accepts it.
+-- 'autocomplete' ignores `menuone` and `noinsert`; they apply to <C-Space>.
+-- Enter takes the first item when none is selected (see plugins.lua).
 vim.opt.completeopt = "menuone,noinsert,popup,fuzzy"

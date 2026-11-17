@@ -547,7 +547,10 @@ local plugins = {
       -- brackets.
       vim.keymap.set("i", "<CR>", function()
         if vim.fn.pumvisible() == 1 then
-          return vim.keycode("<C-y>")
+          -- 'autocomplete' never selects an item for you, so take the first
+          -- one when nothing is selected.
+          local none = vim.fn.complete_info({ "selected" }).selected == -1
+          return vim.keycode(none and "<C-n><C-y>" or "<C-y>")
         end
         return autopairs.autopairs_cr()
       end, { expr = true, replace_keycodes = false, desc = "Accept the completion item or start a new line" })
@@ -666,11 +669,14 @@ local plugins = {
       })
 
       -- Keep Copilot away from Haskell and C files, as Supermaven was: never
-      -- send them to the server. Everywhere else, use the git root like
-      -- nvim-lspconfig does.
+      -- send them to the server. Neovim opens `.h` headers as C++, so skip
+      -- them by name. Everywhere else, use the git root like nvim-lspconfig
+      -- does.
       vim.lsp.config("copilot", {
         root_dir = function(bufnr, on_dir)
-          if vim.list_contains({ "haskell", "c" }, vim.bo[bufnr].filetype) then
+          local private = { "haskell", "lhaskell", "cabal", "c" }
+          if vim.list_contains(private, vim.bo[bufnr].filetype)
+            or vim.api.nvim_buf_get_name(bufnr):match("%.h$") then
             return
           end
           on_dir(vim.fs.root(bufnr, ".git"))
@@ -828,9 +834,11 @@ local plugins = {
       -- item. Neovim can't accept one word of a suggestion, so <C-j> moves
       -- to the next suggestion instead.
       vim.keymap.set("i", "<C-y>", function()
-        if not vim.lsp.inline_completion.get() then
-          return "<C-y>"
+        if vim.lsp.inline_completion.get() then
+          -- Close the menu too, or its next key would undo the suggestion.
+          return vim.fn.pumvisible() == 1 and "<C-e>" or ""
         end
+        return "<C-y>"
       end, { expr = true, desc = "Accept the Copilot suggestion or the menu item" })
       vim.keymap.set("i", "<C-j>", function()
         vim.lsp.inline_completion.select()
