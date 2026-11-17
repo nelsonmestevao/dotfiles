@@ -22,46 +22,11 @@ end
 
 vim.opt.rtp:prepend(lazypath)
 
--- Utilities
-
--- Function to get the current OS theme mode ("dark" or "light")
-local function get_os_theme_mode()
-  local is_mac = vim.fn.has("mac") == 1
-
-  -- On macOS, `defaults read -g AppleInterfaceStyle` prints "Dark" in dark
-  -- mode and errors (empty output) in light mode. On GNOME, gsettings reports
-  -- the color-scheme preference directly.
-  local command = is_mac
-    and "defaults read -g AppleInterfaceStyle 2>/dev/null"
-    or "gsettings get org.gnome.desktop.interface color-scheme"
-
-  local ok, result = pcall(vim.fn.system, command)
-  if not ok then
-    return nil, "Failed to execute command to get OS theme."
-  end
-
-  result = string.lower(result:gsub("%s+", ""))
-
-  if is_mac then
-    -- Empty output (light mode) or the absence of "dark" means light.
-    return result == "dark" and "dark" or "light"
-  end
-
-  if result == "'prefer-dark'" then
-    return "dark"
-  elseif result == "'default'" then
-    return "light"
-  else
-    return nil, "Unexpected theme value from GNOME settings."
-  end
-end
-
 -- Configure Plugins
 
 local plugins = {
   {
     "projekt0n/github-nvim-theme",
-    dependencies = { "vimpostor/vim-lumen" },
     lazy = false,
     priority = 1000,
     config = function()
@@ -74,26 +39,23 @@ local plugins = {
         },
       })
 
-      local mode, err = get_os_theme_mode()
-      if mode then
-        vim.cmd.colorscheme(mode == "dark" and "github_dark" or "github_light")
-      else
-        vim.notify("Error detecting theme: " .. err, vim.log.levels.WARN)
-        vim.cmd.colorscheme("github_dark")
+      -- Neovim asks the terminal for its background color before it reads
+      -- this file, and asks again when the terminal says the OS theme
+      -- changed. Pick the color scheme from 'background' each time.
+      local function apply_theme()
+        local name = vim.o.background == "light" and "github_light" or "github_dark"
+        -- Loading a color scheme sets 'background' again. Skip a scheme
+        -- that is already loaded, so it doesn't load twice.
+        if vim.g.colors_name ~= name then
+          vim.cmd.colorscheme(name)
+        end
       end
 
-      vim.api.nvim_create_autocmd("User", {
-        pattern = "LumenLight",
-        callback = function()
-          vim.cmd.colorscheme("github_light")
-        end,
-      })
-
-      vim.api.nvim_create_autocmd("User", {
-        pattern = "LumenDark",
-        callback = function()
-          vim.cmd.colorscheme("github_dark")
-        end,
+      apply_theme()
+      vim.api.nvim_create_autocmd("OptionSet", {
+        pattern = "background",
+        desc = "Match the color scheme to the terminal's theme",
+        callback = apply_theme,
       })
     end,
   },
