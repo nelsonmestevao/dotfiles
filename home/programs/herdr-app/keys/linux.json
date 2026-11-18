@@ -63,7 +63,6 @@
     "ctrl-,": "app.settings",
     "ctrl-shift-o": "pane.split:right",
     "ctrl-shift-e": "pane.split:down",
-    "ctrl-shift-w": "tab.close",
     "ctrl-shift-x": "pane.close",
     "ctrl-shift-z": "pane.zoom",
     "ctrl-shift-l": "layout.switch",
