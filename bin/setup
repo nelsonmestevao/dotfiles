@@ -17,8 +17,7 @@ Options:
   -h --help                Show this screen.
   -v --version             Show version.
   --platform=<platform>    nixos, darwin, or home (Home Manager only).
-  --system=<system>        x86_64-linux, aarch64-linux, aarch64-darwin, or
-                           x86_64-darwin.
+  --system=<system>        x86_64-linux, aarch64-linux, or aarch64-darwin.
   --users=<users>          The host's users, comma-separated.
   --roles=<roles>          The host's roles, comma-separated, like desktop.
                            Pass an empty value for none.
@@ -59,7 +58,7 @@ HOSTS_FILE = "config/hosts.nix"
 USERS_FILE = "config/users.nix"
 
 PLATFORMS = ["nixos", "darwin", "home"]
-SYSTEMS = ["x86_64-linux", "aarch64-linux", "aarch64-darwin", "x86_64-darwin"]
+SYSTEMS = ["x86_64-linux", "aarch64-linux", "aarch64-darwin"]
 DEFAULT_GROUPS = ["docker", "wheel", "networkmanager"]
 
 # ── Templates ────────────────────────────────────────────────────────────
