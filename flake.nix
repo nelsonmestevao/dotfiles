@@ -39,10 +39,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    vicinae = {
-      url = "github:vicinaehq/vicinae";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
-    };
+    # No follows: vicinae must use its own nixpkgs, so the build matches the one
+    # in vicinae.cachix.org and is downloaded instead of compiled.
+    vicinae.url = "github:vicinaehq/vicinae";
 
     crit = {
       url = "github:tomasz-tomczyk/crit";

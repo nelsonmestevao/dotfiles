@@ -22,6 +22,13 @@
 
   nix.settings.auto-optimise-store = true;
 
+  # vicinae's own cache. Its flake asks for it in nixConfig, but Nix ignores
+  # that for users it doesn't trust, so the system has to add it.
+  nix.settings.extra-substituters = [ "https://vicinae.cachix.org" ];
+  nix.settings.extra-trusted-public-keys = [
+    "vicinae.cachix.org-1:1kDrfienkGHPYbkpNj1mWTr7Fm1+zcenzgTizIcI3oc="
+  ];
+
   boot.tmp.cleanOnBoot = true;
 
   # Once a month, delete old generations in every profile, the users' homes
