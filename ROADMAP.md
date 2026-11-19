@@ -50,23 +50,17 @@ guess.
 **Done when:** the number of snapshots stays flat for weeks, a failed run
 shows a notification, and a restore from each repository works.
 
-## 3. Make `bin/update` safe, then run it every week
+## 3. Run `bin/update` every week
 
-**Why:** [bin/update](bin/update) runs `git add flake.lock` and then a bare
-`git commit`, so anything else you staged lands in the `chore: upgrade` commit.
-It also runs `tput` at start, which fails without a terminal, so CI can't run
-it. Inputs move only when you remember to update, and an upstream break then
-shows up in the middle of other work, with an hour of compiling.
+**Why:** inputs move only when you remember to update, and an upstream break
+then shows up in the middle of other work, with an hour of compiling.
+[bin/update](bin/update) is ready for it: it commits only the lockfile and
+runs without a terminal.
 
-**Do:**
+**Do:** add a weekly workflow that runs `bin/update --save` on a branch and
+opens a pull request, so CI builds the new inputs before you switch to them.
 
-- Commit only the lockfile: `git commit -- flake.lock`.
-- Use colors only when the output is a terminal.
-- Add a weekly workflow that runs `bin/update --save` on a branch and opens a
-  pull request, so CI builds the new inputs before you switch to them.
-
-**Done when:** files you staged stay staged after `bin/update --save`, and the
-weekly pull request shows up with CI's result on it.
+**Done when:** the weekly pull request shows up with CI's result on it.
 
 ## 4. Stop surprise Homebrew upgrades on the Mac
 

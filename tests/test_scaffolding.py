@@ -17,7 +17,7 @@ class ScaffoldingTests(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
         self.env = dict(os.environ, PYTHONDONTWRITEBYTECODE='1')
-        for name in ('bin/new', 'bin/setup', 'scripts/scaffold.xsh', 'statix.toml'):
+        for name in ('bin/new', 'bin/setup', 'scripts/common.xsh', 'scripts/scaffold.xsh', 'statix.toml'):
             self.write(name, (SOURCE / name).read_text())
         self.write('config/users.nix', '{\n  alice = { name = "Alice"; extraGroups = [ ]; };\n}\n')
         self.write('config/hosts.nix', '{\n  old = { roles = [ "desktop" ]; };\n}\n')

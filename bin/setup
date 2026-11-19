@@ -34,25 +34,9 @@ import os
 import re
 import sys
 
-from docopt import docopt
-
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
+from common import GREEN, YELLOW, fail, paint, run, warn
 from scaffold import apply_files, checked, insert_entry, read_config, require, validate_name
-
-os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-
-$RED="\033[1;31m"
-$YELLOW="\033[1;33m"
-$GREEN="\033[1;32m"
-$BLUE="\033[1;34m"
-$RESET="\033[0m"
-
-RED="\033[1;31m"
-YELLOW="\033[1;33m"
-GREEN="\033[1;32m"
-BLUE="\033[1;34m"
-RESET="\033[0m"
 
 HOSTS_FILE = "config/hosts.nix"
 USERS_FILE = "config/users.nix"
@@ -166,15 +150,13 @@ def resolve(flag, value, prompt, default=None):
         return prompt()
     if default is not None:
         return default
-    print(f"{RED}✗{RESET} There's no terminal to ask in. Pass {flag}.")
-    sys.exit(1)
+    fail(f"There's no terminal to ask in. Pass {flag}.")
 
 
 def check_choices(flag, values, allowed):
     unknown = [v for v in values if v not in allowed]
     if unknown:
-        print(f"{RED}✗{RESET} {flag}: unknown {', '.join(unknown)} (known: {', '.join(allowed)})")
-        sys.exit(1)
+        fail(f"{flag}: unknown {', '.join(unknown)} (known: {', '.join(allowed)})")
 
 
 def nixpkgs_release():
@@ -246,7 +228,7 @@ def setup_host(hostname, args):
     # every program that user files enable for "desktop", so say so.
     new_roles = [r for r in roles if r not in known]
     if new_roles:
-        print(f"{YELLOW}! New role {', '.join(new_roles)}: no host has it yet (known: {', '.join(known)}). Check the spelling.{RESET}")
+        warn(f"New role {', '.join(new_roles)}: no host has it yet (known: {', '.join(known)}). Check the spelling.")
 
     entry = {'system': arch, 'users': selected, 'stateVersion': nixpkgs_release()}
     if host_type in ('nixos', 'darwin'):
@@ -271,10 +253,10 @@ def setup_host(hostname, args):
     files[HOSTS_FILE] = insert_entry(original, hostname, entry)
     apply_files(files, {HOSTS_FILE: original}, {HOSTS_FILE: hosts | {hostname: entry}})
 
-    print(f"{GREEN}✓{RESET} Host '{hostname}' created; new files staged, config edit left unstaged.")
+    print(f"{paint('✓', GREEN)} Host '{hostname}' created; new files staged, config edit left unstaged.")
     if host_type == 'nixos':
         if not args['--detect-hardware']:
-            print(f"{YELLOW}! Incomplete hardware stub: {hw_path}{RESET}")
+            print(f"{paint('!', YELLOW)} Incomplete hardware stub: {hw_path}")
             print(f"  On the target machine: nixos-generate-config --show-hardware-config > {hw_path}")
         print(f'  Verify root and boot filesystems in {hw_path}.')
         print(f'  Set a boot loader in system/hosts/{hostname}.nix before evaluation or rebuilding.')
@@ -315,7 +297,7 @@ def setup_user(username, args):
         USERS_FILE: insert_entry(original, username, entry),
     }
     apply_files(files, {USERS_FILE: original}, {USERS_FILE: users | {username: entry}})
-    print(f"{GREEN}✓{RESET} User '{username}' created; new file staged, config edit left unstaged.")
+    print(f"{paint('✓', GREEN)} User '{username}' created; new file staged, config edit left unstaged.")
     print(f'  Put your git identity in home/programs/git/profiles/{username}.ini.')
     print(f"  Add the user to an existing host's users list in {HOSTS_FILE},")
     print(f'  or create a host with bin/setup host <hostname> --users={username}.')
@@ -329,11 +311,6 @@ def main(args):
 
 
 if __name__ == '__main__':
-    arguments = docopt(__doc__.format(program=__file__), version=f'{os.path.basename(__file__)} script version 1.0')
-    try:
-        main(arguments)
-    except (ValueError, OSError) as error:
-        print(f"{RED}✗{RESET} {error}", file=sys.stderr)
-        sys.exit(1)
+    run(main, __doc__, __file__)
 
 # vim: ft=xonsh
