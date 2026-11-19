@@ -508,6 +508,7 @@ version and the hash in place:
 | glocalsend | `nix-update --flake glocalsend --version=branch`, on a Linux machine | It has a second hash, for its dependencies. |
 | wiggle | Edit `rev` and `hash` in `config/overlays.nix`. | |
 | herdr-app | It comes from a flake input, so `bin/update` moves it. | |
+| Material icons (Herdr's file tree) | Edit the version and `hash` in `home/programs/herdr-app/herdr-app.nix`. | Make `icons.js` again for the new version, in the `filetree` and `file-icons` mods. |
 
 Then run `bin/check --eval` and `nix build .#<name>`.
 
