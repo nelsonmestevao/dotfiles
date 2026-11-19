@@ -2,7 +2,7 @@
   nixpkgs,
   home-manager,
   vicinae,
-  overlays,
+  pkgsFor,
   knownNames,
   hostNames,
 }:
@@ -16,7 +16,7 @@
 }:
 let
   inherit (nixpkgs) lib;
-  pkgs = nixpkgs.legacyPackages.${host.system};
+  pkgs = pkgsFor.${host.system};
   importModules = import ./importModules.nix { inherit lib; };
   mkHomeModule = import ../home/lib/mkHomeModule.nix;
   mkGnomeExtensionModule = import ../home/lib/mkGnomeExtensionModule.nix;
@@ -55,17 +55,15 @@ home-manager.lib.homeManagerConfiguration {
   inherit pkgs;
   extraSpecialArgs = arguments;
   modules = [
-    { nixpkgs.overlays = overlays; }
+    # Home Manager loads a nixpkgs of its own for each home, even when it is
+    # handed one. This makes every module use the shared one (see `pkgsFor`
+    # in ./default.nix), which has the overlays and allows unfree packages.
+    { _module.args.pkgs = lib.mkForce pkgs; }
     ../home
     ../home/lib
-    # Always import every module so its options are *declared* on every
-    # platform. GNOME extensions and Vicinae are Linux/Wayland-only, but their
-    # activation is already gated by per-program `enable` flags (off on Darwin),
-    # and module `config` blocks / option defaults are lazy `mkIf`-guarded — so
-    # importing them on Darwin evaluates cleanly and activates nothing. Gating
-    # the *imports* instead would drop the option declarations, which breaks
-    # any `mkIf false` reference to them (the module system checks definition
-    # paths against declarations regardless of the condition).
+    # Every module is imported on every OS, the Linux-only ones too (vicinae,
+    # the GNOME extensions). A module that is off does nothing, but its
+    # options must exist, or a user file that sets one fails on a Mac.
     vicinae.homeManagerModules.default
   ]
   ++ importModules mkHomeModule "home/programs"

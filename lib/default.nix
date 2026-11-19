@@ -31,6 +31,17 @@ let
     "aarch64-darwin"
   ];
 
+  # One nixpkgs for each system, with the overlays. Every home on a system
+  # and the flake's packages share it. Loading nixpkgs is the slow part of an
+  # evaluation, and each home used to load its own.
+  pkgsFor = lib.genAttrs lib.systems.flakeExposed (
+    system:
+    import nixpkgs {
+      inherit system overlays;
+      config.allowUnfree = true;
+    }
+  );
+
   hostNames = lib.attrNames checked.hosts;
 
   # Every host name and role that enableFor, disableFor and valueFor accept.
@@ -63,7 +74,7 @@ let
       nixpkgs
       home-manager
       vicinae
-      overlays
+      pkgsFor
       knownNames
       hostNames
       ;
@@ -85,6 +96,9 @@ in
   homeConfigs = lib.concatMapAttrs (
     hostname: host: lib.listToAttrs (map (homeOf hostname host) host.users)
   ) checked.hosts;
+
+  # For the flake's packages (see ./packages.nix).
+  inherit pkgsFor;
 
   # The checked data, for the checks (see ./checks.nix).
   checkedData = checked;

@@ -6,20 +6,16 @@
 #
 # A package says where it runs with `meta.platforms`, and a system only gets
 # the ones that run on it. One that doesn't say gets its builder's default.
-{ nixpkgs, overlays }:
+{ lib, pkgsFor }:
 system:
 let
-  inherit (nixpkgs) lib;
   # Joins two sets of packages, and stops when both have one of the same name.
   # Otherwise one would quietly replace the other.
   inherit (lib.attrsets) unionOfDisjoint;
 
-  # The same packages the configurations use, so `nix build .#git-sim` builds
-  # exactly what a home installs.
-  pkgs = import nixpkgs {
-    inherit system overlays;
-    config.allowUnfree = true;
-  };
+  # The same packages the homes use, so `nix build .#git-sim` builds exactly
+  # what a home installs.
+  pkgs = pkgsFor.${system};
 
   # A program's own package: every package.nix under home/programs.
   packageFiles = lib.filter (file: baseNameOf file == "package.nix") (
