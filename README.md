@@ -599,7 +599,8 @@ of neither kind stops `bin/lint` and `bin/check --eval` with its name.
 `bin/test` runs the tests for `bin/new`, `bin/setup`, `bin/check`, `bin/update`,
 `bin/build`, `bin/rebuild` and CI's planning script, which work in throwaway
 folders and touch nothing else. Pass it unittest's arguments to narrow the
-run, like `bin/test -k hardware`.
+run, like `bin/test -k hardware`. The test files run at the same time, and
+each one's output shows when it is done.
 
 CI runs in two steps. A quick job lints, runs `bin/test` and the `lib-tests`
 check, and reads through every config with `bin/check --list`. Then a build

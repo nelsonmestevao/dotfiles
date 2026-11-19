@@ -4,7 +4,52 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 # The Python tests in tests/, of the scripts in bin/ and .github/scripts/,
-# which run in throwaway repos. They need the dev shell's tools. CI runs them
-# in its first job. Extra arguments go to Python's unittest, like
-# `bin/test -k hardware`. (The Nix tests in tests/ run in `bin/check --eval`.)
-nix --extra-experimental-features 'nix-command flakes' develop --command python3 -B -m unittest discover -s tests -v "$@"
+# which run in throwaway repos. They need the dev shell's tools, so the script
+# starts itself again inside it. CI runs them in its first job. Extra
+# arguments go to Python's unittest, like `bin/test -k hardware`. (The Nix
+# tests in tests/ run in `bin/check --eval`.)
+if [ -z "${DOTFILES_TEST_SHELL:-}" ]; then
+  DOTFILES_TEST_SHELL=1 exec nix --extra-experimental-features 'nix-command flakes' \
+    develop --command "$0" "$@"
+fi
+
+# Every test file runs at the same time, each into its own log. The tests
+# mostly wait for the commands they start, so this takes about as long as the
+# slowest file.
+logs=$(mktemp -d)
+files=(tests/test_*.py)
+pids=()
+# Ctrl-C, or any other end, stops the files still running.
+trap 'kill "${pids[@]}" 2> /dev/null || true; rm -rf "$logs"' EXIT
+
+# Job control, so a file in the background can still get Ctrl-C. Without it
+# bash makes background jobs ignore that signal, and the tests that send one
+# to a helper would see it do nothing.
+set -m
+for file in "${files[@]}"; do
+  python3 -B -m unittest -v "$file" "$@" > "$logs/$(basename "$file")" 2>&1 &
+  pids+=("$!")
+done
+
+# The logs are shown in the files' order, each when its file is done.
+failed=0
+ran=0
+for i in "${!files[@]}"; do
+  status=0
+  wait "${pids[$i]}" || status=$?
+  # unittest ends with 5 when a file has no test to run, as with `-k`.
+  if [ "$status" -eq 5 ]; then
+    continue
+  fi
+  ran=1
+  cat "$logs/$(basename "${files[$i]}")"
+  if [ "$status" -ne 0 ]; then
+    failed=1
+  fi
+done
+
+if [ "$ran" -eq 0 ]; then
+  echo "bin/test: no test matched." >&2
+  exit 1
+fi
+exit "$failed"
