@@ -57,8 +57,9 @@ let
 in
 {
   # Every Nix file (deadnix, statix, nixfmt), the shell and xonsh scripts, the
-  # zsh files (zsh -n), the workflow (actionlint) and the docs' links (lychee).
-  # CI runs it before the builds, and bin/lint runs it here.
+  # zsh files (zsh -n), the workflow (actionlint), the docs' links (lychee),
+  # and the JavaScript and Lua files, which are only parsed. CI runs it before
+  # the builds, and bin/lint runs it here.
   lint =
     pkgs.runCommand "lint"
       {
@@ -70,6 +71,8 @@ in
           zsh
           actionlint
           lychee
+          nodejs
+          luajit
           python3Packages.xonsh
         ];
       }
@@ -100,6 +103,18 @@ in
           [ -n "$file" ] && zsh -n "$file"
         done <<< "$found"
         zsh -n home/programs/zsh/zshrc
+
+        # The JavaScript of the Herdr mods and the Lua of nvim, only parsed.
+        # Both are copied or linked into place as they are, so a syntax error
+        # would otherwise show up in the running app.
+        found=$(find home/programs -name '*.js' -o -name '*.mjs')
+        while IFS= read -r file; do
+          [ -n "$file" ] && node --check "$file"
+        done <<< "$found"
+        found=$(find home/programs -name '*.lua')
+        while IFS= read -r file; do
+          [ -n "$file" ] && luajit -bl "$file" > /dev/null
+        done <<< "$found"
 
         # The workflow, with the shell in its steps checked by shellcheck too.
         actionlint .github/workflows/*.yml

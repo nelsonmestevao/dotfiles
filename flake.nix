@@ -120,6 +120,8 @@
               python3Packages.xonsh
               python3Packages.docopt
               nix-update
+              # bin/test runs the Herdr mods' tests with it.
+              nodejs
             ];
           };
         }
