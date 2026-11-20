@@ -7,34 +7,10 @@ username:
   ...
 }:
 let
-  mkSystemTimer = import ../lib/mkSystemTimer.nix {
-    inherit pkgs username;
-  };
+  mkSystemTimer = import ../lib/mkSystemTimer.nix { inherit pkgs username; };
+  mkResticBackups = import ../lib/mkResticBackups.nix { inherit lib username; };
 
   inherit (config.users.users.${username}) home;
-
-  # The same backup goes to each repo, one repo per host. Every entry gets its
-  # own restic-backups-<name> service and timer, plus a restic-<name> wrapper.
-  # Each repo has its own hour, so the three don't read the disk at once.
-  resticRepos = {
-    mega = {
-      repository = "rclone:mega:Backups/restic/${hostname}.repo";
-      backupAt = "Mon..Fri 17:00";
-    };
-    mdrive = {
-      repository = "rclone:mdrive:Backups/restic/${hostname}.repo";
-      backupAt = "Mon..Fri 18:00";
-    };
-    tpshare = {
-      repository = "rclone:tpshare:G/backups/${hostname}.repo";
-      backupAt = "Mon..Fri 19:00";
-    };
-  };
-
-  passwordFile = "${home}/.config/restic/restic.pw";
-
-  # Every backup unit. Each one tells the desktop when it fails.
-  resticUnits = map (name: "restic-backups-${name}") (lib.attrNames resticRepos);
 in
 lib.mkMerge [
   (mkSystemTimer "sync-books" "Mon..Fri 18:00"
@@ -47,53 +23,43 @@ lib.mkMerge [
     ''
   )
 
-  {
-    services.restic.backups = lib.mapAttrs (_name: repo: {
-      inherit (repo) repository;
-      inherit passwordFile;
-      user = username;
-      paths = map (dir: "${home}/${dir}") [
-        "Archive"
-        "Books"
-        "Code"
-        "Documents"
-        "Downloads"
-        "Pictures"
-        "Videos"
-      ];
-      extraBackupArgs = [
-        "--compression=max"
-        "--exclude-file=${../../home/programs/restic/exclude.txt}"
-        "--verbose"
-      ];
-      # After each backup, keep a week of daily snapshots, five weekly ones
-      # and twelve monthly ones, and delete the rest. Without this a repo
-      # grows forever.
-      pruneOpts = [
-        "--keep-daily 7"
-        "--keep-weekly 5"
-        "--keep-monthly 12"
-      ];
-      # Then read a random hundredth of the repo back and check it. A backup
-      # that can't be read is no backup, and a week of these reads about a
-      # twentieth. The README has the restore drill, which no timer can do
-      # for you. systemd reads a lone % as the start of a specifier, so 1%
-      # is written 1%%.
-      checkOpts = [ "--read-data-subset=1%%" ];
-      timerConfig = {
-        OnCalendar = repo.backupAt;
-        Persistent = true;
+  # The same folders go to each repository, one repository per host. Each
+  # one has its own hour, so the three don't read the disk at once. The README
+  # has the restore drill, which no timer can do for you.
+  (mkResticBackups {
+    passwordFile = "${home}/.config/restic/restic.pw";
+    exclude = ../../home/programs/restic/exclude.txt;
+    paths = map (dir: "${home}/${dir}") [
+      "Archive"
+      "Books"
+      "Code"
+      "Documents"
+      "Downloads"
+      "Pictures"
+      "Videos"
+    ];
+    # After each backup, a week of daily snapshots stays, five weekly ones
+    # and twelve monthly ones.
+    keep = {
+      daily = 7;
+      weekly = 5;
+      monthly = 12;
+    };
+    repos = {
+      mega = {
+        repository = "rclone:mega:Backups/restic/${hostname}.repo";
+        backupAt = "Mon..Fri 17:00";
       };
-    }) resticRepos;
-  }
-
-  # A failed backup shows a notice on the desktop, like any other timer (see
-  # ./default.nix).
-  {
-    systemd.services = lib.genAttrs resticUnits (_: {
-      unitConfig.OnFailure = "notify-failure@%N.service";
-    });
-  }
+      mdrive = {
+        repository = "rclone:mdrive:Backups/restic/${hostname}.repo";
+        backupAt = "Mon..Fri 18:00";
+      };
+      tpshare = {
+        repository = "rclone:tpshare:G/backups/${hostname}.repo";
+        backupAt = "Mon..Fri 19:00";
+      };
+    };
+  })
 
   (mkSystemTimer "backup-dbclient" "hourly"
     (with pkgs; [
