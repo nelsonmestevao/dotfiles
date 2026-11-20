@@ -24,23 +24,14 @@ in
   home.packages =
     with pkgs;
     [
-      # elixir_1_18
-      # erlang_27
-
       ## pdf documents
-      # k2pdfopt
       pdftk
       weasyprint
 
       ## image processing and optimization
       file
       image_optim
-      # gifsicle
-      # jpegoptim
-      # libwebp
       svgo
-      # optipng
-      # pngquant
 
       (pkgs.writeShellScriptBin "runex" ''
         FILE="$1"

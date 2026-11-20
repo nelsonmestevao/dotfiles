@@ -6,24 +6,13 @@
 {
   home.packages = with pkgs; [
     ghc
-    # haskell.compiler.ghc912
     haskellPackages.haskell-language-server
 
-    # haskellPackages.lhs2tex
     haskellPackages.cabal-install
     # HLS formats .cabal files with it (nvim's plugins.lua picks it). Not
     # cabal-fmt: that turns `license: NONE` into an empty field.
     haskellPackages.cabal-gild
-    # haskellPackages.hindent
     haskellPackages.hlint
-
-    # haskellPackages.HUnit
-    # haskellPackages.gloss
-
-    # haskellPackages.pandoc
-    # haskellPackages.pandoc-citeproc
-    # haskellPackages.pandoc-include-code
-    # haskellPackages.patat
 
     # OpenGL
     freeglut

@@ -56,11 +56,6 @@ with lib.hm.gvariant;
     adwaita-icon-theme
   ];
 
-  # dconf write /org/gnome/desktop/input-sources/xkb-options "['caps:ctrl_modifier']"
-  # gsettings get org.gnome.desktop.interface color-scheme
-  # gsettings set org.gnome.desktop.background picture-uri-dark file:///home/nelson/Pictures/desktop.jpg
-  # gsettings set org.gnome.desktop.background picture-uri file:///home/nelson/Pictures/login.jpg
-
   home.sessionVariables = {
     GSETTINGS_SCHEMA_DIR = builtins.concatStringsSep ":" config.dotfiles.programs.gnome.extensionSchemaDirs;
   };

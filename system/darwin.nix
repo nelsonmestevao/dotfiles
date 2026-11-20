@@ -40,7 +40,6 @@
   # bottom screen edge. Frees vertical space for AeroSpace-tiled windows.
   system.defaults.dock.autohide = true;
   system.defaults.dock.autohide-delay = 0.0;
-  # system.defaults.dock.autohide-time-modifier = 0.0;
 
   # Show the full path in Finder, like the GNOME Files location bar. The path
   # bar sits at the bottom of each window; double-click a folder in it to go
