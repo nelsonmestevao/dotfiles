@@ -1,7 +1,5 @@
 {
-  nixpkgs,
-  home-manager,
-  vicinae,
+  inputs,
   pkgsFor,
   knownNames,
   hostNames,
@@ -15,7 +13,7 @@
   user,
 }:
 let
-  inherit (nixpkgs) lib;
+  inherit (inputs.nixpkgs) lib;
   pkgs = pkgsFor.${host.system};
   importModules = import ./importModules.nix { inherit lib; };
   mkHomeModule = import ../home/lib/mkHomeModule.nix;
@@ -51,7 +49,7 @@ let
     valueFor = import ../home/lib/valueFor.nix hostInfo;
   };
 in
-home-manager.lib.homeManagerConfiguration {
+inputs.home-manager.lib.homeManagerConfiguration {
   inherit pkgs;
   extraSpecialArgs = arguments;
   modules = [
@@ -64,7 +62,7 @@ home-manager.lib.homeManagerConfiguration {
     # Every module is imported on every OS, the Linux-only ones too (vicinae,
     # the GNOME extensions). A module that is off does nothing, but its
     # options must exist, or a user file that sets one fails on a Mac.
-    vicinae.homeManagerModules.default
+    inputs.vicinae.homeManagerModules.default
   ]
   ++ importModules mkHomeModule "home/programs"
   ++ plainPrograms

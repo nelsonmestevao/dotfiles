@@ -1,16 +1,12 @@
-{
-  nixpkgs,
-  vicinae,
-  pkgsFor,
-}:
+{ inputs, pkgsFor }:
 hostname:
 { host, users }:
 let
-  inherit (nixpkgs) lib;
+  inherit (inputs.nixpkgs) lib;
   importModules = import ./importModules.nix { inherit lib; };
   mkSystemModule = import ../system/lib/mkSystemModule.nix;
 in
-nixpkgs.lib.nixosSystem {
+lib.nixosSystem {
   inherit (host) system;
   # `host` is this host's entry in config/hosts.nix; `users` holds the
   # config/users.nix entries of the users it lists.
@@ -22,7 +18,7 @@ nixpkgs.lib.nixosSystem {
     # has the overlays and allows unfree packages.
     { nixpkgs.pkgs = pkgsFor.${host.system}; }
     ../system/nixos.nix
-    vicinae.nixosModules.default
+    inputs.vicinae.nixosModules.default
     (
       { config, pkgs, ... }:
       {

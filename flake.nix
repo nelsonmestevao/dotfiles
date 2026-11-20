@@ -50,11 +50,8 @@
   };
   outputs =
     inputs@{
-      self,
       nixpkgs,
       home-manager,
-      nix-darwin,
-      vicinae,
       ...
     }:
     let
@@ -69,10 +66,7 @@
       inherit
         (import ./lib {
           inherit
-            nixpkgs
-            home-manager
-            nix-darwin
-            vicinae
+            inputs
             hosts
             users
             overlays
@@ -126,9 +120,7 @@
       checks = lib.genAttrs hostSystems (
         import ./lib/checks.nix {
           inherit
-            nixpkgs
-            home-manager
-            self
+            inputs
             checkedData
             dataIsRight
             nixosConfigs

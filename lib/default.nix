@@ -1,9 +1,8 @@
 # Turns the data in `config/` into the flake's configurations.
 {
-  nixpkgs,
-  home-manager,
-  nix-darwin,
-  vicinae,
+  # The flake's inputs. Each file here takes the ones it uses, so a new input
+  # is named only where it is used.
+  inputs,
   hosts,
   users,
   overlays,
@@ -11,6 +10,7 @@
   root ? ../.,
 }:
 let
+  inherit (inputs) nixpkgs;
   inherit (nixpkgs) lib;
   inherit (import ./roles.nix { inherit lib; }) rolesOf rolesAcross;
   schema = import ./schema.nix { inherit lib; };
@@ -54,8 +54,8 @@ let
   # ── Configurations ─────────────────────────────────────────────────────────
 
   builders = {
-    nixos = import ./mkNixosConfig.nix { inherit nixpkgs vicinae pkgsFor; };
-    darwin = import ./mkDarwinConfig.nix { inherit nixpkgs nix-darwin pkgsFor; };
+    nixos = import ./mkNixosConfig.nix { inherit inputs pkgsFor; };
+    darwin = import ./mkDarwinConfig.nix { inherit inputs pkgsFor; };
   };
 
   # The hosts with this `platform`, each with its users' entries.
@@ -71,9 +71,7 @@ let
 
   mkHomeConfig = import ./mkHomeConfig.nix {
     inherit
-      nixpkgs
-      home-manager
-      vicinae
+      inputs
       pkgsFor
       knownNames
       hostNames

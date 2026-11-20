@@ -1,9 +1,7 @@
 # The flake's checks for one system: lint, the lib tests, and one check per
 # configuration that runs on that system.
 {
-  nixpkgs,
-  home-manager,
-  self,
+  inputs,
   checkedData,
   dataIsRight,
   nixosConfigs,
@@ -11,6 +9,7 @@
   homeConfigs,
 }:
 let
+  inherit (inputs) nixpkgs home-manager self;
   inherit (nixpkgs) lib;
 
   # The scripts in bin/ and .github/scripts/, sorted by ./scriptKind.nix, like
