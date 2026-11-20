@@ -1,25 +1,26 @@
 {
-  lib,
+  config,
   pkgs,
   mkSymlink,
   ...
 }:
+let
+  # VS Code reads its user config from ~/Library/Application Support on macOS,
+  # but from $XDG_CONFIG_HOME (~/.config) on Linux.
+  userDir =
+    if pkgs.stdenv.hostPlatform.isDarwin then
+      "Library/Application Support/Code/User"
+    else
+      "${config.xdg.configHome}/Code/User";
+in
 {
   home.packages = with pkgs; [
     pkgs.unstable.vscode
   ];
 
-  # VS Code reads its user config from ~/Library/Application Support on macOS,
-  # but from $XDG_CONFIG_HOME (~/.config) on Linux.
-  home.file = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
-    "Library/Application Support/Code/User/settings.json" = mkSymlink ./settings.json;
-    "Library/Application Support/Code/User/keybindings.json" = mkSymlink ./keybindings.json;
-    "Library/Application Support/Code/User/tasks.json" = mkSymlink ./tasks.json;
-  };
-
-  xdg.configFile = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
-    "Code/User/settings.json" = mkSymlink ./settings.json;
-    "Code/User/keybindings.json" = mkSymlink ./keybindings.json;
-    "Code/User/tasks.json" = mkSymlink ./tasks.json;
+  home.file = {
+    "${userDir}/settings.json" = mkSymlink ./settings.json;
+    "${userDir}/keybindings.json" = mkSymlink ./keybindings.json;
+    "${userDir}/tasks.json" = mkSymlink ./tasks.json;
   };
 }
