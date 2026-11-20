@@ -52,13 +52,9 @@
   users.users = lib.mapAttrs (_username: userCfg: {
     isNormalUser = true;
     description = userCfg.name;
-    extraGroups = userCfg.extraGroups or [ ];
+    inherit (userCfg) extraGroups;
     shell = pkgs.zsh;
   }) users;
-
-  # ── Extra Packages ────────────────────────────────────────────────────
-  environment.systemPackages = with pkgs; [
-  ];
 
   # ──────────────────────────────────────────────────────────────────────
   # The release this host was first installed with; see config/hosts.nix.
