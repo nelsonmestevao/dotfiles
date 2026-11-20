@@ -111,8 +111,10 @@ alias ip='ip -c=auto'
 alias tp5="$HOME/Code/UMinho/aulas-pi/2526/tp5"
 alias tp6="$HOME/Code/UMinho/aulas-pi/2526/tp6"
 
-alias mega="restic -r rclone:mega:Backups/restic/framework.repo"
-alias mdrive="restic -r rclone:mdrive:Backups/restic/framework.repo"
-alias tpshare="restic -r rclone:tpshare:G/backups/framework.repo"
+# The backups, by repository: `mega snapshots`. NixOS installs each command
+# where the backup timers run, with the repository and the password set.
+alias mega=restic-mega
+alias mdrive=restic-mdrive
+alias tpshare=restic-tpshare
 
 alias wt='dir=$(git worktree-select) && [ -n "$dir" ] && cd "$dir"'
