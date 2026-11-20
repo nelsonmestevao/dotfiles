@@ -106,8 +106,11 @@ in
 
         # The docs' links. Each must point to a file or folder that is here,
         # which holds only what git tracks, and to a heading that exists.
-        # --offline leaves the URLs alone: the sandbox has no network.
-        lychee --offline --include-fragments --no-progress --root-dir "$PWD" \
+        # --offline leaves the URLs alone: the sandbox has no network. lychee
+        # still sets up its web client, which stops without a certificate
+        # file, and the Linux sandbox has none.
+        SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt \
+          lychee --offline --include-fragments --no-progress --root-dir "$PWD" \
           README.md AGENTS.md ROADMAP.md
 
         touch "$out"
