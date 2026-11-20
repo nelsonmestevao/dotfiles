@@ -100,16 +100,6 @@ with lib.hm.gvariant;
     };
 
     "org/gnome/shell/keybindings" = {
-      switch-to-application-1 = [ ];
-      switch-to-application-2 = [ ];
-      switch-to-application-3 = [ ];
-      switch-to-application-4 = [ ];
-      switch-to-application-5 = [ ];
-      switch-to-application-6 = [ ];
-      switch-to-application-7 = [ ];
-      switch-to-application-8 = [ ];
-      switch-to-application-9 = [ ];
-      switch-to-application-10 = [ ];
       toggle-overview = [ ];
       toggle-application-view = [ "<Super>a" ];
       toggle-message-tray = [ "<Super>m" ];
@@ -118,7 +108,10 @@ with lib.hm.gvariant;
       show-screen-recording-ui = [ "<Control>Print" ];
       screenshot = [ "<Super>Print" ];
       screenshot-window = [ "<Alt>Print" ];
-    };
+    }
+    # Super+1 to Super+0 switch workspaces (see below), so the shortcuts
+    # that open the dock's apps with the same keys are turned off.
+    // lib.genAttrs (map (n: "switch-to-application-${toString n}") (lib.range 1 10)) (_: [ ]);
 
     "org/gnome/desktop/wm/keybindings" = {
       switch-input-source = [ "<Super>Space" ];
