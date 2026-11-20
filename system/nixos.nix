@@ -29,6 +29,10 @@
     "vicinae.cachix.org-1:1kDrfienkGHPYbkpNj1mWTr7Fm1+zcenzgTizIcI3oc="
   ];
 
+  # vicinae's NixOS module turns its input server on for every host. Here it
+  # is off unless the host turns on dotfiles.modules.vicinae.
+  programs.vicinae.input-server.enable = lib.mkDefault false;
+
   boot.tmp.cleanOnBoot = true;
 
   # Once a month, delete old generations in every profile, the users' homes
