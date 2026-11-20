@@ -16,6 +16,29 @@ let
   # ctrl-shift-l cycles the layouts.
   mods = lib.attrNames (lib.filterAttrs (_: type: type == "directory") (builtins.readDir ./mods));
   layouts = lib.attrNames (builtins.readDir ./layouts);
+
+  # The Material Icon Theme's icons (MIT), which the filetree and file-icons
+  # mods show. The repo doesn't track these 1,256 files. Nix fetches them, and
+  # the activation script below copies them in. The icons.js in both mods was
+  # made from this version, so move them together.
+  #
+  # Upstream calls a recoloured copy `<name>.clone.svg`, and icons.js knows it
+  # as `<name>.svg`.
+  materialIcons =
+    pkgs.runCommand "material-icon-theme-icons-5.40.0"
+      {
+        src = pkgs.fetchzip {
+          url = "https://registry.npmjs.org/material-icon-theme/-/material-icon-theme-5.40.0.tgz";
+          hash = "sha256-ZUZECLyqUjGOshs5QNr0/2zgHacLQX/B2DVWEO3/w3k=";
+        };
+      }
+      ''
+        cp -r "$src/icons" "$out"
+        chmod -R u+w "$out"
+        for clone in "$out"/*.clone.svg; do
+          mv "$clone" "''${clone%.clone.svg}.svg"
+        done
+      '';
 in
 {
   # On macOS, Herdr.app installs and updates itself (herdr-app, hc and
@@ -54,12 +77,23 @@ in
     for m in "''${mods[@]}"; do
       [[ -L $dst/$m ]] && run rm "$dst/$m"
       run mkdir -p "$dst/$m"
+      # file-icons gets its icons/ folder from Nix, after this loop, so
+      # --delete must leave that folder alone.
+      keep=()
+      [[ $m == file-icons ]] && keep=(--exclude /icons)
       # --delete drops files gone from the repo; excluded files (what Herdr
       # writes into each mod, downloads, the marker) are kept.
       run ${lib.getExe pkgs.rsync} -rt --delete --no-links \
         --exclude gpui-kit.d.ts --exclude jsconfig.json --exclude .cache --exclude "$marker" \
-        "$src/$m/" "$dst/$m/"
+        "''${keep[@]}" "$src/$m/" "$dst/$m/"
       run touch "$dst/$m/$marker"
     done
+
+    # The icons come from the Nix store, where nothing is writable, so the
+    # copies are made writable: the next switch can then replace them.
+    if [[ -d $dst/file-icons ]]; then
+      run ${lib.getExe pkgs.rsync} -rt --delete --chmod=u+w \
+        ${materialIcons}/ "$dst/file-icons/icons/"
+    fi
   '';
 }
