@@ -66,6 +66,7 @@
   dotfiles.programs.jj.enable = true;
   dotfiles.programs.jq.enable = true;
   dotfiles.programs.mise.enable = true;
+  dotfiles.programs.nix-index.enable = true;
   dotfiles.programs.onefetch.enable = true;
   dotfiles.programs.ouch.enable = true;
   dotfiles.programs.projectionist.enable = true;

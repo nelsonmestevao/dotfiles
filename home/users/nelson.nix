@@ -125,6 +125,7 @@
   dotfiles.programs.mise.enable = true;
   dotfiles.programs.mysql.enable = false;
   dotfiles.programs.ngrok.enable = true;
+  dotfiles.programs.nix-index.enable = true;
   dotfiles.programs.nix-search-tv.enable = true;
   dotfiles.programs.onefetch.enable = true;
   dotfiles.programs.opencode.enable = false;

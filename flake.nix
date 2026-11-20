@@ -47,6 +47,13 @@
       url = "github:tomasz-tomczyk/crit";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # A ready-made index of which package has which command, rebuilt upstream
+    # every week, so no machine has to index nixpkgs itself.
+    nix-index-database = {
+      url = "github:nix-community/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs =
     inputs@{
