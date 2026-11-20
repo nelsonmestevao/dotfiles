@@ -13,7 +13,9 @@ let
   inherit (config.users.users.${username}) home;
 in
 lib.mkMerge [
-  (mkSystemTimer "sync-books" "Mon..Fri 18:00"
+  # Half an hour before the first backup, so the books are there by then and
+  # the two don't read the folder at once.
+  (mkSystemTimer "sync-books" "Mon..Fri 16:30"
     (with pkgs; [
       rclone
     ])
