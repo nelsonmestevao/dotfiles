@@ -1,7 +1,7 @@
 {
   nixpkgs,
   nix-darwin,
-  overlays,
+  pkgsFor,
 }:
 hostname:
 { host, users }:
@@ -19,7 +19,9 @@ nix-darwin.lib.darwinSystem {
   modules = [
     {
       nixpkgs.hostPlatform = host.system;
-      nixpkgs.overlays = overlays;
+      # The nixpkgs every config on this system shares (see ./default.nix).
+      # It has the overlays and allows unfree packages.
+      nixpkgs.pkgs = pkgsFor.${host.system};
     }
     ../system/darwin.nix
   ]
