@@ -114,6 +114,8 @@
               jq
               nh
               nix-diff
+              # bin/doctor asks it for the remotes it has.
+              rclone
               python3
               python3Packages.xonsh
               python3Packages.docopt

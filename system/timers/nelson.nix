@@ -157,4 +157,27 @@ lib.mkMerge [
     ${pkgs.git}/bin/git commit --no-verify --no-gpg-sign --message "$(${pkgs.curl}/bin/curl -s https://whatthecommit.com/index.txt)"
     GIT_SSH_COMMAND="${pkgs.openssh}/bin/ssh -i $HOME/.ssh/id_ed25519" ${pkgs.git}/bin/git push
   '')
+
+  # What these timers need that no switch can make, because it is a secret.
+  # bin/doctor reads this list on the machine and says what is missing.
+  {
+    environment.etc."dotfiles/made-by-hand.json".text = builtins.toJSON {
+      files =
+        map
+          (path: {
+            inherit path;
+            what = "The password of the Restic repositories.";
+            how = "Write the password in it, on one line, then run: chmod 600 ${path}";
+          })
+          (lib.unique (lib.mapAttrsToList (_: backup: backup.passwordFile) config.services.restic.backups));
+
+      # The remote of each repository, and the one sync-books copies to.
+      rcloneRemotes = lib.unique (
+        [ "gdrive" ]
+        ++ lib.mapAttrsToList (
+          _: backup: lib.elemAt (lib.splitString ":" backup.repository) 1
+        ) config.services.restic.backups
+      );
+    };
+  }
 ]

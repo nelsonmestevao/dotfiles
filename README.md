@@ -345,6 +345,17 @@ To see what would change first, run `bin/build`. It takes the same `os` and
 `home` arguments, builds the configs, and prints the package diff. It doesn't
 switch, so it needs no `sudo`.
 
+### What a switch can't make
+
+A few things are made by hand on each machine, because they are secrets: the
+Restic password file, the rclone remotes, the SSH key that signs your commits,
+and `~/.zshenv.local` for tokens. `bin/doctor` checks them on the machine it
+runs on and says what is missing and how to make it. It changes nothing.
+
+A NixOS config that needs such a thing says so in
+`/etc/dotfiles/made-by-hand.json`, which `bin/doctor` reads. The backup timers
+do, in `system/timers/`.
+
 ### Rolling back
 
 Each switch keeps the one before it, so you can go back:
@@ -575,6 +586,7 @@ that shell for you (`direnv allow` once).
 | `bin/format`                   | Formats every Nix file (`nix fmt`).                                  |
 | `bin/test`                     | Tests the helper scripts, like CI does.                              |
 | `bin/autoclean [--dry-run]`    | Deletes old generations and frees space (asks for your password).    |
+| `bin/doctor`                   | Checks what is set up by hand on this machine, and says what is missing. |
 | `bin/setup user\|host <name>`  | Adds a user or host (see [Installing](#-installing)).                |
 | `bin/new program <name>`       | Creates a Home Manager program in `home/programs/<name>/`.           |
 | `bin/new module <name>`        | Creates a NixOS module in `system/modules/nixos/<name>/`.            |

@@ -1,0 +1,155 @@
+#!/usr/bin/env -S nix --extra-experimental-features nix-command --extra-experimental-features flakes develop --command xonsh --no-rc
+"""
+Checks what no switch can make: the files and logins that are set up by hand
+on each machine, because they are secrets. Says what is missing and how to
+make it. Changes nothing.
+
+Usage:
+  {program}
+  {program} (-h | --help)
+  {program} (-v | --version)
+
+Options:
+  -h --help         Show this screen.
+  -v --version      Show version.
+
+On the machine it runs on, for the user who runs it, it checks:
+
+  - what the system says it needs. A NixOS host lists that in
+    /etc/dotfiles/made-by-hand.json (see system/timers/): the Restic password
+    file and the rclone remotes of the backups;
+  - the key, or the program, that signs your commits, when git is set to
+    sign;
+  - ~/.zshenv.local, for tokens and settings of this machine. It is optional.
+"""
+import glob
+import json
+import os
+import shutil
+import sys
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
+from common import GREEN, RED, YELLOW, fail, paint, run
+
+# Where a NixOS host says what it needs made by hand. The tests point this at
+# a file of their own.
+NEEDS = os.environ.get('DOTFILES_MADE_BY_HAND', '/etc/dotfiles/made-by-hand.json')
+
+SIGNING_KEY_HINT = "Or change dotfiles.programs.git.signingKey in your file in home/users/."
+
+
+def found(what):
+    print(f"{paint('✓', GREEN)} {what}")
+    return True
+
+
+def missing(what, how):
+    print(f"{paint('✗', RED)} {what}")
+    print(f"    {how}")
+    return False
+
+
+def optional(what, why):
+    print(f"{paint('!', YELLOW)} {what}")
+    print(f"    {why}")
+    return True
+
+
+def needed_by_the_system():
+    """What this host's system asks for by hand: {'files': [...],
+    'rcloneRemotes': [...]}. A host that asks for nothing has no such file."""
+    try:
+        with open(NEEDS) as file:
+            return json.load(file)
+    except FileNotFoundError:
+        return {}
+
+
+def check_files(files):
+    """Each is {'path', 'what', 'how'}, written next to the config that
+    needs the file."""
+    return [found(f"{entry['path']}: {entry['what']}") if os.path.isfile(entry['path'])
+            else missing(f"{entry['path']} is missing. {entry['what']}", entry['how'])
+            for entry in files]
+
+
+def check_remotes(remotes):
+    if not remotes:
+        return []
+    listed = !(rclone listremotes)
+    if listed.returncode != 0:
+        return [missing("rclone could not list its remotes.", (listed.err or '').strip() or "Run `rclone listremotes` to see why.")]
+    have = {line.strip().rstrip(':') for line in listed.out.splitlines() if line.strip()}
+    return [found(f"rclone remote {name}") if name in have
+            else missing(f"rclone has no remote named {name}.", f"Run `rclone config` and add one with that name.")
+            for name in remotes]
+
+
+def git_setting(name):
+    """A setting of the user's own git config, or '' when it isn't set."""
+    result = !(git config --global --includes --get @(name))
+    return result.out.strip() if result.returncode == 0 else ''
+
+
+def keys_on_this_machine():
+    """The public keys in ~/.ssh/*.pub and in the SSH agent, each as its
+    first two words: the type and the key itself."""
+    lines = []
+    for path in glob.glob(os.path.expanduser('~/.ssh/*.pub')):
+        with open(path) as file:
+            lines += file.read().splitlines()
+    agent = !(ssh-add -L)
+    if agent.returncode == 0:
+        lines += agent.out.splitlines()
+    return {tuple(line.split()[:2]) for line in lines if len(line.split()) >= 2}
+
+
+def check_signing():
+    """git signs commits with an SSH key. The user file gives the key as a
+    path or as the public key itself, and sometimes a program that signs with
+    it (1Password). A host with no key set signs nothing."""
+    key = git_setting('user.signingkey')
+    program = git_setting('gpg.ssh.program')
+    if not key:
+        return []
+    if program:
+        if shutil.which(program) or os.path.exists(program):
+            return [found(f"{program} signs your commits")]
+        return [missing(f"{program}, which signs your commits, is not installed.",
+                        "Install it, or change dotfiles.programs.git.signingProgram in your file in home/users/.")]
+    if key.startswith(('~', '/')):
+        path = os.path.expanduser(key)
+        if os.path.isfile(path):
+            return [found(f"{key} signs your commits")]
+        return [missing(f"{key}, the key that signs your commits, is missing.",
+                        f"Copy the key pair there. {SIGNING_KEY_HINT}")]
+    if tuple(key.split()[:2]) in keys_on_this_machine():
+        return [found("The key that signs your commits is on this machine")]
+    return [missing("The key that signs your commits is not on this machine.",
+                    f"No file in ~/.ssh/*.pub and no key in the SSH agent matches it. Copy the key pair to ~/.ssh. {SIGNING_KEY_HINT}")]
+
+
+def check_zshenv_local():
+    if os.path.isfile(os.path.expanduser('~/.zshenv.local')):
+        return [found("~/.zshenv.local")]
+    return [optional("~/.zshenv.local is not there.",
+                     "That is fine unless this machine needs tokens or settings of its own. zsh reads the file when it exists.")]
+
+
+def main(args):
+    needs = needed_by_the_system()
+    results = (check_files(needs.get('files', []))
+               + check_remotes(needs.get('rcloneRemotes', []))
+               + check_signing()
+               + check_zshenv_local())
+    lacking = results.count(False)
+    print()
+    if lacking:
+        fail(f"{lacking} missing. Nothing was changed.")
+    print(f"{paint('✓', GREEN)} Nothing is missing.")
+
+
+if __name__ == '__main__':
+    run(main, __doc__, __file__)
+
+# vim: ft=xonsh
