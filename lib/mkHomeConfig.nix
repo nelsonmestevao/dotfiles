@@ -19,8 +19,8 @@ let
   pkgs = pkgsFor.${host.system};
   importModules = import ./importModules.nix { inherit lib; };
   mkHomeModule = import ../home/lib/mkHomeModule.nix;
-  mkGnomeExtensionModule = import ../home/lib/mkGnomeExtensionModule.nix;
   plainPrograms = import ../home/lib/plainPrograms.nix { inherit lib pkgs; };
+  gnomeExtensions = import ../home/lib/gnomeExtensions.nix { inherit lib pkgs; };
 
   # What enableFor, disableFor and valueFor need to know about this host and
   # this user.
@@ -68,5 +68,5 @@ home-manager.lib.homeManagerConfiguration {
   ]
   ++ importModules mkHomeModule "home/programs"
   ++ plainPrograms
-  ++ importModules mkGnomeExtensionModule "home/programs/gnome/extensions";
+  ++ gnomeExtensions;
 }

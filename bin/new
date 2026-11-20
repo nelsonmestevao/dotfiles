@@ -56,6 +56,9 @@ PROGRAM_TEMPLATE = """\
 
 EXTENSION_TEMPLATE = """\
 _: {
+  # An extension with nothing to set needs no folder: name it in plain.nix,
+  # one folder up, instead.
+
   # The package is pkgs.gnomeExtensions.__NAME__ unless you set one here
   # (add pkgs to the arguments):
   # package = pkgs.unstable.gnomeExtensions.__NAME__;
