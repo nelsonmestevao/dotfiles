@@ -26,23 +26,6 @@ vim.keymap.set("c", "kj", "<Esc>")
 
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>")
 
--- ## Embrace the errors
-
--- We all do this mistakes. I would recommend you to remap your `CapsLock` key
--- system wise. Less errors of this nature would happen. However, if you choose
--- not to, this list of shortcuts will make you a little bit happier.
-
-vim.keymap.set("c", "W!", "w!")
-vim.keymap.set("c", "Q!", "q!")
-vim.keymap.set("c", "Qall!", "qall!")
-vim.keymap.set("c", "Wq", "wq")
-vim.keymap.set("c", "Wa", "wa")
-vim.keymap.set("c", "wQ", "wq")
-vim.keymap.set("c", "WQ", "wq")
-vim.keymap.set("c", "W", "w")
-vim.keymap.set("c", "Q", "q")
-vim.keymap.set("c", "Qall", "qall")
-
 -- ## Old habits are hard to break
 
 -- I could not live without this old habit. Saving with key sequence `Ctrl` + `S`.
@@ -72,8 +55,10 @@ vim.keymap.set("n", "N", "Nzzzv")
 -- But, hitting `gj` will move the cursor down one displayed line. This will
 -- enable you to move around on a long sentence wrapped in multiple rows/lines.
 
-vim.keymap.set("n", "j", "gj")
-vim.keymap.set("n", "k", "gk")
+-- With a count, move by real lines: `5j` has to land on the line that the
+-- relative number 5 points at.
+vim.keymap.set("n", "j", function() return vim.v.count == 0 and "gj" or "j" end, { expr = true })
+vim.keymap.set("n", "k", function() return vim.v.count == 0 and "gk" or "k" end, { expr = true })
 
 -- It makes navigating easier. I got this tip from [Mastering Vim Quickly
 -- Newsletter](https://masteringvim.com/).

@@ -805,7 +805,21 @@ local plugins = {
       })
 
       -- ── Keymaps ─────
-      vim.keymap.set("n", "K", vim.lsp.buf.hover)
+      -- `K` needs no map: nvim maps it to hover in a buffer whose server can
+      -- hover, and leaves it alone elsewhere, like in a help file.
+      --
+      -- `gd` goes to the definition only where a server can find one. Copilot
+      -- attaches almost everywhere and can't, so without the check `gd` would
+      -- lose vim's own jump in every file.
+      vim.api.nvim_create_autocmd("LspAttach", {
+        group = vim.api.nvim_create_augroup("lsp_keymaps", { clear = true }),
+        callback = function(event)
+          local client = vim.lsp.get_client_by_id(event.data.client_id)
+          if client and client:supports_method("textDocument/definition") then
+            vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = event.buf })
+          end
+        end,
+      })
       -- Open the documentation in a vertical split
       vim.keymap.set("n", "<leader>K", function()
         local clients = vim.lsp.get_clients({ bufnr = 0, method = "textDocument/hover" })
@@ -827,7 +841,6 @@ local plugins = {
           vim.bo[buf].filetype = "markdown"
         end)
       end, { noremap = true, silent = true })
-      vim.keymap.set("n", "gd", vim.lsp.buf.definition)
       vim.keymap.set("i", "<C-Space>", vim.lsp.completion.get, { desc = "Ask the language server for completions" })
       -- <C-y> takes Copilot's suggestion first, as it did with Supermaven.
       -- With none showing, it's the built-in <C-y>, which accepts the menu
