@@ -373,7 +373,9 @@ Each host in `config/hosts.nix` has these fields:
 
 - **`system`** — like `x86_64-linux` or `aarch64-darwin`.
 - **`platform`** — `"nixos"` or `"darwin"`. Leave it out for a standalone
-  Home Manager host.
+  Home Manager host. On Linux, such a host also gets Home Manager's
+  `targets.genericLinux`, so the other distro's desktop finds the apps, icons
+  and graphics drivers that Nix installs.
 - **`roles`** — what the host is for, like `[ "desktop" ]`. Optional.
 - **`users`** — the users from `config/users.nix` that get a home config there.
 - **`stateVersion`** — the release the host was first installed with, like
