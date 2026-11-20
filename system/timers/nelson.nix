@@ -37,10 +37,15 @@ let
   resticUnits = map (name: "restic-backups-${name}") (lib.attrNames resticRepos);
 in
 lib.mkMerge [
-  (mkSystemTimer "sync-books" "Mon..Fri 18:00" ''
-    ${pkgs.rclone}/bin/rclone sync ~/Books gdrive:Backups/Calibre -v
-    # --log-file=$HOME/.logs/rclone/backup-books.log
-  '')
+  (mkSystemTimer "sync-books" "Mon..Fri 18:00"
+    (with pkgs; [
+      rclone
+    ])
+    ''
+      rclone sync ~/Books gdrive:Backups/Calibre -v
+      # --log-file=$HOME/.logs/rclone/backup-books.log
+    ''
+  )
 
   {
     services.restic.backups = lib.mapAttrs (_name: repo: {
@@ -90,13 +95,20 @@ lib.mkMerge [
     });
   }
 
-  (mkSystemTimer "backup-dbclient" "hourly" ''
-    cd $HOME/.dbclient/query || exit 1
-    ${pkgs.git}/bin/git diff --quiet && exit 0
-    ${pkgs.git}/bin/git add --all
-    ${pkgs.git}/bin/git commit --no-verify --no-gpg-sign --message "$(${pkgs.curl}/bin/curl -s https://whatthecommit.com/index.txt)"
-    GIT_SSH_COMMAND="${pkgs.openssh}/bin/ssh -i $HOME/.ssh/id_ed25519" ${pkgs.git}/bin/git push
-  '')
+  (mkSystemTimer "backup-dbclient" "hourly"
+    (with pkgs; [
+      git
+      curl
+      openssh
+    ])
+    ''
+      cd $HOME/.dbclient/query || exit 1
+      git diff --quiet && exit 0
+      git add --all
+      git commit --no-verify --no-gpg-sign --message "$(curl -s https://whatthecommit.com/index.txt)"
+      GIT_SSH_COMMAND="ssh -i $HOME/.ssh/id_ed25519" git push
+    ''
+  )
 
   # What these timers need that no switch can make, because it is a secret.
   # bin/doctor reads this list on the machine and says what is missing.
