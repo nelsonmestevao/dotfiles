@@ -31,9 +31,9 @@ let
     "aarch64-darwin"
   ];
 
-  # One nixpkgs for each system, with the overlays. Every home on a system
-  # and the flake's packages share it. Loading nixpkgs is the slow part of an
-  # evaluation, and each home used to load its own.
+  # One nixpkgs for each system, with the overlays. Every system and home on
+  # it and the flake's packages share it. Loading nixpkgs is the slow part of
+  # an evaluation, and each configuration used to load its own.
   pkgsFor = lib.genAttrs lib.systems.flakeExposed (
     system:
     import nixpkgs {
@@ -54,8 +54,8 @@ let
   # ── Configurations ─────────────────────────────────────────────────────────
 
   builders = {
-    nixos = import ./mkNixosConfig.nix { inherit nixpkgs vicinae overlays; };
-    darwin = import ./mkDarwinConfig.nix { inherit nixpkgs nix-darwin overlays; };
+    nixos = import ./mkNixosConfig.nix { inherit nixpkgs vicinae pkgsFor; };
+    darwin = import ./mkDarwinConfig.nix { inherit nixpkgs nix-darwin pkgsFor; };
   };
 
   # The hosts with this `platform`, each with its users' entries.

@@ -20,8 +20,6 @@
   # nix-command are enabled by Determinate out of the box, and it handles GC.
   nix.enable = false;
 
-  nixpkgs.config.allowUnfree = true;
-
   # ── Users ───────────────────────────────────────────────────────────────
   # Homebrew activation and user-scoped defaults run as the primary user.
   # macOS owns the account itself; we only point nix-darwin at it.

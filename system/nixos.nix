@@ -40,8 +40,6 @@
     extraArgs = toString (import ../config/cleanup.nix);
   };
 
-  nixpkgs.config.allowUnfree = true;
-
   # ── Users ───────────────────────────────────────────────────────────────
   programs.zsh.enable = true;
 

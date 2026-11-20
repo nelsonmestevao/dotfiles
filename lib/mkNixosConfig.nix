@@ -1,7 +1,7 @@
 {
   nixpkgs,
   vicinae,
-  overlays,
+  pkgsFor,
 }:
 hostname:
 { host, users }:
@@ -18,7 +18,9 @@ nixpkgs.lib.nixosSystem {
     inherit hostname host users;
   };
   modules = [
-    { nixpkgs.overlays = overlays; }
+    # The nixpkgs every config on this system shares (see ./default.nix). It
+    # has the overlays and allows unfree packages.
+    { nixpkgs.pkgs = pkgsFor.${host.system}; }
     ../system/nixos.nix
     vicinae.nixosModules.default
     (
