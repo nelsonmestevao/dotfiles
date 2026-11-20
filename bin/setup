@@ -36,7 +36,7 @@ import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
 from common import GREEN, YELLOW, fail, paint, run, warn
-from scaffold import apply_files, checked, insert_entry, read_config, require, validate_name
+from scaffold import apply_files, checked, insert_entry, read_config, render_template, require, validate_name
 
 HOSTS_FILE = "config/hosts.nix"
 USERS_FILE = "config/users.nix"
@@ -118,10 +118,6 @@ USER_TEMPLATE = """\
 """
 
 # ── Helpers ──────────────────────────────────────────────────────────────
-
-def render_template(template, name):
-    return template.replace("__NAME_CAP__", name.capitalize()).replace("__NAME__", name)
-
 
 def has_terminal():
     """gum prompts need a terminal. Agents and pipes don't have one."""
