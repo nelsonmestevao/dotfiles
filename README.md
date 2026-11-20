@@ -367,6 +367,27 @@ a Home Manager–only machine, nothing deletes old generations on its own
 (Determinate Nix only removes what no generation uses), so run
 `bin/autoclean` there now and then.
 
+### Backups
+
+framework backs up `Archive`, `Books`, `Code`, `Documents`, `Downloads`,
+`Pictures` and `Videos` to three Restic repositories, each at its own hour on
+weekdays (`system/timers/nelson.nix`). After each backup it keeps a week of
+daily snapshots, five weekly ones and twelve monthly ones, and deletes the
+rest. On Saturdays it reads a random twentieth of each repository back and
+checks it. A failed backup or check shows a notice on the desktop.
+
+No timer can prove that a restore works. Every few months, restore one folder
+from each repository and compare it with the real one:
+
+```shell
+restic-mega snapshots   # what the repository holds
+restic-mega restore latest --target /tmp/restore --include ~/Documents/Taxes
+diff -r ~/Documents/Taxes /tmp/restore/home/nelson/Documents/Taxes && echo same
+rm -rf /tmp/restore
+```
+
+Then do the same with `restic-mdrive` and `restic-tpshare`.
+
 ### What goes into a host entry
 
 Each host in `config/hosts.nix` has these fields:
