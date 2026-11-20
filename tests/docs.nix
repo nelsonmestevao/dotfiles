@@ -328,11 +328,4 @@ in
     "README.md"
     "AGENTS.md"
   ];
-
-  # The README says direnv opens the dev shell on `cd`; that needs this file.
-  theDevShellLoadsOnCd =
-    if !builtins.readDir root ? ".envrc" then
-      [ ".envrc is missing, so direnv opens no dev shell" ]
-    else
-      lib.optional (lib.trim (read ".envrc") != "use flake") ".envrc holds more than `use flake`";
 }

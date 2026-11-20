@@ -611,9 +611,9 @@ nix build --no-link ".#checks.$(nix config show system).lib-tests"
 `tests/docs.nix` checks the docs, as cases of the same run. Every link in
 README.md, AGENTS.md and ROADMAP.md must point to a file or folder git tracks,
 with its name in the same case, and to a heading or `id` that exists. Every
-`bin/` script must be in the table above, both hosts tables must match
-`config/hosts.nix`, and `.envrc` must load the dev shell. A failure lists what
-is wrong, like the link and the doc it is in.
+`bin/` script must be in the table above, and both hosts tables must match
+`config/hosts.nix`. A failure lists what is wrong, like the link and the doc
+it is in.
 
 Coding agents get their rules from [`AGENTS.md`](AGENTS.md). For Claude Code,
 [`.claude/settings.json`](.claude/settings.json) also makes it ask before it
