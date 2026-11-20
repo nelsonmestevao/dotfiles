@@ -15,33 +15,26 @@ let
 
   # The same backup goes to each repo, one repo per host. Every entry gets its
   # own restic-backups-<name> service and timer, plus a restic-<name> wrapper.
-  # Each repo has its own hour, so the three don't read the disk at once, and
-  # its own morning for the weekly check.
+  # Each repo has its own hour, so the three don't read the disk at once.
   resticRepos = {
     mega = {
       repository = "rclone:mega:Backups/restic/${hostname}.repo";
       backupAt = "Mon..Fri 17:00";
-      checkAt = "Sat 10:00";
     };
     mdrive = {
       repository = "rclone:mdrive:Backups/restic/${hostname}.repo";
       backupAt = "Mon..Fri 18:00";
-      checkAt = "Sat 11:00";
     };
     tpshare = {
       repository = "rclone:tpshare:G/backups/${hostname}.repo";
       backupAt = "Mon..Fri 19:00";
-      checkAt = "Sat 12:00";
     };
   };
 
   passwordFile = "${home}/.config/restic/restic.pw";
 
-  # Every backup and check unit. Each one tells the desktop when it fails.
-  resticUnits = lib.concatMap (name: [
-    "restic-backups-${name}"
-    "restic-check-${name}"
-  ]) (lib.attrNames resticRepos);
+  # Every backup unit. Each one tells the desktop when it fails.
+  resticUnits = map (name: "restic-backups-${name}") (lib.attrNames resticRepos);
 in
 lib.mkMerge [
   (mkSystemTimer "sync-books" "Mon..Fri 18:00" ''
@@ -76,6 +69,12 @@ lib.mkMerge [
         "--keep-weekly 5"
         "--keep-monthly 12"
       ];
+      # Then read a random hundredth of the repo back and check it. A backup
+      # that can't be read is no backup, and a week of these reads about a
+      # twentieth. The README has the restore drill, which no timer can do
+      # for you. systemd reads a lone % as the start of a specifier, so 1%
+      # is written 1%%.
+      checkOpts = [ "--read-data-subset=1%%" ];
       timerConfig = {
         OnCalendar = repo.backupAt;
         Persistent = true;
@@ -83,47 +82,7 @@ lib.mkMerge [
     }) resticRepos;
   }
 
-  # Once a week, read a random twentieth of each repo back and check it. A
-  # backup that can't be read is no backup, and a year of these reads most of
-  # a repo. The README has the restore drill, which no timer can do for you.
-  {
-    systemd.services = lib.mapAttrs' (
-      name: repo:
-      lib.nameValuePair "restic-check-${name}" {
-        description = "Check the ${name} backup";
-        wants = [ "network-online.target" ];
-        after = [ "network-online.target" ];
-        # The same repo, password and cache as the backup (see the
-        # restic-${name} command).
-        environment = {
-          RESTIC_REPOSITORY = repo.repository;
-          RESTIC_PASSWORD_FILE = passwordFile;
-          RESTIC_CACHE_DIR = "/var/cache/restic-backups-${name}";
-        };
-        serviceConfig = {
-          Type = "oneshot";
-          User = username;
-          CacheDirectory = "restic-backups-${name}";
-          CacheDirectoryMode = "0700";
-          # systemd reads a lone % as the start of a specifier, so 5% is 5%%.
-          ExecStart = "${lib.getExe pkgs.restic} check --read-data-subset=5%%";
-        };
-      }
-    ) resticRepos;
-
-    systemd.timers = lib.mapAttrs' (
-      name: repo:
-      lib.nameValuePair "restic-check-${name}" {
-        wantedBy = [ "timers.target" ];
-        timerConfig = {
-          OnCalendar = repo.checkAt;
-          Persistent = true;
-        };
-      }
-    ) resticRepos;
-  }
-
-  # A failed backup or check shows a notice on the desktop. Without it, the
+  # A failed backup shows a notice on the desktop. Without it, the
   # only sign is in the journal, where nobody looks.
   {
     systemd.services =
