@@ -109,7 +109,7 @@ jobs:
   #
   # A run that builds nothing leaves the saved Nix store below unread. After a
   # week of that, GitHub may delete it, and the next build compiles herdr-app
-  # again. vicinae comes from vicinae.cachix.org. Our own Cachix cache (CI-002) will end this.
+  # again. vicinae comes from vicinae.cachix.org.
   build:
     name: build (${{ matrix.system }})
     needs: quick
@@ -137,7 +137,9 @@ jobs:
       # The Linux build needs a lot of disk. This frees 20 to 30 GB first.
       - name: Free disk space
         if: runner.os == 'Linux'
-        uses: jlumbroso/free-disk-space@main
+        # main on 2026-11-19, three commits after v2.0.0. A commit can't
+        # change under us the way a branch can.
+        uses: jlumbroso/free-disk-space@cf1e78c50ca91e757bab3edc229027eebfc07871
       - uses: cachix/install-nix-action@v31
         with:
           extra_nix_config: |

@@ -121,8 +121,5 @@ errors, and `:Lazy restore` gives the same plugins on every host.
 - **thinkpad:** it runs Home Manager on another distro, and nothing sets
   `targets.genericLinux.enable`. Turn it on for every home-only host, so Nix
   programs find fonts, icons, desktop entries and the graphics drivers.
-- **CI:** [ci.yml](.github/workflows/ci.yml) uses
-  `jlumbroso/free-disk-space@main`, which can change under you. Pin it to a
-  release or a commit.
 - **vicinae:** finish pull request #30. The old roadmap measured about an hour
   of compiling for every vicinae bump.
