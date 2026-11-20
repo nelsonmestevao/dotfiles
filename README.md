@@ -583,7 +583,7 @@ that shell for you (`direnv allow` once).
 | `bin/check --same [<rev>]`     | Shows which configs build a different derivation than `<rev>` did.   |
 | `bin/check --list`             | Prints what every config builds, as JSON. CI decides from this list. |
 | `bin/lint`                     | Checks the Nix, shell, xonsh, zsh, JavaScript and Lua files, the workflow and the docs' links, like CI. |
-| `bin/format`                   | Formats every Nix file (`nix fmt`).                                  |
+| `bin/format`                   | Formats the Nix, shell and Lua files (`nix fmt`).                    |
 | `bin/test`                     | Tests the helper scripts and the Herdr mods, like CI does.           |
 | `bin/autoclean [--dry-run]`    | Deletes old generations and frees space (asks for your password).    |
 | `bin/doctor`                   | Checks what is set up by hand on this machine, and says what is missing. |
@@ -630,8 +630,9 @@ lists the untracked files it found, whatever their type.
 `.github/scripts/` must be shell or xonsh:
 [`lib/scriptKind.nix`](lib/scriptKind.nix) reads its first line, and a script
 of neither kind stops `bin/lint` and `bin/check --eval` with its name. The
-JavaScript of the Herdr mods and the Lua of nvim are only parsed: a syntax
-error fails the check, a style choice doesn't.
+JavaScript of the Herdr mods is only parsed: a syntax error fails the check,
+a style choice doesn't. The Nix, shell and Lua files must also be formatted
+the way `bin/format` leaves them ([`lib/formatter.nix`](lib/formatter.nix)).
 
 `bin/test` runs the tests for `bin/new`, `bin/setup`, `bin/check`, `bin/update`,
 `bin/build`, `bin/rebuild` and CI's planning script, which work in throwaway

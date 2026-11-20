@@ -11,17 +11,8 @@ let
   inherit (inputs) nixpkgs home-manager self;
   inherit (nixpkgs) lib;
 
-  # The scripts in bin/ and .github/scripts/, sorted by ./scriptKind.nix, like
-  # { shell = [ "bin/lint" … ]; xonsh = [ "bin/check" … ]; }. A script of
-  # neither kind stops the evaluation, so `bin/check --eval` names it too.
-  scripts = lib.groupBy (import ./scriptKind.nix { inherit lib; } "${self}") (
-    lib.concatMap
-      (folder: map (name: "${folder}/${name}") (lib.attrNames (builtins.readDir "${self}/${folder}")))
-      [
-        "bin"
-        ".github/scripts"
-      ]
-  );
+  # The scripts in bin/ and .github/scripts/, by kind (see ./scripts.nix).
+  scripts = import ./scripts.nix { inherit lib; } self;
 
   # Which system each configuration is for, read from config/hosts.nix.
   # Asking the configuration itself would load its modules, and then a broken
@@ -32,6 +23,14 @@ in
 system:
 let
   pkgs = nixpkgs.legacyPackages.${system};
+
+  # The formatter bin/format runs. The lint check fails on a file it would
+  # change.
+  formatter = import ./formatter.nix {
+    inherit lib pkgs;
+    root = self;
+  };
+
   runningHere = systemOf: lib.filterAttrs (name: _: systemOf name == system);
 
   # Checks a system configuration without building it. Nix still reads every
@@ -56,7 +55,8 @@ let
     // systemChecks "darwin" (cfg: cfg.system) darwinConfigs;
 in
 {
-  # Every Nix file (deadnix, statix, nixfmt), the shell and xonsh scripts, the
+  # Every Nix file (deadnix, statix), the formatting of the Nix, shell and Lua
+  # files (treefmt, as bin/format runs it), the shell and xonsh scripts, the
   # zsh files (zsh -n), the workflow (actionlint), the docs' links (lychee),
   # and the JavaScript and Lua files, which are only parsed. CI runs it before
   # the builds, and bin/lint runs it here.
@@ -66,7 +66,7 @@ in
         nativeBuildInputs = with pkgs; [
           deadnix
           statix
-          nixfmt
+          formatter
           shellcheck
           zsh
           actionlint
@@ -80,7 +80,13 @@ in
         cd ${self}
         deadnix --fail .
         statix check .
-        nixfmt --check $(find . -name '*.nix')
+
+        # What bin/format would change, in Nix, shell and Lua. treefmt writes
+        # the files it formats, so it works on a copy it may write to, and
+        # fails when it changed one.
+        cp -r . "$TMPDIR/tree"
+        chmod -R u+w "$TMPDIR/tree"
+        HOME=$TMPDIR treefmt --ci --tree-root "$TMPDIR/tree" --working-dir "$TMPDIR/tree"
 
         # The shell scripts, and the .sh files next to the programs (not the
         # Herdr mods, which come from upstream, should one ever ship one).

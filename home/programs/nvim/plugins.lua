@@ -12,7 +12,7 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
   if vim.v.shell_error ~= 0 then
     vim.api.nvim_echo({
       { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-      { out,                            "WarningMsg" },
+      { out, "WarningMsg" },
       { "\nPress any key to exit..." },
     }, true, {})
     vim.fn.getchar()
@@ -61,23 +61,23 @@ local plugins = {
   },
   {
     "nvim-lualine/lualine.nvim",
-    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
       require("lualine").setup({
         options = {
           theme = "auto",
           globalstatus = true,
           icons_enabled = true,
-          section_separators = { left = '', right = '' },
-          component_separators = { left = '', right = '' },
+          section_separators = { left = "", right = "" },
+          component_separators = { left = "", right = "" },
         },
         sections = {
-          lualine_a = { { 'mode', separator = { left = '' } } },
-          lualine_b = { 'branch', 'diff', 'diagnostics' },
-          lualine_c = { 'filename' },
-          lualine_x = { 'encoding', 'filetype' },
-          lualine_y = { 'progress' },
-          lualine_z = { { 'location', separator = { right = '' } } },
+          lualine_a = { { "mode", separator = { left = "" } } },
+          lualine_b = { "branch", "diff", "diagnostics" },
+          lualine_c = { "filename" },
+          lualine_x = { "encoding", "filetype" },
+          lualine_y = { "progress" },
+          lualine_z = { { "location", separator = { right = "" } } },
         },
       })
     end,
@@ -134,8 +134,7 @@ local plugins = {
     config = function()
       require("telescope").setup({
         defaults = {
-          layout_config = {
-          },
+          layout_config = {},
           sorting_strategy = "ascending",
         },
 
@@ -178,7 +177,7 @@ local plugins = {
         "html",
         "javascript",
         "lua",
-        "markdown",        -- render-markdown.nvim
+        "markdown", -- render-markdown.nvim
         "markdown_inline", -- render-markdown.nvim
         "nix",
         "python",
@@ -204,15 +203,16 @@ local plugins = {
         desc = "Enable treesitter highlighting, indentation and folding",
         callback = function(ev)
           local lang = vim.treesitter.language.get_lang(vim.bo[ev.buf].filetype)
-          if not lang then return end
+          if not lang then
+            return
+          end
 
           -- `language.add` loads the parser and reports whether it is available
           -- (without throwing). If it isn't, install it when upstream has one
           -- and bail out; highlighting turns on next time the file is opened.
           local ok, loaded = pcall(vim.treesitter.language.add, lang)
           if not (ok and loaded) then
-            if vim.list_contains(ts.get_available(), lang)
-              and not vim.list_contains(ts.get_installed(), lang) then
+            if vim.list_contains(ts.get_available(), lang) and not vim.list_contains(ts.get_installed(), lang) then
               ts.install(lang)
             end
             return
@@ -243,8 +243,8 @@ local plugins = {
             template = {
               "defmodule {dirname|camelcase|capitalize}.{basename|camelcase|capitalize}Channel do",
               "  use {dirname|camelcase|capitalize}, :channel",
-              "end"
-            }
+              "end",
+            },
           },
           ["test/**/channels/*_channel_test.exs"] = {
             alternate = "lib/{dirname}/channels/{basename}_channel.ex",
@@ -254,8 +254,8 @@ local plugins = {
               "  use {dirname|camelcase|capitalize}.ChannelCase, async: true",
               "",
               "  alias {dirname|camelcase|capitalize}.{basename|camelcase|capitalize}Channel",
-              "end"
-            }
+              "end",
+            },
           },
           ["lib/**/live/*_live.ex"] = {
             type = "liveview",
@@ -263,8 +263,8 @@ local plugins = {
             template = {
               "defmodule {dirname|camelcase|capitalize}.{basename|camelcase|capitalize}Live do",
               "  use {dirname|camelcase|capitalize}, :live_view",
-              "end"
-            }
+              "end",
+            },
           },
           ["test/**/live/*_live_test.exs"] = {
             alternate = "lib/{dirname}/live/{basename}_live.ex",
@@ -274,16 +274,16 @@ local plugins = {
               "  use {dirname|camelcase|capitalize}.ConnCase, async: true",
               "",
               "  alias {dirname|camelcase|capitalize}.{basename|camelcase|capitalize}Live",
-              "end"
-            }
+              "end",
+            },
           },
           ["lib/*.ex"] = {
             alternate = "test/{}_test.exs",
             type = "source",
             template = {
               "defmodule {camelcase|capitalize|dot} do",
-              "end"
-            }
+              "end",
+            },
           },
           ["test/*_test.exs"] = {
             alternate = "lib/{}.ex",
@@ -293,12 +293,12 @@ local plugins = {
               "  use ExUnit.Case, async: true",
               "",
               "  alias {camelcase|capitalize|dot}",
-              "end"
-            }
-          }
-        }
+              "end",
+            },
+          },
+        },
       }
-    end
+    end,
   },
   -- Markdown
   {
@@ -306,11 +306,11 @@ local plugins = {
     -- It completes notes through its own language server, so it needs no
     -- completion plugin.
     "obsidian-nvim/obsidian.nvim",
-    version      = "*",
-    ft           = "markdown",
+    version = "*",
+    ft = "markdown",
     -- Telescope is the picker. Load it first.
     dependencies = { "nvim-telescope/telescope.nvim" },
-    config       = function()
+    config = function()
       require("obsidian").setup({
         -- Use `:Obsidian quick_switch`, not the old `:ObsidianQuickSwitch`.
         legacy_commands = false,
@@ -324,14 +324,14 @@ local plugins = {
       })
 
       vim.opt.conceallevel = 2
-    end
+    end,
   },
   {
 
     "MeanderingProgrammer/render-markdown.nvim",
     ft = "markdown",
     opts = {},
-    dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
+    dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" }, -- if you prefer nvim-web-devicons
   },
   -- {
   --   "3rd/image.nvim",
@@ -372,20 +372,20 @@ local plugins = {
           mappings = {
             { key = "<C-c>", mode = "v", action = "run_selection" },
             { key = "<C-c>", mode = "n", action = "run_file" },
-          }
-        }
+          },
+        },
       })
     end,
   },
   -- Navigating
   {
-    'romgrk/barbar.nvim',
-    version = '^1.0.0',
+    "romgrk/barbar.nvim",
+    version = "^1.0.0",
     -- Draw the tab line right after the first screen, not during startup.
     event = "VeryLazy",
     dependencies = {
-      'lewis6991/gitsigns.nvim',
-      'nvim-tree/nvim-web-devicons',
+      "lewis6991/gitsigns.nvim",
+      "nvim-tree/nvim-web-devicons",
     },
     config = function()
       require("barbar").setup({
@@ -394,7 +394,7 @@ local plugins = {
           separator_at_end = false,
         },
       })
-    end
+    end,
   },
   {
     "nvim-neo-tree/neo-tree.nvim",
@@ -437,7 +437,7 @@ local plugins = {
   },
   -- Terminal
   {
-    'akinsho/toggleterm.nvim',
+    "akinsho/toggleterm.nvim",
     version = "*",
     config = function()
       require("toggleterm").setup({
@@ -448,7 +448,7 @@ local plugins = {
             return vim.o.columns * 0.45
           end
         end,
-        shell = vim.o.shell
+        shell = vim.o.shell,
       })
       local prefix = "<leader>s"
       local tescape = "<C-\\><C-n>"
@@ -467,7 +467,7 @@ local plugins = {
 
       vim.keymap.set("n", "<C-c><C-c>", ":ToggleTermSendCurrentLine<CR>")
       vim.keymap.set("v", "<C-c><C-c>", ":ToggleTermSendVisualLines<CR>")
-    end
+    end,
   },
   -- Tests
   {
@@ -484,20 +484,38 @@ local plugins = {
       neotest.setup({
         adapters = {
           require("neotest-elixir"),
-        }
+        },
       })
 
       local prefix = "<leader>t"
 
-      vim.keymap.set("n", prefix .. "t", function() neotest.run.run({ vim.fn.expand("%") }) end)
-      vim.keymap.set("n", prefix .. "T", function() neotest.run.run(vim.uv.cwd()) end)
-      vim.keymap.set("n", prefix .. "S", function() neotest.run.stop() end)
-      vim.keymap.set("n", prefix .. "r", function() neotest.run.run() end)
-      vim.keymap.set("n", prefix .. "s", function() neotest.summary.toggle() end)
-      vim.keymap.set("n", prefix .. "a", function() neotest.run.attach() end)
-      vim.keymap.set("n", prefix .. "o", function() neotest.output.open({ enter = true, auto_close = true }) end)
-      vim.keymap.set("n", prefix .. "p", function() neotest.output_panel.toggle() end)
-      vim.keymap.set("n", prefix .. "w", function() neotest.watch.toggle(vim.fn.expand("%")) end)
+      vim.keymap.set("n", prefix .. "t", function()
+        neotest.run.run({ vim.fn.expand("%") })
+      end)
+      vim.keymap.set("n", prefix .. "T", function()
+        neotest.run.run(vim.uv.cwd())
+      end)
+      vim.keymap.set("n", prefix .. "S", function()
+        neotest.run.stop()
+      end)
+      vim.keymap.set("n", prefix .. "r", function()
+        neotest.run.run()
+      end)
+      vim.keymap.set("n", prefix .. "s", function()
+        neotest.summary.toggle()
+      end)
+      vim.keymap.set("n", prefix .. "a", function()
+        neotest.run.attach()
+      end)
+      vim.keymap.set("n", prefix .. "o", function()
+        neotest.output.open({ enter = true, auto_close = true })
+      end)
+      vim.keymap.set("n", prefix .. "p", function()
+        neotest.output_panel.toggle()
+      end)
+      vim.keymap.set("n", prefix .. "w", function()
+        neotest.watch.toggle(vim.fn.expand("%"))
+      end)
     end,
   },
   -- Git
@@ -557,7 +575,7 @@ local plugins = {
     end,
   },
   {
-    "sitiom/nvim-numbertoggle"
+    "sitiom/nvim-numbertoggle",
   },
   {
     "RRethy/nvim-treesitter-endwise",
@@ -675,8 +693,7 @@ local plugins = {
       vim.lsp.config("copilot", {
         root_dir = function(bufnr, on_dir)
           local private = { "haskell", "lhaskell", "cabal", "c" }
-          if vim.list_contains(private, vim.bo[bufnr].filetype)
-            or vim.api.nvim_buf_get_name(bufnr):match("%.h$") then
+          if vim.list_contains(private, vim.bo[bufnr].filetype) or vim.api.nvim_buf_get_name(bufnr):match("%.h$") then
             return
           end
           on_dir(vim.fs.root(bufnr, ".git"))
@@ -764,9 +781,7 @@ local plugins = {
           end, vim.lsp.get_clients({ bufnr = bufnr }))
           local starting = vim.tbl_filter(function(name)
             local filetypes = vim.lsp.config[name].filetypes
-            return filetypes ~= nil
-              and vim.list_contains(filetypes, filetype)
-              and not vim.list_contains(attached, name)
+            return filetypes ~= nil and vim.list_contains(filetypes, filetype) and not vim.list_contains(attached, name)
           end, enabled)
 
           local wait = 15000 - (vim.uv.now() - (vim.b[bufnr].lsp_started_at or 0))
@@ -777,8 +792,12 @@ local plugins = {
 
           vim.notify("Waiting for " .. table.concat(starting, ", ") .. " to start…")
           if not vim.wait(wait, ready, 100) then
-            vim.notify("No language server formats this file: " .. table.concat(starting, ", ")
-              .. " didn't attach. See :checkhealth vim.lsp.", vim.log.levels.WARN)
+            vim.notify(
+              "No language server formats this file: "
+                .. table.concat(starting, ", ")
+                .. " didn't attach. See :checkhealth vim.lsp.",
+              vim.log.levels.WARN
+            )
             return
           end
         end
@@ -823,14 +842,20 @@ local plugins = {
       -- Open the documentation in a vertical split
       vim.keymap.set("n", "<leader>K", function()
         local clients = vim.lsp.get_clients({ bufnr = 0, method = "textDocument/hover" })
-        if #clients == 0 then return end
+        if #clients == 0 then
+          return
+        end
 
         local params = vim.lsp.util.make_position_params(0, clients[1].offset_encoding)
         vim.lsp.buf_request(0, "textDocument/hover", params, function(err, result)
-          if err or not result or not result.contents then return end
+          if err or not result or not result.contents then
+            return
+          end
 
           local lines = vim.lsp.util.convert_input_to_markdown_lines(result.contents)
-          if vim.tbl_isempty(lines) then return end
+          if vim.tbl_isempty(lines) then
+            return
+          end
 
           vim.cmd("vnew")
           local buf = vim.api.nvim_get_current_buf()
@@ -859,7 +884,7 @@ local plugins = {
       vim.keymap.set("n", "<leader>gf", format, { desc = "Format the file with its language server" })
       vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action)
     end,
-  }
+  },
 }
 
 require("lazy").setup(plugins)

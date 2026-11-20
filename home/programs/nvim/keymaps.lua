@@ -57,8 +57,12 @@ vim.keymap.set("n", "N", "Nzzzv")
 
 -- With a count, move by real lines: `5j` has to land on the line that the
 -- relative number 5 points at.
-vim.keymap.set("n", "j", function() return vim.v.count == 0 and "gj" or "j" end, { expr = true })
-vim.keymap.set("n", "k", function() return vim.v.count == 0 and "gk" or "k" end, { expr = true })
+vim.keymap.set("n", "j", function()
+  return vim.v.count == 0 and "gj" or "j"
+end, { expr = true })
+vim.keymap.set("n", "k", function()
+  return vim.v.count == 0 and "gk" or "k"
+end, { expr = true })
 
 -- It makes navigating easier. I got this tip from [Mastering Vim Quickly
 -- Newsletter](https://masteringvim.com/).
@@ -108,5 +112,4 @@ vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 -- ## Coping & Pasting
 
 -- copy entire block to clipboard register
-vim.keymap.set("n", "YY", "\"+y<CR>")
-
+vim.keymap.set("n", "YY", '"+y<CR>')
