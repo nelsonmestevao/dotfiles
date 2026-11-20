@@ -10,6 +10,9 @@
 # also listed in lib/packages.nix, so it can be built on its own.
 inputs:
 let
+  # A flake's own package for this system, for a flake that has no overlay.
+  fromFlake = prev: name: inputs.${name}.packages.${prev.stdenv.hostPlatform.system}.default;
+
   # True once nixpkgs has a copy of a GNOME extension made for the GNOME
   # version it ships. `gnomeExtensions` also holds copies made for older GNOME
   # versions, so finding one there proves nothing.
@@ -45,13 +48,13 @@ in
   })
   # Packages taken straight from a flake that has no overlay of its own.
   (_final: prev: {
-    zen-browser = inputs.zen-browser.packages.${prev.stdenv.hostPlatform.system}.default;
+    zen-browser = fromFlake prev "zen-browser";
     # Not in nixpkgs.
-    crit = inputs.crit.packages.${prev.stdenv.hostPlatform.system}.default;
+    crit = fromFlake prev "crit";
     # vicinae from its own flake, which is newer than nixpkgs' copy. The
     # NixOS and home-manager modules use `pkgs.vicinae`, so there's one name
     # for it.
-    vicinae = inputs.vicinae.packages.${prev.stdenv.hostPlatform.system}.default;
+    vicinae = fromFlake prev "vicinae";
   })
   (final: prev: {
     gnomeExtensions = prev.gnomeExtensions // {
