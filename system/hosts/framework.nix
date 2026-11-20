@@ -5,6 +5,7 @@
 {
   # ── System ───────────────────────────────────────────────────────────
   services.atd.enable = true;
+  services.fwupd.enable = true;
   dotfiles.modules.fingerprint.enable = true;
   dotfiles.modules.locale.enable = true;
   dotfiles.modules.printing.enable = true;
