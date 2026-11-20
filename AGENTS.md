@@ -115,14 +115,15 @@ Mac) can't run there: ask me to run it and paste the output back.
 Run these before you say a change works:
 
 ```shell
-bin/lint          # Nix, shell, xonsh, zsh, workflow and docs-link checks (CI first)
+bin/lint          # Nix, shell, xonsh, zsh, JavaScript, Lua, workflow and docs-link checks (CI first)
 bin/format        # fixes nixfmt errors
-bin/test          # the helper scripts' tests (CI too)
+bin/test          # the helper scripts' and the Herdr mods' tests (CI too)
 bin/check --eval  # evaluates every config, Mac ones too; tests lib/ and the docs
 bin/check --same  # shows which configs your change builds differently
 ```
 
-Run `bin/test` when you touch `bin/`, `scripts/`, `tests/` or `.github/`.
+Run `bin/test` when you touch `bin/`, `scripts/`, `tests/`, `.github/` or a
+Herdr mod.
 `bin/check --eval` checks the docs' tables and `bin/lint` their links, so run
 both after you edit the docs. Run `bin/check --eval` after you edit
 `config/hosts.nix`, too.

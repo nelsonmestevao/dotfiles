@@ -8,3 +8,9 @@ cd "$(dirname "$0")/.."
 # in its first job. Extra arguments go to Python's unittest, like
 # `bin/test -k hardware`. (The Nix tests in tests/ run in `bin/check --eval`.)
 nix --extra-experimental-features 'nix-command flakes' develop --command python3 -B -m unittest discover -s tests -v "$@"
+
+# The Herdr mods' own tests, next to the code they test. Arguments are for
+# Python's tests, so a narrowed run leaves these out.
+if [ $# -eq 0 ]; then
+  nix --extra-experimental-features 'nix-command flakes' develop --command node --test 'home/programs/herdr-app/mods/**/*.test.mjs'
+fi

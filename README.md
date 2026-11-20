@@ -582,9 +582,9 @@ that shell for you (`direnv allow` once).
 | `bin/check --all-systems`      | Builds every system's checks. Needs a builder for the other OS.      |
 | `bin/check --same [<rev>]`     | Shows which configs build a different derivation than `<rev>` did.   |
 | `bin/check --list`             | Prints what every config builds, as JSON. CI decides from this list. |
-| `bin/lint`                     | Checks the Nix, shell, xonsh and zsh files, the workflow and the docs' links, like CI. |
+| `bin/lint`                     | Checks the Nix, shell, xonsh, zsh, JavaScript and Lua files, the workflow and the docs' links, like CI. |
 | `bin/format`                   | Formats every Nix file (`nix fmt`).                                  |
-| `bin/test`                     | Tests the helper scripts, like CI does.                              |
+| `bin/test`                     | Tests the helper scripts and the Herdr mods, like CI does.           |
 | `bin/autoclean [--dry-run]`    | Deletes old generations and frees space (asks for your password).    |
 | `bin/doctor`                   | Checks what is set up by hand on this machine, and says what is missing. |
 | `bin/setup user\|host <name>`  | Adds a user or host (see [Installing](#-installing)).                |
@@ -629,12 +629,15 @@ lists the untracked files it found, whatever their type.
 `bin/lint` builds the flake check `lint`. A script in `bin/` or
 `.github/scripts/` must be shell or xonsh:
 [`lib/scriptKind.nix`](lib/scriptKind.nix) reads its first line, and a script
-of neither kind stops `bin/lint` and `bin/check --eval` with its name.
+of neither kind stops `bin/lint` and `bin/check --eval` with its name. The
+JavaScript of the Herdr mods and the Lua of nvim are only parsed: a syntax
+error fails the check, a style choice doesn't.
 
 `bin/test` runs the tests for `bin/new`, `bin/setup`, `bin/check`, `bin/update`,
 `bin/build`, `bin/rebuild` and CI's planning script, which work in throwaway
 folders and touch nothing else. Pass it unittest's arguments to narrow the
-run, like `bin/test -k hardware`.
+run, like `bin/test -k hardware`. With no arguments it also runs the Herdr
+mods' own tests, the `*.test.mjs` files next to their code.
 
 CI runs in two steps. A quick job lints, runs `bin/test` and the `lib-tests`
 check, and reads through every config with `bin/check --list`. Then a build
