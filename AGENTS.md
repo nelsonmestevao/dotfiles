@@ -116,7 +116,7 @@ Run these before you say a change works:
 
 ```shell
 bin/lint          # Nix, shell, xonsh, zsh, JavaScript, Lua, workflow and docs-link checks (CI first)
-bin/format        # fixes nixfmt errors
+bin/format        # formats the Nix, shell and Lua files
 bin/test          # the helper scripts' and the Herdr mods' tests (CI too)
 bin/check --eval  # evaluates every config, Mac ones too; tests lib/ and the docs
 bin/check --same  # shows which configs your change builds differently
@@ -170,6 +170,9 @@ Change this list and that file together.
 
 ## Code style
 
+- `bin/format` formats Nix (`nixfmt`), shell (`shfmt`) and Lua (`stylua`),
+  and `bin/lint` fails on a file it would change. JavaScript has no
+  formatter: keep a mod in the style it is written in.
 - Nix: `nixfmt`, two-space indent. `statix.toml` turns off `empty_pattern`
   and `repeated_keys` on purpose. Don't "fix" those.
 - Comments say why, in plain words. Section breaks look like

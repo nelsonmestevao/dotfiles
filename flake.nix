@@ -89,7 +89,16 @@
         ;
     in
     {
-      formatter = lib.genAttrs toolSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-tree);
+      # `nix fmt`, which bin/format runs: Nix, shell and Lua (see
+      # lib/formatter.nix).
+      formatter = lib.genAttrs toolSystems (
+        system:
+        import ./lib/formatter.nix {
+          inherit lib;
+          pkgs = nixpkgs.legacyPackages.${system};
+          root = inputs.self;
+        }
+      );
 
       # The packages this repo builds or changes itself, so each one can be
       # built alone, like `nix build .#git-sim`. lib/packages.nix finds them.
