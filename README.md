@@ -462,6 +462,9 @@ use a new flake:
    `inputs.<name>`. If the overlay reuses the name of a nixpkgs package, give
    it a new name instead, like `orca-app` there. Otherwise it replaces that
    package on the systems too.
+3. If it brings a module, import it where that kind of configuration is made:
+   `lib/mkNixosConfig.nix`, `lib/mkDarwinConfig.nix` or `lib/mkHomeConfig.nix`.
+   `inputs.<name>` is in scope there too, as vicinae's modules show.
 
 ### Custom packages
 

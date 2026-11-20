@@ -52,23 +52,19 @@ let
 
   # lib/default.nix over some data. Home Manager is replaced by a function
   # that hands back what it was given, so a test can read what a home gets
-  # without building it. Only the arguments lib/default.nix asks for are
-  # passed, so this keeps working when it gains or loses a flake input.
+  # without building it. No test builds a system or a home's modules, so the
+  # other inputs are never read and can be left out.
   assemble =
     hosts: users:
-    let
-      assembly = import ../lib;
-    in
-    assembly (
-      lib.intersectAttrs (lib.functionArgs assembly) {
-        inherit nixpkgs hosts users;
-        root = repo;
-        overlays = [ ];
+    import ../lib {
+      inherit hosts users;
+      root = repo;
+      overlays = [ ];
+      inputs = {
+        inherit nixpkgs;
         home-manager.lib.homeManagerConfiguration = lib.id;
-        nix-darwin = { };
-        vicinae = { };
-      }
-    );
+      };
+    };
 
   # The checks lib/checks.nix makes for a system, by name.
   checksOn =
@@ -78,7 +74,10 @@ let
     in
     lib.attrNames (
       import ../lib/checks.nix {
-        inherit nixpkgs home-manager;
+        inputs = {
+          inherit nixpkgs home-manager;
+          self = repo;
+        };
         inherit (assembly)
           checkedData
           dataIsRight
@@ -86,7 +85,6 @@ let
           darwinConfigs
           homeConfigs
           ;
-        self = repo;
       } system
     );
 

@@ -90,7 +90,8 @@ Mac) can't run there: ask me to run it and paste the output back.
   `~/.config/herdr-app` get overwritten.
 - **New flake input:** add it to `inputs` in `flake.nix` and its overlay to
   `config/overlays.nix`. If the overlay reuses a nixpkgs package name, give it
-  a new one (like `orca-app`).
+  a new one (like `orca-app`). A module it brings is imported in the
+  `lib/mk*Config.nix` that uses it, as `inputs.<name>`.
 - **A package built here lives next to its program** as `package.nix`. It
   becomes a flake output on its own, named after its folder
   (`nix build .#<name>`), and says where it runs with `meta.platforms`.
