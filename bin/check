@@ -42,6 +42,7 @@ import json
 import os
 import subprocess
 import sys
+from types import SimpleNamespace
 from urllib.parse import quote
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
@@ -53,6 +54,9 @@ DERIVATIONS = 'c: builtins.mapAttrs (_: s: builtins.mapAttrs (_: d: d.drvPath) (
 
 # How many untracked files to name before "and N more".
 UNTRACKED_SHOWN = 10
+
+# How many commits' derivations --same keeps (see `remembered`).
+COMMITS_KEPT = 20
 
 
 def resolve(rev):
@@ -86,6 +90,35 @@ def evaluate(flake):
     threads."""
     return subprocess.run(['nix', 'eval', '--json', f'{flake}#checks', '--apply', DERIVATIONS],
                           capture_output=True, text=True)
+
+
+def memory():
+    """The folder where --same keeps what it worked out for each commit. It is
+    inside .git, so git never sees it and every worktree shares it."""
+    return os.path.join($(git rev-parse --git-common-dir).strip(), 'check-same')
+
+
+def remembered(commit):
+    """What `evaluate` gave for `commit` last time, or None. A commit never
+    changes, so its derivations are worked out once. Only the working tree is
+    evaluated on the next run, which halves the wait."""
+    try:
+        with open(os.path.join(memory(), f'{commit}.json')) as file:
+            return SimpleNamespace(returncode=0, **json.load(file))
+    except (OSError, ValueError, TypeError):
+        return None
+
+
+def remember(commit, result):
+    """Keeps a passed evaluation of `commit`, with the warnings Nix printed,
+    and drops all but the newest COMMITS_KEPT."""
+    folder = memory()
+    os.makedirs(folder, exist_ok=True)
+    with open(os.path.join(folder, f'{commit}.json'), 'w') as file:
+        json.dump({'stdout': result.stdout, 'stderr': result.stderr}, file)
+    files = sorted((os.path.join(folder, name) for name in os.listdir(folder)), key=os.path.getmtime)
+    for old in files[:-COMMITS_KEPT]:
+        os.remove(old)
 
 
 def show_messages(label, result):
@@ -149,9 +182,16 @@ def same(rev, why):
     # Nix refuses a shallow clone unless it is told to expect one.
     committed = f'git+file://{quote(os.getcwd())}?rev={commit}' + ('&shallow=1' if shallow else '')
 
-    print(f"Evaluating {label} and the working tree…")
-    with ThreadPoolExecutor(max_workers=2) as pool:
-        runs = dict(zip([label, 'the working tree'], pool.map(evaluate, [committed, '.'])))
+    known = remembered(commit)
+    if known:
+        print(f"Evaluating the working tree ({label} is remembered)…")
+        runs = {label: known, 'the working tree': evaluate('.')}
+    else:
+        print(f"Evaluating {label} and the working tree…")
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            runs = dict(zip([label, 'the working tree'], pool.map(evaluate, [committed, '.'])))
+        if runs[label].returncode == 0:
+            remember(commit, runs[label])
 
     for side, result in runs.items():
         show_messages(side, result)

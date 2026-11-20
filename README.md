@@ -571,7 +571,8 @@ bin/check --same main --why  # what changed since main, and why?
 ```
 
 It evaluates both sides at the same time and shows the warnings Nix printed
-for each. For a `nixos-<host>` or `darwin-<host>` check, `--why` compares the
+for each. A commit never changes, so it keeps the commit's side in
+`.git/check-same` and the next run only evaluates the working tree. For a `nixos-<host>` or `darwin-<host>` check, `--why` compares the
 system derivations, since those checks only evaluate the system.
 
 Flakes only see tracked files, so `git add` a new file first. The command
