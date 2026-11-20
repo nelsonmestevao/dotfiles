@@ -115,5 +115,7 @@ errors, and `:Lazy restore` gives the same plugins on every host.
 - **thinkpad:** it runs Home Manager on another distro, and nothing sets
   `targets.genericLinux.enable`. Turn it on for every home-only host, so Nix
   programs find fonts, icons, desktop entries and the graphics drivers.
-- **vicinae:** finish pull request #30. The old roadmap measured about an hour
-  of compiling for every vicinae bump.
+- **vicinae:** it comes from its own flake, which is newer than
+  nixpkgs-unstable's copy (0.30.1 against 0.29.2 on 2026-11-20), and downloads
+  from `vicinae.cachix.org`. Once nixpkgs-unstable catches up, take it from
+  there and drop the flake input, its modules and the cache.
