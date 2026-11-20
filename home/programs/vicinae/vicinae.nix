@@ -1,6 +1,5 @@
 {
   config,
-  lib,
   pkgs,
   ...
 }:
@@ -54,14 +53,13 @@
     };
   };
 
-  # ── GNOME / dconf Integration ────────────────────────────────────────
+  # ── GNOME Integration ────────────────────────────────────────────────
+  # Both only do something where GNOME is on.
   dotfiles.programs.gnome.extensions.vicinae.enable = config.dotfiles.programs.gnome.enable;
 
-  dconf.settings = lib.mkIf config.dotfiles.programs.gnome.enable {
-    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
-      name = "Vicinae";
-      command = "vicinae toggle";
-      binding = "<Alt>Space";
-    };
+  dotfiles.programs.gnome.shortcuts.vicinae = {
+    name = "Vicinae";
+    command = "vicinae toggle";
+    binding = "<Alt>Space";
   };
 }

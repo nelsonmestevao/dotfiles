@@ -4,6 +4,12 @@
   pkgs,
   ...
 }:
+let
+  inherit (config.dotfiles.programs.gnome) shortcuts;
+
+  # Where dconf keeps the shortcut called `name`.
+  shortcutPath = name: "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/${name}";
+in
 with lib.hm.gvariant;
 {
   platforms = [ "linux" ];
@@ -23,6 +29,24 @@ with lib.hm.gvariant;
     default = [ ];
     internal = true;
     description = "GSettings schema folders of the enabled GNOME extensions.";
+  };
+
+  # Keyboard shortcuts that run a command. A program adds its own by name,
+  # like dotfiles.programs.gnome.shortcuts.terminal in ghostty.nix, and this
+  # module writes them all to dconf below.
+  options.shortcuts = lib.mkOption {
+    type = lib.types.attrsOf (
+      lib.types.submodule {
+        options = lib.genAttrs [ "name" "command" "binding" ] (_: lib.mkOption { type = lib.types.str; });
+      }
+    );
+    default = { };
+    example.terminal = {
+      name = "Terminal";
+      command = "ghostty";
+      binding = "<Super>Return";
+    };
+    description = "Keyboard shortcuts that run a command, by name.";
   };
 
   home.packages = with pkgs; [
@@ -58,10 +82,7 @@ with lib.hm.gvariant;
       control-center = [ "<Super>i" ];
       home = [ "<Super>e" ];
       screensaver = [ "<Super>Escape" ];
-      custom-keybindings = [
-        "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
-        "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/"
-      ];
+      custom-keybindings = map (name: "/${shortcutPath name}/") (lib.attrNames shortcuts);
     };
 
     "org/gnome/settings-daemon/plugins/power" = {
@@ -222,5 +243,7 @@ with lib.hm.gvariant;
       two-finger-scrolling-enabled = true;
       disable-while-typing = true;
     };
-  };
+  }
+  # One dconf entry for each shortcut, with its name, command and binding.
+  // lib.mapAttrs' (name: shortcut: lib.nameValuePair (shortcutPath name) shortcut) shortcuts;
 }

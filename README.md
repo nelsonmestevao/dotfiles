@@ -135,6 +135,10 @@ A misspelled setting stops the build with its name. So a module never checks
 a host name or a user name: it offers a setting, and the user file picks.
 System modules and GNOME extensions take `options` the same way.
 
+A setting can also gather things from other programs. GNOME's `shortcuts` is
+one: ghostty adds its own as `dotfiles.programs.gnome.shortcuts.terminal`, and
+the GNOME program writes every shortcut to dconf.
+
 One rule: a module returns a plain attribute set, with `lib.mkIf` on single
 values inside it. A body wrapped whole in `lib.mkIf` or `lib.mkMerge` stops
 the build with a message that names the module, because the wrapper could not
