@@ -53,7 +53,7 @@ HOST_NIXOS_TEMPLATE = """\
 }:
 {
   # ── System ───────────────────────────────────────────────────────────
-  dotfiles.modules.boot.enable = true;
+  boot.plymouth.enable = true;
   dotfiles.modules.locale.enable = true;
 
   # ── Networking ───────────────────────────────────────────────────────
@@ -64,7 +64,9 @@ HOST_NIXOS_TEMPLATE = """\
   # dotfiles.modules.docker.enable = true;
   # dotfiles.modules.gnome.enable = true;
   # dotfiles.modules.printing.enable = true;
-  # dotfiles.modules.tailscale.enable = true;
+
+  # One NixOS option needs no module. Set it here:
+  # services.tailscale.enable = true;
 }
 """
 

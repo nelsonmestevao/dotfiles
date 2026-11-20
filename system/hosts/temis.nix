@@ -4,7 +4,6 @@
 }:
 {
   # ── System ───────────────────────────────────────────────────────────
-  dotfiles.modules.boot.enable = true;
   dotfiles.modules.locale.enable = true;
 
   # ── Boot ─────────────────────────────────────────────────────────────
@@ -12,6 +11,7 @@
   boot.loader.grub.device = "/dev/sda";
   boot.loader.grub.useOSProber = true;
   boot.loader.grub.configurationLimit = 10;
+  boot.plymouth.enable = true;
 
   # ── Keyboard ─────────────────────────────────────────────────────────
   services.xserver.xkb.layout = "us";
@@ -19,7 +19,7 @@
 
   # ── Networking ───────────────────────────────────────────────────────
   dotfiles.modules.networking.enable = true;
-  dotfiles.modules.tailscale.enable = true;
+  services.tailscale.enable = true;
   services.openssh.enable = true;
 
   networking.firewall.enable = false;
