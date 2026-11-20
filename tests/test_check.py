@@ -2,6 +2,7 @@
 import json
 import os
 from pathlib import Path
+import shutil
 import subprocess
 import tempfile
 import unittest
@@ -110,6 +111,10 @@ class CheckTests(unittest.TestCase):
         for name, checks in (('before.json', before), ('after.json', after)):
             (self.fakes / name).write_text(json.dumps(checks))
 
+    def forget(self, repo=None):
+        """Drops what --same remembers, so its next run evaluates the commit."""
+        shutil.rmtree((repo or self.root) / '.git' / 'check-same', ignore_errors=True)
+
     def states(self, result):
         """{check name: state} from the lines --same prints."""
         return {line.split()[2]: line.split()[0] for line in result.stdout.splitlines()
@@ -156,6 +161,30 @@ class CheckTests(unittest.TestCase):
         self.assertTrue(commit.startswith('git+file://'), commit)
         self.assertTrue(commit.endswith(f'?rev={self.head}#checks'), commit)
 
+    def test_same_evaluates_a_commit_only_once(self):
+        self.derivations(ONE, ONE)
+        (self.fakes / 'before.err').write_text('warning: old\n')
+        self.check('--same')
+        (self.fakes / 'nix.log').unlink()
+        # The commit's side now comes from .git/check-same, warnings included.
+        (self.fakes / 'before.json').unlink()
+        result = self.check('--same')
+        self.assertEqual(self.evaluated(), ['.#checks'])
+        self.assertEqual(self.states(result), {'nelson@framework': 'same'})
+        self.assertIn('warning: old', result.stderr)
+        # Another commit is evaluated again.
+        self.derivations(ONE, ONE)
+        self.check('--same', self.first)
+        self.assertEqual(len(self.evaluated()), 3)
+
+    def test_a_failed_evaluation_of_the_commit_is_not_kept(self):
+        self.derivations(ONE, ONE)
+        (self.fakes / 'before.json').unlink()
+        self.check('--same', success=False)
+        self.derivations(ONE, ONE)
+        self.check('--same')
+        self.assertEqual(len(self.evaluated()), 4)
+
     def test_changed_added_and_removed_all_count_as_different(self):
         self.derivations({LINUX: {'kept': '/nix/store/a.drv', 'edited': '/nix/store/b.drv',
                                   'gone': '/nix/store/c.drv'}},
@@ -181,6 +210,7 @@ class CheckTests(unittest.TestCase):
         for rev in ('HEAD~1', self.first, self.first[:8]):
             with self.subTest(rev=rev):
                 (self.fakes / 'nix.log').unlink(missing_ok=True)
+                self.forget()
                 self.check('--same', rev)
                 self.assertTrue(self.evaluated()[1].endswith(f'?rev={self.first}#checks'))
 
@@ -197,6 +227,7 @@ class CheckTests(unittest.TestCase):
         self.assertTrue(self.evaluated()[1].endswith(f'?rev={self.head}&shallow=1#checks'))
 
         (self.fakes / 'before.json').unlink()
+        self.forget(clone)
         result = self.run_command('xonsh', '--no-rc', 'bin/check', '--same', cwd=clone, success=False)
         self.assertIn('This clone is shallow', result.stderr)
         # The full clone gets neither the flag nor the hint.
