@@ -11,6 +11,8 @@ name: onCalendar: scriptCmd: {
 
   systemd.services.${name} = {
     script = scriptCmd;
+    # Tell the user on the desktop when it fails (see ../timers/default.nix).
+    unitConfig.OnFailure = "notify-failure@%N.service";
     serviceConfig = {
       Type = "oneshot";
       User = username;

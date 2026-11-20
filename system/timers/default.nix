@@ -9,6 +9,7 @@
 {
   config,
   lib,
+  pkgs,
   users,
   ...
 }:
@@ -46,10 +47,35 @@ in
     };
   };
 
-  config.assertions = [
-    {
-      assertion = cfg.enable -> cfg.users != [ ];
-      message = "dotfiles.modules.timers is enabled, but dotfiles.modules.timers.users is empty. Pick the users whose timers should run.";
-    }
-  ];
+  config = {
+    assertions = [
+      {
+        assertion = cfg.enable -> cfg.users != [ ];
+        message = "dotfiles.modules.timers is enabled, but dotfiles.modules.timers.users is empty. Pick the users whose timers should run.";
+      }
+    ];
+
+    # A timer that fails shows a notice on its user's desktop. Without it, the
+    # only sign is in the journal, where nobody looks. The helpers in ../lib
+    # point every unit they make here, with `OnFailure`.
+    systemd.services."notify-failure@" = lib.mkIf cfg.enable {
+      description = "Tell its user that %i failed";
+      path = with pkgs; [
+        libnotify
+        util-linux
+      ];
+      serviceConfig.Type = "oneshot";
+      scriptArgs = "%i";
+      # This runs as root, so it can ask systemd which user the failed unit
+      # runs as, and speak on that user's own session bus, where the desktop
+      # listens. With nobody logged in there is no bus, and the notice fails
+      # without a sound: there is nobody to tell.
+      script = ''
+        user=$(systemctl show --property=User --value "$1.service")
+        [ -n "$user" ] || exit 0
+        runuser -u "$user" -- env DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$(id -u "$user")/bus" \
+          notify-send --urgency=critical --icon=dialog-error "$1 failed" "To see why: journalctl -eu $1"
+      '';
+    };
+  };
 }

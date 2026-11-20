@@ -82,31 +82,12 @@ lib.mkMerge [
     }) resticRepos;
   }
 
-  # A failed backup shows a notice on the desktop. Without it, the
-  # only sign is in the journal, where nobody looks.
+  # A failed backup shows a notice on the desktop, like any other timer (see
+  # ./default.nix).
   {
-    systemd.services =
-      lib.genAttrs resticUnits (_: {
-        unitConfig.OnFailure = "notify-failure@%N.service";
-      })
-      // {
-        "notify-failure@" = {
-          description = "Tell ${username} that %i failed";
-          serviceConfig = {
-            Type = "oneshot";
-            User = username;
-          };
-          scriptArgs = "%i";
-          # The notice goes to the user's own session bus, where the desktop
-          # listens. With nobody logged in there is no bus, and this fails
-          # without a sound: there is nobody to tell.
-          script = ''
-            export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$(id -u)/bus"
-            ${pkgs.libnotify}/bin/notify-send --urgency=critical --icon=dialog-error \
-              "$1 failed" "To see why: journalctl -eu $1"
-          '';
-        };
-      };
+    systemd.services = lib.genAttrs resticUnits (_: {
+      unitConfig.OnFailure = "notify-failure@%N.service";
+    });
   }
 
   (mkSystemTimer "backup-dbclient" "hourly" ''
