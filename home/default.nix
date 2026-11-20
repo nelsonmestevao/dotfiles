@@ -1,4 +1,5 @@
 {
+  lib,
   username,
   pkgs,
   host,
@@ -30,6 +31,11 @@
   # warning about a derivation named options.json, once for each home. The
   # options are on the web.
   manual.manpages.enable = false;
+
+  # The nix-index-database module turns nix-index on in every home that
+  # imports it, and every home does. This puts it back to off, so a user file
+  # turns it on like any program: dotfiles.programs.nix-index.
+  programs.nix-index.enable = lib.mkOverride 900 false;
 
   # The release this home was first set up with; see config/hosts.nix.
   home.stateVersion = host.stateVersion;

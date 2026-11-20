@@ -63,6 +63,7 @@ inputs.home-manager.lib.homeManagerConfiguration {
     # the GNOME extensions). A module that is off does nothing, but its
     # options must exist, or a user file that sets one fails on a Mac.
     inputs.vicinae.homeManagerModules.default
+    inputs.nix-index-database.homeModules.nix-index
   ]
   ++ importModules mkHomeModule "home/programs"
   ++ plainPrograms
