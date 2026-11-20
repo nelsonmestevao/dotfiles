@@ -31,6 +31,11 @@ def validate_name(name, kind):
     return name
 
 
+def render_template(template, name):
+    """`template` with `name` in place of every __NAME__."""
+    return template.replace("__NAME__", name)
+
+
 def nix_string(value):
     require(all(ord(c) >= 32 or c in '\n\r\t' for c in value),
             'Nix strings cannot contain control characters other than newline, tab or carriage return.')

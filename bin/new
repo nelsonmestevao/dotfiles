@@ -25,7 +25,7 @@ import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
 from common import GREEN, fail, paint, run
-from scaffold import apply_files, validate_name
+from scaffold import apply_files, render_template, validate_name
 
 PROGRAM_TEMPLATE = """\
 {
@@ -89,10 +89,6 @@ MODULE_TEMPLATE = """\
   # services.__NAME__.enable = true;
 }
 """
-
-
-def render_template(template, name):
-    return template.replace("__NAME__", name)
 
 
 # What each kind makes: its folder, its template, its name in messages, and
