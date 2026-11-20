@@ -98,8 +98,6 @@
     "(( $+functions[gtwd] )) && gtwd"
   ];
   programs.zsh.envExtra = ''
-    export DOTFILES="${config.dotfiles.directory}"
-
     [[ -r "$HOME/.zshenv.local" ]] && source "$HOME/.zshenv.local"
   '';
 
