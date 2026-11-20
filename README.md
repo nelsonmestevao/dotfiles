@@ -422,9 +422,10 @@ Leave both out and commits aren't signed.
 ### How the entries are checked
 
 `lib/schema.nix` checks both files before any configuration is built. A
-mistake stops every configuration with the host or user and the field in the
-message, as one failing check named `data`. The dev shell and the formatter
-don't depend on the data, so `bin/` keeps working while you fix it.
+mistake stops every configuration, check and package, with the host or user
+and the field in the message. The `bin/` scripts stop with that message too,
+until you fix the file: `nix develop` reads the flake's packages on its way
+to the dev shell. `bin/format` still works.
 
 First, each field must exist, be there when required, and hold the right kind
 of value. A misspelled field, a missing `stateVersion`, `platform = "nixoss"`,

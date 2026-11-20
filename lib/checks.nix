@@ -3,7 +3,6 @@
 {
   inputs,
   checkedData,
-  dataIsRight,
   nixosConfigs,
   darwinConfigs,
   homeConfigs,
@@ -124,7 +123,4 @@ in
     touch "$out"
   '';
 }
-# With a mistake in config/hosts.nix or config/users.nix, one check, `data`,
-# fails with the message in place of the configuration checks. Lint and the
-# tests still run.
-// (if dataIsRight then configurations else { data = checkedData; })
+// configurations
