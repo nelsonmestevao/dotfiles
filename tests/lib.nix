@@ -80,7 +80,6 @@ let
         };
         inherit (assembly)
           checkedData
-          dataIsRight
           nixosConfigs
           darwinConfigs
           homeConfigs
@@ -276,16 +275,6 @@ let
         ];
       };
     };
-    # With a mistake in the data, the checks are made for all four systems, so
-    # the one that reports it shows up on every machine.
-    theChecksSurviveBrokenData = {
-      expr =
-        let
-          broken = assemble brokenHosts users;
-        in
-        broken.hostSystems == broken.toolSystems && !broken.dataIsRight;
-      expected = true;
-    };
     aHomeGetsItsEntries = {
       expr = {
         hostSystem = onBox.host.system;
@@ -300,7 +289,6 @@ let
       expr = {
         linux = checksOn hosts "x86_64-linux";
         mac = checksOn hosts "aarch64-darwin";
-        brokenDataOnIntelMac = checksOn brokenHosts "x86_64-darwin";
       };
       expected = {
         linux = [
@@ -313,11 +301,6 @@ let
         mac = [
           "bob@mac"
           "darwin-mac"
-          "lib-tests"
-          "lint"
-        ];
-        brokenDataOnIntelMac = [
-          "data"
           "lib-tests"
           "lint"
         ];
@@ -558,6 +541,10 @@ let
     };
     brokenDataStopsTheHomes = {
       expr = lib.attrNames (assemble brokenHosts users).homeConfigs;
+      expectedError.msg = "hosts\\.box\\.platform' is not of type";
+    };
+    brokenDataStopsTheChecks = {
+      expr = checksOn brokenHosts "x86_64-linux";
       expectedError.msg = "hosts\\.box\\.platform' is not of type";
     };
 

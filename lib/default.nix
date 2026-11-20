@@ -21,10 +21,6 @@ let
   # filled in. A mistake stops every configuration here and says what it is.
   checked = schema.check { inherit hosts users root; };
 
-  # True when the data has no mistake. The checks use it to tell a mistake in
-  # the data from an error inside one configuration.
-  dataIsRight = (builtins.tryEval checked).success;
-
   toolSystems = [
     "x86_64-linux"
     "aarch64-linux"
@@ -100,19 +96,12 @@ in
 
   # The checked data, for the checks (see ./checks.nix).
   checkedData = checked;
-  inherit dataIsRight;
 
   # The systems the dev shell and the formatter are made for: the ones
-  # bin/setup offers. They don't depend on the data, so a mistake in it can't
-  # take them away. Every bin/ script starts in the dev shell.
+  # bin/setup offers, whether a host runs them yet or not.
   inherit toolSystems;
 
-  # The systems the hosts run, for the checks and the packages. With a mistake
-  # in the data, all four above, so the check that reports the mistake shows
-  # up on every machine.
-  hostSystems =
-    if dataIsRight then
-      lib.unique (lib.mapAttrsToList (_: host: host.system) checked.hosts)
-    else
-      toolSystems;
+  # The systems the hosts run, for the checks and the packages. A mistake in
+  # the data stops both, with its message.
+  hostSystems = lib.unique (lib.mapAttrsToList (_: host: host.system) checked.hosts);
 }

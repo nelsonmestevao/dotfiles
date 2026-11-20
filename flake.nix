@@ -76,7 +76,6 @@
         hostSystems
         pkgsFor
         checkedData
-        dataIsRight
         nixosConfigs
         darwinConfigs
         homeConfigs
@@ -122,7 +121,6 @@
           inherit
             inputs
             checkedData
-            dataIsRight
             nixosConfigs
             darwinConfigs
             homeConfigs
