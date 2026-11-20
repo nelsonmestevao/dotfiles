@@ -1,7 +1,6 @@
 {
   lib,
   hostname,
-  users,
   host,
   ...
 }:
@@ -23,7 +22,7 @@
   # ── Users ───────────────────────────────────────────────────────────────
   # Homebrew activation and user-scoped defaults run as the primary user.
   # macOS owns the account itself; we only point nix-darwin at it.
-  system.primaryUser = lib.head (lib.attrNames users);
+  system.primaryUser = lib.head host.users;
 
   # ── Shell ─────────────────────────────────────────────────────────────
   # Makes /etc/zshrc source the nix-darwin environment (PATH, profiles). The

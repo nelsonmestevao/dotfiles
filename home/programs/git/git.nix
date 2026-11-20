@@ -55,7 +55,7 @@ let
 in
 {
   # ── Settings ──────────────────────────────────────────────────────────
-  # Keys differ per machine, so a user file picks one with `enableFor`.
+  # Keys differ per machine, so a user file picks one with `valueFor`.
   options.signingKey = lib.mkOption {
     type = lib.types.nullOr lib.types.str;
     default = null;
