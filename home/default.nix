@@ -17,6 +17,11 @@
   # Mac (herdr-core and hc), pipx. Every home needs it, not just one program.
   home.sessionPath = [ "$HOME/.local/bin" ];
 
+  # On another distro (a Linux host with no `platform`), help its desktop find
+  # what Nix installs: apps and icons in the menu, cursors, terminfo and the
+  # graphics drivers. The first switch says how to set up the drivers.
+  targets.genericLinux.enable = pkgs.stdenv.hostPlatform.isLinux && host.platform == null;
+
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
   programs.nh.enable = true;
