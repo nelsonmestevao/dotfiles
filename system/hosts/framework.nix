@@ -5,6 +5,8 @@
 {
   # ── System ───────────────────────────────────────────────────────────
   services.atd.enable = true;
+  # Firmware updates for the laptop and its parts: `fwupdmgr update`.
+  services.fwupd.enable = true;
   dotfiles.modules.fingerprint.enable = true;
   dotfiles.modules.locale.enable = true;
   dotfiles.modules.printing.enable = true;
