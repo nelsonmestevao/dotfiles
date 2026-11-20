@@ -31,7 +31,7 @@ $XONSH_SHOW_TRACEBACK = False
 # would overtake it. Writing each line at once keeps a log in order.
 sys.stdout.reconfigure(line_buffering=True)
 
-RED, GREEN, YELLOW = 31, 32, 33
+RED, GREEN, YELLOW, BLUE, CYAN, GREY = 31, 32, 33, 34, 36, 90
 
 
 def paint(text, color, stream=sys.stdout):
@@ -98,11 +98,15 @@ def targets(only=None):
 
 def run(main, doc, file):
     """Reads the arguments with docopt and calls `main` with them. A command
-    that fails, or Ctrl-C, ends the helper with one plain line."""
+    that fails, or Ctrl-C, ends the helper with one plain line. So does a
+    mistake the helper found itself (a ValueError, like a bad name) and a file
+    it could not read or write."""
     arguments = docopt(doc.format(program=file), version=f'{os.path.basename(file)} script version 1.0')
     try:
         main(arguments)
     except (subprocess.CalledProcessError, KeyboardInterrupt) as problem:
         fail(f"{failed(problem)}.")
+    except (ValueError, OSError) as problem:
+        fail(str(problem))
 
 # vim: ft=xonsh

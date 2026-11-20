@@ -16,33 +16,8 @@ import os
 import re
 import sys
 
-from docopt import docopt
-
-os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-# These are easy to use in bash commands.
-$BLACK=$(tput setaf 0).strip()
-$RED=$(tput setaf 1).strip()
-$GREEN=$(tput setaf 2).strip()
-$YELLOW=$(tput setaf 3).strip()
-$BLUE=$(tput setaf 4).strip()
-$MAGENTA=$(tput setaf 5).strip()
-$CYAN=$(tput setaf 6).strip()
-$WHITE=$(tput setaf 7).strip()
-$PINK=$(tput setaf 13).strip()
-$RESET=$(tput sgr0).strip()
-
-# These are easy to use in python commands.
-BLACK=$(tput setaf 0).strip()
-RED=$(tput setaf 1).strip()
-GREEN=$(tput setaf 2).strip()
-YELLOW=$(tput setaf 3).strip()
-BLUE=$(tput setaf 4).strip()
-MAGENTA=$(tput setaf 5).strip()
-CYAN=$(tput setaf 6).strip()
-WHITE=$(tput setaf 7).strip()
-PINK=$(tput setaf 13).strip()
-RESET=$(tput sgr0).strip()
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
+from common import BLUE, CYAN, GREEN, GREY, RED, paint, run, warn
 
 UPDATED_RE = re.compile(r"^• Updated input '([^']+)':$")
 FLAKE_LINE_RE = re.compile(r"'([^']+)'\s*\(([^)]+)\)")
@@ -108,9 +83,14 @@ def build_update(name, old_line, new_line):
     return update
 
 def update_inputs():
-    # gum spin draws the spinner on the TTY while gum's captured stdout
-    # carries the wrapped command's combined output (stderr→stdout via bash).
-    output = $(gum spin --spinner=dot --title='Updating flake inputs...' --show-output -- bash -c 'nix flake update 2>&1')
+    if sys.stdout.isatty():
+        # gum spin draws the spinner on the terminal, and its captured stdout
+        # carries the command's output (stderr joined to stdout by bash).
+        output = $(gum spin --spinner=dot --title='Updating flake inputs...' --show-output -- bash -c 'nix flake update 2>&1')
+    else:
+        # No terminal (CI, an agent): there is nowhere to draw a spinner.
+        print('Updating flake inputs...')
+        output = $(bash -c 'nix flake update 2>&1')
     updates = []
     lines = output.splitlines()
     i = 0
@@ -157,48 +137,48 @@ def format_body(updates):
 
 def print_summary(updates):
     if not updates:
-        print(f'{YELLOW}• No inputs changed.{RESET}')
+        warn('No inputs changed.')
         return
 
     count = len(updates)
     word = 'input' if count == 1 else 'inputs'
-    print(f'\n{GREEN}✓{RESET} {count} {word} updated\n')
+    print(f"\n{paint('✓', GREEN)} {count} {word} updated\n")
 
+    arrow = paint('→', GREEN)
+    dated = lambda date: paint(f'({date})', GREY)
     for u in updates:
-        print(f'  {CYAN}{u["name"]}{RESET}')
+        print(f"  {paint(u['name'], CYAN)}")
         if 'new_rev_short' in u:
             old_short = u.get('old_rev_short', '???????')
-            print(
-                f'    {RED}{old_short}{RESET} {BLACK}({u["old_date"]}){RESET} '
-                f'{GREEN}→{RESET} {GREEN}{u["new_rev_short"]}{RESET} '
-                f'{BLACK}({u["new_date"]}){RESET}'
-            )
+            print(f"    {paint(old_short, RED)} {dated(u['old_date'])} {arrow} "
+                  f"{paint(u['new_rev_short'], GREEN)} {dated(u['new_date'])}")
             if 'compare_url' in u:
-                print(f'    {BLUE}{u["compare_url"]}{RESET}')
+                print(f"    {paint(u['compare_url'], BLUE)}")
         elif 'old_ref' in u:
-            print(f'    {u["old_ref"]} {BLACK}({u["old_date"]}){RESET}')
-            print(f'    {GREEN}→{RESET} {u["new_ref"]} {BLACK}({u["new_date"]}){RESET}')
+            print(f"    {u['old_ref']} {dated(u['old_date'])}")
+            print(f"    {arrow} {u['new_ref']} {dated(u['new_date'])}")
         else:
-            print(f'    {u["old_raw"]}')
-            print(f'    {GREEN}→{RESET} {u["new_raw"]}')
+            print(f"    {u['old_raw']}")
+            print(f"    {arrow} {u['new_raw']}")
         print()
 
 def save_commit(updates):
     if not updates:
-        print(f'{YELLOW}✗ No inputs were updated; nothing to commit.{RESET}')
+        warn('No inputs were updated; nothing to commit.')
         return
 
     status = $(git status --porcelain flake.lock).strip()
     if not status:
-        print(f'{YELLOW}✗ flake.lock is unchanged; nothing to commit.{RESET}')
+        warn('flake.lock is unchanged; nothing to commit.')
         return
 
     title = format_title(updates)
     body = format_body(updates)
 
-    git add flake.lock
-    git commit -m @(title) -m @(body)
-    print(f'{GREEN}✓ Committed:{RESET} {title}')
+    # Naming the file commits only the lockfile. Anything else that is
+    # staged stays staged, out of this commit.
+    git commit --quiet -m @(title) -m @(body) -- flake.lock
+    print(f"{paint('✓', GREEN)} Committed: {title}")
 
 def main(args):
     updates = update_inputs()
@@ -208,7 +188,6 @@ def main(args):
             save_commit(updates)
 
 if __name__ == '__main__':
-    arguments = docopt(__doc__.format(program=__file__), version=f'{os.path.basename(__file__)} script version 1.0')
-    main(arguments)
+    run(main, __doc__, __file__)
 
 # vim: ft=xonsh

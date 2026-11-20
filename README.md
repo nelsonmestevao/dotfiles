@@ -514,10 +514,10 @@ Then run `bin/check --eval` and `nix build .#<name>`.
 ## 🧰 Scripts
 
 Runnable helpers live in `bin/`; shared code lives in `scripts/`.
-`scripts/common.xsh` gives `bin/build`, `bin/check` and `bin/rebuild` the same
-failure handling: a failed command ends the helper with one plain line that
-says what failed and what was left undone. `scripts/scaffold.xsh` provides
-validation and file transactions for `bin/new`
+`scripts/common.xsh` gives every xonsh helper the same failure handling: a
+failed command ends the helper with one plain line that says what failed and
+what was left undone. It also keeps colours out of pipes and logs.
+`scripts/scaffold.xsh` provides validation and file transactions for `bin/new`
 and `bin/setup`. Run any helper with `--help` for details. Run
 them from inside the repo: each one starts in the flake's dev shell, so the
 tools it needs come from `flake.lock`. With direnv, `cd` into the repo loads
@@ -528,7 +528,7 @@ that shell for you (`direnv allow` once).
 | `bin/rebuild [os\|home]`       | Builds the config and switches to it.                                |
 | `bin/build [os\|home]`         | Builds the config and shows what would change, without switching.   |
 | `bin/update`                   | Updates the flake inputs and lists what changed.                     |
-| `bin/update --save`            | Same, then commits `flake.lock` with a note for each input.          |
+| `bin/update --save`            | Same, then commits only `flake.lock`, with a note for each input.    |
 | `bin/check`                    | Evaluates every config, then builds this machine's checks.           |
 | `bin/check --eval`             | Evaluates every config and runs the Nix tests (about a minute).      |
 | `bin/check --all-systems`      | Builds every system's checks. Needs a builder for the other OS.      |
@@ -581,7 +581,7 @@ lists the untracked files it found, whatever their type.
 [`lib/scriptKind.nix`](lib/scriptKind.nix) reads its first line, and a script
 of neither kind stops `bin/lint` and `bin/check --eval` with its name.
 
-`bin/test` runs the tests for `bin/new`, `bin/setup`, `bin/check`,
+`bin/test` runs the tests for `bin/new`, `bin/setup`, `bin/check`, `bin/update`,
 `bin/build`, `bin/rebuild` and CI's planning script, which work in throwaway
 folders and touch nothing else. Pass it unittest's arguments to narrow the
 run, like `bin/test -k hardware`.

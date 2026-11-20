@@ -23,24 +23,9 @@ Options:
 import os
 import sys
 
-from docopt import docopt
-
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
+from common import GREEN, fail, paint, run
 from scaffold import apply_files, validate_name
-
-os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-$RED="\033[1;31m"
-$YELLOW="\033[1;33m"
-$GREEN="\033[1;32m"
-$BLUE="\033[1;34m"
-$RESET="\033[0m"
-
-RED="\033[1;31m"
-YELLOW="\033[1;33m"
-GREEN="\033[1;32m"
-BLUE="\033[1;34m"
-RESET="\033[0m"
 
 PROGRAM_TEMPLATE = """\
 {
@@ -131,12 +116,11 @@ def create(kind, name):
     file_path = f"{dir_path}/{name}.nix"
 
     if os.path.exists(file_path):
-        print(f"{RED}✗{RESET} '{name}' already exists at {file_path}")
-        sys.exit(1)
+        fail(f"'{name}' already exists at {file_path}")
 
     apply_files({file_path: render_template(template, name)})
 
-    print(f"{GREEN}✓{RESET} Created and staged {label} at {file_path}")
+    print(f"{paint('✓', GREEN)} Created and staged {label} at {file_path}")
     print(f"  Enable it in {where}:")
     print(f"    {line.format(name=name)}")
 
@@ -155,11 +139,6 @@ def main(args):
 
 
 if __name__ == '__main__':
-    arguments = docopt(__doc__.format(program=__file__), version=f'{os.path.basename(__file__)} script version 1.0')
-    try:
-        main(arguments)
-    except (ValueError, OSError) as error:
-        print(f"{RED}✗{RESET} {error}", file=sys.stderr)
-        sys.exit(1)
+    run(main, __doc__, __file__)
 
 # vim: ft=xonsh
