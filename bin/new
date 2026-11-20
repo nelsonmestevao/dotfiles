@@ -50,7 +50,7 @@ PROGRAM_TEMPLATE = """\
   # xdg.configFile."__NAME__/config" = mkSymlink ./config;
 
   # Shell aliases: home.shellAliases, see bat.nix.
-  # GNOME keybindings: dconf.settings, see ghostty.nix.
+  # A GNOME shortcut: dotfiles.programs.gnome.shortcuts, see ghostty.nix.
 }
 """
 
