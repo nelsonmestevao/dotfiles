@@ -345,6 +345,25 @@ To see what would change first, run `bin/build`. It takes the same `os` and
 `home` arguments, builds the configs, and prints the package diff. It doesn't
 switch, so it needs no `sudo`.
 
+### Starting from an empty disk
+
+framework's disk layout is written down in
+`system/hosts/framework/disks.nix`, for
+[disko](https://github.com/nix-community/disko). From the NixOS installer,
+with this repo cloned:
+
+```shell
+sudo nix --extra-experimental-features 'nix-command flakes' run \
+  github:nix-community/disko/latest -- \
+  --mode destroy,format,mount system/hosts/framework/disks.nix
+sudo nixos-install --flake .#framework
+```
+
+The first command erases the disk the file names, so check the name with
+`lsblk` first. It makes each partition with the UUID that `hardware.nix`
+already names, so that file stays as it is. Nothing reads the layout while the
+system runs.
+
 ### What a switch can't make
 
 A few things are made by hand on each machine, because they are secrets: the
