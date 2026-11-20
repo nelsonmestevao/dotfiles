@@ -93,6 +93,10 @@ inherit
 dotfiles.programs.tokei.enable = true;
 ```
 
+GNOME extensions work the same way. One that is only a package is a name in
+[`home/programs/gnome/extensions/plain.nix`](home/programs/gnome/extensions/plain.nix).
+One with settings has its own folder there.
+
 > [!NOTE]
 > `mkSymlink` creates **true symlinks** (on Linux and macOS alike) pointing
 > directly from your home directory into this repo, so you can edit config files

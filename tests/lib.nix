@@ -132,7 +132,8 @@ let
         }
       ]
       ++ importModules mkHomeModule programs
-      ++ import ../home/lib/plainPrograms.nix { inherit lib pkgs; };
+      ++ import ../home/lib/plainPrograms.nix { inherit lib pkgs; }
+      ++ import ../home/lib/gnomeExtensions.nix { inherit lib pkgs; };
     };
   homeOn = hostname: enabled: (evalHomeOn hostname enabled).config;
 
@@ -156,6 +157,14 @@ let
   inherit (boxEval._module.args) checkoutPath mkSymlink;
   linksTo =
     target: entry: entry.source.outPath == (boxHome.lib.file.mkOutOfStoreSymlink target).outPath;
+
+  # GNOME (a fixture that imports the real program) with one of the real
+  # extensions in plain.nix turned on.
+  gnomeHome = boxHomeWith {
+    dotfiles.programs.gnome.enable = true;
+    dotfiles.programs.gnome.extensions.vitals.enable = true;
+  };
+  inherit (nixpkgs.legacyPackages.x86_64-linux.gnomeExtensions) vitals printers;
 
   # The real zsh program (a fixture that imports it), and a home without it.
   zshHome = homeOn "box" [ "zsh" ];
@@ -352,6 +361,7 @@ let
       expected = [
         "broken-link"
         "demo"
+        "gnome"
         "idle"
         "links"
         "mac-only"
@@ -401,6 +411,20 @@ let
       };
       expected = {
         on = true;
+        off = false;
+      };
+    };
+    # An extension in plain.nix is an extension like one with a folder: turned
+    # on, GNOME enables it and its package is installed.
+    aPlainExtensionIsAnExtensionToo = {
+      expr = {
+        enabled = gnomeHome.dotfiles.programs.gnome.enabledExtensions;
+        installed = lib.elem vitals gnomeHome.home.packages;
+        off = lib.elem printers gnomeHome.home.packages;
+      };
+      expected = {
+        enabled = [ vitals.extensionUuid ];
+        installed = true;
         off = false;
       };
     };

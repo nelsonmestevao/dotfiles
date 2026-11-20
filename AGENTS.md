@@ -14,6 +14,9 @@ to work here safely.
   shell.
 - `home/programs/plain.nix`: programs that are only a package, one line
   each. Each one gets `dotfiles.programs.<name>.enable` like a folder does.
+- `home/programs/gnome/extensions/plain.nix`: GNOME extensions that are only
+  a package, one name each. An extension with settings has its own folder
+  there, `<name>/<name>.nix`.
 - `home/programs/<name>/<name>.nix`: one Home Manager program per folder,
   wrapped by `home/lib/mkHomeModule.nix`. It adds the
   `dotfiles.programs.<name>.enable` option. A module adds its own settings
@@ -99,9 +102,11 @@ Mac) can't run there: ask me to run it and paste the output back.
 - **Never change `stateVersion` or `darwinStateVersion`** on an existing host.
 - **New program, module, user, or host:** use `bin/new` or `bin/setup`. Don't
   write the files by hand. A program that is only a package is one line in
-  `home/programs/plain.nix` instead. `bin/new module <name> --darwin` makes a
-  nix-darwin module. `bin/setup` prompts in a terminal; pass its answers as
-  flags instead (see `bin/setup --help`).
+  `home/programs/plain.nix` instead, and an extension that is only a package
+  is one name in `home/programs/gnome/extensions/plain.nix`.
+  `bin/new module <name> --darwin` makes a nix-darwin module. `bin/setup`
+  prompts in a terminal; pass its answers as flags instead (see
+  `bin/setup --help`).
 
 ## Check your work
 
