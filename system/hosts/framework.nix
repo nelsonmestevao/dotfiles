@@ -4,8 +4,7 @@
 }:
 {
   # ── System ───────────────────────────────────────────────────────────
-  dotfiles.modules.atd.enable = true;
-  dotfiles.modules.boot.enable = true;
+  services.atd.enable = true;
   dotfiles.modules.fingerprint.enable = true;
   dotfiles.modules.locale.enable = true;
   dotfiles.modules.printing.enable = true;
@@ -20,6 +19,7 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.systemd-boot.configurationLimit = 10;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.plymouth.enable = true;
 
   # ── Keyboard ─────────────────────────────────────────────────────────
   services.xserver.xkb.layout = "pt";
@@ -27,7 +27,7 @@
 
   # ── Networking ───────────────────────────────────────────────────────
   dotfiles.modules.networking.enable = true;
-  dotfiles.modules.tailscale.enable = true;
+  services.tailscale.enable = true;
 
   networking.firewall.enable = true;
 
@@ -49,13 +49,13 @@
   dotfiles.modules.vicinae.enable = true;
 
   # ── Browsers ─────────────────────────────────────────────────────────
-  dotfiles.modules.firefox.enable = true;
+  programs.firefox.enable = true;
 
   # ── Communication ────────────────────────────────────────────────────
   dotfiles.modules.keybase.enable = true;
 
   # ── Packages & Virtualisation ────────────────────────────────────────
   dotfiles.modules.docker.enable = true;
-  dotfiles.modules.flatpak.enable = true;
+  services.flatpak.enable = true;
   dotfiles.modules.virtualisation.enable = true;
 }

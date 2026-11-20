@@ -145,8 +145,10 @@ see its settings. A body that picks between two sets with
 Similarly, system-level concerns live under `system/modules/`, split by platform
 into `nixos/` and `darwin/`. Each module provides a
 `dotfiles.modules.<name>.enable` option — the NixOS side covers things like
-audio, boot, networking, and Docker, while the macOS (nix-darwin) side currently
-manages Homebrew (see [macOS notes](#-macos--nix-darwin)).
+audio, printing, networking, and Docker, while the macOS (nix-darwin) side
+currently manages Homebrew (see [macOS notes](#-macos--nix-darwin)). A module
+is for more than one line: a single NixOS option, like
+`services.tailscale.enable`, is set in the host file itself.
 
 Every folder in those trees is picked up as `<name>/<name>.nix`, with no list
 to keep. A folder without that file stops the build and says which one. Start
@@ -205,7 +207,7 @@ name the host to pick one. The git signing key uses it (see
 # system/hosts/framework.nix
 dotfiles.modules.audio.enable = true;
 dotfiles.modules.docker.enable = true;
-dotfiles.modules.tailscale.enable = true;
+services.tailscale.enable = true;
 ```
 
 ## 🚀 Installing
@@ -302,8 +304,7 @@ To do it by hand:
      `system/hosts/<hostname>/hardware.nix`. Make the hardware file on the
      target machine with `nixos-generate-config --show-hardware-config`. Also
      set a boot loader (for example `boot.loader.systemd-boot.enable = true;`)
-     in the host file. The `boot` module doesn't set one, so the build fails
-     without it.
+     in the host file. No module sets one, so the build fails without it.
    - **nix-darwin:** `system/hosts/<hostname>.nix` (see
      `Remote-Nelson-Estevao.nix`).
    - **Home Manager only:** nothing.

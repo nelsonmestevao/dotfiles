@@ -1,6 +1,0 @@
-{
-  ...
-}:
-{
-  services.atd.enable = true;
-}

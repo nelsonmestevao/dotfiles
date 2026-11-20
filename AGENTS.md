@@ -21,7 +21,8 @@ to work here safely.
   `checkoutPath` arguments, from `home/lib/default.nix`.
 - `home/users/<username>.nix`: which programs a user gets, and where.
 - `system/modules/{nixos,darwin}/<name>/<name>.nix`: system modules, with
-  `dotfiles.modules.<name>.enable`.
+  `dotfiles.modules.<name>.enable`. A single NixOS option needs no module:
+  set it in the host file.
 - `system/hosts/<hostname>.nix`: which modules a host gets, plus settings only
   that host needs (boot loader, firewall, keyboard layout).
 - `bin/`: helper scripts. Each one runs inside the flake's dev shell.
