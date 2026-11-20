@@ -548,7 +548,7 @@ that shell for you (`direnv allow` once).
 | `bin/check --all-systems`      | Builds every system's checks. Needs a builder for the other OS.      |
 | `bin/check --same [<rev>]`     | Shows which configs build a different derivation than `<rev>` did.   |
 | `bin/check --list`             | Prints what every config builds, as JSON. CI decides from this list. |
-| `bin/lint`                     | Checks the Nix, shell, xonsh and zsh files and the workflow, like CI. |
+| `bin/lint`                     | Checks the Nix, shell, xonsh and zsh files, the workflow and the docs' links, like CI. |
 | `bin/format`                   | Formats every Nix file (`nix fmt`).                                  |
 | `bin/test`                     | Tests the helper scripts, like CI does.                              |
 | `bin/autoclean [--dry-run]`    | Deletes old generations and frees space (asks for your password).    |
@@ -621,12 +621,14 @@ alone:
 nix build --no-link ".#checks.$(nix config show system).lib-tests"
 ```
 
-`tests/docs.nix` checks the docs, as cases of the same run. Every link in
-README.md, AGENTS.md and ROADMAP.md must point to a file or folder git tracks,
-with its name in the same case, and to a heading or `id` that exists. Every
+`tests/docs.nix` checks the docs' tables, as cases of the same run. Every
 `bin/` script must be in the table above, and both hosts tables must match
-`config/hosts.nix`. A failure lists what is wrong, like the link and the doc
-it is in.
+`config/hosts.nix`. A failure lists what is wrong.
+
+`bin/lint` checks the docs' links with [lychee](https://lychee.cli.rs). Every
+link in README.md, AGENTS.md and ROADMAP.md must point to a file or folder git
+tracks, and to a heading that exists. A Mac's disk ignores case, so a link
+with the wrong case only fails on Linux, where CI runs.
 
 Coding agents get their rules from [`AGENTS.md`](AGENTS.md). For Claude Code,
 [`.claude/settings.json`](.claude/settings.json) also makes it ask before it

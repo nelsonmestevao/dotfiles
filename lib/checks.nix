@@ -57,8 +57,8 @@ let
 in
 {
   # Every Nix file (deadnix, statix, nixfmt), the shell and xonsh scripts, the
-  # zsh files (zsh -n) and the workflow (actionlint). CI runs it before the
-  # builds, and bin/lint runs it here.
+  # zsh files (zsh -n), the workflow (actionlint) and the docs' links (lychee).
+  # CI runs it before the builds, and bin/lint runs it here.
   lint =
     pkgs.runCommand "lint"
       {
@@ -69,6 +69,7 @@ in
           shellcheck
           zsh
           actionlint
+          lychee
           python3Packages.xonsh
         ];
       }
@@ -102,6 +103,15 @@ in
 
         # The workflow, with the shell in its steps checked by shellcheck too.
         actionlint .github/workflows/*.yml
+
+        # The docs' links. Each must point to a file or folder that is here,
+        # which holds only what git tracks, and to a heading that exists.
+        # --offline leaves the URLs alone: the sandbox has no network. lychee
+        # still sets up its web client, which stops without a certificate
+        # file, and the Linux sandbox has none.
+        SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt \
+          lychee --offline --include-fragments --no-progress --root-dir "$PWD" \
+          README.md AGENTS.md ROADMAP.md
 
         touch "$out"
       '';

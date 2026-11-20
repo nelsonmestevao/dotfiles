@@ -1,22 +1,14 @@
-# The docs name files, scripts and hosts that change over time. These checks
-# fail when README.md, AGENTS.md or ROADMAP.md names one that is gone or leaves
-# one out, so the docs can't quietly fall behind the repo.
+# The docs have tables that change over time: the scripts in bin/, and the
+# hosts. These checks fail when a table leaves one out or names one that is
+# gone, so the docs can't quietly fall behind the repo.
 #
 # Each check is the list of its problems, and tests/lib.nix makes each one a
-# case that expects none, so a failure names what is wrong. The repo here is
-# the flake's source, which holds only the files git tracks: a link to an
-# untracked file fails, as it would on GitHub. Names are looked up in
-# builtins.readDir, case and all, because a Mac's disk is case-blind and a
-# plain path check there would pass a link that GitHub can't follow.
+# case that expects none, so a failure names what is wrong. The docs' links
+# are checked by lychee, in the lint check (lib/checks.nix).
 { lib }:
 let
   root = ../.;
   read = name: builtins.readFile (root + "/${name}");
-  docs = [
-    "README.md"
-    "AGENTS.md"
-    "ROADMAP.md"
-  ];
 
   # How the docs name a host's build, from its `platform` in config/hosts.nix.
   buildOf =
@@ -43,7 +35,7 @@ let
   matches = regex: text: lib.filter lib.isList (builtins.split regex text);
 
   # The lines of a text without its fenced code blocks (``` or ~~~, indented
-  # or not), where a link or a `#` line is only an example. A block ends at
+  # or not), where a table is only an example. A block ends at
   # the next line that starts with the same fence, and the rest of that line
   # stays. A fence that never closes is an ordinary line.
   linesWithoutBlocks =
@@ -78,134 +70,6 @@ let
       next = 0;
       kept = [ ];
     } (lib.range 0 (lib.length lines - 1))).kept;
-
-  # The text without any code: blocks, and inline spans too.
-  prose =
-    text:
-    lib.concatMapStringsSep "\n" (
-      line: lib.concatStrings (lib.filter lib.isString (builtins.split "`[^`]*`" line))
-    ) (linesWithoutBlocks text);
-
-  # ── Links ──────────────────────────────────────────────────────────────────
-
-  # Every link target: inline `[x](target "title")`, reference `[x]: target`,
-  # and the `src`, `srcset` and `href` of the HTML in the README.
-  linksIn =
-    text:
-    let
-      words = prose text;
-      inline = map lib.head (matches "[]][(]<?([^)>[:space:]]+)>?([[:space:]]+\"[^\"]*\")?[)]" words);
-      # The target may sit in <>, which is not part of it.
-      unwrap =
-        target:
-        let
-          bare = if lib.stringLength target > 1 then lib.removePrefix "<" target else target;
-        in
-        if lib.stringLength bare > 1 then lib.removeSuffix ">" bare else bare;
-      reference = lib.concatMap (
-        line:
-        let
-          found = builtins.match "[[:space:]]*[[][^]]+[]]:[[:space:]]*([^[:space:]]+)([[:space:]]+\"[^\"]*\")?[[:space:]]*" line;
-        in
-        lib.optional (found != null) (unwrap (lib.head found))
-      ) (lib.splitString "\n" words);
-      html = map (found: lib.elemAt found 1) (matches "(src|srcset|href)=\"([^\"]+)\"" words);
-    in
-    inline ++ reference ++ html;
-
-  # True when the repo has this file or folder, each name in it written
-  # exactly.
-  exists =
-    path:
-    let
-      walk =
-        folder: names:
-        let
-          entries = builtins.readDir folder;
-          name = lib.head names;
-        in
-        entries ? ${name}
-        && (
-          lib.tail names == [ ]
-          || entries.${name} == "directory" && walk (folder + "/${name}") (lib.tail names)
-        );
-    in
-    walk root (lib.splitString "/" path);
-
-  # GitHub's anchor for a heading: its words in lower case, links reduced to
-  # their text, anything but letters, digits, `_`, spaces and hyphens dropped,
-  # then each space a hyphen. "📄 License" is #-license. Only ASCII letters
-  # stay: GitHub keeps a letter like é too, but no heading here has one.
-  slug =
-    heading:
-    let
-      linkText = found: lib.head found;
-      plain = lib.concatMapStrings (part: if lib.isList part then linkText part else part) (
-        builtins.split "[[]([^]]*)[]][(][^)]*[)]" heading
-      );
-      kept = lib.concatStrings (
-        lib.filter lib.isString (builtins.split "[^a-z0-9_ -]" (lib.toLower (lib.trim (dropEnd "#" plain))))
-      );
-    in
-    lib.replaceStrings [ " " ] [ "-" ] kept;
-
-  # The `#name` targets a doc has: its `id` attributes and its headings. A
-  # repeated heading gets -1, -2 and so on, as on GitHub.
-  anchorsIn =
-    text:
-    let
-      ids = map (found: lib.elemAt found 1) (matches "(^|[^[:alnum:]_])id=\"([^\"]+)\"" text);
-      headings = lib.concatMap (
-        line:
-        let
-          found = builtins.match "#+[[:space:]]+(.+)" line;
-        in
-        lib.optional (found != null) (slug (lib.head found))
-      ) (linesWithoutBlocks text);
-      numbered =
-        (lib.foldl'
-          (state: name: {
-            seen = state.seen // {
-              ${name} = (state.seen.${name} or 0) + 1;
-            };
-            names = state.names ++ [
-              (if state.seen ? ${name} then "${name}-${toString state.seen.${name}}" else name)
-            ];
-          })
-          {
-            seen = { };
-            names = [ ];
-          }
-          headings
-        ).names;
-    in
-    lib.genAttrs (ids ++ numbered) (_: true);
-
-  # Each link of the docs that isn't a URL, split into the file and the
-  # anchor. A link with no file points into its own doc.
-  links = lib.concatMap (
-    doc:
-    lib.concatMap (
-      target:
-      let
-        pieces = lib.splitString "#" target;
-        scheme = lib.splitString ":" target;
-        path = strip "/" (lib.head pieces);
-      in
-      lib.optional (lib.length scheme == 1 || builtins.match "[a-z]+" (lib.head scheme) == null) {
-        inherit doc path;
-        anchor = lib.concatStringsSep "#" (lib.tail pieces);
-        file = if path == "" then doc else path;
-      }
-    ) (linksIn (read doc))
-  ) docs;
-
-  # The anchors of each doc a link points into, read once.
-  anchorsOf = lib.genAttrs (lib.unique (
-    map (link: link.file) (
-      lib.filter (link: link.anchor != "" && lib.hasSuffix ".md" link.file && exists link.file) links
-    )
-  )) (file: anchorsIn (read file));
 
   # ── Tables ─────────────────────────────────────────────────────────────────
 
@@ -292,16 +156,6 @@ let
       ++ lib.concatMap rowProblems (lib.filter (row: row != [ ]) table.rows);
 in
 {
-  everyLinkPointsToSomething = lib.concatMap (
-    link:
-    lib.optional (
-      link.path != "" && !exists link.path
-    ) "${link.doc} links to ${link.path}, which git does not track"
-    ++ lib.optional (
-      link.anchor != "" && anchorsOf ? ${link.file} && !anchorsOf.${link.file} ? ${link.anchor}
-    ) "${link.doc} links to ${link.file}#${link.anchor}, which it lacks"
-  ) links;
-
   everyScriptIsInTheScriptsTable =
     let
       table = tableIn (read "README.md") "| Script";
