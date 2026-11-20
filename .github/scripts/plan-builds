@@ -52,7 +52,10 @@ make_key() {
   homes=$(jq -cS --arg system "$2" \
     '.[$system] // {} | with_entries(select(.key | contains("@")))' "$1")
   [ "$homes" != '{}' ] || fail "the list has no home configuration for $2"
-  hash=$({ echo "$homes"; sha256sum < "$WORKFLOW"; } | sha256sum)
+  hash=$({
+    echo "$homes"
+    sha256sum < "$WORKFLOW"
+  } | sha256sum)
   key="green-$2-${hash%% *}"
 }
 
@@ -76,7 +79,11 @@ keys() {
     make_key "$list" "$system"
     echo "$system=$key"
   done
-  { echo '```json'; cat "$list"; echo '```'; } | summary
+  {
+    echo '```json'
+    cat "$list"
+    echo '```'
+  } | summary
 }
 
 matrix() {
@@ -100,7 +107,14 @@ matrix() {
 }
 
 case "${1:-}" in
-  keys) [ $# -eq 2 ] || usage; keys "$2" ;;
-  matrix) [ $# -ge 3 ] || usage; shift; matrix "$@" ;;
+  keys)
+    [ $# -eq 2 ] || usage
+    keys "$2"
+    ;;
+  matrix)
+    [ $# -ge 3 ] || usage
+    shift
+    matrix "$@"
+    ;;
   *) usage ;;
 esac

@@ -67,12 +67,12 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "gitcommit",
-  command = 'setlocal spell',
+  command = "setlocal spell",
 })
 
 -- ### Markdown
 
 vim.api.nvim_create_autocmd("FileType", {
   pattern = { "markdown", "rmd" },
-  command = 'setlocal spell',
+  command = "setlocal spell",
 })

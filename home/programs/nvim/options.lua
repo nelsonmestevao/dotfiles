@@ -25,7 +25,7 @@ vim.opt.expandtab = true
 -- ## Whitespace
 
 vim.opt.list = true
-vim.opt.listchars = { tab = '>~', trail = '•',  nbsp = '•'}
+vim.opt.listchars = { tab = ">~", trail = "•", nbsp = "•" }
 
 -- ## Spelling
 
@@ -41,7 +41,7 @@ vim.opt.splitright = true
 -- ## Searching
 vim.opt.hlsearch = true -- highlights the term you search for
 
-vim.opt.incsearch= true
+vim.opt.incsearch = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true -- when searching try to be smart about cases
 
@@ -50,9 +50,9 @@ vim.opt.smartcase = true -- when searching try to be smart about cases
 -- Virtual lines to show diagnostics.
 vim.diagnostic.config({
   virtual_lines = {
-   -- Only show virtual line diagnostics for the current cursor line
-   current_line = true,
-  }
+    -- Only show virtual line diagnostics for the current cursor line
+    current_line = true,
+  },
 })
 
 -- One border for every floating window: hover, signature help, the
