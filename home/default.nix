@@ -21,6 +21,11 @@
   programs.home-manager.enable = true;
   programs.nh.enable = true;
 
+  # No `man home-configuration.nix`. Building it made every evaluation print a
+  # warning about a derivation named options.json, once for each home. The
+  # options are on the web.
+  manual.manpages.enable = false;
+
   # The release this home was first set up with; see config/hosts.nix.
   home.stateVersion = host.stateVersion;
 }
