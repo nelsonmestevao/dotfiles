@@ -80,6 +80,7 @@
         })
         toolSystems
         hostSystems
+        pkgsFor
         checkedData
         dataIsRight
         nixosConfigs
@@ -92,7 +93,7 @@
 
       # The packages this repo builds or changes itself, so each one can be
       # built alone, like `nix build .#git-sim`. lib/packages.nix finds them.
-      packages = lib.genAttrs hostSystems (import ./lib/packages.nix { inherit nixpkgs overlays; });
+      packages = lib.genAttrs hostSystems (import ./lib/packages.nix { inherit lib pkgsFor; });
 
       # What the bin/ scripts need; the lint check brings its own tools (see
       # lib/checks.nix). The scripts start in this shell on their own, and
