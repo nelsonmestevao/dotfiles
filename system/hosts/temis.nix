@@ -11,7 +11,6 @@
   boot.loader.grub.device = "/dev/sda";
   boot.loader.grub.useOSProber = true;
   boot.loader.grub.configurationLimit = 10;
-  boot.plymouth.enable = true;
 
   # ── Keyboard ─────────────────────────────────────────────────────────
   services.xserver.xkb.layout = "us";
