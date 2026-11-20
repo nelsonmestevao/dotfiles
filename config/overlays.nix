@@ -43,17 +43,14 @@ in
           })
         );
   })
+  # Packages taken straight from a flake that has no overlay of its own.
   (_final: prev: {
     zen-browser = inputs.zen-browser.packages.${prev.stdenv.hostPlatform.system}.default;
-  })
-  (_final: prev: {
-    # Not in nixpkgs. Its flake has packages but no overlay.
+    # Not in nixpkgs.
     crit = inputs.crit.packages.${prev.stdenv.hostPlatform.system}.default;
-  })
-  (_final: prev: {
     # vicinae from its own flake, which is newer than nixpkgs' copy. The
     # NixOS and home-manager modules use `pkgs.vicinae`, so there's one name
-    # for it (CI also uses it to keep the build in its cache).
+    # for it.
     vicinae = inputs.vicinae.packages.${prev.stdenv.hostPlatform.system}.default;
   })
   (final: prev: {
