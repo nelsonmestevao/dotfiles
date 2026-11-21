@@ -393,10 +393,10 @@ each profile (`config/cleanup.nix`): once a month on NixOS, and whenever you
 run `bin/autoclean`. Both clean every profile, the system's and each user's,
 and leave the `result` links and direnv dev shells in your projects alone.
 `bin/autoclean --dry-run` lists what it would delete first. A Home
-Manager–only Linux machine cleans its own home once a month too, by the same
-rule. On the Mac nothing deletes old generations on its own (Determinate Nix
-only removes what no generation uses), so run `bin/autoclean` there now and
-then.
+Manager–only Linux machine and the Mac clean their own home once a month too,
+by the same rule. The Mac's system generations belong to root, and nothing
+deletes those on its own (Determinate Nix only removes what no generation
+uses), so run `bin/autoclean` there now and then.
 
 ### Backups
 

@@ -36,6 +36,32 @@
     extraArgs = toString (import ../config/cleanup.nix);
   };
 
+  # The Mac's turn, written out: launchd takes each argument on its own, and
+  # Home Manager's `clean` would hand it the whole rule as one. launchd runs
+  # a job the Mac slept through when it wakes. This cleans the home's
+  # generations. The system's belong to root and still need bin/autoclean.
+  launchd.agents.nh-clean = {
+    enable = pkgs.stdenv.hostPlatform.isDarwin;
+    config = {
+      ProgramArguments = [
+        (lib.getExe pkgs.nh)
+        "clean"
+        "user"
+      ]
+      ++ import ../config/cleanup.nix;
+      # launchd starts a job with a bare PATH, and nh calls `nix`.
+      EnvironmentVariables.PATH = "/nix/var/nix/profiles/default/bin:/usr/bin:/bin";
+      # The first of each month, at noon.
+      StartCalendarInterval = [
+        {
+          Day = 1;
+          Hour = 12;
+          Minute = 0;
+        }
+      ];
+    };
+  };
+
   # No `man home-configuration.nix`. Building it made every evaluation print a
   # warning about a derivation named options.json, once for each home. The
   # options are on the web.
