@@ -14,7 +14,6 @@ alias -g N="| nvim +'setlocal buftype=nofile noswapfile' +':0' -"
 
 alias dot="cd $DOTFILES"
 
-alias scim="sc-im"
 alias ka="killall"
 alias :q="exit"
 
