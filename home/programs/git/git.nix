@@ -59,13 +59,13 @@ in
   home.packages =
     with pkgs;
     [
+      betterleaks
       delta
       difftastic
       gh
       git
       git-lfs
       git-who
-      gitleaks
       lazygit
     ]
     # What the drivers in diff-tools.ini run.
@@ -77,7 +77,7 @@ in
       xlsx2csv
     ];
 
-  # gitleaks ships its own zsh completion, so nothing is set up for it here.
+  # betterleaks ships its own zsh completion, so nothing is set up for it here.
   home.shellAliases = {
     lg = "lazygit";
 
