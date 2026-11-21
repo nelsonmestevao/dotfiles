@@ -84,7 +84,6 @@ with pkgs;
     terminaltexteffects
     terraform
     thunderbird
-    tldr
     tokei
     typora
     typst
