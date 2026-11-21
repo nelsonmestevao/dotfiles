@@ -108,7 +108,7 @@ with pkgs;
   ffmpeg = ffmpeg-full;
   mysql = mysql84;
   rust = rustup;
-  speedtest = speedtest-cli;
+  speedtest = ookla-speedtest;
   zen = zen-browser; # about:config zen.view.experimental-no-window-controls
 }
 // import ./scripts.nix { inherit pkgs; }
