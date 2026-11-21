@@ -61,28 +61,67 @@ class PromptMiseTest(unittest.TestCase):
     def times_asked(self):
         return len(self.asked.read_text().splitlines()) if self.asked.exists() else 0
 
-    def test_a_known_tool_gets_its_icon_and_its_style(self):
+    def test_a_tool_powerlevel10k_has_an_icon_for_gets_it_by_name(self):
         self.install_mise()
-        self.prompt({'elixir': '1.18.4-otp-27', 'erlang': '27.3.4'})
+        self.prompt({'elixir': '1.18.4-otp-27', 'erlang': '27.3.4', 'gh': '2.80.0'})
         self.assertEqual(self.segments(), [
             'segment -s ELIXIR -r -i ELIXIR_ICON -t 1.18.4-otp-27',
             'segment -s ERLANG -r -i ERLANG_ICON -t 27.3.4',
+            'segment -s GH -r -i VCS_GIT_GITHUB_ICON -t 2.80.0',
         ])
 
-    def test_a_tool_goes_by_the_name_asdf_has_for_it(self):
-        # Powerlevel10k's icons and colors are named after asdf's plugins.
+    def test_a_tool_is_styled_by_the_name_asdf_has_for_it(self):
+        # The colors in p10k.zsh are named after asdf's plugins.
         self.install_mise()
         self.prompt({'node': '24.22.1', 'go': '1.26.0', 'dotnet': '9.0.1'})
         self.assertEqual(self.segments(), [
-            'segment -s NODEJS -r -i NODEJS_ICON -t 24.22.1',
+            'segment -s NODEJS +r -i \U000f0399 -t 24.22.1',
             'segment -s GOLANG -r -i GOLANG_ICON -t 1.26.0',
             'segment -s DOTNET_CORE -r -i DOTNET_CORE_ICON -t 9.0.1',
         ])
 
-    def test_a_tool_with_no_icon_shows_by_its_name(self):
+    def test_a_tool_powerlevel10k_has_no_icon_for_gets_a_glyph(self):
         self.install_mise()
-        self.prompt({'kubectl': '1.34.9'})
-        self.assertEqual(self.segments(), ['segment -t kubectl 1.34.9'])
+        self.prompt({'redis': '8.2.1', 'tmux': '3.5a', 'lefthook': '1.13.0', 'kubectl': '1.34.9'})
+        self.assertEqual(self.segments(), [
+            'segment -s REDIS +r -i \ue76d -t 8.2.1',
+            'segment -s TMUX +r -i \uebc8 -t 3.5a',
+            'segment -s LEFTHOOK +r -i \U000f06e2 -t 1.13.0',
+            'segment -s KUBECTL +r -i \U000f10fe -t 1.34.9',
+        ])
+
+    def test_a_tool_goes_by_its_short_name_whatever_it_comes_from(self):
+        self.install_mise()
+        self.prompt({'aqua:pnpm/pnpm': '10.4.0', 'vfox:redis': '8.2.1'})
+        self.assertEqual(self.segments(), [
+            'segment -s PNPM +r -i \ue865 -t 10.4.0',
+            'segment -s REDIS +r -i \ue76d -t 8.2.1',
+        ])
+
+    def test_a_tool_with_no_icon_gets_the_one_of_where_it_comes_from_and_its_name(self):
+        self.install_mise()
+        self.prompt({'npm:agent-browser': '0.9.1', 'npm:@scope/open-code-review': '2.0.0',
+                     'github:rustfs/rustfs': '1.0.0', 'cargo:ripgrep': '15.0.0'})
+        self.assertEqual(self.segments(), [
+            'segment -s AGENT_BROWSER +r -i \ue71e -t agent-browser 0.9.1',
+            'segment -s OPEN_CODE_REVIEW +r -i \ue71e -t open-code-review 2.0.0',
+            'segment -s RUSTFS -r -i VCS_GIT_GITHUB_ICON -t rustfs 1.0.0',
+            'segment -s RIPGREP -r -i RUST_ICON -t ripgrep 15.0.0',
+        ])
+
+    def test_any_other_tool_gets_a_package_and_its_name(self):
+        self.install_mise()
+        self.prompt({'remotectl': '5.13.3', 'aqua:remoteoss/dexter': '0.4.2'})
+        self.assertEqual(self.segments(), [
+            'segment -s REMOTECTL +r -i \ueb29 -t remotectl 5.13.3',
+            'segment -s DEXTER +r -i \ueb29 -t dexter 0.4.2',
+        ])
+
+    def test_every_icon_is_a_powerlevel10k_name_or_one_glyph(self):
+        out = self.prompt({}, script='for icon in $prompt_mise_icons $prompt_mise_source_icons $prompt_mise_any_icon; '
+                                     'do [[ $icon == [A-Z]*_ICON || ${#icon} == 1 ]] || print -r -- $icon; done; '
+                                     'print ${#prompt_mise_icons}')
+        self.assertEqual(out.split(), ['62'])
 
     def test_a_folder_that_sets_no_tool_draws_nothing(self):
         self.install_mise()
