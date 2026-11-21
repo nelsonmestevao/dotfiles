@@ -176,7 +176,6 @@
   dotfiles.programs.libjxl.enable = disableFor [ "server" ];
   dotfiles.programs.pandoc.enable = disableFor [ "server" ];
   dotfiles.programs.poppler-utils.enable = true;
-  dotfiles.programs.unoconv.enable = disableFor [ "server" ];
 
   # Typesetting
   dotfiles.programs.latex.enable = enableFor [ "framework" ];

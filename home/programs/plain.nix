@@ -87,7 +87,6 @@ with pkgs;
     tokei
     typora
     typst
-    unoconv
     unzip
     vivaldi
     vlc
