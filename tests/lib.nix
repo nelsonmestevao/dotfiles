@@ -198,6 +198,14 @@ let
 
   # An expression and the value it must have.
   values = {
+    # `nix run nixpkgs#…` in a home uses the nixpkgs the home is built from.
+    aHomeNamesItsNixpkgsInTheRegistry = {
+      expr = lib.any (
+        module: lib.isAttrs module && (module.nix.registry.nixpkgs.flake or null) == nixpkgs
+      ) (assemble hosts users).homeConfigs."alice@box".modules;
+      expected = true;
+    };
+
     enableForPicksByHostOrRole = {
       expr = {
         host = onBox.enableFor [ "box" ];

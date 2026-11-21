@@ -57,6 +57,12 @@ inputs.home-manager.lib.homeManagerConfiguration {
     # handed one. This makes every module use the shared one (see `pkgsFor`
     # in ./default.nix), which has the overlays and allows unfree packages.
     { _module.args.pkgs = lib.mkForce pkgs; }
+    # `nix run nixpkgs#…`, `nix shell nixpkgs#…` and comma look `nixpkgs` up
+    # in the registry. Left alone, that is the newest nixpkgs upstream: a
+    # third one, fetched again every hour, that shares nothing with what the
+    # home installs. This names the one the home is built from. A NixOS host
+    # already does the same for the whole system.
+    { nix.registry.nixpkgs.flake = inputs.nixpkgs; }
     ../home
     ../home/lib
     # Every module is imported on every OS, the Linux-only ones too (vicinae,
