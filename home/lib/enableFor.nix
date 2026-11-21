@@ -19,7 +19,6 @@
 let
   list = lib.concatStringsSep ", ";
 
-  # The hosts that don't list this user.
   hostsWithoutHome = lib.subtractLists homes hostNames;
 in
 names:

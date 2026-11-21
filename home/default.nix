@@ -23,7 +23,6 @@
   # graphics drivers. The first switch says how to set up the drivers.
   targets.genericLinux.enable = pkgs.stdenv.hostPlatform.isLinux && host.platform == null;
 
-  # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
   programs.nh.enable = true;
 

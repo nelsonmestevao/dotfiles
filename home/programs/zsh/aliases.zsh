@@ -2,15 +2,11 @@
 # as `home.shellAliases` in its module, so it only exists where the program
 # is on: see home/programs/git/git.nix.
 
-# GLOBAL ALIASES
-
 alias -g H='| head'
 alias -g T='| tail'
 alias -g G='| grep'
 alias -g L="| less"
 alias -g N="| nvim +'setlocal buftype=nofile noswapfile' +':0' -"
-
-# ALIASES
 
 alias dot="cd $DOTFILES"
 

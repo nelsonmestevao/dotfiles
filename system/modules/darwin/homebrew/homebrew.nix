@@ -80,7 +80,6 @@
       "zlib"
     ];
 
-    # GUI apps / casks.
     casks = [
       "1password-cli"
       "ghostty"

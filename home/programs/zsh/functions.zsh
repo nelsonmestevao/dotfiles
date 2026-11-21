@@ -1,5 +1,3 @@
-# FUNCTIONS
-
 function backup() {
   git add --all
   git commit --no-verify --no-gpg-sign \
