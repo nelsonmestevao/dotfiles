@@ -58,9 +58,6 @@ in
     ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
       ## system utils (linux only)
       pkgs.inotify-tools
-
-      ## pdf documents (linux only)
-      wkhtmltopdf
     ];
 
   home.sessionVariables = {
