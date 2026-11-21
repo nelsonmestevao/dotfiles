@@ -407,9 +407,9 @@ uses), so run `bin/autoclean` there now and then.
 framework backs up `Archive`, `Books`, `Code`, `Documents`, `Downloads`,
 `Pictures` and `Videos` to three Restic repositories, each at its own hour on
 weekdays (`system/timers/nelson.nix`). After each backup it keeps a week of
-daily snapshots, five weekly ones and twelve monthly ones, and deletes the
-rest. On Saturdays it reads a random twentieth of each repository back and
-checks it. A failed backup or check shows a notice on the desktop.
+daily snapshots, five weekly ones and twelve monthly ones, deletes the rest,
+and reads a random hundredth of the repository back to check it. A backup that
+fails shows a notice on the desktop.
 
 No timer can prove that a restore works. Every few months, restore one folder
 from each repository and compare it with the real one:
