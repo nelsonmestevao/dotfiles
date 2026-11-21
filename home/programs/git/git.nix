@@ -88,7 +88,6 @@ in
 
     grw = "git-review";
     ght = "git-history";
-    gfz = "git-fuzzy";
 
     # Rebase on the newest main or develop. git_main_branch and
     # git_develop_branch come from oh-my-zsh's git plugin.
