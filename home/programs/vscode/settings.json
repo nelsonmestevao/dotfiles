@@ -17,8 +17,6 @@
   ],
   "editor.scrollBeyondLastLine": true,
   "editor.wordWrapColumn": 120,
-  "elixirLS.enableTestLenses": true,
-  "elixirLS.fetchDeps": true,
   "explorer.confirmDelete": false,
   "explorer.confirmDragAndDrop": false,
   "files.autoSave": "onFocusChange",
@@ -265,7 +263,7 @@
   "makefile.configureOnOpen": true,
   "gitlens.ai.model": "vscode",
   "gitlens.ai.vscode.model": "copilot:gpt-4.1",
-  "nix.formatterPath": "alejandra",
+  "nix.formatterPath": "nixfmt",
   "haskell.serverExecutablePath": "haskell-language-server-wrapper",
   "security.promptForLocalFileProtocolHandling": false,
 }

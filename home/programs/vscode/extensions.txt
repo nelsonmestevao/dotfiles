@@ -2,7 +2,6 @@ aaron-bond.better-comments
 anthropic.claude-code
 arrterian.nix-env-selector
 astro-build.astro-vscode
-bbenoist.nix
 bierner.github-markdown-preview
 bierner.markdown-checkbox
 bierner.markdown-emoji
@@ -17,7 +16,6 @@ cweijan.dbclient-jdbc
 cweijan.vscode-postgresql-client2
 eamodio.gitlens
 editorconfig.editorconfig
-elixir-tools.elixir-tools
 expertlsp.expert
 formulahendry.auto-close-tag
 formulahendry.auto-complete-tag
@@ -27,10 +25,9 @@ github.vscode-github-actions
 golang.go
 haskell.haskell
 haskell.language-haskell
-jakebecker.elixir-ls
+jnoortheen.nix-ide
 jnoortheen.xonsh
 justusadam.language-haskell
-lexical-lsp.lexical
 mechatroner.rainbow-csv
 miguelsolorio.fluent-icons
 miguelsolorio.min-theme
@@ -73,7 +70,6 @@ samuel-pordeus.elixir-test
 sleistner.vscode-fileutils
 streetsidesoftware.code-spell-checker
 sumneko.lua
-supermaven.supermaven
 tamasfe.even-better-toml
 testdouble.vscode-alternate-alternate-file
 tldraw-org.tldraw-vscode
