@@ -32,7 +32,6 @@ with pkgs;
     dust
     eva
     exiftool
-    eza
     fastfetch
     fd
     figlet
@@ -43,7 +42,6 @@ with pkgs;
     gimp
     glab
     glow
-    gnumake
     gnupg
     gping
     grex
@@ -64,7 +62,6 @@ with pkgs;
     localsend
     mpv
     ngrok
-    nix-search-tv
     nushell
     obsidian
     onefetch
@@ -97,7 +94,6 @@ with pkgs;
     vlc
     watchman
     wget
-    yazi
     yq
     zeal
     ;

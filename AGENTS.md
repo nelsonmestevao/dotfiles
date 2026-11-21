@@ -75,6 +75,11 @@ Mac) can't run there: ask me to run it and paste the output back.
 - **Mark one-OS modules** with `platforms = [ "linux" ]` or `[ "darwin" ]`
   next to the config. Turning one on for the wrong OS then fails with a clear
   message.
+- **An alias lives with its program**, as `home.shellAliases` in the module,
+  so it only exists where the program is on. `home/programs/zsh/aliases.zsh`
+  holds the ones that belong to no program. oh-my-zsh loads before a
+  module's aliases and after that file, so a module's alias wins over
+  oh-my-zsh's and that file's loses.
 - **Link config files with `mkSymlink ./path`.** Give it a path, not a
   string, and keep the file in the program's folder. The file must exist in
   this repo, or the build fails. These are real links into this repo, so an

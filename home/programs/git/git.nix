@@ -78,7 +78,27 @@ in
     ];
 
   # gitleaks ships its own zsh completion, so nothing is set up for it here.
-  home.shellAliases.lg = "lazygit";
+  home.shellAliases = {
+    lg = "lazygit";
+
+    # To the top folder of the repo.
+    "g-" = ''cd $(git rev-parse --show-toplevel || echo ".")'';
+    # Back to the worktree picked from a list.
+    wt = ''dir=$(git worktree-select) && [ -n "$dir" ] && cd "$dir"'';
+
+    grw = "git-review";
+    ght = "git-history";
+    gfz = "git-fuzzy";
+
+    # Rebase on the newest main or develop. git_main_branch and
+    # git_develop_branch come from oh-my-zsh's git plugin.
+    grbma = "git fetch origin; git fetch origin --prune; git rebase origin/$(git_main_branch)";
+    grbfma = "git fetch fork; git fetch fork --prune; git rebase fork/$(git_main_branch)";
+    grbdv = "git fetch origin; git fetch origin --prune; git rebase origin/$(git_develop_branch)";
+
+    # The TODO lines that I wrote.
+    todo = ''git grep -l TODO | xargs -n1 git blame -f -n -w | grep "$(git config user.name)" | grep TODO | sed "s/.\{9\}//" | sed "s/(.*)[[:space:]]*//"'';
+  };
 
   xdg.configFile = {
     # Generated from the settings above, not linked: it's the one git file

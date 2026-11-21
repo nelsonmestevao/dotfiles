@@ -47,5 +47,11 @@
     MANPAGER = "nvim +Man!";
   };
 
+  home.shellAliases = {
+    v = "nvim -p";
+    vi = "nvim";
+    vim = "nvim";
+  };
+
   xdg.configFile."nvim/init.lua" = mkSymlink ./init.lua;
 }
