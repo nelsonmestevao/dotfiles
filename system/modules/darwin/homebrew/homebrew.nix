@@ -49,9 +49,7 @@
       "gdal"
       "ghostscript"
       "git-kasa"
-      "git-lfs"
       "gum"
-      "pdftk-java"
       "pgformatter"
 
       # What git-kasa needs. During a switch Homebrew can't see git-kasa's
