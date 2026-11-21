@@ -6,7 +6,6 @@
 {
   home.packages = with pkgs; [
     texliveFull
-    # latexmkrc previews with it (latexmk -pv).
     zathura
   ];
 
