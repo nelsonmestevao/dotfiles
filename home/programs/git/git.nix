@@ -51,10 +51,9 @@ in
     '';
   };
 
-  # Off by default: the three tools are big (unoconv brings LibreOffice) and
-  # unoconv has no build for a Mac. A user file turns it on for the hosts
-  # that should have them.
-  options.diffTools = lib.mkEnableOption "readable diffs of pictures, Word and Excel files, with the tools they need (see diff-tools.ini)";
+  # Off by default: the tools come to about 640 MB. A user file turns it on
+  # for the hosts that should have them.
+  options.diffTools = lib.mkEnableOption "readable diffs of pictures, documents and spreadsheets, with the tools they need (see diff-tools.ini)";
 
   # ── Packages ──────────────────────────────────────────────────────────
   home.packages =
@@ -72,9 +71,11 @@ in
     ]
     # What the drivers in diff-tools.ini run.
     ++ lib.optionals diffTools [
+      catdoc
+      chafa
       exiftool
       pandoc
-      unoconv
+      xlsx2csv
     ];
 
   # gitleaks ships its own zsh completion, so nothing is set up for it here.

@@ -47,6 +47,9 @@
   dotfiles.programs.figlet.enable = true;
   dotfiles.programs.fzf.enable = true;
   dotfiles.programs.git.enable = true;
+  # Readable diffs of pictures, documents and spreadsheets, and the tools for
+  # them.
+  dotfiles.programs.git.diffTools = true;
   # 1Password on this Mac holds the key that signs commits, and signs with
   # it. A host that isn't named here signs nothing.
   dotfiles.programs.git.signingKey = valueFor {
