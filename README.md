@@ -608,7 +608,7 @@ that shell for you (`direnv allow` once).
 | `bin/check --list`             | Prints what every config builds, as JSON. CI decides from this list. |
 | `bin/lint`                     | Checks the Nix, shell, xonsh, zsh, JavaScript and Lua files, the workflow and the docs' links, like CI. |
 | `bin/format`                   | Formats the Nix, shell and Lua files (`nix fmt`).                    |
-| `bin/test`                     | Tests the helper scripts and the Herdr mods, like CI does.           |
+| `bin/test`                     | Tests the helper scripts, the mise prompt and the Herdr mods.        |
 | `bin/autoclean [--dry-run]`    | Deletes old generations and frees space (asks for your password).    |
 | `bin/doctor`                   | Checks what is set up by hand on this machine, and says what is missing. |
 | `bin/setup user\|host <name>`  | Adds a user or host (see [Installing](#-installing)).                |
@@ -660,7 +660,8 @@ the way `bin/format` leaves them ([`lib/formatter.nix`](lib/formatter.nix)).
 
 `bin/test` runs the tests for `bin/new`, `bin/setup`, `bin/check`, `bin/update`,
 `bin/build`, `bin/rebuild` and CI's planning script, which work in throwaway
-folders and touch nothing else. Pass it unittest's arguments to narrow the
+folders and touch nothing else, and for the prompt's mise segment
+(`home/programs/zsh/prompt-mise.zsh`), with a stand-in mise. Pass it unittest's arguments to narrow the
 run, like `bin/test -k hardware`. With no arguments it also runs the Herdr
 mods' own tests, the `*.test.mjs` files next to their code.
 
