@@ -131,6 +131,8 @@
               nix-update
               # bin/test runs the Herdr mods' tests with it.
               nodejs
+              # bin/test runs the prompt's mise segment in it.
+              zsh
             ];
           };
         }
