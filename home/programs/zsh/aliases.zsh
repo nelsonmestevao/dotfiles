@@ -39,10 +39,6 @@ alias bst="bin/setup"
 alias bsr="bin/start"
 alias bsp="bin/stop"
 
-alias a="ansible"
-alias ac="ansible-console"
-alias ap="ansible-playbook"
-
 alias ip='ip -c=auto'
 
 alias tp5="$HOME/Code/UMinho/aulas-pi/2526/tp5"

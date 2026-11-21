@@ -69,6 +69,7 @@
   dotfiles.programs.pkg-config.enable = true;
 
   # Dev Tools
+  dotfiles.programs.ansible.enable = enableFor [ "framework" ];
   dotfiles.programs.bat.enable = true;
   dotfiles.programs.bc.enable = true;
   dotfiles.programs.bruno.enable = enableFor [ "desktop" ];
