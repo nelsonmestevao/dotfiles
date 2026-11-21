@@ -27,6 +27,15 @@
   programs.home-manager.enable = true;
   programs.nh.enable = true;
 
+  # NixOS deletes old generations once a month (system/nixos.nix), the users'
+  # homes too. A home on another Linux has nothing doing that, so it cleans
+  # its own profile, by the same rule (config/cleanup.nix).
+  programs.nh.clean = {
+    enable = pkgs.stdenv.hostPlatform.isLinux && host.platform == null;
+    dates = "monthly";
+    extraArgs = toString (import ../config/cleanup.nix);
+  };
+
   # No `man home-configuration.nix`. Building it made every evaluation print a
   # warning about a derivation named options.json, once for each home. The
   # options are on the web.

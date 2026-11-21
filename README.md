@@ -392,10 +392,11 @@ Old generations are deleted after 31 days, keeping at least the newest 3 of
 each profile (`config/cleanup.nix`): once a month on NixOS, and whenever you
 run `bin/autoclean`. Both clean every profile, the system's and each user's,
 and leave the `result` links and direnv dev shells in your projects alone.
-`bin/autoclean --dry-run` lists what it would delete first. On the Mac and on
-a Home Manager–only machine, nothing deletes old generations on its own
-(Determinate Nix only removes what no generation uses), so run
-`bin/autoclean` there now and then.
+`bin/autoclean --dry-run` lists what it would delete first. A Home
+Manager–only Linux machine cleans its own home once a month too, by the same
+rule. On the Mac nothing deletes old generations on its own (Determinate Nix
+only removes what no generation uses), so run `bin/autoclean` there now and
+then.
 
 ### Backups
 
