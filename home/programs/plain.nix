@@ -92,7 +92,6 @@ with pkgs;
     vlc
     watchman
     wget
-    yq
     zeal
     ;
 
@@ -107,6 +106,7 @@ with pkgs;
   mysql = mysql84;
   rust = rustup;
   speedtest = ookla-speedtest;
+  yq = yq-go;
   zen = zen-browser; # about:config zen.view.experimental-no-window-controls
 }
 // import ./scripts.nix { inherit pkgs; }
