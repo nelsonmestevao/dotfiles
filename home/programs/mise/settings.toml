@@ -1,0 +1,6 @@
+# On NixOS, mise builds Node, Python, Ruby and Erlang from source unless told
+# otherwise, because a downloaded program doesn't normally run there. nix-ld
+# (system/nixos.nix) makes them run, so take the downloads. Everywhere else
+# this is already what mise does.
+[settings]
+all_compile = false
