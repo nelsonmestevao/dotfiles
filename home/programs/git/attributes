@@ -1,18 +1,25 @@
 *.pdf   diff=pdf
 
-*.docx  diff=word
-*.doc   diff=word
+*.docx  diff=document
+*.odt   diff=document
+*.rtf   diff=document
+*.epub  diff=document
+*.doc   diff=doc
 
-*.xlsx  diff=xls
+*.xlsx  diff=xlsx
+*.xlsm  diff=xlsx
 *.xls   diff=xls
 
-*.png  diff=exif
-*.jpg  diff=exif
-*.jpeg diff=exif
-*.gif  diff=exif
-*.webp diff=exif
-*.tiff diff=exif
-*.bmp  diff=exif
+*.png  diff=image
+*.jpg  diff=image
+*.jpeg diff=image
+*.gif  diff=image
+*.webp diff=image
+*.tiff diff=image
+*.bmp  diff=image
+*.jxl  diff=image
+*.avif diff=image
+*.heic diff=image
 
 bun.lock merge=binary
 mix.lock merge=binary

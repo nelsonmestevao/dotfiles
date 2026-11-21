@@ -97,7 +97,8 @@
   dotfiles.programs.figlet.enable = true;
   dotfiles.programs.fzf.enable = true;
   dotfiles.programs.git.enable = true;
-  # Readable diffs of pictures, Word and Excel files, and the tools for them.
+  # Readable diffs of pictures, documents and spreadsheets, and the tools for
+  # them.
   dotfiles.programs.git.diffTools = disableFor [ "server" ];
   # The key that signs commits. A host that isn't named here signs nothing.
   dotfiles.programs.git.signingKey = valueFor {
