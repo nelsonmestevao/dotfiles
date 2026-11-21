@@ -47,5 +47,13 @@
     [ -f ~/.ghcup/env ] && source ~/.ghcup/env
   '';
 
+  home.shellAliases = {
+    cbe = "cabal run --verbose=0";
+    cbr = "cabal repl";
+    cbt = "cabal test --enable-coverage --verbose=0";
+    cbdt = "cabal repl --build-depends=QuickCheck,doctest --with-ghc=doctest --verbose=0";
+    cbh = "cabal haddock";
+  };
+
   home.file.".ghci" = mkSymlink ./ghci;
 }

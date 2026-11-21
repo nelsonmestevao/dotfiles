@@ -19,4 +19,9 @@
     ++ lib.optionals stdenv.hostPlatform.isDarwin [
       docker-client
     ];
+
+  home.shellAliases = {
+    lzd = "lazydocker";
+    hollywood = "docker run --rm -it bcbcarl/hollywood";
+  };
 }

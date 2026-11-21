@@ -69,6 +69,26 @@ in
     ERL_AFLAGS = "-kernel shell_history enabled";
   };
 
+  home.shellAliases = {
+    m = "mix";
+    ms = "mix phx.server";
+    mc = "mix compile";
+    mcf = "mix compile --force";
+    mcc = "mix do clean, compile";
+    mf = "mix format";
+    ml = "mix lint";
+    mlc = "mix lint.credo";
+    mld = "mix lint.dialyzer";
+    mls = "mix lint.sobelow";
+    mt = "mix test";
+    mtw = "mix test.watch";
+    mh = "mix coveralls.html";
+    im = "iex -S mix";
+    ims = "iex -S mix phx.server";
+    iw = "iex --sname iex --remsh web@$(hostname)";
+    es = "elixir --sname web -S mix phx.server";
+  };
+
   # Where `mix escript.install` puts its commands.
   home.sessionPath = [ "$HOME/.mix/escripts" ];
 
