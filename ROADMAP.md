@@ -2,146 +2,50 @@
 
 What is worth doing next, most important first. Each item says why, what to
 do, and how to know it is done. Every "why" was checked against the repo on
-2026-11-20.
+2026-11-21.
 
-Many ideas come from ten well-known Nix configs, read on the same day:
+Many ideas came from ten well-known Nix configs, read on 2026-11-20:
 [Misterio77], [ryan4yin], [Mic92], [mitchellh], [dustinlyons],
-[EmergentMind], [wimpysworld], [fufexan], [srid] and [hlissner]. "Seen in"
-names the ones that do it. Twenty ideas were weighed, each with two or three
-ways to do it. The eight below were picked; the rest are at the end, so they
-aren't weighed again without a new reason.
+[EmergentMind], [wimpysworld], [fufexan], [srid] and [hlissner]. Twenty ideas
+were weighed, each with two or three ways to do it, and eight were picked.
+Seven of those are done. What is left of the eighth is below, and the ideas
+that were left out are at the end, so they aren't weighed again without a new
+reason.
 
 An older audit of about 40 items is in git history
 (`git log -- ROADMAP.md`).
 
-## 1. Make the backups trustworthy
+## Check on the machines
 
-**Why:** [the timers](system/timers/nelson.nix) back up to three Restic
-repositories with no retention, so they grow forever. Nothing runs
-`restic check`, nothing tells you when a backup fails, and all three start at
-17:00 on weekdays over the same paths. A backup you have never restored is a
-guess.
+These changes were only evaluated from the Mac. Each needs one look on the
+machine it is for:
 
-**Do:**
+- **framework, the backups:** the first backup after the switch deletes every
+  snapshot the retention doesn't keep. Start one by hand with
+  `sudo systemctl start restic-backups-mega` and read its log with
+  `journalctl -eu restic-backups-mega`. To see the failure notice once, run
+  `sudo systemctl start notify-failure@sync-books`.
+- **framework, by hand:** `bin/doctor` should say nothing is missing, and
+  `fwupdmgr update` should find the laptop's firmware.
+- **framework, the disk layout:**
+  [disks.nix](system/hosts/framework/disks.nix) guesses the drive's name
+  (`/dev/nvme0n1`) and the size of the EFI partition (1 GiB). Check both
+  against `lsblk`.
+- **thinkpad:** the first switch prints one `sudo` command that sets up the
+  graphics drivers for Nix programs. Run it.
 
-- Add `pruneOpts`, like `--keep-daily 7 --keep-weekly 5 --keep-monthly 12`.
-- Add `checkOpts`, or a weekly `restic check --read-data-subset=5%`.
-- Send a desktop notification when a backup unit fails (`OnFailure`).
-- Start the three repositories at different times.
-- Every few months, restore one folder to `/tmp` from each repository. Write
-  the steps in the README.
+## 1. A disk layout for temis
 
-**Done when:** the number of snapshots stays flat for weeks, a failed run
-shows a notification, and a restore from each repository works.
+**Why:** framework's disk is written down for disko, so an empty disk becomes
+the laptop with two commands. temis's
+[hardware file](system/hosts/temis/hardware.nix) still names its disk by the
+UUID of the first install, and nothing says how it was partitioned.
 
-## 2. A `bin/doctor` for what is made by hand
+**Do:** write `system/hosts/temis/disks.nix` the way framework's is written:
+the partitions temis has today, each made with the UUID its hardware file
+already names. temis boots with GRUB from `/dev/sda`, not EFI.
 
-**Why:** the Restic password (`~/.config/restic/restic.pw`), the rclone
-remotes and `~/.zshenv.local` are made by hand on each machine. A new machine
-needs steps that no file lists, and the backup timers fail without the
-password file.
-
-**Seen in:** nine of the ten keep secrets in the repo, encrypted, with
-sops-nix or agenix. That was weighed and left out for now: there are few
-secrets here, and rclone rewrites its config when a login token refreshes, so
-that file can't be a read-only secret.
-
-**Do:** write `bin/doctor`. It checks each hand-made file on this machine
-(the Restic password, the rclone remotes the timers use, `~/.zshenv.local`,
-the SSH key that signs commits) and says what is missing and how to make it.
-The secrets stay out of the repo.
-
-**Done when:** on a fresh machine `bin/doctor` names every file it lacks, and
-on a finished one it says nothing is missing.
-
-## 3. Fix three nvim bugs
-
-**Why:** found with nvim 0.12 on 2026-11-20:
-
-- The typo maps in [keymaps.lua](home/programs/nvim/keymaps.lua) turn every
-  `W` and `Q` you type on the command line into lowercase. `/Word` searches
-  for `word`.
-- `j` and `k` map to `gj` and `gk`, so `5j` moves five screen lines, not the
-  five real lines the relative numbers show.
-- `gd` and `K` are mapped everywhere, so they break in a file with no
-  language server.
-
-**Do:** user commands (`:W`, `:Q`, `:Wq`, `:Wa`, `:Qall`, each with `!`) in
-place of the typo maps; `gj` and `gk` only without a count; `gd` set when a
-language server attaches, and no map for `K`, which nvim sets itself there.
-
-**Done when:** `/Word` finds `Word`, `5j` lands on the line numbered 5, and
-`K` opens help in a help file.
-
-## 4. Quiet the warning on every evaluation
-
-**Why:** every `bin/check` prints "Using 'builtins.derivation' to create a
-derivation named 'options.json'" four times, once for each home. It comes
-from Home Manager's man page: with `manual.manpages.enable = false` the
-warning is gone (tested).
-
-**Do:** turn that man page off in [home/default.nix](home/default.nix).
-`man home-configuration.nix` goes with it; the options are still on the web.
-
-**Done when:** `bin/check --eval` prints no warning from the homes.
-
-## 5. Check and format the other languages
-
-**Why:** the lint check covers Nix, shell, xonsh, zsh, the workflow and the
-docs' links. The 56 JavaScript files of the Herdr mods and the 6 Lua files of
-nvim get no check at all, and
-[remote.test.mjs](home/programs/herdr-app/mods/profile-pictures/remote.test.mjs)
-is a test that nothing runs.
-
-**Seen in:** Mic92 formats every language with one command.
-
-**Do:**
-
-- Run that test in `bin/test`.
-- Parse every JavaScript and Lua file in the lint check, so a syntax error
-  fails before a switch.
-- Make `bin/format` format every language through treefmt (nixfmt, shfmt,
-  stylua, prettier). The first run reformats many files: keep it a commit of
-  its own.
-
-**Done when:** a syntax error in a mod fails `bin/lint`, and `bin/format`
-leaves a clean tree.
-
-## 6. A "command not found" that knows Nix
-
-**Why:** [the handler](home/programs/zsh/handlers.zsh) prints a drawing and
-the command's name. It can't say which package has the command.
-
-**Seen in:** nix-index-database in EmergentMind, wimpysworld and srid.
-
-**Do:** add nix-index-database as an input, with comma. The handler keeps its
-drawing and also names the package, and `, cowsay hi` runs a command once
-without installing it.
-
-**Done when:** a missing command names its package, and `, cowsay hi` runs.
-
-## 7. Start the shell faster
-
-**Why:** a new zsh takes 0.40 to 0.43 seconds on the Mac (three runs, after a
-warm-up).
-
-**Do:** measure one start with `zprof`, see where the time goes, and cut only
-what is slow. oh-my-zsh stays.
-
-**Done when:** a new shell starts in under 0.2 seconds.
-
-## 8. Make a reinstall repeatable
-
-**Why:** both hardware files name the disks by the UUIDs of the first
-install. A new disk means partitioning by hand and writing the file again.
-
-**Seen in:** disko in seven of the ten.
-
-**Do:** write a disko layout for each NixOS host, framework first, to match
-its disks today. It is only read at install time, so the running systems
-don't change.
-
-**Done when:** an empty disk becomes the host with one documented command.
+**Done when:** the README's two commands work for temis too.
 
 ## Waiting
 
@@ -154,6 +58,14 @@ don't change.
 
 Left out on 2026-11-20. Each is still true; pick one up if it starts to hurt.
 
+- **A faster shell start:** measured on the Mac on 2026-11-21. A new zsh
+  takes about 0.39 seconds, but powerlevel10k's instant prompt shows the
+  prompt at once. No part is slow on its own: mise 43 ms, zsh-autopair 28,
+  oh-my-zsh's completion audit about 30, zoxide 17. Skipping the audit only
+  brought 0.35 seconds down to 0.32.
+- **Formatting the JavaScript:** the Herdr mods are written densely, and
+  prettier would grow them from about 9,400 lines to about 30,700. The lint
+  check parses them instead.
 - **SSH on temis:** [temis.nix](system/hosts/temis.nix) turns on SSH with the
   firewall off, and the server takes passwords. The ways in: keys and a
   firewall, SSH only over Tailscale, or the `srvos` server profile.
