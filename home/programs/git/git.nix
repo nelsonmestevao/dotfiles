@@ -60,7 +60,6 @@ in
     with pkgs;
     [
       delta
-      diffpdf
       difftastic
       gh
       git
