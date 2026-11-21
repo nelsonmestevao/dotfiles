@@ -18,7 +18,6 @@ macos-titlebar-proxy-icon = hidden
 macos-non-native-fullscreen = true
 
 gtk-titlebar = false
-#gtk-adwaita = true
 gtk-wide-tabs = true
 gtk-tabs-location = bottom
 adw-toolbar-style = flat

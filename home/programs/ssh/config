@@ -1,9 +1,6 @@
 AddKeysToAgent  yes
 Compression yes
 
-# Host *
-#     IdentityAgent "~/.bitwarden-ssh-agent.sock"
-
 Host aur.archlinux.org
   User aur
 
