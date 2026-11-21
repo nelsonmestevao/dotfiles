@@ -36,17 +36,15 @@
 
     # Every Homebrew formula installed on this Mac. With `cleanup = "uninstall"`,
     # a switch removes any formula that isn't listed here, so the list has to
-    # be complete, even where Nix installs the same tool. New CLI tools belong
-    # in home.packages; add one here only when it has to come from Homebrew.
+    # be complete. New CLI tools belong in home.packages; add one here only
+    # when it has to come from Homebrew. A tool listed here that Nix installs
+    # too is on the Mac twice, and Homebrew's copy is the one that runs.
     # `brew bundle dump --file=-` prints what is installed, to compare.
     brews = [
       # Tools
       "awscli"
-      "colima"
       "coreutils"
       "curl"
-      "docker"
-      "docker-compose"
       "ffmpeg"
       "gdal"
       "ghostscript"
@@ -55,8 +53,6 @@
       "gum"
       "pdftk-java"
       "pgformatter"
-      "weasyprint"
-      "yq"
 
       # What git-kasa needs. During a switch Homebrew can't see git-kasa's
       # needs (it comes from another tap), so without these lines it tries to
