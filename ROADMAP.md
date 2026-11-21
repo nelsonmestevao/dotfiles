@@ -8,9 +8,8 @@ Many ideas came from ten well-known Nix configs, read on 2026-11-20:
 [Misterio77], [ryan4yin], [Mic92], [mitchellh], [dustinlyons],
 [EmergentMind], [wimpysworld], [fufexan], [srid] and [hlissner]. Twenty ideas
 were weighed, each with two or three ways to do it, and eight were picked.
-Seven of those are done. What is left of the eighth is below, and the ideas
-that were left out are at the end, so they aren't weighed again without a new
-reason.
+All eight are done. The ideas that were left out are at the end, so they
+aren't weighed again without a new reason.
 
 An older audit of about 40 items is in git history
 (`git log -- ROADMAP.md`).
@@ -31,21 +30,13 @@ machine it is for:
   [disks.nix](system/hosts/framework/disks.nix) guesses the drive's name
   (`/dev/nvme0n1`) and the size of the EFI partition (1 GiB). Check both
   against `lsblk`.
+- **temis, the disk layout:** [disks.nix](system/hosts/temis/disks.nix)
+  guesses the disk's name (`/dev/sda`, where GRUB goes today) and makes a GPT
+  disk with a 1 MiB partition for GRUB. temis may have an older MBR disk
+  today; a new install doesn't need to match it. Check the name against
+  `lsblk`.
 - **thinkpad:** the first switch prints one `sudo` command that sets up the
   graphics drivers for Nix programs. Run it.
-
-## 1. A disk layout for temis
-
-**Why:** framework's disk is written down for disko, so an empty disk becomes
-the laptop with two commands. temis's
-[hardware file](system/hosts/temis/hardware.nix) still names its disk by the
-UUID of the first install, and nothing says how it was partitioned.
-
-**Do:** write `system/hosts/temis/disks.nix` the way framework's is written:
-the partitions temis has today, each made with the UUID its hardware file
-already names. temis boots with GRUB from `/dev/sda`, not EFI.
-
-**Done when:** the README's two commands work for temis too.
 
 ## Waiting
 

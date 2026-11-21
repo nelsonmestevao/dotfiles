@@ -347,10 +347,10 @@ switch, so it needs no `sudo`.
 
 ### Starting from an empty disk
 
-framework's disk layout is written down in
-`system/hosts/framework/disks.nix`, for
+Each NixOS host's disk layout is written down in
+`system/hosts/<hostname>/disks.nix`, for
 [disko](https://github.com/nix-community/disko). From the NixOS installer,
-with this repo cloned:
+with this repo cloned, for framework:
 
 ```shell
 sudo nix --extra-experimental-features 'nix-command flakes' run \
@@ -363,6 +363,10 @@ The first command erases the disk the file names, so check the name with
 `lsblk` first. It makes each partition with the UUID that `hardware.nix`
 already names, so that file stays as it is. Nothing reads the layout while the
 system runs.
+
+temis works the same way, with `temis` in both commands. It starts with a
+BIOS, so its layout has a small partition for GRUB where framework has an EFI
+one.
 
 ### What a switch can't make
 
