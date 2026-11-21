@@ -7,38 +7,16 @@
   ...
 }:
 let
-  inherit (config.dotfiles.programs.git) signingKey signingProgram;
+  inherit (config.dotfiles.programs.git) signingKey signingProgram diffTools;
 
   # The user's identity is profiles/<username>.ini, included when it exists.
   profile = "profiles/${username}.ini";
-
-  # A diff driver runs its tool on each diff of a matching file (see
-  # `attributes`). If the tool is missing, `git show`, `git diff` and
-  # `git log -p` die. So these drivers live here, set only where their tool's
-  # program is on, and not in the linked common.ini. Where a driver isn't set,
-  # git says "Binary files differ". The cost: changing a driver needs a
-  # rebuild. But they differ per host, like the signing key. The pdf driver
-  # stays in common.ini, because every machine has pdftotext (the Mac from
-  # Homebrew). Slides and ODF files get no driver, so git shows them as
-  # binary: LibreOffice can't export slides as text, and no package gives a
-  # working odt2txt.
-  driver =
-    program: textconv:
-    lib.optionalAttrs config.dotfiles.programs.${program}.enable {
-      inherit textconv;
-      cachetextconv = true;
-    };
-
-  diffDrivers = lib.filterAttrs (_: d: d != { }) {
-    exif = driver "exiftool" "exiftool";
-    word = driver "pandoc" "pandoc --to plain";
-    xls = driver "unoconv" "sh -c 'unoconv --stdout --format csv \"$0\"'";
-  };
 
   gitConfig = {
     include.path = [
       "~/.config/git/common.ini"
     ]
+    ++ lib.optional diffTools "~/.config/git/diff-tools.ini"
     ++ lib.optional (builtins.pathExists (./. + "/${profile}")) "~/.config/git/${profile}";
   }
   // lib.optionalAttrs (signingKey != null) {
@@ -48,9 +26,6 @@ let
   }
   // lib.optionalAttrs (signingProgram != null) {
     gpg.ssh.program = signingProgram;
-  }
-  // lib.optionalAttrs (diffDrivers != { }) {
-    diff = diffDrivers;
   };
 in
 {
@@ -76,18 +51,31 @@ in
     '';
   };
 
+  # Off by default: the three tools are big (unoconv brings LibreOffice) and
+  # unoconv has no build for a Mac. A user file turns it on for the hosts
+  # that should have them.
+  options.diffTools = lib.mkEnableOption "readable diffs of pictures, Word and Excel files, with the tools they need (see diff-tools.ini)";
+
   # ── Packages ──────────────────────────────────────────────────────────
-  home.packages = with pkgs; [
-    delta
-    diffpdf
-    difftastic
-    gh
-    git
-    git-lfs
-    git-who
-    gitleaks
-    lazygit
-  ];
+  home.packages =
+    with pkgs;
+    [
+      delta
+      diffpdf
+      difftastic
+      gh
+      git
+      git-lfs
+      git-who
+      gitleaks
+      lazygit
+    ]
+    # What the drivers in diff-tools.ini run.
+    ++ lib.optionals diffTools [
+      exiftool
+      pandoc
+      unoconv
+    ];
 
   # gitleaks ships its own zsh completion, so nothing is set up for it here.
   home.shellAliases.lg = "lazygit";
@@ -98,6 +86,8 @@ in
     # edit in place.
     "git/config".text = lib.generators.toGitINI gitConfig;
     "git/common.ini" = mkSymlink ./common.ini;
+    # Included only where `diffTools` is on.
+    "git/diff-tools.ini" = mkSymlink ./diff-tools.ini;
     "git/allowed_signers" = mkSymlink ./allowed_signers;
     "git/commit-template" = mkSymlink ./commit-template;
     "git/ignore" = mkSymlink ./ignore;
