@@ -668,9 +668,25 @@ local plugins = {
         end,
       })
 
-      -- Format Nix like bin/format does.
+      -- Format Nix like bin/format does. In a flake with homes or NixOS
+      -- systems, like the dotfiles, also complete and describe their options
+      -- (dotfiles.programs.zsh.showHost), read from the first of each.
+      -- Elsewhere the expressions fail and nixd goes without.
+      local first = function(configurations)
+        return "(builtins.head (builtins.attrValues (builtins.getFlake (toString ./.))."
+          .. configurations
+          .. ")).options"
+      end
       vim.lsp.config("nixd", {
-        settings = { nixd = { formatting = { command = { "nixfmt" } } } },
+        settings = {
+          nixd = {
+            formatting = { command = { "nixfmt" } },
+            options = {
+              ["home-manager"] = { expr = first("homeConfigurations") },
+              nixos = { expr = first("nixosConfigurations") },
+            },
+          },
+        },
       })
 
       -- sqls formats and completes SQL without a database, but says "no
