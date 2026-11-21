@@ -1,3 +1,21 @@
+# A hunk header names the function, heading or rule the change is in. git's
+# own guess is made for C, so each language gets the driver git ships for it.
+*.ex        diff=elixir
+*.exs       diff=elixir
+*.md        diff=markdown
+*.markdown  diff=markdown
+*.py        diff=python
+*.rs        diff=rust
+*.go        diff=golang
+*.rb        diff=ruby
+*.sh        diff=bash
+*.bash      diff=bash
+*.zsh       diff=bash
+*.css       diff=css
+*.scss      diff=css
+*.html      diff=html
+*.tex       diff=tex
+
 *.pdf   diff=pdf
 
 *.docx  diff=document
