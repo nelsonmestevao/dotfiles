@@ -3,7 +3,6 @@
 ------------------------------------------------------------------------------
 ---
 
--- Install lazy.nvim if not installed
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -21,8 +20,6 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 
 vim.opt.rtp:prepend(lazypath)
-
--- Configure Plugins
 
 local plugins = {
   {
@@ -92,21 +89,6 @@ local plugins = {
       "nvim-tree/nvim-web-devicons",
     },
   },
-  -- {
-  --   "folke/noice.nvim",
-  --   event = "VeryLazy",
-  --   dependencies = {
-  --     "MunifTanjim/nui.nvim",
-  --     "rcarriga/nvim-notify",
-  --   },
-  --   config = function()
-  --     require("notify").setup({
-  --       max_width = 80,
-  --     })
-  --
-  --     require("noice").setup()
-  --   end,
-  -- },
   {
     "nvim-telescope/telescope.nvim",
     -- v0.2.x uses Neovim's built-in `vim.treesitter` API for preview
@@ -331,31 +313,8 @@ local plugins = {
     "MeanderingProgrammer/render-markdown.nvim",
     ft = "markdown",
     opts = {},
-    dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" }, -- if you prefer nvim-web-devicons
+    dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" },
   },
-  -- {
-  --   "3rd/image.nvim",
-  --   config = function()
-  --     require("image").setup({
-  --       -- default options
-  --       backed = "kitty",
-  --       max_width = 80,
-  --       max_height = 60,
-  --       integrations = {
-  --         markdown = {
-  --           resolve_image_path = function(document_path, image_path, fallback)
-  --             -- document_path is the path to the file that contains the image
-  --             -- image_path is the potentially relative path to the image. for
-  --             -- markdown it's `![](this text)`
-  --
-  --             -- you can call the fallback function to get the default behavior
-  --             return fallback(document_path, image_path)
-  --           end,
-  --         }
-  --       }
-  --     })
-  --   end
-  -- },
   -- Databases
   {
     "kndndrj/nvim-dbee",
@@ -403,7 +362,6 @@ local plugins = {
       "nvim-lua/plenary.nvim",
       "nvim-tree/nvim-web-devicons",
       "MunifTanjim/nui.nvim",
-      -- "3rd/image.nvim",
     },
     config = function()
       require("neo-tree").setup({
@@ -580,11 +538,11 @@ local plugins = {
   {
     "RRethy/nvim-treesitter-endwise",
     -- No config needed: endwise auto-attaches via built-in Neovim treesitter APIs.
-    dependencies = { "nvim-treesitter/nvim-treesitter" }, -- if you install parsers with `nvim-treesitter`
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
   },
   {
     "Wansmer/treesj",
-    dependencies = { "nvim-treesitter/nvim-treesitter" }, -- if you install parsers with `nvim-treesitter`
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
     -- Load on the first press. lazy.nvim then replays the key.
     keys = { "<leader>m", "<leader>M" },
     config = function()

@@ -17,7 +17,6 @@ vim.g.maplocalleader = ","
 -- combination since they normally don't appear together in the English
 -- dictionary.
 
--- Because <Esc> is too far away
 vim.keymap.set("i", "kj", "<Esc>")
 vim.keymap.set("c", "kj", "<Esc>")
 
