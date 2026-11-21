@@ -12,6 +12,11 @@
     # Xcode Command Line Tools' clang instead of this gcc.)
     tree-sitter
     gcc
+    # lazy.nvim builds a plugin's Lua libraries with luarocks, and wants the
+    # Lua that Neovim speaks, 5.1. No plugin here needs one yet. Without
+    # these, `:checkhealth lazy` reports an error.
+    lua5_1
+    lua51Packages.luarocks
 
     # ── Language servers ─────
     # plugins.lua turns a server on only when its command is on PATH, so
