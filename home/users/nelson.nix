@@ -97,6 +97,8 @@
   dotfiles.programs.figlet.enable = true;
   dotfiles.programs.fzf.enable = true;
   dotfiles.programs.git.enable = true;
+  # Readable diffs of pictures, Word and Excel files, and the tools for them.
+  dotfiles.programs.git.diffTools = disableFor [ "server" ];
   # The key that signs commits. A host that isn't named here signs nothing.
   dotfiles.programs.git.signingKey = valueFor {
     framework = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINt6s4KNjVHcH0qA0CPKWYPyCTPXkbwXFlfljrToN8b6";
