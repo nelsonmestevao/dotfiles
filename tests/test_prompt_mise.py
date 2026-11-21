@@ -8,6 +8,7 @@ draw. They check what the segment draws for a tool, and how seldom it asks.
 import json
 import os
 from pathlib import Path
+import shutil
 import subprocess
 import tempfile
 import unittest
@@ -15,6 +16,7 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 SEGMENT = ROOT / 'home/programs/zsh/prompt-mise.zsh'
+ZSH = shutil.which('zsh')
 
 # Answers the one question the segment asks, and counts the askings.
 MISE = '''#!/bin/sh
@@ -31,8 +33,12 @@ class PromptMiseTest(unittest.TestCase):
     def setUp(self):
         self.home = Path(tempfile.mkdtemp(prefix='prompt-mise-'))
         self.addCleanup(lambda: subprocess.run(['rm', '-rf', str(self.home)]))
+        # The only folder on PATH: jq, which the segment needs, and cat, which
+        # the stand-in mise needs. So a mise installed here can't answer.
         self.bin = self.home / 'bin'
         self.bin.mkdir()
+        for tool in ('jq', 'cat'):
+            (self.bin / tool).symlink_to(shutil.which(tool))
         self.drawn = self.home / 'drawn'
         self.asked = self.home / 'asked'
         self.answer = self.home / 'answer.json'
@@ -42,14 +48,14 @@ class PromptMiseTest(unittest.TestCase):
         mise.write_text(MISE)
         mise.chmod(0o755)
 
-    def prompt(self, tools, script='prompt_mise', before=''):
+    def prompt(self, tools, script='prompt_mise', before='', locale='C.UTF-8'):
         """Runs `script` in a zsh that has the segment, with mise answering
-        `tools`. Gives back what the zsh printed."""
+        `tools`. Gives back what the zsh printed. The locale is UTF-8, as
+        Powerlevel10k makes it before it draws."""
         self.answer.write_text(json.dumps({tool: [{'version': version}] for tool, version in tools.items()}))
-        env = dict(os.environ,
-                   PATH=f"{self.bin}{os.pathsep}{os.environ['PATH']}",
-                   ASKED=str(self.asked), ANSWER=str(self.answer), DRAWN=str(self.drawn))
-        result = subprocess.run(['zsh', '-f', '-c', f'{P10K}\n{before}\nsource {SEGMENT}\n{script}'],
+        env = {'HOME': str(self.home), 'PATH': str(self.bin), 'LC_ALL': locale,
+               'ASKED': str(self.asked), 'ANSWER': str(self.answer), 'DRAWN': str(self.drawn)}
+        result = subprocess.run([ZSH, '-f', '-c', f'{P10K}\n{before}\nsource {SEGMENT}\n{script}'],
                                 cwd=self.home, env=env, capture_output=True, text=True)
         self.assertEqual(result.stderr, '')
         self.assertEqual(result.returncode, 0)
@@ -119,7 +125,7 @@ class PromptMiseTest(unittest.TestCase):
 
     def test_every_icon_is_a_powerlevel10k_name_or_one_glyph(self):
         out = self.prompt({}, script='for icon in $prompt_mise_icons $prompt_mise_source_icons $prompt_mise_any_icon; '
-                                     'do [[ $icon == [A-Z]*_ICON || ${#icon} == 1 ]] || print -r -- $icon; done; '
+                                     'do [[ $icon == [A-Z]*_ICON || ${#${(g::)icon}} == 1 ]] || print -r -- $icon; done; '
                                      'print ${#prompt_mise_icons}')
         self.assertEqual(out.split(), ['62'])
 
@@ -153,6 +159,12 @@ class PromptMiseTest(unittest.TestCase):
         self.install_mise()
         self.prompt({'elixir': '1.18%F'})
         self.assertEqual(self.segments(), ['segment -s ELIXIR -r -i ELIXIR_ICON -t 1.18%%F'])
+
+    def test_a_shell_with_no_utf8_locale_reads_the_file_without_a_word(self):
+        # zsh can't write a glyph there, so the file must not ask it to.
+        self.install_mise()
+        out = self.prompt({}, locale='C', script='print ${#prompt_mise_icons} $+functions[prompt_mise]')
+        self.assertEqual(out.split(), ['62', '1'])
 
     def test_the_colors_are_the_ones_set_for_asdf(self):
         self.install_mise()

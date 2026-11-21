@@ -11,69 +11,72 @@
 # where Powerlevel10k has no icon, has one that today's fonts draw wrong
 # (node), or has one that is not the tool's logo (terraform, flutter,
 # kubectl). Every glyph is in Nerd Fonts 3.4, the fonts the desktops have.
+#
+# A number stays text until the prompt is drawn. A shell can start with no
+# UTF-8 locale, and there zsh can't write a glyph, so it must not try here.
 typeset -gA prompt_mise_icons=(
-  ansible         $'\ue723'
+  ansible         '\ue723'
   aws-cli         AWS_ICON
   awscli          AWS_ICON
-  azure-cli       $'\ue754'
-  bun             $'\ue76f'
-  clojure         $'\ue768'
-  cmake           $'\ue794'
-  consul          $'\ue79a'
-  crystal         $'\ue62f'
-  dart            $'\ue64c'
-  deno            $'\ue7c0'
+  azure-cli       '\ue754'
+  bun             '\ue76f'
+  clojure         '\ue768'
+  cmake           '\ue794'
+  consul          '\ue79a'
+  crystal         '\ue62f'
+  dart            '\ue64c'
+  deno            '\ue7c0'
   direnv          DIRENV_ICON
-  docker-cli      $'\uf308'
-  docker-compose  $'\uf308'
+  docker-cli      '\uf308'
+  docker-compose  '\uf308'
   dotnet          DOTNET_CORE_ICON
   elixir          ELIXIR_ICON
-  elm             $'\ue62c'
+  elm             '\ue62c'
   erlang          ERLANG_ICON
-  ffmpeg          $'\uf008'
-  flutter         $'\ue7dd'
-  gcloud          $'\U000f11f6'
+  ffmpeg          '\uf008'
+  flutter         '\ue7dd'
+  gcloud          '\U000f11f6'
   gh              VCS_GIT_GITHUB_ICON
   ghc             HASKELL_ICON
   glab            VCS_GIT_GITLAB_ICON
   go              GOLANG_ICON
-  gradle          $'\ue660'
+  gradle          '\ue660'
   haskell         HASKELL_ICON
-  helm            $'\ue7fb'
+  helm            '\ue7fb'
   java            JAVA_ICON
   julia           JULIA_ICON
-  kotlin          $'\ue634'
-  kubectl         $'\U000f10fe'
-  lefthook        $'\U000f06e2'
+  kotlin          '\ue634'
+  kubectl         '\U000f10fe'
+  lefthook        '\U000f06e2'
   lua             LUA_ICON
-  maven           $'\ue674'
-  mysql           $'\ue704'
+  maven           '\ue674'
+  mysql           '\ue704'
   neovim          VIM_ICON
-  node            $'\U000f0399'
-  npm             $'\ue71e'
-  packer          $'\ue85c'
+  node            '\U000f0399'
+  npm             '\ue71e'
+  packer          '\ue85c'
   perl            PERL_ICON
   php             PHP_ICON
-  pnpm            $'\ue865'
-  poetry          $'\ue867'
+  pnpm            '\ue865'
+  poetry          '\ue867'
   postgres        POSTGRES_ICON
-  pulumi          $'\ue873'
+  pulumi          '\ue873'
   python          PYTHON_ICON
-  redis           $'\ue76d'
+  redis           '\ue76d'
   ruby            RUBY_ICON
   rust            RUST_ICON
   scala           SCALA_ICON
-  sqlite          $'\ue7c4'
+  sqlite          '\ue7c4'
   swift           SWIFT_ICON
-  terraform       $'\ue8bd'
-  tmux            $'\uebc8'
-  typst           $'\uf37f'
-  vault           $'\ue8d2'
+  terraform       '\ue8bd'
+  tmux            '\uebc8'
+  typst           '\uf37f'
+  vault           '\ue8d2'
   vim             VIM_ICON
-  yarn            $'\ue6a7'
+  yarn            '\ue6a7'
   yazi            YAZI_ICON
-  yq              $'\ue8eb'
-  zig             $'\ue6a9'
+  yq              '\ue8eb'
+  zig             '\ue6a9'
 )
 
 # A tool with no icon of its own gets the icon of where mise takes it from,
@@ -85,12 +88,12 @@ typeset -gA prompt_mise_source_icons=(
   github  VCS_GIT_GITHUB_ICON
   gitlab  VCS_GIT_GITLAB_ICON
   go      GOLANG_ICON
-  npm     $'\ue71e'
+  npm     '\ue71e'
   pipx    PYTHON_ICON
 )
 
 # Any other tool gets a package, and shows its name.
-typeset -g prompt_mise_any_icon=$'\ueb29'
+typeset -g prompt_mise_any_icon='\ueb29'
 
 # The colors in p10k.zsh go by asdf's name for a tool, in capitals. For these
 # three it is not mise's.
@@ -113,7 +116,7 @@ typeset -g prompt_mise_asked_for=
 typeset -ga prompt_mise_found=()
 
 function prompt_mise() {
-  (( $+commands[mise] && $+commands[jq] )) || return
+  (( $+commands[mise] && $+commands[jq] )) || return 0
 
   # Ask mise again only in another folder, or when PATH changed, which is how
   # mise makes a tool the current one. Every other prompt reuses the answer.
@@ -144,8 +147,14 @@ function prompt_mise() {
       text="${name//\%/%%} $version"
     fi
     # A name in capitals is one of Powerlevel10k's, for it to look up (-r).
-    # Anything else is the glyph, to draw as it is (+r).
-    [[ $icon == [A-Z]*_ICON ]] && lookup=-r || lookup=+r
+    # Anything else is a glyph's number, made into the glyph here (+r): by
+    # the time it draws, Powerlevel10k has given the shell a UTF-8 locale.
+    if [[ $icon == [A-Z]*_ICON ]]; then
+      lookup=-r
+    else
+      lookup=+r
+      icon=${(g::)icon}
+    fi
     p10k segment -s ${prompt_mise_styles[$name]:-${(U)name//[^[:alnum:]]/_}} $lookup -i $icon -t $text
   done
 }
