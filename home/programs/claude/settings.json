@@ -19,12 +19,6 @@
     "pr-review-toolkit@anthropic-plugin-directory": true,
     "typescript-lsp@claude-plugins-official": true
   },
-  "effortLevel": "xhigh",
-  "modelSettings": {
-    "claude-opus-5-5": {
-      "effortLevel": "xhigh"
-    }
-  },
   "voice": {
     "enabled": true,
     "mode": "hold"
