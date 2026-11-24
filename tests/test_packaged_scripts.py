@@ -1,6 +1,6 @@
 """Run with: bin/test.
 
-The xonsh and bash scripts that programs package: mode with theme, caffeine
+The xonsh scripts that programs package: mode with theme, caffeine
 and notifications (home/programs/mode/), and herd (home/programs/herd/). The
 tests build the packages, as a home installs them, and run them against
 stand-ins for the system tools they change: gsettings on Linux,
@@ -149,7 +149,7 @@ class PackagedScriptTest(unittest.TestCase):
                    '{\n  "buffer_font_size": 18,\n  "terminal": {\n    "font_size": 16,\n  },\n}\n')
         self.write('home/programs/ghostty/config', 'background-opacity = 0.6\nfont-size = 16\n')
 
-        self.assertIn('USAGE', self.run_it('mode', '--help'))
+        self.assertIn('mode (chill | demo | status)', self.run_it('mode', '--help'))
         self.assertIn('mode v', self.run_it('mode', '--version'))
         self.assertIn('Changed to mode demo!', self.run_it('mode', 'demo'))
         self.assertTrue(self.run_it('mode', 'status').startswith('demo'))
@@ -167,6 +167,33 @@ class PackagedScriptTest(unittest.TestCase):
     def test_mode_needs_the_checkout(self):
         del self.env['DOTFILES']
         self.assertIn('DOTFILES: must point to the dotfiles checkout', self.run_it('mode', 'status'))
+
+    def test_mode_finds_the_checkout_a_home_gives_it(self):
+        expr = f"""
+          let
+            flake = builtins.getFlake (toString {ROOT});
+            pkgs = flake.inputs.nixpkgs.legacyPackages.${{builtins.currentSystem}};
+          in
+          pkgs.callPackage {ROOT}/home/programs/mode/package.nix {{ dotfilesDirectory = "{self.dotfiles}"; }}
+        """
+        package = subprocess.run(['nix', 'build', '--impure', '--no-link', '--print-out-paths', '--expr', expr],
+                                 cwd=ROOT, capture_output=True, text=True, check=True).stdout.strip()
+        for checkout, opacity in ((self.dotfiles, '0.6'), (self.tmp / 'other', '1')):
+            (checkout / 'home/programs/ghostty').mkdir(parents=True)
+            (checkout / 'home/programs/ghostty/config').write_text(f'background-opacity = {opacity}\nfont-size = 16\n')
+            for path in ('vscode/settings.json', 'zed/settings.json'):
+                (checkout / 'home/programs' / path).parent.mkdir(parents=True, exist_ok=True)
+                (checkout / 'home/programs' / path).write_text('{\n  "editor.fontSize": 18,\n}\n')
+
+        def status():
+            return subprocess.run([f'{package}/bin/mode', 'status'], env=self.env,
+                                  capture_output=True, text=True).stdout
+
+        # $DOTFILES, when set, wins over the checkout the home gave.
+        self.env['DOTFILES'] = str(self.tmp / 'other')
+        self.assertIn('opacity             1\n', status())
+        del self.env['DOTFILES']
+        self.assertIn('opacity             0.6\n', status())
 
     # ── herd ─────────────────────────────────────────────────────────────
 
