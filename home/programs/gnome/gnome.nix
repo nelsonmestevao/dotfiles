@@ -9,6 +9,21 @@ let
 
   # Where dconf keeps the shortcut called `name`.
   shortcutPath = name: "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/${name}";
+
+  # The original files from Unsplash, at full size. The bare
+  # images.unsplash.com link with no query serves the upload as it is.
+  # Desktop: https://unsplash.com/photos/3zVJxLelo_M by Christoph Richter.
+  desktop = pkgs.fetchurl {
+    name = "desktop.jpg";
+    url = "https://images.unsplash.com/photo-1533759233673-2d30c9bc1e93";
+    hash = "sha256-od5qvY30kycb01ru40k2Uv2k46aNcUd4XtBbMP0or/A=";
+  };
+  # Lock screen: https://unsplash.com/photos/v6V-hfxjboI by Xuan Nguyen.
+  lockscreen = pkgs.fetchurl {
+    name = "lockscreen.jpg";
+    url = "https://images.unsplash.com/photo-1530027644375-9c83053d392e";
+    hash = "sha256-m45urB0Gb7hfhIOt0qW40VTM3/jym9l5Lc0IdF8K66E=";
+  };
 in
 with lib.hm.gvariant;
 {
@@ -208,13 +223,13 @@ with lib.hm.gvariant;
     };
 
     "org/gnome/desktop/screensaver" = {
-      picture-uri = "file://${config.home.homeDirectory}/Pictures/Wallpapers/lockscreen.jpg";
-      picture-uri-dark = "file://${config.home.homeDirectory}/Pictures/Wallpapers/lockscreen.jpg";
+      picture-uri = "file://${lockscreen}";
+      picture-uri-dark = "file://${lockscreen}";
     };
 
     "org/gnome/desktop/background" = {
-      picture-uri = "file://${config.home.homeDirectory}/Pictures/Wallpapers/desktop.jpg";
-      picture-uri-dark = "file://${config.home.homeDirectory}/Pictures/Wallpapers/desktop.jpg";
+      picture-uri = "file://${desktop}";
+      picture-uri-dark = "file://${desktop}";
     };
 
     "org/gnome/desktop/input-sources" = {
