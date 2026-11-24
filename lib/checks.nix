@@ -101,6 +101,10 @@ in
 
         # The xonsh scripts, only parsed: their own code doesn't run here.
         xonsh=(${lib.escapeShellArgs (scripts.xonsh or [ ])} scripts/*.xsh)
+        found=$(find home/programs -name '*.xsh')
+        while IFS= read -r file; do
+          [ -n "$file" ] && xonsh+=("$file")
+        done <<< "$found"
         HOME=$TMPDIR python3 ${./xonsh-syntax.py} "''${xonsh[@]}"
 
         # The zsh files, only read: a typo there would break every new shell.

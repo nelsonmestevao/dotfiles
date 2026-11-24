@@ -238,7 +238,10 @@ git clone https://github.com/nelsonmestevao/dotfiles ~/.dotfiles
 
 You can also clone my [`spells`][spells] into `~/.spells`. Spells are the small
 shell scripts I use every day. They're optional: zsh only loads them when
-`~/.spells/spells.init` exists. But there's a lot of goodies there.
+`~/.spells/spells.init` exists. But there's a lot of goodies there. A spell
+runs on any machine with only nix. A script that needs this repo, or a program
+these dotfiles set up, is a program here instead: `mode` in
+`home/programs/mode/`, `herd` in `home/programs/herd/`.
 
 ```shell
 git clone https://github.com/nelsonmestevao/spells ~/.spells
@@ -590,7 +593,9 @@ Runnable helpers live in `bin/`; shared code lives in `scripts/`.
 failed command ends the helper with one plain line that says what failed and
 what was left undone. It also keeps colours out of pipes and logs.
 `scripts/scaffold.xsh` provides validation and file transactions for `bin/new`
-and `bin/setup`. Run any helper with `--help` for details. Run
+and `bin/setup`. `scripts/spellbook.xsh` is not for `bin/`: it holds the
+helpers of the xonsh scripts a program packages (`mode`'s and `herd`), and
+their `package.nix` puts it next to them. Run any helper with `--help` for details. Run
 them from inside the repo: each one starts in the flake's dev shell, so the
 tools it needs come from `flake.lock`. With direnv, `cd` into the repo loads
 that shell for you (`direnv allow` once).

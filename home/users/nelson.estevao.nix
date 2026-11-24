@@ -63,12 +63,14 @@
   dotfiles.programs.glow.enable = true;
   dotfiles.programs.gping.enable = true;
   dotfiles.programs.grex.enable = true;
+  dotfiles.programs.herd.enable = true;
   dotfiles.programs.herdr-app.enable = enableFor [ "desktop" ];
   dotfiles.programs.httpie.enable = true;
   dotfiles.programs.hyperfine.enable = true;
   dotfiles.programs.jj.enable = true;
   dotfiles.programs.jq.enable = true;
   dotfiles.programs.mise.enable = true;
+  dotfiles.programs.mode.enable = enableFor [ "desktop" ];
   dotfiles.programs.nix-index.enable = true;
   dotfiles.programs.onefetch.enable = true;
   dotfiles.programs.ouch.enable = true;

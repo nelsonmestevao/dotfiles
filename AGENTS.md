@@ -29,7 +29,9 @@ to work here safely.
 - `system/hosts/<hostname>.nix`: which modules a host gets, plus settings only
   that host needs (boot loader, firewall, keyboard layout).
 - `bin/`: helper scripts. Each one runs inside the flake's dev shell.
-- `scripts/`: shared libraries imported by the helpers in `bin/`.
+- `scripts/`: shared libraries imported by the helpers in `bin/`, and
+  `spellbook.xsh`, which the xonsh scripts of `mode` and `herd` import. Their
+  `package.nix` puts it next to them.
 - `.github/scripts/`: scripts only CI runs, next to the workflow that calls
   them. They run outside the dev shell, so they need only bash and jq.
 - `tests/lib.nix`: tests for the helpers in `lib/` and `home/lib/`, against
@@ -128,7 +130,8 @@ bin/check --same  # shows which configs your change builds differently
 ```
 
 Run `bin/test` when you touch `bin/`, `scripts/`, `tests/`, `.github/`, a
-Herdr mod or the prompt's mise segment (`home/programs/zsh/prompt-mise.zsh`).
+Herdr mod, a script a program packages (`mode`'s, `herd`) or the prompt's
+mise segment (`home/programs/zsh/prompt-mise.zsh`).
 `bin/check --eval` checks the docs' tables and `bin/lint` their links, so run
 both after you edit the docs. Run `bin/check --eval` after you edit
 `config/hosts.nix`, too.

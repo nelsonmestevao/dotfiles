@@ -113,6 +113,10 @@
   dotfiles.programs.gnupg.enable = true;
   dotfiles.programs.gping.enable = true;
   dotfiles.programs.grex.enable = true;
+  dotfiles.programs.herd.enable = enableFor [
+    "desktop"
+    "server"
+  ];
   dotfiles.programs.herdr-app.enable = enableFor [ "desktop" ];
   dotfiles.programs.herdr-core.enable = enableFor [
     "desktop"
@@ -127,6 +131,7 @@
   dotfiles.programs.lazysql.enable = true;
   dotfiles.programs.lftp.enable = true;
   dotfiles.programs.mise.enable = true;
+  dotfiles.programs.mode.enable = enableFor [ "desktop" ];
   dotfiles.programs.mysql.enable = false;
   dotfiles.programs.ngrok.enable = true;
   dotfiles.programs.nix-index.enable = true;
@@ -161,7 +166,6 @@
   dotfiles.programs.zoxide.enable = true;
 
   # My Scripts
-  dotfiles.programs.gensecret.enable = true;
   dotfiles.programs.hm-diff.enable = true;
   # thinkpad isn't NixOS, so it has no system generations. No role means
   # "NixOS", so the host is named.
