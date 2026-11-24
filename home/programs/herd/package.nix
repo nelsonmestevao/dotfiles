@@ -1,11 +1,6 @@
 { pkgs }:
 let
-  xonsh = pkgs.xonsh.override {
-    extraPackages =
-      ps: with ps; [
-        docopt
-      ];
-  };
+  inherit (import ../../../scripts/spellbook.nix { inherit pkgs; }) installXonshScript;
 in
 pkgs.stdenvNoCC.mkDerivation {
   pname = "herd";
@@ -26,12 +21,7 @@ pkgs.stdenvNoCC.mkDerivation {
   installPhase = ''
     runHook preInstall
 
-    libexec=$out/libexec/herd
-    install -Dm755 home/programs/herd/herd.xsh "$libexec/herd"
-    install -Dm644 scripts/spellbook.xsh "$libexec/spellbook.xsh"
-    makeWrapper ${xonsh}/bin/xonsh "$out/bin/herd" \
-      --add-flags "--no-rc $libexec/herd" \
-      --prefix PATH : ${pkgs.lib.makeBinPath [ pkgs.gum ]}
+    ${installXonshScript "herd" "home/programs/herd/herd.xsh"}
 
     runHook postInstall
   '';
