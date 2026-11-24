@@ -47,14 +47,6 @@ in
     echo $(nix eval --raw "github:NixOS/nixpkgs/$REVISION#$PACKAGE.version")
   '';
 
-  gensecret = pkgs.writeShellScriptBin "gensecret" ''
-    SIZE="$1"
-
-    [[ -z "$SIZE" ]] && SIZE="32"
-
-    ${pkgs.openssl}/bin/openssl rand -hex "$SIZE"
-  '';
-
   wake-hades = pkgs.writeShellScriptBin "wake-hades" ''
     ${pkgs.wakeonlan}/bin/wakeonlan 2c:f0:5d:59:3c:0d
   '';

@@ -163,7 +163,6 @@
   dotfiles.programs.zoxide.enable = true;
 
   # My Scripts
-  dotfiles.programs.gensecret.enable = true;
   dotfiles.programs.hm-diff.enable = true;
   # thinkpad isn't NixOS, so it has no system generations. No role means
   # "NixOS", so the host is named.
