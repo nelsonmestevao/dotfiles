@@ -127,6 +127,8 @@
   dotfiles.programs.lazysql.enable = true;
   dotfiles.programs.lftp.enable = true;
   dotfiles.programs.mise.enable = true;
+  # mode edits the Ghostty, VS Code and Zed files, so it goes where they are.
+  dotfiles.programs.mode.enable = enableFor [ "desktop" ];
   dotfiles.programs.mysql.enable = false;
   dotfiles.programs.ngrok.enable = true;
   dotfiles.programs.nix-index.enable = true;
