@@ -4,12 +4,12 @@ let
 in
 pkgs.stdenvNoCC.mkDerivation {
   pname = "mode";
-  version = "0.7.0";
+  version = "0.8.0";
 
   src = pkgs.lib.fileset.toSource {
     root = ../../..;
     fileset = pkgs.lib.fileset.unions [
-      ./mode.sh
+      ./mode.xsh
       ./theme.xsh
       ./caffeine.xsh
       ./notifications.xsh
@@ -21,27 +21,22 @@ pkgs.stdenvNoCC.mkDerivation {
     makeWrapper
   ];
 
-  # GNU sed and grep, since a Mac's take other flags.
   installPhase = ''
     runHook preInstall
 
     ${installXonshScript "theme" "home/programs/mode/theme.xsh"}
     ${installXonshScript "caffeine" "home/programs/mode/caffeine.xsh"}
     ${installXonshScript "notifications" "home/programs/mode/notifications.xsh"}
+    ${installXonshScript "mode" "home/programs/mode/mode.xsh"}
 
-    install -Dm755 home/programs/mode/mode.sh "$out/libexec/mode/mode"
-    makeWrapper ${pkgs.bash}/bin/bash "$out/bin/mode" \
-      --add-flags "$out/libexec/mode/mode" \
+    # mode runs the other three commands.
+    wrapProgram "$out/bin/mode" \
       --prefix PATH : "$out/bin:${
         pkgs.lib.makeBinPath (
           with pkgs;
-          [
-            gnused
-            gnugrep
-          ]
           # Builds only on Linux, where the Framework keyboard is. On a Mac,
           # mode -k says it cannot reach the keyboard light.
-          ++ lib.optional stdenv.hostPlatform.isLinux qmk_hid
+          lib.optional stdenv.hostPlatform.isLinux qmk_hid
         )
       }"
 

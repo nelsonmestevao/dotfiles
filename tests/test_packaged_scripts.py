@@ -1,6 +1,6 @@
 """Run with: bin/test.
 
-The xonsh and bash scripts that programs package: mode with theme, caffeine
+The xonsh scripts that programs package: mode with theme, caffeine
 and notifications (home/programs/mode/), and herd (home/programs/herd/). The
 tests build the packages, as a home installs them, and run them against
 stand-ins for the system tools they change: gsettings on Linux,
@@ -149,7 +149,7 @@ class PackagedScriptTest(unittest.TestCase):
                    '{\n  "buffer_font_size": 18,\n  "terminal": {\n    "font_size": 16,\n  },\n}\n')
         self.write('home/programs/ghostty/config', 'background-opacity = 0.6\nfont-size = 16\n')
 
-        self.assertIn('USAGE', self.run_it('mode', '--help'))
+        self.assertIn('mode (chill | demo | status)', self.run_it('mode', '--help'))
         self.assertIn('mode v', self.run_it('mode', '--version'))
         self.assertIn('Changed to mode demo!', self.run_it('mode', 'demo'))
         self.assertTrue(self.run_it('mode', 'status').startswith('demo'))
