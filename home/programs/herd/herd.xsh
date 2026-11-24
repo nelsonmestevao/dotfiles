@@ -41,7 +41,6 @@ import shutil
 import sys
 import uuid
 
-# The package puts spellbook.xsh, from scripts/ in the repo, next to this file.
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)))
 from spellbook import error, log_info, parse_args, pick, step, success
 

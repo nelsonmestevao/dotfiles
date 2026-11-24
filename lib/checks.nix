@@ -100,7 +100,6 @@ in
         shellcheck "''${shell[@]}"
 
         # The xonsh scripts, only parsed: their own code doesn't run here.
-        # Some live next to their program, like mode's.
         xonsh=(${lib.escapeShellArgs (scripts.xonsh or [ ])} scripts/*.xsh)
         found=$(find home/programs -name '*.xsh')
         while IFS= read -r file; do

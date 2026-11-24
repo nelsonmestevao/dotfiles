@@ -240,8 +240,8 @@ You can also clone my [`spells`][spells] into `~/.spells`. Spells are the small
 shell scripts I use every day. They're optional: zsh only loads them when
 `~/.spells/spells.init` exists. But there's a lot of goodies there. A spell
 runs on any machine with only nix. A script that needs this repo, or a program
-these dotfiles set up, lives here instead, next to that program: `mode` in
-`home/programs/mode/`, `herd` in `home/programs/herdr-core/herd/`.
+these dotfiles set up, is a program here instead: `mode` in
+`home/programs/mode/`, `herd` in `home/programs/herd/`.
 
 ```shell
 git clone https://github.com/nelsonmestevao/spells ~/.spells

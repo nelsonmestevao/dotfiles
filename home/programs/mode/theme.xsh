@@ -18,7 +18,6 @@ Needs from your system:
 import os
 import sys
 
-# The package puts spellbook.xsh, from scripts/ in the repo, next to this file.
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)))
 from spellbook import ask, parse_args, success
 

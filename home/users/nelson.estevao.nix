@@ -63,18 +63,13 @@
   dotfiles.programs.glow.enable = true;
   dotfiles.programs.gping.enable = true;
   dotfiles.programs.grex.enable = true;
+  dotfiles.programs.herd.enable = true;
   dotfiles.programs.herdr-app.enable = enableFor [ "desktop" ];
-  # On a Mac only herd: Herdr.app brings herdr-core itself.
-  dotfiles.programs.herdr-core.enable = enableFor [
-    "desktop"
-    "server"
-  ];
   dotfiles.programs.httpie.enable = true;
   dotfiles.programs.hyperfine.enable = true;
   dotfiles.programs.jj.enable = true;
   dotfiles.programs.jq.enable = true;
   dotfiles.programs.mise.enable = true;
-  # mode edits the Ghostty, VS Code and Zed files, so it goes where they are.
   dotfiles.programs.mode.enable = enableFor [ "desktop" ];
   dotfiles.programs.nix-index.enable = true;
   dotfiles.programs.onefetch.enable = true;

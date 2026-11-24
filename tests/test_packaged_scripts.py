@@ -1,9 +1,9 @@
 """Run with: bin/test.
 
 The xonsh and bash scripts that programs package: mode with theme, caffeine
-and notifications (home/programs/mode/), and herd (home/programs/herdr-core/
-herd/). The tests build the packages, as a home installs them, and run them
-against stand-ins for the system tools they change: gsettings on Linux,
+and notifications (home/programs/mode/), and herd (home/programs/herd/). The
+tests build the packages, as a home installs them, and run them against
+stand-ins for the system tools they change: gsettings on Linux,
 osascript, defaults and caffeinate on macOS, and herdr-app. Each stand-in
 keeps what it was told in a folder of its own, so nothing on this machine
 changes.

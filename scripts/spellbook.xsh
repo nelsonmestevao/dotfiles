@@ -1,16 +1,6 @@
 """
-Helpers shared by the xonsh scripts that a program packages, like mode's and
-herd: messages, the command line, prompts, git. They came from my spells repo,
-which has its own copy. (The helpers in bin/ use common.xsh instead.)
-
-The package.nix puts this file next to the script, which loads the helpers
-it uses with two lines near its top:
-
-    sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)))
-    from spellbook import error, success, parse_args
-
-The prompt helpers run gum, and parse_args needs docopt. The package.nix
-brings both.
+Helpers for the xonsh scripts that mode and herd package. A copy of the
+spells repo's lib/spellbook.xsh. Their package.nix puts it next to them.
 """
 
 from docopt import docopt, DocoptExit

@@ -1,10 +1,3 @@
-# mode and the three commands it switches: theme, caffeine and notifications.
-# Each one is also a command of its own. They came from my spells repo, and
-# came here because mode edits files in this repo.
-#
-# The xonsh scripts import scripts/spellbook.xsh, so it goes next to them.
-# Each command runs its script with an interpreter from nixpkgs, so the
-# shebang lines only matter when you run a script by hand.
 { pkgs }:
 let
   xonsh = pkgs.xonsh.override {
@@ -33,10 +26,7 @@ pkgs.stdenvNoCC.mkDerivation {
     makeWrapper
   ];
 
-  # theme, caffeine and notifications ask with gum when they get no argument.
-  # mode needs GNU sed and grep (a Mac's take other flags), qmk_hid for the
-  # keyboard light, and the other three commands. gsettings, osascript,
-  # defaults and caffeinate come from the system.
+  # GNU sed and grep, since a Mac's take other flags.
   installPhase = ''
     runHook preInstall
 
