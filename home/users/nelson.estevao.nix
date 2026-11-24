@@ -64,8 +64,11 @@
   dotfiles.programs.gping.enable = true;
   dotfiles.programs.grex.enable = true;
   dotfiles.programs.herdr-app.enable = enableFor [ "desktop" ];
-  # Only herd here: Herdr.app brings herdr-core itself.
-  dotfiles.programs.herdr-core.enable = enableFor [ "desktop" ];
+  # On a Mac only herd: Herdr.app brings herdr-core itself.
+  dotfiles.programs.herdr-core.enable = enableFor [
+    "desktop"
+    "server"
+  ];
   dotfiles.programs.httpie.enable = true;
   dotfiles.programs.hyperfine.enable = true;
   dotfiles.programs.jj.enable = true;
