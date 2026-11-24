@@ -26,6 +26,14 @@
   services.xserver.xkb.layout = "pt";
   console.keyMap = "pt-latin1";
 
+  # Lets the logged-in user set the keyboard light (`mode -k` in ~/.spells).
+  # The Laptop 16 input modules are QMK devices, and their hidraw nodes are
+  # root-only by default. The product IDs are the ANSI keyboard, RGB macropad,
+  # numpad, ISO keyboard and JIS keyboard.
+  services.udev.extraRules = ''
+    SUBSYSTEM=="hidraw", ATTRS{idVendor}=="32ac", ATTRS{idProduct}=="0012|0013|0014|0018|0019", TAG+="uaccess"
+  '';
+
   # ── Networking ───────────────────────────────────────────────────────
   dotfiles.modules.networking.enable = true;
   services.tailscale.enable = true;
