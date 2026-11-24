@@ -23,8 +23,8 @@ Options:
   -k --keyboard          Turn the keyboard light on or off.
 
 Needs from your system:
-  $DOTFILES set to the dotfiles checkout, whose editor and terminal settings
-  it edits.
+  The dotfiles checkout, whose editor and terminal settings it edits. A home
+  that installs mode knows where it is. $DOTFILES, when set, wins.
 """
 
 from pathlib import Path

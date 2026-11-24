@@ -1,6 +1,14 @@
-{ pkgs }:
+{
+  pkgs,
+  # Where mode finds the checkout when $DOTFILES isn't set. A home sets it.
+  dotfilesDirectory ? null,
+}:
 let
   inherit (import ../../../scripts/spellbook.nix { inherit pkgs; }) installXonshScript;
+
+  setDotfiles = pkgs.lib.optionalString (
+    dotfilesDirectory != null
+  ) "--set-default DOTFILES ${pkgs.lib.escapeShellArg dotfilesDirectory}";
 in
 pkgs.stdenvNoCC.mkDerivation {
   pname = "mode";
@@ -38,7 +46,7 @@ pkgs.stdenvNoCC.mkDerivation {
           # mode -k says it cannot reach the keyboard light.
           lib.optional stdenv.hostPlatform.isLinux qmk_hid
         )
-      }"
+      }" ${setDotfiles}
 
     runHook postInstall
   '';
