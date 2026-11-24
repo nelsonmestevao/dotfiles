@@ -31,7 +31,8 @@ to work here safely.
 - `bin/`: helper scripts. Each one runs inside the flake's dev shell.
 - `scripts/`: shared libraries imported by the helpers in `bin/`, and
   `spellbook.xsh`, which the xonsh scripts of `mode` and `herd` import. Their
-  `package.nix` puts it next to them.
+  `package.nix` installs each script with `installXonshScript`, from
+  `spellbook.nix`, which puts `spellbook.xsh` next to it.
 - `.github/scripts/`: scripts only CI runs, next to the workflow that calls
   them. They run outside the dev shell, so they need only bash and jq.
 - `tests/lib.nix`: tests for the helpers in `lib/` and `home/lib/`, against

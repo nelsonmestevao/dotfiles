@@ -1,11 +1,6 @@
 { pkgs }:
 let
-  xonsh = pkgs.xonsh.override {
-    extraPackages =
-      ps: with ps; [
-        docopt
-      ];
-  };
+  inherit (import ../../../scripts/spellbook.nix { inherit pkgs; }) installXonshScript;
 in
 pkgs.stdenvNoCC.mkDerivation {
   pname = "mode";
@@ -30,18 +25,13 @@ pkgs.stdenvNoCC.mkDerivation {
   installPhase = ''
     runHook preInstall
 
-    libexec=$out/libexec/mode
-    install -Dm755 home/programs/mode/mode.sh "$libexec/mode"
-    for command in theme caffeine notifications; do
-      install -Dm755 "home/programs/mode/$command.xsh" "$libexec/$command"
-      makeWrapper ${xonsh}/bin/xonsh "$out/bin/$command" \
-        --add-flags "--no-rc $libexec/$command" \
-        --prefix PATH : ${pkgs.lib.makeBinPath [ pkgs.gum ]}
-    done
-    install -Dm644 scripts/spellbook.xsh "$libexec/spellbook.xsh"
+    ${installXonshScript "theme" "home/programs/mode/theme.xsh"}
+    ${installXonshScript "caffeine" "home/programs/mode/caffeine.xsh"}
+    ${installXonshScript "notifications" "home/programs/mode/notifications.xsh"}
 
+    install -Dm755 home/programs/mode/mode.sh "$out/libexec/mode/mode"
     makeWrapper ${pkgs.bash}/bin/bash "$out/bin/mode" \
-      --add-flags "$libexec/mode" \
+      --add-flags "$out/libexec/mode/mode" \
       --prefix PATH : "$out/bin:${
         pkgs.lib.makeBinPath (
           with pkgs;
