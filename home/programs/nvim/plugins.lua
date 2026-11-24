@@ -162,6 +162,21 @@ local plugins = {
     config = function()
       local ts = require("nvim-treesitter")
 
+      -- nvim-treesitter doesn't list xonsh, so add the grammar here. Pinned to
+      -- a commit, since the grammar has no releases.
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "TSUpdate",
+        callback = function()
+          require("nvim-treesitter.parsers").xonsh = {
+            install_info = {
+              url = "https://github.com/FoamScience/tree-sitter-xonsh",
+              revision = "956a48a6c2a5644ccdb274d918355718b1ea41b5",
+              queries = "queries",
+            },
+          }
+        end,
+      })
+
       -- Parsers we always want available. Anything else is installed on demand
       -- the first time a matching buffer is opened (see the autocmd below).
       ts.install({
@@ -188,6 +203,7 @@ local plugins = {
         "tsx", -- .tsx files (filetype typescriptreact) use the `tsx` parser
         "vim",
         "vimdoc",
+        "xonsh", -- added above
         "zig",
       })
 
