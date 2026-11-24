@@ -69,4 +69,4 @@ def main(args):
 if __name__ == "__main__":
     main(parse_args(__doc__, __file__, version="0.2.0"))
 
-# vim: ft=python
+# vim: ft=xonsh
