@@ -576,18 +576,22 @@ local plugins = {
       -- that map would win over ours.
       autopairs.setup({ map_cr = false })
 
-      -- Enter accepts the selected completion item, as nvim-cmp did.
-      -- Otherwise it's a plain Enter, with autopairs' indent between
-      -- brackets.
-      vim.keymap.set("i", "<CR>", function()
-        if vim.fn.pumvisible() == 1 then
-          -- 'autocomplete' never selects an item for you, so take the first
-          -- one when nothing is selected.
-          local none = vim.fn.complete_info({ "selected" }).selected == -1
-          return vim.keycode(none and "<C-n><C-y>" or "<C-y>")
+      -- Only Ctrl-Y accepts a completion item. 'autocomplete' never selects
+      -- an item for you, so it takes the first one when nothing is selected.
+      vim.keymap.set("i", "<C-y>", function()
+        if vim.fn.pumvisible() == 1 and vim.fn.complete_info({ "selected" }).selected == -1 then
+          return "<C-n><C-y>"
         end
-        return autopairs.autopairs_cr()
-      end, { expr = true, replace_keycodes = false, desc = "Accept the completion item or start a new line" })
+        return "<C-y>"
+      end, { expr = true, desc = "Accept the completion item" })
+
+      -- Enter never accepts an item, so it can't pick one while you type.
+      -- It closes the menu, keeping what you typed, and starts a new line,
+      -- with autopairs' indent between brackets.
+      vim.keymap.set("i", "<CR>", function()
+        local close_menu = vim.fn.pumvisible() == 1 and vim.keycode("<C-e>") or ""
+        return close_menu .. autopairs.autopairs_cr()
+      end, { expr = true, replace_keycodes = false, desc = "Close the completion menu and start a new line" })
     end,
   },
   {
