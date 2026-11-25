@@ -53,7 +53,8 @@ defmodule :_utils do
   def copy(term) do
     text = if is_binary(term), do: term, else: inspect(term, limit: :infinity, pretty: true)
 
-    port = Port.open({:spawn, "wl-copy"}, [])
+    clipboard = if match?({:unix, :darwin}, :os.type()), do: "pbcopy", else: "wl-copy"
+    port = Port.open({:spawn, clipboard}, [])
     true = Port.command(port, text)
     true = Port.close(port)
 
