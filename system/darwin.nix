@@ -35,6 +35,10 @@
   # group-writable (see the Homebrew module, which takes them out).
   programs.zsh.enableGlobalCompInit = false;
 
+  # Leave the default prompt out of /etc/zshrc too. It loads promptinit and
+  # the suse theme on every shell start, and Powerlevel10k replaces it.
+  programs.zsh.promptInit = "";
+
   # ── macOS defaults ────────────────────────────────────────────────────
   # Auto-hide the Dock; it slides back in when the pointer reaches the
   # bottom screen edge. Frees vertical space for AeroSpace-tiled windows.

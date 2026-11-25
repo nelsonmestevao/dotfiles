@@ -51,6 +51,10 @@
   # anyway from ~/.zshrc, so a second run would only slow every shell start.
   programs.zsh.enableGlobalCompInit = false;
 
+  # Leave the default prompt out of /etc/zshrc too. It loads promptinit and
+  # the suse theme on every shell start, and Powerlevel10k replaces it.
+  programs.zsh.promptInit = "";
+
   programs.nix-ld.enable = true;
 
   users.users = lib.mapAttrs (_username: userCfg: {
