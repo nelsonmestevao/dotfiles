@@ -39,6 +39,17 @@
     }
   },
   {
+    // Only ctrl-y accepts a completion, as in nvim, so Enter and Tab can't
+    // pick one while you type. Enter starts a new line and Tab indents.
+    // Vim mode binds ctrl-y here to scrolling the menu.
+    "context": "Editor && showing_completions",
+    "bindings": {
+      "ctrl-y": "editor::ConfirmCompletion",
+      "enter": "editor::Newline",
+      "tab": null
+    }
+  },
+  {
     // Vim mode binds ctrl-j to vim::Down, which wins over Workspace bindings.
     "context": "VimControl && !menu",
     "bindings": {
