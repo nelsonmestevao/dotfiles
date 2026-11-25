@@ -20,6 +20,11 @@
   dotfiles.modules.networking.enable = true;
   services.tailscale.enable = true;
   services.openssh.enable = true;
+  # Keys only. The keys in ~/.ssh/authorized_keys on temis still work.
+  services.openssh.settings = {
+    PasswordAuthentication = false;
+    KbdInteractiveAuthentication = false;
+  };
 
   networking.firewall.enable = false;
 
